@@ -1,0 +1,70 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+
+// GET /api/products/[id]
+export async function GET(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const product = await prisma.product.findUnique({
+      where: { id: parseInt(params.id) },
+    });
+    if (!product) {
+      return NextResponse.json({ error: "Product not found" }, { status: 404 });
+    }
+
+    // Produits similaires (même catégorie)
+    const related = await prisma.product.findMany({
+      where: { category: product.category, id: { not: product.id } },
+      take: 4,
+    });
+
+    return NextResponse.json({ product, related });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
+  }
+}
+
+// PUT /api/products/[id]  (admin: update, including stock)
+export async function PUT(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    const body = await req.json();
+    const { name, price, category, image, description, stock } = body;
+
+    const product = await prisma.product.update({
+      where: { id: parseInt(params.id) },
+      data: {
+        ...(name !== undefined && { name }),
+        ...(price !== undefined && { price: parseFloat(price) }),
+        ...(category !== undefined && { category }),
+        ...(image !== undefined && { image }),
+        ...(description !== undefined && { description }),
+        ...(stock !== undefined && { stock: parseInt(stock) }),
+      },
+    });
+
+    return NextResponse.json(product);
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+  }
+}
+
+// DELETE /api/products/[id]
+export async function DELETE(
+  _req: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    await prisma.product.delete({ where: { id: parseInt(params.id) } });
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error(err);
+    return NextResponse.json({ error: "Failed to delete product" }, { status: 500 });
+  }
+}

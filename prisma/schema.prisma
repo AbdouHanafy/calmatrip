@@ -1,0 +1,218 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String?   @unique
+  emailVerified DateTime?
+  image         String?
+  role          String    @default("USER")
+  status        String    @default("active")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  accounts      Account[]
+  sessions      Session[]
+
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId], map: "accounts_userId_fkey")
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "sessions_userId_fkey")
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Service {
+  id          Int      @id @default(autoincrement())
+  title       String
+  subtitle    String?
+  description String   @db.Text
+  price       String
+  icon        String   @default("Car")
+  color       String?
+  category    String?
+  features    Json?
+  duration    String?
+  image       String?
+  active      Boolean  @default(true)
+  popular     Boolean  @default(false)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("services")
+}
+
+model Booking {
+  id              Int       @id @default(autoincrement())
+  service         String
+  date            DateTime
+  time            String
+  fromLocation    String
+  toLocation      String
+  status          String    @default("pending")
+  price           String?
+  driver          String?
+  vehicle         String?
+  passengers      Int       @default(1)
+  specialRequests String?   @db.Text
+  customerName    String?
+  customerEmail   String?
+  customerPhone   String?
+  timeSlotId      Int?
+  timeSlot        TimeSlot? @relation(fields: [timeSlotId], references: [id])
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  hasLuggage      Boolean   @default(false)
+
+  @@index([timeSlotId])
+  @@map("bookings")
+}
+
+model TimeSlot {
+  id        Int       @id @default(autoincrement())
+  serviceId Int
+  date      DateTime
+  time      String
+  capacity  Int       @default(5)
+  bookings  Booking[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@unique([serviceId, date, time])
+  @@map("time_slots")
+}
+
+model Contact {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  subject   String
+  message   String   @db.Text
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("contacts")
+}
+
+model Product {
+  id          Int         @id @default(autoincrement())
+  name        String
+  price       Float
+  category    String
+  image       String
+  description String      @db.Text
+  stock       Int         @default(100)
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+  items       OrderItem[]
+
+  @@map("products")
+}
+
+model TeamMember {
+  id         Int    @id @default(autoincrement())
+  name       String
+  role       String
+  experience String
+  icon       String
+  gradient   String
+  order      Int    @default(0)
+
+  @@map("team_members")
+}
+
+model Destination {
+  id          Int    @id @default(autoincrement())
+  name        String
+  emoji       String
+  description String
+  order       Int    @default(0)
+
+  @@map("destinations")
+}
+
+model FAQ {
+  id       Int    @id @default(autoincrement())
+  question String @db.Text
+  answer   String @db.Text
+  icon     String
+  order    Int    @default(0)
+
+  @@map("faqs")
+}
+
+model Order {
+  id            Int         @id @default(autoincrement())
+  customerName  String
+  customerEmail String
+  customerPhone String?
+  address       String
+  city          String?
+  total         Float
+  status        String      @default("pending")
+  paymentMethod String?
+  notes         String?     @db.Text
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+  items         OrderItem[]
+
+  @@map("orders")
+}
+
+model OrderItem {
+  id          Int     @id @default(autoincrement())
+  orderId     Int
+  productId   Int
+  productName String
+  price       Float
+  quantity    Int
+  order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  product     Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId], map: "order_items_orderId_fkey")
+  @@index([productId], map: "order_items_productId_fkey")
+  @@map("order_items")
+}
