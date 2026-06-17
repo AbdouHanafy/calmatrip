@@ -28,10 +28,12 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <AuthProvider>
+          
           <div className="min-h-screen flex flex-col bg-gray-50">
+          
             <main className="flex-1 w-full relative">
                 <MarketplaceProvider>
-                   <InstallPWA />
+                <InstallPWA />
               {children}
                 </MarketplaceProvider>
             </main>
