@@ -43,7 +43,7 @@ type StatCard = {
   change: string;
 };
 
-export function AdminClients() {
+export default function AdminClients() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);

@@ -1,4 +1,4 @@
-import MarketplacePage from '@/pages/Marketplace';
+import MarketplacePage from '@/views/Marketplace';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

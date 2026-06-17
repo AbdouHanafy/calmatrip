@@ -70,7 +70,7 @@ function SkeletonBlock({ className }: { className?: string }) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function AdminOverview() {
+export default function AdminOverview() {
   const [data, setData] = useState<DashboardData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

@@ -1,5 +1,5 @@
 'use client';
-import { AdminBookings } from '@/pages/admin/AdminBookings';
+import AdminBookings from '@/views/admin/AdminBookings';
 
 export default function AdminBookingsPage() {
   return <AdminBookings />;

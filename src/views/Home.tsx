@@ -10,7 +10,7 @@ import SectionTravelNotes from '@/components/home/SectionTravelNotes';
 import CTASection from '@/components/home/CTASection';
 import ExploreSection from '@/components/home/ExploreSection';
 
-export function Home() {
+export default function Home() {
   const [services, setServices] = useState<any[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
   useEffect(() => {

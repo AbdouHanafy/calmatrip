@@ -263,7 +263,7 @@ const STATS = [
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export function Services() {
+export default function Services() {
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [services, setServices] = useState<MappedService[]>([]);
   const [loading, setLoading] = useState(true);

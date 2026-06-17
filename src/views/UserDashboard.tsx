@@ -43,7 +43,7 @@ type Booking = {
   vehicle?: string;
 };
 
-export function UserDashboard() {
+export default function UserDashboard() {
   const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState<"bookings" | "new">("bookings");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);

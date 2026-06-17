@@ -5,7 +5,7 @@ import Link from "next/link";
 import { Navbar } from '@/components/layouts/Navbar';
 import { Footer } from '@/components/layouts/Footre';
 
-export function Contact() {
+export default function Contact() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",

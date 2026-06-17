@@ -1,4 +1,4 @@
-import ExplorePage  from '@/pages/ExplorePage';
+import ExplorePage  from '@/views/ExplorePage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

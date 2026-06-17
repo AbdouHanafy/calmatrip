@@ -1,4 +1,4 @@
-import { AdminOverview } from '@/pages/admin/AdminOverview';
+import AdminOverview from '@/views/admin/AdminOverview';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

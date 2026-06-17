@@ -4,12 +4,13 @@ import { prisma } from "@/lib/prisma";
 // PUT /api/orders/[id]  (admin: update status)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const { status } = await req.json();
     const order = await prisma.order.update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       data: { status },
       include: { items: true },
     });
@@ -23,11 +24,12 @@ export async function PUT(
 // GET /api/orders/[id]
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const order = await prisma.order.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       include: { items: true },
     });
     if (!order) return NextResponse.json({ error: "Order not found" }, { status: 404 });

@@ -1,4 +1,4 @@
-import { UserDashboard } from '@/pages/UserDashboard';
+import UserDashboard from '@/views/UserDashboard';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

@@ -1,4 +1,4 @@
-import CartPage from '@/pages/CartPage';
+import CartPage from '@/views/CartPage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

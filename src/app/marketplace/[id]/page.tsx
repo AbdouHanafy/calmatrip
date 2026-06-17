@@ -1,4 +1,4 @@
-import ProductDetailPage from '@/pages/ProductDetailPage';
+import ProductDetailPage from '@/views/ProductDetailPage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

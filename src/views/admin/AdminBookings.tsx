@@ -78,7 +78,7 @@ function SkeletonRow() {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function AdminBookings() {
+export default function AdminBookings() {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [stats, setStats] = useState<Stats>({ total: 0, confirmed: 0, pending: 0, revenue: 0 });
   const [pagination, setPagination] = useState<Pagination>({ total: 0, page: 1, limit: 10, totalPages: 1 });

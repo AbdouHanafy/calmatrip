@@ -5,11 +5,12 @@ import { Prisma } from "@prisma/client";
 // GET /api/products/[id]
 export async function GET(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const product = await prisma.product.findUnique({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
     });
     if (!product) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
@@ -30,9 +31,10 @@ export async function GET(
 // PUT /api/products/[id]  (admin: update, including stock)
 export async function PUT(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params;
     const body = await req.json();
     const { name, price, category, image, description, stock, sizes } = body;
 
@@ -46,7 +48,7 @@ export async function PUT(
     }
 
     const product = await prisma.product.update({
-      where: { id: parseInt(params.id) },
+      where: { id: parseInt(id) },
       data: {
         ...(name !== undefined && { name }),
         ...(price !== undefined && { price: parseFloat(price) }),
@@ -68,10 +70,11 @@ export async function PUT(
 // DELETE /api/products/[id]
 export async function DELETE(
   _req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await prisma.product.delete({ where: { id: parseInt(params.id) } });
+    const { id } = await params;
+    await prisma.product.delete({ where: { id: parseInt(id) } });
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error(err);

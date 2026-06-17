@@ -15,9 +15,9 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
-import { AdminOverview } from "./AdminOverview"; // ← import the dynamic version
+import AdminOverview from "./AdminOverview"; // ← import the dynamic version
 
-export function AdminDashboard({ children }: { children?: React.ReactNode }) {
+export default function AdminDashboard({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session } = useSession();

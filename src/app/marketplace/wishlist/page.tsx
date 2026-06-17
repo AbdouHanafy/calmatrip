@@ -1,4 +1,4 @@
-import WishlistPage from '@/pages/WishlistPage';
+import WishlistPage from '@/views/WishlistPage';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {

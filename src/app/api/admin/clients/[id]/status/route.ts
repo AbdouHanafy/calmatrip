@@ -6,23 +6,24 @@ export async function PATCH(
   {
     params,
   }: {
-    params: {
+    params: Promise<{
       id: string;
-    };
+    }>;
   }
 ) {
   try {
+    const { id } = await params;
+
     const body = await req.json();
 
-    const user =
-      await prisma.user.update({
-        where: {
-          id: params.id,
-        },
-        data: {
-          status: body.status
-        },
-      });
+    const user = await prisma.user.update({
+      where: {
+        id,
+      },
+      data: {
+        status: body.status,
+      },
+    });
 
     return NextResponse.json({
       success: true,

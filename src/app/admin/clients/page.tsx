@@ -1,5 +1,5 @@
 'use client';
-import { AdminClients } from '@/pages/admin/AdminClients';
+import AdminClients from '@/views/admin/AdminClients';
 
 export default function AdminClientsPage() {
   return <AdminClients />;

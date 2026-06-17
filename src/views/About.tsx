@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Navbar } from '@/components/layouts/Navbar';
 import { Footer } from '@/components/layouts/Footre';
 
-export function About() {
+export default function About() {
   const stats = [
     { value: "10+", label: "Years of Experience", icon: Award, gradient: "from-[#87CEEB] to-[#4CAF50]" },
     { value: "5000+", label: "Happy Clients", icon: Users, gradient: "from-[#FFD700] to-[#FFC107]" },

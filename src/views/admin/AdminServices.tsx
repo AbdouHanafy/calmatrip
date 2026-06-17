@@ -253,7 +253,7 @@ function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
-export function AdminServices() {
+export default function AdminServices() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

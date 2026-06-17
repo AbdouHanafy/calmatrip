@@ -1,5 +1,5 @@
 'use client';
-import AdminOrdersPage from "@/pages/admin/AdminOrdersPage";
+import AdminOrdersPage from "@/views/admin/AdminOrdersPage";
 
 export default function MarketplaceAdminOverviewPage() {
   return <AdminOrdersPage />;
