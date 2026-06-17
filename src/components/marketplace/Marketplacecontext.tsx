@@ -11,6 +11,7 @@ export interface Product {
   image: string;
   description: string;
   stock: number;
+  sizes?: string[] | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -19,14 +20,15 @@ export interface CartItem {
   productId: number;
   quantity: number;
   product: Product;
+  selectedSize?: string;
 }
 
 interface MarketplaceContextValue {
   cart: CartItem[];
   wishlist: number[];
-  addToCart: (product: Product, quantity?: number) => void;
-  removeFromCart: (productId: number) => void;
-  updateCartQuantity: (productId: number, quantity: number) => void;
+  addToCart: (product: Product, quantity?: number, size?: string) => void;
+  removeFromCart: (productId: number, size?: string) => void;
+  updateCartQuantity: (productId: number, quantity: number, size?: string) => void;
   clearCart: () => void;
   toggleWishlist: (productId: number) => void;
   isWishlisted: (productId: number) => boolean;
@@ -66,31 +68,45 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     if (hydrated) localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
   }, [wishlist, hydrated]);
 
-  const addToCart = (product: Product, quantity = 1) => {
+  const addToCart = (product: Product, quantity = 1, size?: string) => {
     setCart((prev) => {
-      const existing = prev.find((item) => item.productId === product.id);
+      const existing = prev.find(
+        (item) => item.productId === product.id && item.selectedSize === size
+      );
       if (existing) {
         const nextQty = Math.min(existing.quantity + quantity, product.stock);
         return prev.map((item) =>
-          item.productId === product.id ? { ...item, quantity: nextQty } : item
+          item.productId === product.id && item.selectedSize === size
+            ? { ...item, quantity: nextQty }
+            : item
         );
       }
-      return [...prev, { productId: product.id, quantity: Math.min(quantity, product.stock), product }];
+      return [
+        ...prev,
+        {
+          productId: product.id,
+          quantity: Math.min(quantity, product.stock),
+          product,
+          selectedSize: size,
+        },
+      ];
     });
   };
 
-  const removeFromCart = (productId: number) => {
-    setCart((prev) => prev.filter((item) => item.productId !== productId));
+  const removeFromCart = (productId: number, size?: string) => {
+    setCart((prev) =>
+      prev.filter((item) => !(item.productId === productId && item.selectedSize === size))
+    );
   };
 
-  const updateCartQuantity = (productId: number, quantity: number) => {
+  const updateCartQuantity = (productId: number, quantity: number, size?: string) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(productId, size);
       return;
     }
     setCart((prev) =>
       prev.map((item) =>
-        item.productId === productId
+        item.productId === productId && item.selectedSize === size
           ? { ...item, quantity: Math.min(quantity, item.product.stock) }
           : item
       )

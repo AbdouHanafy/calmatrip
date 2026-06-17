@@ -18,6 +18,8 @@ export default function ProductDetailPage() {
   const [related, setRelated] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
+  const [selectedSize, setSelectedSize] = useState<string | null>(null);
+  const [sizeError, setSizeError] = useState(false);
   const [added, setAdded] = useState(false);
 
   useEffect(() => {
@@ -60,10 +62,13 @@ export default function ProductDetailPage() {
 
   const wishlisted = isWishlisted(product.id);
   const outOfStock = product.stock <= 0;
+  const availableSizes = Array.isArray(product.sizes) ? product.sizes : [];
+  const hasSizes = availableSizes.length > 0;
 
   const handleAdd = () => {
-    addToCart(product, qty);
+    addToCart(product, qty, selectedSize ?? undefined);
     setAdded(true);
+    setSizeError(false);
     setTimeout(() => setAdded(false), 1500);
   };
 
@@ -96,6 +101,30 @@ export default function ProductDetailPage() {
             <p className="text-2xl font-bold text-[#4CAF50] mb-4">{product.price.toFixed(2)} TND</p>
 
             <p className="text-sm text-gray-600 leading-relaxed mb-6">{product.description}</p>
+
+            {hasSizes && (
+              <div className="mb-6">
+                <label className="text-sm font-medium text-gray-700 block mb-2">
+                  Taille {sizeError && <span className="text-red-500 text-xs font-normal ml-1">(optionnel — choisis si tu en as une)</span>}
+                </label>
+                <div className="flex gap-2 flex-wrap">
+                  {availableSizes.map((size) => (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => setSelectedSize(selectedSize === size ? null : size)}
+                      className={`px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all ${
+                        selectedSize === size
+                          ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50]"
+                          : "border-gray-200 text-gray-500 hover:border-[#87CEEB]/50"
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             <div className="mb-6">
               {outOfStock ? (

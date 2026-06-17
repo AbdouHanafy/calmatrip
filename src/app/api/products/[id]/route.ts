@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { Prisma } from "@prisma/client";
 
 // GET /api/products/[id]
 export async function GET(
@@ -14,7 +15,6 @@ export async function GET(
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    // Produits similaires (même catégorie)
     const related = await prisma.product.findMany({
       where: { category: product.category, id: { not: product.id } },
       take: 4,
@@ -34,7 +34,16 @@ export async function PUT(
 ) {
   try {
     const body = await req.json();
-    const { name, price, category, image, description, stock } = body;
+    const { name, price, category, image, description, stock, sizes } = body;
+
+    let sizesUpdate: { sizes?: string[] | typeof Prisma.JsonNull } = {};
+    if (sizes !== undefined) {
+      if (sizes !== null && (!Array.isArray(sizes) || !sizes.every((s) => typeof s === "string"))) {
+        return NextResponse.json({ error: "Invalid sizes format" }, { status: 400 });
+      }
+      const isEmpty = sizes === null || (Array.isArray(sizes) && sizes.length === 0);
+      sizesUpdate.sizes = isEmpty ? Prisma.JsonNull : sizes;
+    }
 
     const product = await prisma.product.update({
       where: { id: parseInt(params.id) },
@@ -45,6 +54,7 @@ export async function PUT(
         ...(image !== undefined && { image }),
         ...(description !== undefined && { description }),
         ...(stock !== undefined && { stock: parseInt(stock) }),
+        ...sizesUpdate,
       },
     });
 

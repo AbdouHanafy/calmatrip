@@ -1,17 +1,198 @@
 'use client';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, X, Search } from "lucide-react";
+import {
+  Plus, Pencil, Trash2, X, Search, ImageIcon,
+  Upload, Loader2, GripVertical,
+} from "lucide-react";
 import { Product } from "@/components/marketplace/Marketplacecontext";
+
+const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL"] as const;
 
 const EMPTY_FORM = {
   name: "",
   price: "",
   category: "",
-  image: "",
   description: "",
   stock: "100",
+  sizes: [] as string[],
 };
+
+// An image entry — either already uploaded (has url) or pending upload (has file)
+type ImageEntry = {
+  id: string;
+  url: string;
+  file?: File;
+  uploading?: boolean;
+  error?: string;
+};
+
+function parseImages(raw: string | null | undefined): string[] {
+  if (!raw) return [];
+  try {
+    const parsed = JSON.parse(raw);
+    if (Array.isArray(parsed)) return parsed as string[];
+  } catch {
+    // single URL string
+  }
+  return [raw];
+}
+
+function serializeImages(urls: string[]): string | null {
+  if (urls.length === 0) return null;
+  if (urls.length === 1) return urls[0];
+  return JSON.stringify(urls);
+}
+
+interface ImageUploadZoneProps {
+  images: ImageEntry[];
+  onChange: (images: ImageEntry[]) => void;
+}
+
+function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
+  const inputRef = useRef<HTMLInputElement>(null);
+  const [dragging, setDragging] = useState(false);
+  const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
+  const dragItem = useRef<number | null>(null);
+
+  const addFiles = (files: FileList | null) => {
+    if (!files) return;
+    const newEntries: ImageEntry[] = Array.from(files)
+      .filter((f) => f.type.startsWith("image/"))
+      .map((file) => ({
+        id: `${Date.now()}-${Math.random()}`,
+        url: URL.createObjectURL(file),
+        file,
+      }));
+    onChange([...images, ...newEntries]);
+  };
+
+  const removeImage = (id: string) => {
+    onChange(images.filter((img) => img.id !== id));
+  };
+
+  const onDropZone = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDragging(false);
+    addFiles(e.dataTransfer.files);
+  };
+
+  const onDragStartThumb = (index: number) => { dragItem.current = index; };
+  const onDragEnterThumb = (index: number) => { setDragOverIndex(index); };
+  const onDragEndThumb = () => {
+    if (dragItem.current === null || dragOverIndex === null || dragItem.current === dragOverIndex) {
+      dragItem.current = null;
+      setDragOverIndex(null);
+      return;
+    }
+    const reordered = [...images];
+    const [moved] = reordered.splice(dragItem.current, 1);
+    reordered.splice(dragOverIndex, 0, moved);
+    onChange(reordered);
+    dragItem.current = null;
+    setDragOverIndex(null);
+  };
+
+  return (
+    <div className="space-y-3">
+      <div
+        onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+        onDragLeave={() => setDragging(false)}
+        onDrop={onDropZone}
+        onClick={() => inputRef.current?.click()}
+        className={`relative border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-200 ${
+          dragging
+            ? "border-[#87CEEB] bg-[#87CEEB]/5 scale-[1.01]"
+            : "border-gray-200 hover:border-[#87CEEB] hover:bg-[#87CEEB]/5"
+        }`}
+      >
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#87CEEB]/20 to-[#4CAF50]/20 flex items-center justify-center">
+          <Upload className="w-6 h-6 text-[#87CEEB]" />
+        </div>
+        <div className="text-center">
+          <p className="text-sm font-medium text-gray-700">
+            Drop images here or <span className="text-[#87CEEB]">browse</span>
+          </p>
+          <p className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP — max 5 MB each</p>
+        </div>
+        <input
+          ref={inputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(e) => addFiles(e.target.files)}
+        />
+      </div>
+
+      {images.length > 0 && (
+        <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+          {images.map((img, index) => (
+            <div
+              key={img.id}
+              draggable
+              onDragStart={() => onDragStartThumb(index)}
+              onDragEnter={() => onDragEnterThumb(index)}
+              onDragEnd={onDragEndThumb}
+              onDragOver={(e) => e.preventDefault()}
+              className={`relative group aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-grab active:cursor-grabbing ${
+                index === 0 ? "border-[#87CEEB]" : "border-gray-200"
+              } ${dragOverIndex === index && dragItem.current !== index ? "scale-105 border-[#4CAF50]" : ""}`}
+            >
+              <img src={img.url} alt="" className="w-full h-full object-cover" />
+
+              {index === 0 && (
+                <span className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#87CEEB] text-white text-[10px] font-bold rounded-md">
+                  Main
+                </span>
+              )}
+
+              {img.uploading && (
+                <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
+                  <Loader2 className="w-5 h-5 text-white animate-spin" />
+                </div>
+              )}
+
+              {img.error && (
+                <div className="absolute inset-0 bg-red-500/70 flex items-center justify-center p-1">
+                  <p className="text-white text-[10px] text-center">{img.error}</p>
+                </div>
+              )}
+
+              <div className="absolute bottom-1 left-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <GripVertical className="w-4 h-4 text-white drop-shadow" />
+              </div>
+
+              <button
+                type="button"
+                onClick={(e) => { e.stopPropagation(); removeImage(img.id); }}
+                className="absolute top-1 right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+              >
+                <X className="w-3 h-3 text-white" />
+              </button>
+            </div>
+          ))}
+
+          <button
+            type="button"
+            onClick={() => inputRef.current?.click()}
+            className="aspect-square rounded-xl border-2 border-dashed border-gray-200 hover:border-[#87CEEB] hover:bg-[#87CEEB]/5 flex flex-col items-center justify-center gap-1 transition-all"
+          >
+            <Plus className="w-5 h-5 text-gray-400" />
+            <span className="text-[10px] text-gray-400">Add more</span>
+          </button>
+        </div>
+      )}
+
+      {images.length > 1 && (
+        <p className="text-xs text-gray-400 flex items-center gap-1">
+          <GripVertical className="w-3 h-3" />
+          Drag thumbnails to reorder — first image is the main one
+        </p>
+      )}
+    </div>
+  );
+}
 
 export default function AdminProductsPage() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -20,8 +201,9 @@ export default function AdminProductsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [imageEntries, setImageEntries] = useState<ImageEntry[]>([]);
   const [saving, setSaving] = useState(false);
-  const [imageFile, setImageFile] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const load = () => {
     setLoading(true);
@@ -39,6 +221,7 @@ export default function AdminProductsPage() {
   const openCreate = () => {
     setEditing(null);
     setForm(EMPTY_FORM);
+    setImageEntries([]);
     setModalOpen(true);
   };
 
@@ -48,76 +231,96 @@ export default function AdminProductsPage() {
       name: p.name,
       price: String(p.price),
       category: p.category,
-      image: p.image,
       description: p.description,
       stock: String(p.stock),
+      sizes: Array.isArray(p.sizes) ? p.sizes : [],
     });
+    const existing = parseImages(p.image).map((url) => ({
+      id: `existing-${url}`,
+      url,
+    }));
+    setImageEntries(existing);
     setModalOpen(true);
   };
 
-const handleSave = async (e: React.FormEvent) => {
-  e.preventDefault();
-  setSaving(true);
+  const toggleSize = (size: string) => {
+    setForm((f) => ({
+      ...f,
+      sizes: f.sizes.includes(size)
+        ? f.sizes.filter((s) => s !== size)
+        : [...f.sizes, size],
+    }));
+  };
 
-  try {
-    let imageUrl = form.image;
+  const uploadPendingFiles = async (entries: ImageEntry[]): Promise<ImageEntry[]> => {
+    const pending = entries.filter((e) => !!e.file);
+    if (pending.length === 0) return entries;
 
-    if (imageFile) {
-      const fd = new FormData();
-      fd.append("files", imageFile);
+    setImageEntries((prev) =>
+      prev.map((e) => (e.file ? { ...e, uploading: true, error: undefined } : e))
+    );
 
-      const uploadRes = await fetch(
-        "/api/admin/upload",
-        {
-          method: "POST",
-          body: fd,
-        }
+    const fd = new FormData();
+    pending.forEach((e) => fd.append("files", e.file!));
+
+    let uploadedUrls: string[] = [];
+    try {
+      const res = await fetch("/api/admin/upload", { method: "POST", body: fd });
+      const json = await res.json();
+      if (!res.ok) throw new Error(json.error ?? "Upload failed");
+      uploadedUrls = json.urls as string[];
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : "Upload failed";
+      setImageEntries((prev) =>
+        prev.map((e) => (e.file ? { ...e, uploading: false, error: msg } : e))
       );
-
-      const uploadData =
-        await uploadRes.json();
-
-      if (!uploadRes.ok)
-        throw new Error(
-          uploadData.error || "Upload failed"
-        );
-
-      imageUrl =
-        uploadData.urls?.[0] || "";
+      throw err;
     }
 
-    const url = editing
-      ? `/api/products/${editing.id}`
-      : "/api/products";
-
-    const method = editing
-      ? "PUT"
-      : "POST";
-
-    const res = await fetch(url, {
-      method,
-      headers: {
-        "Content-Type":
-          "application/json",
-      },
-      body: JSON.stringify({
-        ...form,
-        image: imageUrl,
-      }),
+    let urlIndex = 0;
+    const resolved = entries.map((e) => {
+      if (!e.file) return e;
+      const url = uploadedUrls[urlIndex++] ?? e.url;
+      return { id: e.id, url };
     });
 
-    if (!res.ok)
-      throw new Error("Erreur");
+    setImageEntries(resolved);
+    return resolved;
+  };
 
-    setModalOpen(false);
-    load();
-  } catch (err) {
-    console.error(err);
-    alert("Échec de l'enregistrement");
-  } finally {
-    setSaving(false);
-  }
-};
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setSaving(true);
+    setError(null);
+
+    try {
+      const resolvedImages = await uploadPendingFiles(imageEntries);
+      const imageValue = serializeImages(resolvedImages.map((entry) => entry.url));
+
+      const url = editing ? `/api/products/${editing.id}` : "/api/products";
+      const method = editing ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...form,
+          image: imageValue,
+          sizes: form.sizes.length > 0 ? form.sizes : null,
+        }),
+      });
+
+      if (!res.ok) throw new Error("Erreur");
+
+      setModalOpen(false);
+      load();
+    } catch (err) {
+      console.error(err);
+      setError(err instanceof Error ? err.message : "Échec de l'enregistrement");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleDelete = async (id: number) => {
     if (!confirm("Supprimer ce produit ?")) return;
@@ -165,6 +368,7 @@ const handleSave = async (e: React.FormEvent) => {
             <tr className="border-b border-gray-100 text-left text-gray-500">
               <th className="px-4 py-3 font-medium">Produit</th>
               <th className="px-4 py-3 font-medium">Catégorie</th>
+              <th className="px-4 py-3 font-medium">Tailles</th>
               <th className="px-4 py-3 font-medium">Prix</th>
               <th className="px-4 py-3 font-medium">Stock</th>
               <th className="px-4 py-3 font-medium text-right">Actions</th>
@@ -172,58 +376,74 @@ const handleSave = async (e: React.FormEvent) => {
           </thead>
           <tbody>
             {loading ? (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Chargement...</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Chargement...</td></tr>
             ) : products.length === 0 ? (
-              <tr><td colSpan={5} className="px-4 py-8 text-center text-gray-400">Aucun produit</td></tr>
+              <tr><td colSpan={6} className="px-4 py-8 text-center text-gray-400">Aucun produit</td></tr>
             ) : (
-              products.map((p) => (
-                <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50/50">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="relative w-10 h-10 rounded-lg bg-gray-50 overflow-hidden shrink-0">
-<Image
-  src={
-    p.image &&
-    (p.image.startsWith("/") ||
-      p.image.startsWith("http"))
-      ? p.image
-      : "/placeholder-product.png"
-  }
-  alt={p.name}
-  fill
-  className="object-cover"
-  sizes="40px"
-/>                      </div>
-                      <span className="font-medium text-gray-900 line-clamp-1">{p.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 text-gray-600 capitalize">{p.category}</td>
-                  <td className="px-4 py-3 text-gray-900 font-medium">{p.price.toFixed(2)} TND</td>
-                  <td className="px-4 py-3">
-                    <input
-                      type="number"
-                      defaultValue={p.stock}
-                      onBlur={(e) => {
-                        const v = parseInt(e.target.value);
-                        if (!isNaN(v) && v !== p.stock) quickStockUpdate(p.id, v);
-                      }}
-                      className={`w-20 px-2 py-1 rounded-lg border text-sm ${
-                        p.stock <= 5 ? "border-red-300 text-red-600 bg-red-50" : "border-gray-200"
-                      }`}
-                    />
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-gray-100 text-gray-500">
-                        <Pencil className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500">
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))
+              products.map((p) => {
+                const images = parseImages(p.image);
+                return (
+                  <tr key={p.id} className="border-b border-gray-50 hover:bg-gray-50/50">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="relative w-10 h-10 rounded-lg bg-gray-50 overflow-hidden shrink-0">
+                          <Image
+                            src={images[0] || "/placeholder-product.png"}
+                            alt={p.name}
+                            fill
+                            className="object-cover"
+                            sizes="40px"
+                          />
+                          {images.length > 1 && (
+                            <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#87CEEB] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                              +{images.length - 1}
+                            </span>
+                          )}
+                        </div>
+                        <span className="font-medium text-gray-900 line-clamp-1">{p.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 text-gray-600 capitalize">{p.category}</td>
+                    <td className="px-4 py-3">
+                      {Array.isArray(p.sizes) && p.sizes.length > 0 ? (
+                        <div className="flex gap-1 flex-wrap">
+                          {p.sizes.map((s: string) => (
+                            <span key={s} className="px-2 py-0.5 rounded-md bg-gray-100 text-gray-600 text-xs font-medium">
+                              {s}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-300 text-xs">—</span>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-gray-900 font-medium">{p.price.toFixed(2)} TND</td>
+                    <td className="px-4 py-3">
+                      <input
+                        type="number"
+                        defaultValue={p.stock}
+                        onBlur={(e) => {
+                          const v = parseInt(e.target.value);
+                          if (!isNaN(v) && v !== p.stock) quickStockUpdate(p.id, v);
+                        }}
+                        className={`w-20 px-2 py-1 rounded-lg border text-sm ${
+                          p.stock <= 5 ? "border-red-300 text-red-600 bg-red-50" : "border-gray-200"
+                        }`}
+                      />
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button onClick={() => openEdit(p)} className="p-2 rounded-lg hover:bg-gray-100 text-gray-500">
+                          <Pencil className="w-4 h-4" />
+                        </button>
+                        <button onClick={() => handleDelete(p.id)} className="p-2 rounded-lg hover:bg-red-50 text-red-500">
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })
             )}
           </tbody>
         </table>
@@ -238,6 +458,12 @@ const handleSave = async (e: React.FormEvent) => {
                 <X className="w-5 h-5" />
               </button>
             </div>
+
+            {error && (
+              <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSave} className="space-y-4">
               <div>
@@ -281,18 +507,38 @@ const handleSave = async (e: React.FormEvent) => {
                   className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
                 />
               </div>
+
               <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1.5">Image (URL)</label>
-                <input
-  type="file"
-  accept="image/*"
-  onChange={(e) =>
-    setImageFile(
-      e.target.files?.[0] || null
-    )
-  }
-/>
+                <label className="text-sm font-medium text-gray-700 block mb-1.5">
+                  Tailles disponibles <span className="text-gray-400 font-normal">(optionnel)</span>
+                </label>
+                <div className="flex gap-2 flex-wrap">
+                  {AVAILABLE_SIZES.map((size) => (
+                    <button
+                      key={size}
+                      type="button"
+                      onClick={() => toggleSize(size)}
+                      className={`px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all ${
+                        form.sizes.includes(size)
+                          ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50]"
+                          : "border-gray-200 text-gray-500 hover:border-[#87CEEB]/50"
+                      }`}
+                    >
+                      {size}
+                    </button>
+                  ))}
+                </div>
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-[#87CEEB]" />
+                  Images
+                  <span className="text-xs text-gray-400 font-normal">(optional — multiple allowed)</span>
+                </label>
+                <ImageUploadZone images={imageEntries} onChange={setImageEntries} />
+              </div>
+
               <div>
                 <label className="text-sm font-medium text-gray-700 block mb-1.5">Description</label>
                 <textarea

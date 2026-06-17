@@ -1,14 +1,18 @@
 'use client';
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useMarketplace } from "@/components/marketplace/Marketplacecontext";
 import { Navbar } from '@/components/layouts/Navbar';
 import { Footer } from '@/components/layouts/Footre';
 
+const DELIVERY_FEE = 7;
+
 export default function CheckoutPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const { cart, cartTotal, clearCart } = useMarketplace();
 
   const [form, setForm] = useState({
@@ -22,6 +26,18 @@ export default function CheckoutPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Prefill from session once it loads, without clobbering user edits
+  useEffect(() => {
+    if (session?.user?.name) {
+      setForm((f) => (f.customerName ? f : { ...f, customerName: session.user!.name! }));
+    }
+    if (session?.user?.email) {
+      setForm((f) => (f.customerEmail ? f : { ...f, customerEmail: session.user!.email! }));
+    }
+  }, [session?.user?.name, session?.user?.email]);
+
+  const orderTotal = cartTotal + DELIVERY_FEE;
 
   if (cart.length === 0) {
     return (
@@ -45,6 +61,7 @@ export default function CheckoutPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          total: orderTotal,
           items: cart.map((item) => ({ productId: item.productId, quantity: item.quantity })),
         }),
       });
@@ -130,7 +147,6 @@ export default function CheckoutPage() {
               <div className="flex gap-3">
                 {[
                   { value: "cod", label: "Paiement à la livraison" },
-                  
                 ].map((opt) => (
                   <button
                     type="button"
@@ -184,9 +200,17 @@ export default function CheckoutPage() {
                 </div>
               ))}
             </div>
+            <div className="space-y-3 mb-4 pt-3 border-t border-gray-50">
+              <div className="flex items-center justify-between text-sm">
+                <span className="text-gray-600">Livraison</span>
+                <span className="font-medium text-gray-900 shrink-0">
+                  {DELIVERY_FEE.toFixed(2)} TND
+                </span>
+              </div>
+            </div>
             <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
               <span className="font-semibold text-gray-900">Total</span>
-              <span className="font-bold text-lg text-gray-900">{cartTotal.toFixed(2)} TND</span>
+              <span className="font-bold text-lg text-gray-900">{orderTotal.toFixed(2)} TND</span>
             </div>
           </div>
         </div>

@@ -27,6 +27,8 @@ import Link from "next/link";
 import { Navbar } from '@/components/layouts/Navbar';
 import { Footer } from '@/components/layouts/Footre';
 import { BookingForm } from "@/components/booking/Bookingform";
+import { useSession } from "next-auth/react";
+
 
 type Booking = {
   id: string;
@@ -42,32 +44,40 @@ type Booking = {
 };
 
 export function UserDashboard() {
+  const { data: session, status } = useSession();
   const [activeTab, setActiveTab] = useState<"bookings" | "new">("bookings");
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
 
   const [bookings, setBookings] = useState<Booking[]>([]);
 
   const fetchBookings = async () => {
-    try {
-      const res = await fetch('/api/bookings');
-      if (res.ok) {
-        const data = await res.json();
-        setBookings(data.map((b: any) => ({
-          id: b.id.toString(),
-          service: b.serviceId ? `Service #${b.serviceId}` : "Airport Transfer", // Ideally this should join the service name
-          date: b.date.split('T')[0],
-          time: new Date(b.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }),
-          from: b.pickupLocation || "Unknown",
-          to: b.dropoffLocation || "Unknown",
-          status: b.status.toLowerCase(),
-          price: "TBD", // Depends on service
-          passengers: b.passengers.toString(),
-        })));
-      }
-    } catch (e) {
-      console.error(e);
+  if (!session?.user?.email) return;
+
+  try {
+    const res = await fetch(`/api/bookings?email=${encodeURIComponent(session.user.email)}`);
+
+    if (res.ok) {
+      const data = await res.json();
+      setBookings(data.map((b: any) => ({
+        id: b.id.toString(),
+        service: b.service || "Airport Transfer",
+        date: b.date.split('T')[0],
+        time: b.time, // already stored as a string like "09:00"
+        from: b.fromLocation || "Unknown",
+        to: b.toLocation || "Unknown",
+        status: b.status.toLowerCase(),
+        price: b.price ? `${b.price} TND` : "TBD",
+        passengers: b.passengers?.toString(),
+      })));
     }
-  };
+  } catch (e) {
+    console.error(e);
+  }
+};
+
+useEffect(() => {
+  fetchBookings();
+}, [session?.user?.email]);
 
   useEffect(() => {
     fetchBookings();
@@ -183,6 +193,24 @@ export function UserDashboard() {
 
   const upcomingTrips = bookings.filter(b => b.status === "confirmed").slice(0, 2);
 
+  const handleCancelBooking = async (id: string) => {
+  try {
+    const res = await fetch(`/api/bookings/${id}/cancel`, { method: "PATCH" });
+    const data = await res.json();
+
+    if (res.ok) {
+      setBookings(prev => prev.map(b => b.id === id ? { ...b, status: "cancelled" } : b));
+    } else {
+      alert(data.error || "Failed to cancel booking.");
+    }
+  } catch (e) {
+    console.error(e);
+    alert("Error cancelling booking.");
+  } finally {
+    setShowDeleteConfirm(null);
+  }
+};
+
   return (
     <>
     <Navbar />
@@ -208,7 +236,7 @@ export function UserDashboard() {
                 <User className="w-8 h-8 text-white" />
               </div>
               <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Hello, Ahmed 👋</h1>
+                <h1 className="text-2xl md:text-3xl font-bold">Hello, {session?.user?.name}👋</h1>
                 <p className="text-gray-300 text-sm">Welcome to your personal space</p>
               </div>
             </div>
@@ -564,9 +592,9 @@ export function UserDashboard() {
                 <Phone className="w-4 h-4" />
                 <span>Call</span>
               </a>
-              <Link href="/contact" className="px-5 py-2.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+              <Link href={`https://wa.me/21670000000`} className="px-5 py-2.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
                 <Mail className="w-4 h-4" />
-                <span>Send a message</span>
+                <span>whatsapp</span>
               </Link>
             </div>
           </div>
@@ -594,8 +622,7 @@ export function UserDashboard() {
                 </button>
                 <button
                   onClick={() => {
-                    alert("Booking cancelled successfully");
-                    setShowDeleteConfirm(null);
+                    handleCancelBooking(showDeleteConfirm);
                   }}
                   className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors"
                 >

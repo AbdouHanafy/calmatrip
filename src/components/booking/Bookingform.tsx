@@ -5,6 +5,7 @@ import {
   Car, Clock, Luggage, MapPin, Users, Calendar, 
   ChevronRight, Sparkles, User, Mail, AlertCircle 
 } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 interface ServiceOption {
   id: number;
@@ -37,6 +38,7 @@ function toISODate(d: Date) {
 
 export function BookingForm() {
   const router = useRouter();
+  const { data: session } = useSession();
 
   const [services, setServices] = useState<ServiceOption[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
@@ -58,9 +60,17 @@ export function BookingForm() {
 
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
+  const [customerPhone, setCustomerPhone] = useState("");
+  const [specialRequests, setSpecialRequests] = useState("");
 
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  // Prefill from session once it loads, without clobbering user edits later
+  useEffect(() => {
+    if (session?.user?.name) setCustomerName(session.user.name);
+    if (session?.user?.email) setCustomerEmail(session.user.email);
+  }, [session?.user?.name, session?.user?.email]);
 
   useEffect(() => {
     fetch("/api/services")
@@ -107,6 +117,16 @@ export function BookingForm() {
     setTime("");
   };
 
+  const handlePassengersChange = (raw: string) => {
+    if (raw === "") {
+      setPassengers(1); // don't let the field collapse to NaN
+      return;
+    }
+    const n = Number(raw);
+    if (Number.isNaN(n)) return;
+    setPassengers(Math.min(8, Math.max(1, n)));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
@@ -115,6 +135,14 @@ export function BookingForm() {
 
     if (!serviceId || !date || !finalTime) {
       setError("Please select service, date and time");
+      return;
+    }
+    if (!customerName.trim() || !customerEmail.trim()) {
+      setError("Please provide your name and email");
+      return;
+    }
+    if (!passengers || passengers < 1) {
+      setError("Please enter at least 1 passenger");
       return;
     }
 
@@ -134,6 +162,8 @@ export function BookingForm() {
           hasLuggage,
           customerName,
           customerEmail,
+          customerPhone,
+          specialRequests,
         }),
       });
 
@@ -141,6 +171,7 @@ export function BookingForm() {
       if (!res.ok) throw new Error(data.error || "Booking failed");
 
       router.push(`/dashboard`);
+      router.refresh();
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -377,7 +408,7 @@ export function BookingForm() {
                 min={1}
                 max={8}
                 value={passengers}
-                onChange={(e) => setPassengers(Number(e.target.value))}
+                onChange={(e) => handlePassengersChange(e.target.value)}
                 className="w-full px-4 py-3.5 rounded-2xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-gray-50/50"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
@@ -424,6 +455,26 @@ export function BookingForm() {
               placeholder="john@example.com"
               value={customerEmail}
               onChange={(e) => setCustomerEmail(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-white"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-gray-500 block mb-1.5">Phone</label>
+            <input
+              required
+              type="tel"
+              placeholder="+44 6 00 00 00 00"
+              value={customerPhone}
+              onChange={(e) => setCustomerPhone(e.target.value)}
+              className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-white"
+            />
+          </div>
+          <div>
+            <label className="text-xs font-medium text-gray-500 block mb-1.5">Special Requests</label>
+            <textarea
+              placeholder="Any special requests?"
+              value={specialRequests}
+              onChange={(e) => setSpecialRequests(e.target.value)}
               className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-white"
             />
           </div>

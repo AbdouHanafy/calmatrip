@@ -20,17 +20,32 @@ type Service = {
   category: string | null;
   duration?: string | null;
   popular: boolean;
-  image?: string | null; // stored as JSON array string OR single URL
+  image?: string | null;
+  features?: unknown; 
 };
 
 type ServiceFormData = {
   title: string;
+  subtitle: string;
   description: string;
   price: string;
   category: string;
   duration: string;
   active: boolean;
   popular: boolean;
+  features: string[];
+};
+
+const emptyForm: ServiceFormData = {
+  title: "",
+  subtitle: "",
+  description: "",
+  price: "",
+  category: "Transport",
+  duration: "",
+  active: true,
+  popular: false,
+  features: [],
 };
 
 // An image entry — either already uploaded (has url) or pending upload (has file)
@@ -42,17 +57,14 @@ type ImageEntry = {
   error?: string;
 };
 
-const emptyForm: ServiceFormData = {
-  title: "",
-  description: "",
-  price: "",
-  category: "Transport",
-  duration: "",
-  active: true,
-  popular: false,
-};
+
 
 const categories = ["all", "Transport", "Excursion", "Group"];
+
+function parseFeatures(raw: unknown): string[] {
+  if (Array.isArray(raw)) return raw.filter((f) => typeof f === "string");
+  return [];
+}
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -294,32 +306,33 @@ export function AdminServices() {
 
   // ── Modal helpers ──────────────────────────────────────────────────────────
 
-  const openAddModal = () => {
-    setFormData(emptyForm);
-    setImageEntries([]);
-    setEditingService(null);
-    setShowAddModal(true);
-  };
+ const openAddModal = () => {
+  setFormData(emptyForm);
+  setImageEntries([]);
+  setEditingService(null);
+  setShowAddModal(true);
+};
 
-  const openEditModal = (service: Service) => {
-    setFormData({
-      title: service.title,
-      description: service.description,
-      price: service.price,
-      category: service.category ?? "Transport",
-      duration: service.duration ?? "",
-      active: service.active,
-      popular: service.popular,
-    });
-    // Rehydrate existing images as ImageEntry[]
-    const existing = parseImages(service.image).map((url) => ({
-      id: `existing-${url}`,
-      url,
-    }));
-    setImageEntries(existing);
-    setEditingService(service);
-    setShowAddModal(true);
-  };
+const openEditModal = (service: Service) => {
+  setFormData({
+    title: service.title,
+    subtitle: service.subtitle ?? "",
+    description: service.description,
+    price: service.price,
+    category: service.category ?? "Transport",
+    duration: service.duration ?? "",
+    active: service.active,
+    popular: service.popular,
+    features: parseFeatures(service.features),
+  });
+  const existing = parseImages(service.image).map((url) => ({
+    id: `existing-${url}`,
+    url,
+  }));
+  setImageEntries(existing);
+  setEditingService(service);
+  setShowAddModal(true);
+};
 
   const closeModal = () => {
     setShowAddModal(false);
@@ -330,6 +343,22 @@ export function AdminServices() {
   };
 
   // ── Upload pending files ───────────────────────────────────────────────────
+
+  const addFeatureRow = () => {
+  setFormData((f) => ({ ...f, features: [...f.features, ""] }));
+};
+
+const updateFeatureRow = (index: number, value: string) => {
+  setFormData((f) => {
+    const next = [...f.features];
+    next[index] = value;
+    return { ...f, features: next };
+  });
+};
+
+const removeFeatureRow = (index: number) => {
+  setFormData((f) => ({ ...f, features: f.features.filter((_, i) => i !== index) }));
+};
 
   const uploadPendingFiles = async (entries: ImageEntry[]): Promise<ImageEntry[]> => {
     const pending = entries.filter((e) => !!e.file);
@@ -372,50 +401,52 @@ export function AdminServices() {
   // ── Save ───────────────────────────────────────────────────────────────────
 
   const handleSave = async () => {
-    if (!formData.title.trim() || !formData.description.trim() || !formData.price.trim()) {
-      setError("Please fill in all required fields");
-      return;
-    }
+  if (!formData.title.trim() || !formData.description.trim() || !formData.price.trim()) {
+    setError("Please fill in all required fields");
+    return;
+  }
 
-    setSaving(true);
-    setError(null);
+  setSaving(true);
+  setError(null);
 
-    try {
-      // 1. Upload any new files first
-      const resolvedImages = await uploadPendingFiles(imageEntries);
-      const imageValue = serializeImages(resolvedImages.map((e) => e.url));
+  try {
+    const resolvedImages = await uploadPendingFiles(imageEntries);
+    const imageValue = serializeImages(resolvedImages.map((e) => e.url));
 
-      // 2. Save service
-      const payload = {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        price: formData.price.trim(),
-        category: formData.category,
-        duration: formData.duration.trim() || null,
-        image: imageValue,
-        active: formData.active,
-        popular: formData.popular,
-      };
+    const cleanedFeatures = formData.features.map((f) => f.trim()).filter((f) => f.length > 0);
 
-      const url = editingService ? `/api/services/${editingService.id}` : "/api/services";
-      const method = editingService ? "PUT" : "POST";
+    const payload = {
+      title: formData.title.trim(),
+      subtitle: formData.subtitle.trim() || null,
+      description: formData.description.trim(),
+      price: formData.price.trim(),
+      category: formData.category,
+      duration: formData.duration.trim() || null,
+      image: imageValue,
+      active: formData.active,
+      popular: formData.popular,
+      features: cleanedFeatures.length > 0 ? cleanedFeatures : null,
+    };
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+    const url = editingService ? `/api/services/${editingService.id}` : "/api/services";
+    const method = editingService ? "PUT" : "POST";
 
-      if (!res.ok) throw new Error(editingService ? "Failed to update service" : "Failed to create service");
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
 
-      await fetchServices();
-      closeModal();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save service");
-    } finally {
-      setSaving(false);
-    }
-  };
+    if (!res.ok) throw new Error(editingService ? "Failed to update service" : "Failed to create service");
+
+    await fetchServices();
+    closeModal();
+  } catch (err) {
+    setError(err instanceof Error ? err.message : "Failed to save service");
+  } finally {
+    setSaving(false);
+  }
+};
 
   // ── Quick toggles ──────────────────────────────────────────────────────────
 
@@ -729,32 +760,83 @@ export function AdminServices() {
               </div>
 
               {/* Title */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Service Name <span className="text-[#87CEEB]">*</span>
-                </label>
-                <input
-                  type="text"
-                  value={formData.title}
-                  onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                  placeholder="Ex: Airport Transfer"
-                  required
-                />
-              </div>
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Service Name <span className="text-[#87CEEB]">*</span>
+  </label>
+  <input
+    type="text"
+    value={formData.title}
+    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+    placeholder="Ex: Airport Transfer"
+    required
+  />
+</div>
 
-              {/* Description */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  Description <span className="text-[#87CEEB]">*</span>
-                </label>
-                <RichTextEditor
-                  value={formData.description}
-                  onChange={(html) => setFormData({ ...formData, description: html })}
-                  placeholder="Detailed description of the service..."
-                  minHeight={180}
-                />
-              </div>
+{/* Subtitle */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Subtitle <span className="text-xs text-gray-400 font-normal">(optional)</span>
+  </label>
+  <input
+    type="text"
+    value={formData.subtitle}
+    onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+    placeholder="Ex: Arrival & Departure"
+  />
+</div>
+
+{/* Description */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Description <span className="text-[#87CEEB]">*</span>
+  </label>
+  <RichTextEditor
+    value={formData.description}
+    onChange={(html) => setFormData({ ...formData, description: html })}
+    placeholder="Detailed description of the service..."
+    minHeight={180}
+  />
+</div>
+
+{/* Features */}
+<div>
+  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
+    <span>
+      Features <span className="text-xs text-gray-400 font-normal">(optional)</span>
+    </span>
+  </label>
+  <div className="space-y-2">
+    {formData.features.map((feature, index) => (
+      <div key={index} className="flex items-center gap-2">
+        <input
+          type="text"
+          value={feature}
+          onChange={(e) => updateFeatureRow(index, e.target.value)}
+          placeholder="Ex: Real-time flight tracking"
+          className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+        />
+        <button
+          type="button"
+          onClick={() => removeFeatureRow(index)}
+          className="p-2.5 text-red-500 hover:bg-red-50 rounded-xl transition-colors shrink-0"
+        >
+          <X className="w-4 h-4" />
+        </button>
+      </div>
+    ))}
+    <button
+      type="button"
+      onClick={addFeatureRow}
+      className="flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 hover:border-[#87CEEB] hover:bg-[#87CEEB]/5 rounded-xl text-sm text-gray-500 hover:text-[#87CEEB] transition-all w-full justify-center"
+    >
+      <Plus className="w-4 h-4" />
+      Add feature
+    </button>
+  </div>
+</div>
 
               {/* Category + Price */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
