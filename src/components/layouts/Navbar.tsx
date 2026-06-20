@@ -13,7 +13,7 @@ import {
   Mail,
   ChevronDown,
 } from "lucide-react";
-import InstallPWA from "@/components/ui/InstallPWA";
+
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -33,7 +33,7 @@ export const Navbar = () => {
   return (
     <nav className="bg-white shadow-md sticky top-0 z-50">
       <div className="border-b border-gray-100">
-      <InstallPWA />
+      
         {/* Top Bar - Version professionnelle */}
         <div className="hidden lg:block bg-gradient-to-r from-gray-50 to-white py-2">
           <div className="max-w-7xl mx-auto px-6">

@@ -19,7 +19,7 @@ import {
   Phone,
   Mail,
   Settings,
-  Bell,
+
   Menu,
   Headphones,
 } from "lucide-react";
@@ -28,6 +28,8 @@ import { Navbar } from '@/components/layouts/Navbar';
 import { Footer } from '@/components/layouts/Footre';
 import { BookingForm } from "@/components/booking/Bookingform";
 import { useSession } from "next-auth/react";
+import NotificationBell from "@/components/ui/NotificationBell";
+import PushToggle from "@/components/ui/PushToggle";
 
 
 type Booking = {
@@ -241,18 +243,21 @@ useEffect(() => {
               </div>
             </div>
             <div className="flex items-center gap-3">
-              <button className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors">
-                <Bell className="w-5 h-5" />
-              </button>
+              <NotificationBell />
               <button className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors">
                 <Settings className="w-5 h-5" />
               </button>
             </div>
           </div>
         </div>
+
+        {/* Push Notifications Section */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <PushToggle />
+        </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 z-10 " >
         {/* Stats Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
           {stats.map((stat, index) => (
@@ -260,7 +265,7 @@ useEffect(() => {
               key={index}
               className="group bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
             >
-              <div className="flex items-start justify-between mb-3">
+              <div className="flex items-start justify-between mb-3 z-20">
                 <div>
                   <p className="text-xs text-gray-500 uppercase tracking-wider">{stat.label}</p>
                   <p className={`text-3xl font-bold mt-1 ${stat.textColor}`}>{stat.value}</p>

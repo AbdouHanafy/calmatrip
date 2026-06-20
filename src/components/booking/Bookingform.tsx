@@ -50,7 +50,7 @@ export function BookingForm() {
   const [slots, setSlots] = useState<TimeSlotOption[]>([]);
   const [time, setTime] = useState("");
 
-  const [useManualTime, setUseManualTime] = useState(false);
+  const [useManualTime, setUseManualTime] = useState(true);
   const [manualTime, setManualTime] = useState("");
 
   const [fromLocation, setFromLocation] = useState("");
@@ -170,8 +170,7 @@ export function BookingForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Booking failed");
 
-      router.push(`/dashboard`);
-      router.refresh();
+      window.location.replace("/dashboard");
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -308,15 +307,7 @@ export function BookingForm() {
               Select Time
             </label>
             <div className="flex gap-2 bg-gray-100 p-1 rounded-xl">
-              <button
-                type="button"
-                onClick={switchToSlots}
-                className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
-                  !useManualTime ? "bg-white shadow-md text-gray-900" : "text-gray-500 hover:text-gray-700"
-                }`}
-              >
-                Slots
-              </button>
+              
               <button
                 type="button"
                 onClick={switchToManual}
@@ -406,13 +397,13 @@ export function BookingForm() {
               <input
                 type="number"
                 min={1}
-                max={8}
+                
                 value={passengers}
                 onChange={(e) => handlePassengersChange(e.target.value)}
                 className="w-full px-4 py-3.5 rounded-2xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-gray-50/50"
               />
               <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
-                max 8
+                max 4
               </div>
             </div>
           </div>

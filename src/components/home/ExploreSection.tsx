@@ -348,10 +348,10 @@ export default function ExploreSection({
                     style={{ animationDelay: `${idx * 50}ms` }}
                   >
                     <div className="relative h-64 overflow-hidden">
-                      <Image 
+                      <img 
                         src={place.image} 
                         alt={place.title} 
-                        fill 
+                         
                         className="object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out" 
                       />
                       <div className="absolute top-5 left-5 flex flex-col gap-2">

@@ -15,6 +15,7 @@ import {
   X,
 } from "lucide-react";
 import { useState } from "react";
+import NotificationBell from "@/components/ui/NotificationBell";
 import AdminOverview from "./AdminOverview"; // ← import the dynamic version
 
 export default function AdminDashboard({ children }: { children?: React.ReactNode }) {
@@ -178,10 +179,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
                 </div>
 
                 {/* Notifications */}
-                <button className="relative p-2 rounded-xl hover:bg-gray-100 transition-colors">
-                  <Bell className="w-5 h-5 text-gray-600" />
-                  <span className="absolute top-1 right-1 w-2 h-2 bg-[#FFD700] rounded-full" />
-                </button>
+                <NotificationBell />
 
                 {/* Profile */}
                 <div className="flex items-center gap-3">
