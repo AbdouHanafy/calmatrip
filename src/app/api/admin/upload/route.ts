@@ -1,12 +1,17 @@
 // app/api/upload/route.ts
-// Uploads images to Vercel Blob storage and returns their public URLs.
+// Uploads images to Cloudinary and returns their public URLs.
 // Vercel's serverless functions have a read-only filesystem, so writing
 // to /public/uploads/ (which worked locally) fails in production — this
-// stores files in Vercel Blob instead, which is writable from any environment.
+// uploads to Cloudinary instead, which works from any environment.
 
 import { NextRequest, NextResponse } from "next/server";
-import { put } from "@vercel/blob";
-import { randomUUID } from "crypto";
+import { v2 as cloudinary } from "cloudinary";
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 5 * 1024 * 1024; // 5 MB per file
@@ -37,15 +42,21 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      const ext = file.name.split(".").pop() ?? "jpg";
-      const filename = `${randomUUID()}.${ext}`;
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
 
-      const blob = await put(`uploads/${filename}`, file, {
-        access: "public",
-        contentType: file.type,
+      const uploadResult = await new Promise<{ secure_url: string }>((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          { folder: "calmatrip/uploads", resource_type: "image" },
+          (error, result) => {
+            if (error || !result) return reject(error ?? new Error("Upload failed"));
+            resolve(result as { secure_url: string });
+          }
+        );
+        stream.end(buffer);
       });
 
-      urls.push(blob.url);
+      urls.push(uploadResult.secure_url);
     }
 
     return NextResponse.json({ urls });
