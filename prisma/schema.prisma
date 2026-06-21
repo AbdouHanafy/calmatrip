@@ -243,8 +243,8 @@ model Notification {
 model PushSubscription {
   id        Int      @id @default(autoincrement())
   userId    String?
-  role      String   // "ADMIN" | "USER" — même valeur que ton User.role
-  endpoint  String   @unique @db.VarChar(1000)
+  role      String
+  endpoint  String   @unique @db.VarChar(500)
   p256dh    String   @db.Text
   auth      String   @db.Text
   userAgent String?
