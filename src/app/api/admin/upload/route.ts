@@ -1,10 +1,11 @@
 // app/api/upload/route.ts
-// Saves uploaded images to /public/uploads/ and returns their public URLs.
-// No extra dependency needed — uses the built-in File API from Next.js.
+// Uploads images to Vercel Blob storage and returns their public URLs.
+// Vercel's serverless functions have a read-only filesystem, so writing
+// to /public/uploads/ (which worked locally) fails in production — this
+// stores files in Vercel Blob instead, which is writable from any environment.
 
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
-import { join } from "path";
+import { put } from "@vercel/blob";
 import { randomUUID } from "crypto";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
@@ -18,9 +19,6 @@ export async function POST(req: NextRequest) {
     if (!files || files.length === 0) {
       return NextResponse.json({ error: "No files provided" }, { status: 400 });
     }
-
-    const uploadDir = join(process.cwd(), "public", "uploads");
-    await mkdir(uploadDir, { recursive: true });
 
     const urls: string[] = [];
 
@@ -41,9 +39,13 @@ export async function POST(req: NextRequest) {
 
       const ext = file.name.split(".").pop() ?? "jpg";
       const filename = `${randomUUID()}.${ext}`;
-      const bytes = await file.arrayBuffer();
-      await writeFile(join(uploadDir, filename), Buffer.from(bytes));
-      urls.push(`/uploads/${filename}`);
+
+      const blob = await put(`uploads/${filename}`, file, {
+        access: "public",
+        contentType: file.type,
+      });
+
+      urls.push(blob.url);
     }
 
     return NextResponse.json({ urls });
