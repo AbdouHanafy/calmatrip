@@ -232,23 +232,24 @@ useEffect(() => {
         </div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#87CEEB] to-[#4CAF50] flex items-center justify-center shadow-lg">
-                <User className="w-8 h-8 text-white" />
-              </div>
-              <div>
-                <h1 className="text-2xl md:text-3xl font-bold">Hello, {session?.user?.name}👋</h1>
-                <p className="text-gray-300 text-sm">Welcome to your personal space</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <NotificationBell />
-              <button className="p-2 rounded-xl bg-white/10 hover:bg-white/20 transition-colors">
-                <Settings className="w-5 h-5" />
-              </button>
-            </div>
-          </div>
+          <div className="flex justify-between items-start md:items-center gap-4">
+  <div className="flex items-center gap-4">
+    <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#87CEEB] to-[#4CAF50] flex items-center justify-center shadow-lg">
+      <User className="w-8 h-8 text-white" />
+    </div>
+
+    <div>
+      <h1 className="text-2xl md:text-3xl font-bold">
+        Hello, {session?.user?.name} 👋
+      </h1>
+      <p className="text-gray-300 text-sm">
+        Welcome to your personal space
+      </p>
+    </div>
+  </div>
+
+  <NotificationBell />
+</div>
         </div>
 
         {/* Push Notifications Section */}
@@ -452,128 +453,6 @@ useEffect(() => {
                   <p className="text-gray-600 mt-2">Fill out the form below to book your next trip</p>
                 </div>
 
-                {/* <form onSubmit={handleSubmitBooking} className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Service Type <span className="text-[#87CEEB]">*</span>
-                    </label>
-                    <select
-                      required
-                      value={newBooking.service}
-                      onChange={(e) => setNewBooking({ ...newBooking, service: e.target.value })}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all bg-white"
-                    >
-                      <option value="">Select a service</option>
-                      <option value="airport">Airport Transfer</option>
-                      <option value="private">Private Transport</option>
-                      <option value="excursion">Tourist Excursion</option>
-                      <option value="group">Group Transport</option>
-                    </select>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Date <span className="text-[#87CEEB]">*</span>
-                      </label>
-                      <input
-                        type="date"
-                        required
-                        value={newBooking.date}
-                        onChange={(e) => setNewBooking({ ...newBooking, date: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Time <span className="text-[#87CEEB]">*</span>
-                      </label>
-                      <input
-                        type="time"
-                        required
-                        value={newBooking.time}
-                        onChange={(e) => setNewBooking({ ...newBooking, time: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Pickup Point <span className="text-[#87CEEB]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={newBooking.from}
-                      onChange={(e) => setNewBooking({ ...newBooking, from: e.target.value })}
-                      placeholder="Ex: Tunis-Carthage Airport"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Destination <span className="text-[#87CEEB]">*</span>
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      value={newBooking.to}
-                      onChange={(e) => setNewBooking({ ...newBooking, to: e.target.value })}
-                      placeholder="Ex: Golden Tulip Hotel"
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Number of Passengers <span className="text-[#87CEEB]">*</span>
-                      </label>
-                      <input
-                        type="number"
-                        required
-                        min="1"
-                        max="50"
-                        value={newBooking.passengers}
-                        onChange={(e) => setNewBooking({ ...newBooking, passengers: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Contact Phone
-                      </label>
-                      <input
-                        type="tel"
-                        placeholder="+216 XX XXX XXX"
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Special Requests
-                    </label>
-                    <textarea
-                      value={newBooking.specialRequests}
-                      onChange={(e) => setNewBooking({ ...newBooking, specialRequests: e.target.value })}
-                      rows={3}
-                      placeholder="Baby seat, specific meal, etc..."
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all resize-none"
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full px-8 py-4 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#87CEEB]/30 transform hover:scale-[1.02] transition-all duration-300 flex items-center justify-center gap-2 group"
-                  >
-                    <Plus className="w-5 h-5 group-hover:rotate-90 transition-transform duration-300" />
-                    Create Booking
-                  </button>
-                </form> */}
                 <BookingForm />
               </div>
             </div>
@@ -593,11 +472,11 @@ useEffect(() => {
               </div>
             </div>
             <div className="flex gap-3">
-              <a href="tel:+21670000000" className="px-5 py-2.5 bg-white text-[#87CEEB] rounded-xl font-medium hover:shadow-md transition-all duration-300 flex items-center gap-2 border border-gray-200">
+              <a href="tel:+21621622972" className="px-5 py-2.5 bg-white text-[#87CEEB] rounded-xl font-medium hover:shadow-md transition-all duration-300 flex items-center gap-2 border border-gray-200">
                 <Phone className="w-4 h-4" />
                 <span>Call</span>
               </a>
-              <Link href={`https://wa.me/21670000000`} className="px-5 py-2.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
+              <Link href={`https://wa.me/21621622972`} className="px-5 py-2.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-medium hover:shadow-lg transition-all duration-300 flex items-center gap-2">
                 <Mail className="w-4 h-4" />
                 <span>whatsapp</span>
               </Link>

@@ -127,7 +127,7 @@ const allPlaces: Place[] = [
     id: 6,
     title: "El Jem Amphitheatre",
     category: "Sight",
-    image: "https://images.unsplash.com/photo-1549444158-947703358057?auto=format&fit=crop&q=80&w=1000",
+    image: "/images/explore/El Jem Amphitheatre.jpg",
     description: "The world's third largest Roman amphitheatre and a UNESCO World Heritage site.",
     rating: 4.9,
     reviews: 3200,
@@ -137,20 +137,7 @@ const allPlaces: Place[] = [
     budget: 1,
     coordinates: { lat: 35.2961, lng: 10.7064 }
   },
-  {
-    id: 7,
-    title: "Djerba Hood",
-    category: "Activity",
-    image: "https://images.unsplash.com/photo-1534430480872-3498386e7856?auto=format&fit=crop&q=80&w=1000",
-    description: "An open-air museum of street art in the traditional village of Erriadh.",
-    rating: 4.7,
-    reviews: 1450,
-    tags: ["Art", "Culture", "Walk"],
-    duration: "2 hours",
-    city: "Djerba",
-    budget: 1,
-    coordinates: { lat: 33.8406, lng: 10.8524 }
-  }
+  
 ];
 
 export default function ExplorePage() {
@@ -405,22 +392,9 @@ export default function ExplorePage() {
                           </div>
                         </div>
                         
-                        <h3 className="text-2xl font-bold text-[#1E3A3A] mb-3 group-hover:text-[#D4A373] transition-colors duration-300 tracking-tight leading-tight">
-                          {place.title}
-                        </h3>
-                        <p className="text-gray-500/80 leading-relaxed text-sm mb-8 line-clamp-2 italic font-medium">
-                          {place.description}
-                        </p>
                         
-                        <div className="flex items-center justify-between pt-6 border-t border-gray-50">
-                          <div className="flex items-center gap-1">
-                             <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mr-2 leading-none">Budget</span>
-                             <span className="text-sm font-black text-[#D4A373] leading-none">{"$".repeat(place.budget)}</span>
-                          </div>
-                          <button className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#1E3A3A] group-hover:text-[#D4A373] transition-all">
-                            Discovery <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
-                          </button>
-                        </div>
+                        
+                        
                       </div>
                     </div>
                   ))}

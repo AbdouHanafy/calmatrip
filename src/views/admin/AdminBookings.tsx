@@ -188,16 +188,7 @@ export default function AdminBookings() {
           </h1>
           <p className="text-gray-500 mt-1">View and manage all bookings</p>
         </div>
-        <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-5 py-2.5 border border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all">
-            <Printer className="w-5 h-5" />
-            Print
-          </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-semibold hover:shadow-lg transition-all">
-            <Download className="w-5 h-5" />
-            Export
-          </button>
-        </div>
+        
       </div>
 
       {/* Stats */}

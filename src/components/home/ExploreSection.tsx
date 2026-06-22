@@ -15,8 +15,9 @@ import {
   Clock,
   ChevronRight
 } from 'lucide-react';
-import Image from 'next/image';
 import dynamic from 'next/dynamic';
+import { useRouter } from 'next/navigation';
+
 
 const MapExplorer = dynamic(() => import('@/components/explore/MapExplorer'), { 
   ssr: false,
@@ -122,7 +123,7 @@ const defaultPlaces: Place[] = [
     id: 6,
     title: "El Jem Amphitheatre",
     category: "Sight",
-    image: "https://images.unsplash.com/photo-1549444158-947703358057?auto=format&fit=crop&q=80&w=1000",
+    image: "/images/explore/El Jem Amphitheatre.jpg",
     description: "The world's third largest Roman amphitheatre and a UNESCO World Heritage site.",
     rating: 4.9,
     reviews: 3200,
@@ -150,6 +151,7 @@ export default function ExploreSection({
   places = defaultPlaces,
   className = ""
 }: ExploreSectionProps) {
+  const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCity, setSelectedCity] = useState("All Cities");
   const [budgetLimit, setBudgetLimit] = useState(3);
@@ -390,11 +392,8 @@ export default function ExploreSection({
                       </p>
                       
                       <div className="flex items-center justify-between pt-4 border-t border-gray-50">
-                        <div className="flex items-center gap-1">
-                          <span className="text-[10px] font-black text-gray-300 uppercase tracking-widest mr-2 leading-none">Budget</span>
-                          <span className="text-sm font-black text-[#D4A373] leading-none">{"$".repeat(place.budget)}</span>
-                        </div>
-                        <button className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#1E3A3A] group-hover:text-[#D4A373] transition-all">
+                        <button className="flex items-center gap-2 text-xs font-black uppercase tracking-widest text-[#1E3A3A] group-hover:text-[#D4A373] transition-all" 
+                        onClick={() => {router.push(`/explore`)}}>
                           Explore <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
                         </button>
                       </div>

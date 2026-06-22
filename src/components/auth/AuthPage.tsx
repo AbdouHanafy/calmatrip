@@ -37,7 +37,7 @@ export function AuthPage({ mode, callbackUrl = "/dashboard" }: AuthPageProps) {
         <div className="text-center mb-8">
           <Link href="/" className="inline-flex flex-col items-center gap-3 group">
             <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#87CEEB] via-[#4CAF50] to-[#FFD700] flex items-center justify-center shadow-lg shadow-[#87CEEB]/20 group-hover:scale-105 transition-transform duration-300">
-              <Plane className="w-8 h-8 text-white" />
+             <img src="/images/logo-calma-trip.jpg" alt="Calmatrip Logo" className="w-full h-full rounded-2xl" />
             </div>
             <span className="text-2xl font-extrabold bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">
               Calmatrip

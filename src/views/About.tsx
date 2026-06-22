@@ -6,8 +6,8 @@ import { Footer } from '@/components/layouts/Footre';
 
 export default function About() {
   const stats = [
-    { value: "10+", label: "Years of Experience", icon: Award, gradient: "from-[#87CEEB] to-[#4CAF50]" },
-    { value: "5000+", label: "Happy Clients", icon: Users, gradient: "from-[#FFD700] to-[#FFC107]" },
+    { value: "3+", label: "Years of Experience", icon: Award, gradient: "from-[#87CEEB] to-[#4CAF50]" },
+    { value: "500+", label: "Happy Clients", icon: Users, gradient: "from-[#FFD700] to-[#FFC107]" },
     { value: "50+", label: "Modern Vehicles", icon: Clock, gradient: "from-[#4CAF50] to-[#45A049]" },
     { value: "98%", label: "Client Satisfaction", icon: Star, gradient: "from-[#87CEEB] to-[#FFD700]" },
   ];
@@ -40,19 +40,13 @@ export default function About() {
   ];
 
   const timeline = [
-    { year: "2015", event: "Sahara founded with 5 vehicles", icon: Briefcase, completed: true },
-    { year: "2018", event: "Fleet expanded to 20 vehicles", icon: Target, completed: true },
-    { year: "2020", event: "Launch of online booking service", icon: Clock, completed: true },
-    { year: "2023", event: "Partnership with major Tunisian hotels", icon: Award, completed: true },
-    { year: "2026", event: "Over 50 vehicles and services across Tunisia", icon: Star, completed: true },
+    { year: "2023", event: "Calma trip founded with one vehicle", icon: Briefcase, completed: true },
+    { year: "2024", event: "", icon: Target, completed: true },
+    { year: "2025", event: "Partnership with major Tunisian hotels", icon: Award, completed: true },
+    { year: "2026", event: "Launch of online booking service", icon: Clock, completed: true },
   ];
 
-  const team = [
-    { name: "Mohamed Ben Salah", role: "General Manager", experience: "15 years experience", icon: "👨‍💼", gradient: "from-[#87CEEB] to-[#4CAF50]" },
-    { name: "Fatima Trabelsi", role: "Operations Manager", experience: "10 years experience", icon: "👩‍💼", gradient: "from-[#FFD700] to-[#FFC107]" },
-    { name: "Ahmed Gharbi", role: "Driver Team Leader", experience: "12 years experience", icon: "👨‍✈️", gradient: "from-[#4CAF50] to-[#45A049]" },
-    { name: "Nadia Mansour", role: "Sales Manager", experience: "8 years experience", icon: "👩‍💻", gradient: "from-[#87CEEB] to-[#FFD700]" },
-  ];
+  const team = [""];
 
   return (
     <>
@@ -87,11 +81,11 @@ export default function About() {
             <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
               About{" "}
               <span className="bg-gradient-to-r from-[#87CEEB] via-[#FFD700] to-[#4CAF50] bg-clip-text text-transparent">
-                Sahara
+                Calma Trip
               </span>
             </h1>
             <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Your trusted partner to discover the beauty and cultural richness of Tunisia since 2015
+              Your trusted partner to discover the beauty and cultural richness of Tunisia since 2023
             </p>
           </div>
 
@@ -130,11 +124,10 @@ export default function About() {
                 </div>
                 <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Mission</h2>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  At Sahara, our mission is to make your experience in Tunisia unforgettable by offering the highest quality transport and excursion services.
+                   We are a Tunisia-based tourism platform offering transfers, excursions, local recommendations and a wide range of tourism services.
                 </p>
                 <p className="text-gray-600 leading-relaxed mb-6">
-                  We believe every journey should be a memorable adventure, which is why we go above and beyond to exceed your expectations at every step.
-                </p>
+                  We help you understand your destination before you arrive so you can enjoy a smooth, stress-free journey.                </p>
                 <div className="space-y-3">
                   {["Personalized customer service", "Modern and comfortable vehicles", "Professional and courteous drivers"].map((item, idx) => (
                     <div key={idx} className="flex items-center group/item">
@@ -275,7 +268,7 @@ export default function About() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {/* <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {team.map((member, index) => (
               <div key={index} className="group bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
                 <div className={`h-1.5 bg-gradient-to-r ${member.gradient}`}></div>
@@ -293,7 +286,7 @@ export default function About() {
                 </div>
               </div>
             ))}
-          </div>
+          </div> */}
 
           <div className="mt-12 text-center max-w-3xl mx-auto">
             <div className="bg-gradient-to-r from-[#87CEEB]/10 via-[#4CAF50]/10 to-[#FFD700]/10 rounded-2xl p-8">

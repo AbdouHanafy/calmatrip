@@ -41,7 +41,7 @@ export const Navbar = () => {
               <div className="flex items-center space-x-6">
                 <div className="flex items-center space-x-2 text-gray-500">
                   <Phone className="w-3 h-3" />
-                  <span>+216 70 000 000</span>
+                  <span>+216 21 622 972</span>
                 </div>
                 <div className="flex items-center space-x-2 text-gray-500">
                   <Mail className="w-3 h-3" />
@@ -250,7 +250,7 @@ export const Navbar = () => {
                 <div className="mt-4 pt-4 border-t border-gray-100 px-4 space-y-2">
                   <div className="flex items-center space-x-3 text-sm text-gray-500">
                     <Phone className="w-4 h-4" />
-                    <span>+216 70 000 000</span>
+                    <span>+216 21 622 972</span>
                   </div>
                   <div className="flex items-center space-x-3 text-sm text-gray-500">
                     <Mail className="w-4 h-4" />

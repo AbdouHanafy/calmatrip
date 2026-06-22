@@ -97,7 +97,7 @@ export default function CTASection() {
           </a>
 
           <a
-            href="tel:+21600000000"
+            href="tel:+21621622972"
             className="px-10 py-5 border border-white/20 text-white/70 uppercase tracking-[0.2em] text-sm flex items-center gap-3 hover:border-white/50 hover:text-white transition"
           >
             <Phone className="w-4 h-4" />

@@ -255,7 +255,7 @@ const WHY_CHOOSE_US = [
 ];
 
 const STATS = [
-  { value: "5000+", label: "Happy clients",      icon: Star      },
+  { value: "500+", label: "Happy clients",      icon: Star      },
   { value: "50+",   label: "Destinations",       icon: MapPin    },
   { value: "98%",   label: "Satisfaction rate",  icon: Award     },
   { value: "24/7",  label: "Support available",  icon: Headphones },
@@ -461,7 +461,7 @@ export default function Services() {
                   </div>
                   <div className="space-y-3">
                     <div className="flex items-center gap-3 text-sm"><Mail className="w-4 h-4 text-[#87CEEB]" /><span className="text-gray-300">contact@sahara-tunisia.com</span></div>
-                    <div className="flex items-center gap-3 text-sm"><Phone className="w-4 h-4 text-[#87CEEB]" /><span className="text-gray-300">+216 70 000 000</span></div>
+                    <div className="flex items-center gap-3 text-sm"><Phone className="w-4 h-4 text-[#87CEEB]" /><span className="text-gray-300">+216 21 622 972</span></div>
                   </div>
                 </div>
               </div>

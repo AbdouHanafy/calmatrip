@@ -1,5 +1,7 @@
 import prisma from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
+import { createNotification } from "@/lib/notifications";
+import { sendPushToRole, sendPushToUser } from "@/lib/push";
 
 // GET /api/admin/bookings?status=all&search=&page=1
 export async function GET(req: NextRequest) {
@@ -74,19 +76,75 @@ export async function PATCH(req: NextRequest) {
     const { id, status } = body as { id: number; status: string };
 
     const validStatuses = ["pending", "confirmed", "completed", "cancelled"];
+
     if (!id || !validStatuses.includes(status)) {
-      return NextResponse.json({ error: "Invalid id or status" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid id or status" },
+        { status: 400 }
+      );
     }
 
+    // 1. récupérer booking actuelle
+    const existing = await prisma.booking.findUnique({
+      where: { id },
+    });
+
+    if (!existing) {
+      return NextResponse.json(
+        { error: "Booking not found" },
+        { status: 404 }
+      );
+    }
+
+    // 2. update booking
     const updated = await prisma.booking.update({
       where: { id },
       data: { status },
     });
 
+    // 3. notifications
+    const notifications: Promise<any>[] = [];
+
+    // user notification (si email existe)
+    if (existing.customerEmail) {
+      const user = await prisma.user.findUnique({
+        where: { email: existing.customerEmail },
+      });
+
+      if (user) {
+        notifications.push(
+          createNotification({
+            recipient: "user",
+            userId: user.id,
+            type: "booking_status_updated",
+            title: "Statut de réservation mis à jour",
+            body: `Votre réservation est maintenant: ${status}`,
+            link: "/dashboard/bookings",
+            metadata: {
+              bookingId: existing.id,
+              status,
+            },
+          })
+        );
+
+        notifications.push(
+          sendPushToUser(user.id, {
+            title: "Mise à jour réservation",
+            body: `Statut: ${status}`,
+            link: "/dashboard/bookings",
+          })
+        );
+      }
+    }
+    await Promise.all(notifications);
+
     return NextResponse.json(updated);
   } catch (error) {
     console.error("[ADMIN_BOOKINGS_PATCH]", error);
-    return NextResponse.json({ error: "Failed to update booking" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update booking" },
+      { status: 500 }
+    );
   }
 }
 

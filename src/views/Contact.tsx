@@ -44,7 +44,7 @@ export default function Contact() {
     {
       icon: Phone,
       title: "Phone",
-      details: ["+216 70 000 000", "+216 70 000 001"],
+      details: ["+216 21 622 972", "+216 70 000 001"],
       description: "Available 24/7",
       gradient: "from-[#87CEEB] to-[#4CAF50]",
       action: "Call now",
@@ -78,7 +78,7 @@ export default function Contact() {
   const faqs = [
     {
       q: "How can I book a service?",
-      a: "You can book online via our platform, by phone at +216 70 000 000, or by visiting our office in Tunis. Our team is available 24/7 to assist you.",
+      a: "You can book online via our platform, by phone at +216 21 622 972, or by visiting our office in Tunis. Our team is available 24/7 to assist you.",
       icon: Car,
     },
     {
@@ -334,7 +334,7 @@ export default function Contact() {
                 </div>
                 <MapPin className="w-20 h-20 text-[#87CEEB] opacity-50" />
                 <div className="absolute bottom-4 left-4 bg-white rounded-lg px-3 py-1.5 shadow-md">
-                  <p className="text-xs text-gray-600">📍 Avenue Habib Bourguiba, Tunis</p>
+                  <p className="text-xs text-gray-600">📍 Avenue Habib Bourguiba, Hammamet</p>
                 </div>
               </div>
 
@@ -466,14 +466,14 @@ export default function Contact() {
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <a
-                  href="tel:+21670000000"
+                  href="tel:+21621622972"
                   className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-[#1B4F6E] rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 group"
                 >
                   <Phone className="w-4 h-4" />
                   <span>Call now</span>
                 </a>
                 <Link
-                  href="/services"
+                  href="https://wa.me/21621622972"
                   className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-black/20 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-black/30 transition-all duration-300 border border-white/30"
                 >
                   <MessageCircle className="w-4 h-4" />

@@ -113,7 +113,7 @@ async function main() {
   // FAQs
   await prisma.fAQ.createMany({
     data: [
-      { question: "How can I book a service?", answer: "You can book online via our platform, by phone at +216 70 000 000, or by visiting our office. Our team is available 24/7.", icon: "Car", order: 1 },
+      { question: "How can I book a service?", answer: "You can book online via our platform, by phone at +216 21 622 972, or by visiting our office. Our team is available 24/7.", icon: "Car", order: 1 },
       { question: "What payment methods are accepted?", answer: "We accept cash, credit cards (Visa, Mastercard), and bank transfers.", icon: "CreditCard", order: 2 },
       { question: "Can I cancel my reservation?", answer: "Yes, free cancellation up to 24 hours before the scheduled date for a full refund.", icon: "Clock", order: 3 },
       { question: "Do you offer services for groups?", answer: "Absolutely! Solutions for groups up to 50 people with minibuses and buses.", icon: "Users", order: 4 },

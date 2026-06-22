@@ -1,8 +1,6 @@
 'use client';
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
-// ─── Types ────────────────────────────────────────────────────────────────────
-
 export interface Product {
   id: number;
   name: string;
@@ -46,47 +44,55 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const [wishlist, setWishlist] = useState<number[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
-  // Load from localStorage on mount
   useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem(CART_KEY);
-      const savedWishlist = localStorage.getItem(WISHLIST_KEY);
-      if (savedCart) setCart(JSON.parse(savedCart));
-      if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
-    } catch {
-      // ignore corrupt storage
-    }
+    const savedCart = localStorage.getItem(CART_KEY);
+    const savedWishlist = localStorage.getItem(WISHLIST_KEY);
+
+    if (savedCart) setCart(JSON.parse(savedCart));
+    if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
+
     setHydrated(true);
   }, []);
 
-  // Persist on change
   useEffect(() => {
-    if (hydrated) localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    if (hydrated) {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    }
   }, [cart, hydrated]);
 
   useEffect(() => {
-    if (hydrated) localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
+    if (hydrated) {
+      localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
+    }
   }, [wishlist, hydrated]);
 
+  // 🔥 FIX IMPORTANT: productId + size unique
   const addToCart = (product: Product, quantity = 1, size?: string) => {
     setCart((prev) => {
       const existing = prev.find(
-        (item) => item.productId === product.id && item.selectedSize === size
+        (item) =>
+          item.productId === product.id &&
+          item.selectedSize === size
       );
+
       if (existing) {
-        const nextQty = Math.min(existing.quantity + quantity, product.stock);
         return prev.map((item) =>
-          item.productId === product.id && item.selectedSize === size
-            ? { ...item, quantity: nextQty }
+          item.productId === product.id &&
+          item.selectedSize === size
+            ? {
+                ...item,
+                quantity: Math.min(item.quantity + quantity, product.stock),
+              }
             : item
         );
       }
+
       return [
         ...prev,
         {
           productId: product.id,
-          quantity: Math.min(quantity, product.stock),
           product,
+          quantity: Math.min(quantity, product.stock),
           selectedSize: size,
         },
       ];
@@ -95,19 +101,31 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
   const removeFromCart = (productId: number, size?: string) => {
     setCart((prev) =>
-      prev.filter((item) => !(item.productId === productId && item.selectedSize === size))
+      prev.filter(
+        (item) =>
+          !(item.productId === productId && item.selectedSize === size)
+      )
     );
   };
 
-  const updateCartQuantity = (productId: number, quantity: number, size?: string) => {
+  const updateCartQuantity = (
+    productId: number,
+    quantity: number,
+    size?: string
+  ) => {
     if (quantity <= 0) {
       removeFromCart(productId, size);
       return;
     }
+
     setCart((prev) =>
       prev.map((item) =>
-        item.productId === productId && item.selectedSize === size
-          ? { ...item, quantity: Math.min(quantity, item.product.stock) }
+        item.productId === productId &&
+        item.selectedSize === size
+          ? {
+              ...item,
+              quantity: Math.min(quantity, item.product.stock),
+            }
           : item
       )
     );
@@ -117,14 +135,24 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
   const toggleWishlist = (productId: number) => {
     setWishlist((prev) =>
-      prev.includes(productId) ? prev.filter((id) => id !== productId) : [...prev, productId]
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
     );
   };
 
-  const isWishlisted = (productId: number) => wishlist.includes(productId);
+  const isWishlisted = (productId: number) =>
+    wishlist.includes(productId);
 
-  const cartTotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
-  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const cartTotal = cart.reduce(
+    (sum, item) => sum + item.product.price * item.quantity,
+    0
+  );
+
+  const cartCount = cart.reduce(
+    (sum, item) => sum + item.quantity,
+    0
+  );
 
   return (
     <MarketplaceContext.Provider
@@ -148,6 +176,7 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
 export function useMarketplace() {
   const ctx = useContext(MarketplaceContext);
-  if (!ctx) throw new Error("useMarketplace must be used within MarketplaceProvider");
+  if (!ctx)
+    throw new Error("useMarketplace must be used within MarketplaceProvider");
   return ctx;
 }

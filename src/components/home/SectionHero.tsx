@@ -3,6 +3,7 @@ import { useState, useEffect, useRef, type CSSProperties } from "react";
 import { MapPin, ArrowRight,  } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 
 
 
@@ -24,6 +25,7 @@ function Ticker({ items }: { items: string[] }) {
 
 export function SectionHero() {
 const [bookingType, setBookingType] = useState('Transfer');
+const router = useRouter();
 
   return (
     <><section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0A1A2F]">
@@ -64,7 +66,7 @@ const [bookingType, setBookingType] = useState('Transfer');
                   {/* Stats */}
                   <div className="grid grid-cols-3 gap-6 pt-10 border-t border-white/10">
                       <div>
-                          <div className="text-3xl font-bold text-white">5k+</div>
+                          <div className="text-3xl font-bold text-white">500+</div>
                           <div className="text-sm text-gray-100 uppercase tracking-widest mt-1">Happy Clients</div>
                       </div>
                       <div>
@@ -120,7 +122,8 @@ const [bookingType, setBookingType] = useState('Transfer');
                           </div>
                       </div>
 
-                      <button className="w-full py-4 mt-4 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-[#4CAF50]/30 transition-all hover:-translate-y-0.5">
+                      <button className="w-full py-4 mt-4 bg-gradient-to-r from-[#d7f0fa] to-[#4CAF50] text-white rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-[#4CAF50]/30 transition-all hover:-translate-y-0.5"
+                      onClick={() => {router.push(`/dashboard`)}}>
                           Booking Now
                       </button>
                   </div>

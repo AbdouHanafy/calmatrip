@@ -8,34 +8,42 @@ type PushState = "idle" | "loading" | "granted" | "denied" | "unsupported";
 export function usePushSubscription() {
   const [state, setState] = useState<PushState>("idle");
 
-  const isSupported =
+  const [isSupported, setIsSupported] = useState<boolean | null>(null);
+
+  // ─── Vérifier l'état actuel au mount ────────────────────────
+  useEffect(() => {
+  const supported =
     typeof window !== "undefined" &&
     "serviceWorker" in navigator &&
     "PushManager" in window;
 
-  // ─── Vérifier l'état actuel au mount ────────────────────────
-  useEffect(() => {
-    if (!isSupported) {
-      setState("unsupported");
+  setIsSupported(supported);
+
+  if (!supported) {
+    setState("unsupported");
+    return;
+  }
+
+  const checkPermission = async () => {
+    const permission = Notification.permission;
+
+    if (permission === "denied") {
+      setState("denied");
       return;
     }
 
-    const checkPermission = async () => {
-      const permission = Notification.permission;
-      if (permission === "denied") {
-        setState("denied");
-        return;
-      }
-      if (permission === "granted") {
-        // Vérifier si déjà abonné
-        const reg = await navigator.serviceWorker.ready;
-        const existing = await reg.pushManager.getSubscription();
-        if (existing) setState("granted");
-      }
-    };
+    if (permission === "granted") {
+      const reg = await navigator.serviceWorker.ready;
+      const existing = await reg.pushManager.getSubscription();
 
-    checkPermission();
-  }, [isSupported]);
+      if (existing) {
+        setState("granted");
+      }
+    }
+  };
+
+  checkPermission();
+}, []);
 
   // ─── S'abonner ───────────────────────────────────────────────
   const subscribe = async () => {

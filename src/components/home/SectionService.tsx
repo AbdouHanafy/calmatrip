@@ -1,13 +1,9 @@
-
-'use client';
+"use client";
 
 import { useEffect, useState } from "react";
-import {
-  ArrowRight,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 import { ZelligePattern } from "@/components/ui/ZelligePattern";
+import { useRouter } from "next/navigation";
 
 interface Service {
   id: number;
@@ -31,17 +27,12 @@ function htmlTextLength(html: string) {
   return html.replace(/<[^>]+>/g, "").trim().length;
 }
 
-export default function SectionService({
-  services,
-}: Props) {
-  const [activeService, setActiveService] =
-    useState(0);
+export default function SectionService({ services }: Props) {
+  const [activeService, setActiveService] = useState(0);
 
-  const [currentImageIndex, setCurrentImageIndex] =
-    useState(0);
+  const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
-  const [expanded, setExpanded] =
-    useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   useEffect(() => {
     setCurrentImageIndex(0);
@@ -49,37 +40,28 @@ export default function SectionService({
   }, [activeService]);
 
   const active = services[activeService];
+  const router = useRouter();
 
   const nextImage = () => {
     if (!active?.images?.length) return;
 
-    setCurrentImageIndex(
-      (prev) =>
-        (prev + 1) % active.images.length
-    );
+    setCurrentImageIndex((prev) => (prev + 1) % active.images.length);
   };
 
   const prevImage = () => {
     if (!active?.images?.length) return;
 
     setCurrentImageIndex(
-      (prev) =>
-        (prev - 1 + active.images.length) %
-        active.images.length
+      (prev) => (prev - 1 + active.images.length) % active.images.length,
     );
   };
 
-  const isLong =
-    htmlTextLength(
-      active?.description || ""
-    ) > DESCRIPTION_LIMIT;
+  const isLong = htmlTextLength(active?.description || "") > DESCRIPTION_LIMIT;
 
   if (!services.length) {
     return (
       <section className="py-28 bg-[#FAEDCD]">
-        <div className="max-w-7xl mx-auto px-6">
-          Chargement...
-        </div>
+        <div className="max-w-7xl mx-auto px-6">Chargement...</div>
       </section>
     );
   }
@@ -108,46 +90,37 @@ export default function SectionService({
           <h2 className="font-display text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1] text-gray-900 mb-6">
             Everything you
             <br />
-            <span className="italic font-300 text-[#D4A373]">
-              need
-            </span>
+            <span className="italic font-300 text-[#D4A373]">need</span>
           </h2>
 
           <p className="font-sans-clean text-gray-600 text-base leading-relaxed">
-            From the airport to your hotel,
-            from desert excursions to cultural
-            tours — we craft every journey as
-            an experience.
+            From the airport to your hotel, from desert excursions to cultural
+            tours — we craft every journey as an experience.
           </p>
         </div>
 
         {/* Tabs */}
         <div className="flex flex-wrap gap-2 mb-12">
-          {services.map(
-            (service, index) => (
-              <button
-                key={service.id}
-                onClick={() =>
-                  setActiveService(index)
-                }
-                className={`font-sans-clean text-sm font-500 px-5 py-2.5 rounded-full transition-all duration-300 ${
-                  activeService === index
-                    ? "text-white shadow-lg"
-                    : "bg-white text-gray-500 hover:text-gray-900 border border-gray-200"
-                }`}
-                style={
-                  activeService === index
-                    ? {
-                        background:
-                          service.color,
-                      }
-                    : {}
-                }
-              >
-                {service.title}
-              </button>
-            )
-          )}
+          {services.map((service, index) => (
+            <button
+              key={service.id}
+              onClick={() => setActiveService(index)}
+              className={`font-sans-clean text-sm font-500 px-5 py-2.5 rounded-full transition-all duration-300 ${
+                activeService === index
+                  ? "text-white shadow-lg"
+                  : "bg-white text-gray-500 hover:text-gray-900 border border-gray-200"
+              }`}
+              style={
+                activeService === index
+                  ? {
+                      background: service.color,
+                    }
+                  : {}
+              }
+            >
+              {service.title}
+            </button>
+          ))}
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
@@ -163,7 +136,7 @@ export default function SectionService({
               border: `1px solid ${active.color}30`,
             }}
           >
-            <div className="absolute inset-0 opacity-5">
+            <div className="absolute inset-0 opacity-5 pointer-events-none">
               <ZelligePattern />
             </div>
 
@@ -185,9 +158,7 @@ export default function SectionService({
             <div className="relative w-full h-64 mb-6 rounded-2xl overflow-hidden bg-gray-100">
               <img
                 src={
-                  active.images?.[
-                    currentImageIndex
-                  ] ||
+                  active.images?.[currentImageIndex] ||
                   "/placeholder-service.jpg"
                 }
                 alt={active.title}
@@ -211,24 +182,17 @@ export default function SectionService({
                   </button>
 
                   <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-2">
-                    {active.images.map(
-                      (_, idx) => (
-                        <button
-                          key={idx}
-                          onClick={() =>
-                            setCurrentImageIndex(
-                              idx
-                            )
-                          }
-                          className={`h-2 rounded-full transition-all ${
-                            idx ===
-                            currentImageIndex
-                              ? "w-8 bg-[#D4A373]"
-                              : "w-2 bg-white/60"
-                          }`}
-                        />
-                      )
-                    )}
+                    {active.images.map((_, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => setCurrentImageIndex(idx)}
+                        className={`h-2 rounded-full transition-all ${
+                          idx === currentImageIndex
+                            ? "w-8 bg-[#D4A373]"
+                            : "w-2 bg-white/60"
+                        }`}
+                      />
+                    ))}
                   </div>
                 </>
               )}
@@ -251,60 +215,47 @@ export default function SectionService({
             <div className="mb-6">
               <div
                 className={`font-sans-clean text-gray-600 leading-relaxed ${
-                  !expanded && isLong
-                    ? "max-h-[120px] overflow-hidden"
-                    : ""
+                  !expanded && isLong ? "max-h-[120px] overflow-hidden" : ""
                 }`}
                 dangerouslySetInnerHTML={{
-                  __html:
-                    active.description,
+                  __html: active.description,
                 }}
               />
 
               {isLong && (
                 <button
-                  onClick={() =>
-                    setExpanded(
-                      !expanded
-                    )
-                  }
+                  onClick={() => setExpanded(!expanded)}
                   className="mt-2 text-sm font-semibold text-[#D4A373]"
                 >
-                  {expanded
-                    ? "Show less ↑"
-                    : "Show more ↓"}
+                  {expanded ? "Show less ↑" : "Show more ↓"}
                 </button>
               )}
             </div>
 
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-xs text-gray-400 uppercase">
-                  From
-                </p>
+                <p className="text-xs text-gray-400 uppercase">From</p>
 
                 <p
                   className="font-display text-2xl font-bold"
                   style={{
-                    color:
-                      active.color,
+                    color: active.color,
                   }}
                 >
                   {active.price}
                 </p>
               </div>
 
-              <a
-                href="/services"
-                className="flex items-center gap-2 px-6 py-3 rounded-xl text-white"
-                style={{
-                  background:
-                    active.color,
+              <button
+                onClick={() => {
+                  router.push("/services");
                 }}
+                className="flex items-center gap-2 px-6 py-3 rounded-xl text-white"
+                style={{ background: active.color }}
               >
                 Book
                 <ArrowRight className="w-4 h-4" />
-              </a>
+              </button>
             </div>
           </div>
 
@@ -317,60 +268,36 @@ export default function SectionService({
               </p>
 
               <div className="space-y-3">
-                {active.features?.map(
-                  (
-                    feature,
-                    index
-                  ) => (
+                {active.features?.map((feature, index) => (
+                  <div key={index} className="flex items-center gap-3">
                     <div
-                      key={index}
-                      className="flex items-center gap-3"
+                      className="w-5 h-5 rounded-full flex items-center justify-center"
+                      style={{
+                        background: active.color,
+                      }}
                     >
-                      <div
-                        className="w-5 h-5 rounded-full flex items-center justify-center"
-                        style={{
-                          background:
-                            active.color,
-                        }}
-                      >
-                        ✓
-                      </div>
-
-                      <span className="text-sm text-gray-700">
-                        {feature}
-                      </span>
+                      ✓
                     </div>
-                  )
-                )}
+
+                    <span className="text-sm text-gray-700">{feature}</span>
+                  </div>
+                ))}
               </div>
             </div>
 
             {/* Other services */}
             <div className="grid gap-3 flex-1">
               {services
-                .filter(
-                  (_, i) =>
-                    i !==
-                    activeService
-                )
+                .filter((_, i) => i !== activeService)
                 .map((service) => {
-                  const Icon =
-                    service.icon;
+                  const Icon = service.icon;
 
                   return (
                     <button
-                      key={
-                        service.id
-                      }
+                      key={service.id}
                       onClick={() =>
                         setActiveService(
-                          services.findIndex(
-                            (
-                              s
-                            ) =>
-                              s.id ===
-                              service.id
-                          )
+                          services.findIndex((s) => s.id === service.id),
                         )
                       }
                       className="bg-white rounded-2xl px-5 py-4 border border-gray-100 hover:border-gray-300 transition-all flex items-center justify-between"
@@ -385,23 +312,18 @@ export default function SectionService({
                           <Icon
                             className="w-5 h-5"
                             style={{
-                              color:
-                                service.color,
+                              color: service.color,
                             }}
                           />
                         </div>
 
                         <div>
                           <p className="font-semibold text-sm">
-                            {
-                              service.title
-                            }
+                            {service.title}
                           </p>
 
                           <p className="text-xs text-gray-400">
-                            {
-                              service.price
-                            }
+                            {service.price}
                           </p>
                         </div>
                       </div>
@@ -417,4 +339,3 @@ export default function SectionService({
     </section>
   );
 }
-
