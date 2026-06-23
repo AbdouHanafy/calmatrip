@@ -1,17 +1,12 @@
+import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
-import { getToken } from "next-auth/jwt";
 
-export async function middleware(req: NextRequest) {
+
+
+export default auth((req) => {
   const { pathname } = req.nextUrl;
-
-  const token = await getToken({
-    req,
-    secret: process.env.NEXTAUTH_SECRET ?? process.env.AUTH_SECRET,
-  });
-
-  const isLoggedIn = !!token;
-  const isAdmin = token?.role === "ADMIN";
+  const isLoggedIn = !!req.auth;
+  const isAdmin = req.auth?.user?.role === "ADMIN";
 
   // Admin → always redirect to /admin
   if (isLoggedIn && isAdmin && pathname === "/dashboard") {
@@ -45,10 +40,12 @@ export async function middleware(req: NextRequest) {
   }
 
   return NextResponse.next();
-}
+});
 
 export const config = {
+  runtime: "nodejs", // use Node.js instead of Edge
   matcher: [
+    "/((?!_next/static|_next/image|favicon.ico).*)",
     "/",
     "/admin/:path*",
     "/dashboard/:path*",
