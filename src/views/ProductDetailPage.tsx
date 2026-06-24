@@ -72,6 +72,17 @@ export default function ProductDetailPage() {
     setTimeout(() => setAdded(false), 1500);
   };
 
+const [activeImg, setActiveImg] = useState(0);
+
+const images = (() => {
+  if (!product.image) return ["/placeholder-product.png"];
+  try {
+    const parsed = JSON.parse(product.image);
+    if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+  } catch {}
+  return [product.image];
+})();
+
   return (
     <>
     <Navbar />
@@ -85,15 +96,43 @@ export default function ProductDetailPage() {
         </button>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="relative aspect-square bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
-            <Image
-              src={product.image || "/placeholder-product.png"}
-              alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, 50vw"
-            />
-          </div>
+          <div className="flex flex-col gap-3">
+  {/* Main image */}
+  <div className="relative aspect-square bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+    <Image
+      src={images[activeImg]}
+      alt={product.name}
+      fill
+      className="object-cover transition-all duration-300"
+      sizes="(max-width: 768px) 100vw, 50vw"
+    />
+  </div>
+
+  {/* Thumbnails */}
+  {images.length > 1 && (
+    <div className="flex gap-2">
+      {images.map((img: string, i: number) => (
+        <button
+          key={i}
+          onClick={() => setActiveImg(i)}
+          className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
+            activeImg === i
+              ? "border-[#4CAF50] shadow-md"
+              : "border-gray-200 opacity-60 hover:opacity-100"
+          }`}
+        >
+          <Image
+            src={img}
+            alt={`${product.name} ${i + 1}`}
+            fill
+            className="object-cover"
+            sizes="64px"
+          />
+        </button>
+      ))}
+    </div>
+  )}
+</div>
 
           <div>
             <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">{product.category}</p>
