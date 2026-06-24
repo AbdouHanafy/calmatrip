@@ -10,12 +10,24 @@ export function ProductCard({ product }: { product: Product }) {
   const outOfStock = product.stock <= 0;
   const lowStock = product.stock > 0 && product.stock <= 5;
 
+  // Add this helper at the top of the component
+  const getImageSrc = (image: string | null) => {
+    if (!image) return "/placeholder-product.png";
+    try {
+      const parsed = JSON.parse(image);
+      if (Array.isArray(parsed) && parsed.length > 0) return parsed[0];
+    } catch {
+      // already a plain string URL
+    }
+    return image;
+  };
+
   return (
     <div className="group relative bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
       <Link href={`/marketplace/${product.id}`} className="block">
         <div className="relative aspect-square bg-gray-50 overflow-hidden">
           <Image
-            src={product.image || "/placeholder-product.png"}
+            src={getImageSrc(product.image)}
             alt={product.name}
             fill
             className="object-cover group-hover:scale-105 transition-transform duration-500"
