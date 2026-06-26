@@ -42,14 +42,14 @@ const STATUS_LABEL: Record<string, string> = {
   delivered: "Livrée",
   cancelled: "Annulée",
 };
- const { cartCount, wishlist } = useMarketplace();
+ 
 
 function OrdersContent() {
   const searchParams = useSearchParams();
   const success = searchParams?.get("success");
 
   const { data: session, status } = useSession();
-
+  const { cartCount, wishlist } = useMarketplace();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
 
