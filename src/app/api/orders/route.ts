@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
           data: { stock: product.stock - item.quantity },
         });
 
-        total += product.price * item.quantity;
+        total += product.price * item.quantity + 7;
 
         orderItemsData.push({
           productId: product.id,

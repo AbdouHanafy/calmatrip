@@ -1,11 +1,21 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { 
-  Car, Clock, Luggage, MapPin, Users, Calendar, 
-  ChevronRight, Sparkles, User, Mail, AlertCircle 
+import {
+  Car,
+  Clock,
+  Luggage,
+  MapPin,
+  Users,
+  Calendar,
+  ChevronRight,
+  Sparkles,
+  User,
+  Mail,
+  AlertCircle,
 } from "lucide-react";
 import { useSession } from "next-auth/react";
+import LocationPickerModal from "@/components/ui/LocationPickerModal";
 
 interface ServiceOption {
   id: number;
@@ -53,8 +63,7 @@ export function BookingForm() {
   const [useManualTime, setUseManualTime] = useState(true);
   const [manualTime, setManualTime] = useState("");
 
-  const [fromLocation, setFromLocation] = useState("");
-  const [toLocation, setToLocation] = useState("");
+  
   const [passengers, setPassengers] = useState(1);
   const [hasLuggage, setHasLuggage] = useState(false);
 
@@ -74,7 +83,7 @@ export function BookingForm() {
 
   useEffect(() => {
     fetch("/api/services")
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(setServices)
       .finally(() => setLoadingServices(false));
   }, []);
@@ -86,8 +95,10 @@ export function BookingForm() {
     const end = new Date();
     end.setDate(today.getDate() + 30);
 
-    fetch(`/api/availability/dates?serviceId=${serviceId}&from=${toISODate(today)}&to=${toISODate(end)}`)
-      .then(res => res.json())
+    fetch(
+      `/api/availability/dates?serviceId=${serviceId}&from=${toISODate(today)}&to=${toISODate(end)}`,
+    )
+      .then((res) => res.json())
       .then(setAvailableDates);
 
     setDate("");
@@ -100,7 +111,7 @@ export function BookingForm() {
     if (!serviceId || !date) return;
 
     fetch(`/api/availability?serviceId=${serviceId}&date=${date}`)
-      .then(res => res.json())
+      .then((res) => res.json())
       .then(setSlots);
 
     setTime("");
@@ -117,15 +128,7 @@ export function BookingForm() {
     setTime("");
   };
 
-  const handlePassengersChange = (raw: string) => {
-    if (raw === "") {
-      setPassengers(1); // don't let the field collapse to NaN
-      return;
-    }
-    const n = Number(raw);
-    if (Number.isNaN(n)) return;
-    setPassengers(Math.min(8, Math.max(1, n)));
-  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,8 +159,10 @@ export function BookingForm() {
           serviceId,
           date,
           time: finalTime,
-          fromLocation,
-          toLocation,
+
+          fromLocation: pickupLocation.address,
+          toLocation: destinationLocation.address,
+
           passengers,
           hasLuggage,
           customerName,
@@ -178,18 +183,37 @@ export function BookingForm() {
     }
   };
 
-  const selectedService = services.find(s => s.id === serviceId);
+  const selectedService = services.find((s) => s.id === serviceId);
+  const [isPickupModalOpen, setIsPickupModalOpen] = useState(false);
+  const [isDestinationModalOpen, setIsDestinationModalOpen] = useState(false);
+  const [pickupLocation, setPickupLocation] = useState({
+    address: "Tunis-Carthage Airport",
+    lat: 36.851,
+    lng: 10.227,
+  });
+  const [destinationLocation, setDestinationLocation] = useState({
+    address: "",
+    lat: 0,
+    lng: 0,
+  });
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8 bg-white/95 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/50">
+    <form
+      onSubmit={handleSubmit}
+      className="space-y-8 bg-white/95 backdrop-blur-sm p-8 rounded-3xl shadow-2xl border border-white/50"
+    >
       {/* Header */}
       <div className="text-center pb-6 border-b border-gray-100">
         <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#D4A373]/10 rounded-full mb-3">
           <Sparkles className="w-4 h-4 text-[#D4A373]" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4A373]">Book Your Trip</span>
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4A373]">
+            Book Your Trip
+          </span>
         </div>
         <h2 className="text-2xl font-bold text-[#1E3A3A]">Plan Your Journey</h2>
-        <p className="text-sm text-gray-500 mt-1">Select your service and preferences</p>
+        <p className="text-sm text-gray-500 mt-1">
+          Select your service and preferences
+        </p>
       </div>
 
       {/* SERVICES */}
@@ -201,8 +225,11 @@ export function BookingForm() {
 
         {loadingServices ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            {[1, 2].map(i => (
-              <div key={i} className="h-24 bg-gray-100 animate-pulse rounded-2xl" />
+            {[1, 2].map((i) => (
+              <div
+                key={i}
+                className="h-24 bg-gray-100 animate-pulse rounded-2xl"
+              />
             ))}
           </div>
         ) : services.length === 0 ? (
@@ -224,21 +251,31 @@ export function BookingForm() {
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-3">
-                    <div className={`p-2 rounded-xl ${
-                      serviceId === s.id ? "bg-[#4CAF50] text-white" : "bg-gray-100 text-gray-500"
-                    }`}>
+                    <div
+                      className={`p-2 rounded-xl ${
+                        serviceId === s.id
+                          ? "bg-[#4CAF50] text-white"
+                          : "bg-gray-100 text-gray-500"
+                      }`}
+                    >
                       <Car className="w-4 h-4" />
                     </div>
                     <div>
-                      <div className="font-semibold text-gray-900 text-sm">{s.title}</div>
+                      <div className="font-semibold text-gray-900 text-sm">
+                        {s.title}
+                      </div>
                       {s.subtitle && (
-                        <div className="text-xs text-gray-500">{s.subtitle}</div>
+                        <div className="text-xs text-gray-500">
+                          {s.subtitle}
+                        </div>
                       )}
                     </div>
                   </div>
-                  <div className={`font-bold text-sm ${
-                    serviceId === s.id ? "text-[#4CAF50]" : "text-gray-400"
-                  }`}>
+                  <div
+                    className={`font-bold text-sm ${
+                      serviceId === s.id ? "text-[#4CAF50]" : "text-gray-400"
+                    }`}
+                  >
                     {s.price}
                   </div>
                 </div>
@@ -272,7 +309,7 @@ export function BookingForm() {
           </div>
           {availableDates.length > 0 && (
             <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
-              {availableDates.slice(0, 7).map(d => (
+              {availableDates.slice(0, 7).map((d) => (
                 <button
                   key={d.date}
                   type="button"
@@ -283,10 +320,10 @@ export function BookingForm() {
                       : "border-gray-200 hover:border-[#87CEEB] hover:bg-gray-50"
                   }`}
                 >
-                  {new Date(d.date).toLocaleDateString("en-US", { 
-                    weekday: 'short', 
-                    day: 'numeric', 
-                    month: 'short' 
+                  {new Date(d.date).toLocaleDateString("en-US", {
+                    weekday: "short",
+                    day: "numeric",
+                    month: "short",
                   })}
                   <span className="block text-[9px] text-gray-400 mt-0.5">
                     {d.remaining} spots
@@ -307,12 +344,13 @@ export function BookingForm() {
               Select Time
             </label>
             <div className="flex gap-2 bg-gray-100 p-1 rounded-xl">
-              
               <button
                 type="button"
                 onClick={switchToManual}
                 className={`px-3 py-1.5 text-xs font-bold rounded-lg transition-all ${
-                  useManualTime ? "bg-white shadow-md text-gray-900" : "text-gray-500 hover:text-gray-700"
+                  useManualTime
+                    ? "bg-white shadow-md text-gray-900"
+                    : "text-gray-500 hover:text-gray-700"
                 }`}
               >
                 Manual
@@ -327,7 +365,7 @@ export function BookingForm() {
                   No slots available
                 </div>
               ) : (
-                slots.map(slot => (
+                slots.map((slot) => (
                   <button
                     key={slot.id}
                     type="button"
@@ -337,8 +375,8 @@ export function BookingForm() {
                       time === slot.time
                         ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50] shadow-lg shadow-[#4CAF50]/10"
                         : slot.full
-                        ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed"
-                        : "border-gray-100 hover:border-[#87CEEB] hover:bg-gray-50"
+                          ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed"
+                          : "border-gray-100 hover:border-[#87CEEB] hover:bg-gray-50"
                     }`}
                   >
                     <Clock className="w-3.5 h-3.5 inline mr-1.5" />
@@ -361,52 +399,72 @@ export function BookingForm() {
       {/* TRIP DETAILS */}
       <div className="space-y-4">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          {/* Pickup location */}
           <div>
-            <label className="text-sm font-bold text-gray-700 block mb-2 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#87CEEB]" />
-              From
+            <label className="font-sans-clean text-white text-xs uppercase tracking-wider block mb-2">
+              Pickup location
             </label>
-            <input
-              placeholder="Pickup location"
-              value={fromLocation}
-              onChange={(e) => setFromLocation(e.target.value)}
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-gray-50/50"
-            />
+            <div
+              onClick={() => setIsPickupModalOpen(true)}
+              className="flex items-center gap-3 bg-black/20 border border-white/10 rounded-xl px-4 py-3 cursor-pointer hover:border-[#D4A373]/50 transition-colors"
+            >
+              <MapPin className="w-4 h-4 text-[#D4A373] shrink-0" />
+              <span className="font-sans-clean text-sm text-white flex-1">
+                {pickupLocation.address || "Choose a location"}
+              </span>
+            </div>
           </div>
+
+          {/* Destination */}
           <div>
-            <label className="text-sm font-bold text-gray-700 block mb-2 flex items-center gap-2">
-              <MapPin className="w-4 h-4 text-[#D4A373]" />
-              To
+            <label className="font-sans-clean text-white text-xs uppercase tracking-wider block mb-2">
+              Destination
             </label>
-            <input
-              placeholder="Drop-off location"
-              value={toLocation}
-              onChange={(e) => setToLocation(e.target.value)}
-              className="w-full px-4 py-3.5 rounded-2xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-gray-50/50"
-            />
+            <div
+              onClick={() => setIsDestinationModalOpen(true)}
+              className="flex items-center gap-3 bg-black/20 border border-white/10 rounded-xl px-4 py-3 cursor-pointer hover:border-[#1E6091]/50 transition-colors"
+            >
+              <MapPin className="w-4 h-4 text-[#1E6091] shrink-0" />
+              <span className="font-sans-clean text-sm text-white flex-1">
+                {destinationLocation.address || "Hammamet, Sousse, Djerba..."}
+              </span>
+            </div>
           </div>
         </div>
 
         <div className="flex flex-wrap items-center gap-6">
-          <div className="flex-1 min-w-[120px]">
-            <label className="text-sm font-bold text-gray-700 block mb-2 flex items-center gap-2">
-              <Users className="w-4 h-4 text-[#87CEEB]" />
-              Passengers
-            </label>
-            <div className="relative">
-              <input
-                type="number"
-                min={1}
-                
-                value={passengers}
-                onChange={(e) => handlePassengersChange(e.target.value)}
-                className="w-full px-4 py-3.5 rounded-2xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-gray-50/50"
-              />
-              <div className="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-gray-400">
-                max 4
-              </div>
-            </div>
-          </div>
+          <div>
+  <label className="text-sm font-bold text-gray-700 block mb-2 flex items-center gap-2">
+    <Users className="w-4 h-4 text-[#87CEEB]" />
+    Passengers
+  </label>
+
+  <div className="flex items-center justify-between border-2 border-gray-100 rounded-2xl bg-gray-50 px-3 py-2">
+    <button
+      type="button"
+      onClick={() => setPassengers((p) => Math.max(1, p - 1))}
+      className="w-10 h-10 rounded-xl bg-white border hover:bg-gray-100 text-xl font-bold"
+    >
+      −
+    </button>
+
+    <span className="text-lg font-bold text-gray-800">
+      {passengers}
+    </span>
+
+    <button
+      type="button"
+      onClick={() => setPassengers((p) => Math.min(4, p + 1))}
+      className="w-10 h-10 rounded-xl bg-white border hover:bg-gray-100 text-xl font-bold"
+    >
+      +
+    </button>
+  </div>
+
+  <p className="mt-2 text-xs text-gray-400">
+    Maximum 4 passengers
+  </p>
+</div>
 
           <label className="flex items-center gap-3 cursor-pointer py-2 px-4 bg-gray-50 rounded-2xl border-2 border-gray-100 hover:border-[#87CEEB]/50 transition-all">
             <input
@@ -416,7 +474,9 @@ export function BookingForm() {
               className="w-5 h-5 rounded-lg border-2 border-gray-300 text-[#4CAF50] focus:ring-[#87CEEB] focus:ring-2"
             />
             <Luggage className="w-5 h-5 text-gray-600" />
-            <span className="text-sm font-medium text-gray-700">With luggage</span>
+            <span className="text-sm font-medium text-gray-700">
+              With luggage
+            </span>
           </label>
         </div>
       </div>
@@ -429,7 +489,9 @@ export function BookingForm() {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label className="text-xs font-medium text-gray-500 block mb-1.5">Full Name</label>
+            <label className="text-xs font-medium text-gray-500 block mb-1.5">
+              Full Name
+            </label>
             <input
               required
               placeholder="John Doe"
@@ -439,7 +501,9 @@ export function BookingForm() {
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 block mb-1.5">Email</label>
+            <label className="text-xs font-medium text-gray-500 block mb-1.5">
+              Email
+            </label>
             <input
               required
               type="email"
@@ -450,7 +514,9 @@ export function BookingForm() {
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 block mb-1.5">Phone</label>
+            <label className="text-xs font-medium text-gray-500 block mb-1.5">
+              Phone
+            </label>
             <input
               required
               type="tel"
@@ -461,7 +527,9 @@ export function BookingForm() {
             />
           </div>
           <div>
-            <label className="text-xs font-medium text-gray-500 block mb-1.5">Special Requests</label>
+            <label className="text-xs font-medium text-gray-500 block mb-1.5">
+              Special Requests
+            </label>
             <textarea
               placeholder="Any special requests?"
               value={specialRequests}
@@ -483,7 +551,12 @@ export function BookingForm() {
       {/* SUBMIT */}
       <button
         type="submit"
-        disabled={submitting || !serviceId || !date || (!useManualTime ? !time : !manualTime)}
+        disabled={
+          submitting ||
+          !serviceId ||
+          !date ||
+          (!useManualTime ? !time : !manualTime)
+        }
         className="w-full relative overflow-hidden group py-4 rounded-2xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-2xl transition-all duration-300"
       >
         <span className="relative z-10 flex items-center justify-center gap-3">
@@ -503,9 +576,30 @@ export function BookingForm() {
       </button>
 
       <div>
-        <img src="/images/explore/giftbooking.png" alt="gift booking" className="w-full h-72 " />
+        <img
+          src="/images/explore/giftbooking.png"
+          alt="gift booking"
+          className="w-full h-72 "
+        />
       </div>
 
+      {/* Modals */}
+      <LocationPickerModal
+        isOpen={isPickupModalOpen}
+        onClose={() => setIsPickupModalOpen(false)}
+        onSelectLocation={(address, lat, lng) =>
+          setPickupLocation({ address, lat, lng })
+        }
+        title="Select pickup location"
+      />
+      <LocationPickerModal
+        isOpen={isDestinationModalOpen}
+        onClose={() => setIsDestinationModalOpen(false)}
+        onSelectLocation={(address, lat, lng) =>
+          setDestinationLocation({ address, lat, lng })
+        }
+        title="Select destination"
+      />
 
       <p className="text-center text-[10px] text-gray-400 font-medium tracking-wide">
         Secure booking • Instant confirmation • 24/7 support

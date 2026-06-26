@@ -257,3 +257,16 @@ model PushSubscription {
   @@index([userId])
   @@map("push_subscriptions")
 }
+model Review {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  avatar    String?
+  rating    Int
+  comment   String   @db.Text
+  service   String?
+  approved  Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@map("reviews")
+}

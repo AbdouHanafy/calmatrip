@@ -11,13 +11,9 @@ export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const onlyUnread = searchParams.get("unread") === "true";
 
-  const recipient = session.user?.role === "ADMIN" ? "admin" : "user";
 
   const where = {
-    OR: [
-      { recipient },                          // notifs broadcast au rôle
-      { userId: session.user?.id },            // notifs personnelles
-    ],
+    userId: session.user.id,
     ...(onlyUnread ? { isRead: false } : {}),
   };
 

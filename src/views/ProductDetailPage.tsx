@@ -1,13 +1,23 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingCart, ArrowLeft, Minus, Plus, Check } from "lucide-react";
-import { useMarketplace, Product } from "@/components/marketplace/Marketplacecontext";
+import {
+  Heart,
+  ShoppingCart,
+  ArrowLeft,
+  Minus,
+  Plus,
+  Check,
+} from "lucide-react";
+import {
+  useMarketplace,
+  Product,
+} from "@/components/marketplace/Marketplacecontext";
 import { ProductCard } from "@/components/marketplace/Productcard";
-import { Navbar } from '@/components/layouts/Navbar';
-import { Footer } from '@/components/layouts/Footre';
+import { Navbar } from "@/components/layouts/Navbar";
+import { Footer } from "@/components/layouts/Footre";
 
 export default function ProductDetailPage() {
   const params = useParams();
@@ -22,6 +32,7 @@ export default function ProductDetailPage() {
   const [sizeError, setSizeError] = useState(false);
   const [added, setAdded] = useState(false);
   const [activeImg, setActiveImg] = useState(0); // ← moved here, before any early return
+  const { cartCount, wishlist } = useMarketplace();
 
   useEffect(() => {
     fetch(`/api/products/${params?.id}`)
@@ -57,6 +68,7 @@ export default function ProductDetailPage() {
         <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
           Retour à la marketplace
         </Link>
+        
       </div>
     );
   }
@@ -93,6 +105,46 @@ export default function ProductDetailPage() {
           >
             <ArrowLeft className="w-4 h-4" /> Retour
           </button>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
+            {/* Actions (wishlist + cart + commandes) */}
+            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 order-2 sm:order-1">
+              {/* Wishlist */}
+              <Link
+                href="/marketplace/wishlist"
+                aria-label="Favoris"
+                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
+              >
+                <Heart className="w-5 h-5 text-gray-700" />
+                {wishlist.length > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
+                    {wishlist.length}
+                  </span>
+                )}
+              </Link>
+
+              {/* Cart */}
+              <Link
+                href="/marketplace/cart"
+                aria-label="Panier"
+                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
+              >
+                <ShoppingCart className="w-5 h-5 text-gray-700" />
+                {cartCount > 0 && (
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#4CAF50] text-white text-[10px] font-bold flex items-center justify-center">
+                    {cartCount}
+                  </span>
+                )}
+              </Link>
+
+              {/* Orders */}
+              <Link
+                href="/marketplace/orders"
+                className="flex-1 sm:flex-none w-full sm:w-auto text-center text-sm font-medium text-gray-600 hover:text-[#87CEEB] px-3 py-2 rounded-xl transition-colors"
+              >
+                Mes commandes
+              </Link>
+            </div>
+          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Image gallery */}
@@ -136,11 +188,19 @@ export default function ProductDetailPage() {
 
             {/* Product info */}
             <div>
-              <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">{product.category}</p>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{product.name}</h1>
-              <p className="text-2xl font-bold text-[#4CAF50] mb-4">{product.price.toFixed(2)} TND</p>
+              <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+                {product.category}
+              </p>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
+                {product.name}
+              </h1>
+              <p className="text-2xl font-bold text-[#4CAF50] mb-4">
+                {product.price.toFixed(2)} TND
+              </p>
 
-              <p className="text-sm text-gray-600 leading-relaxed mb-6">{product.description}</p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-6">
+                {product.description}
+              </p>
 
               {hasSizes && (
                 <div className="mb-6">
@@ -157,7 +217,9 @@ export default function ProductDetailPage() {
                       <button
                         key={size}
                         type="button"
-                        onClick={() => setSelectedSize(selectedSize === size ? null : size)}
+                        onClick={() =>
+                          setSelectedSize(selectedSize === size ? null : size)
+                        }
                         className={`px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all ${
                           selectedSize === size
                             ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50]"
@@ -173,13 +235,17 @@ export default function ProductDetailPage() {
 
               <div className="mb-6">
                 {outOfStock ? (
-                  <span className="text-sm font-medium text-red-500">Rupture de stock</span>
+                  <span className="text-sm font-medium text-red-500">
+                    Rupture de stock
+                  </span>
                 ) : product.stock <= 5 ? (
                   <span className="text-sm font-medium text-[#856B00]">
                     Plus que {product.stock} en stock
                   </span>
                 ) : (
-                  <span className="text-sm font-medium text-[#4CAF50]">En stock</span>
+                  <span className="text-sm font-medium text-[#4CAF50]">
+                    En stock
+                  </span>
                 )}
               </div>
 
@@ -194,7 +260,9 @@ export default function ProductDetailPage() {
                     </button>
                     <span className="w-10 text-center font-medium">{qty}</span>
                     <button
-                      onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
+                      onClick={() =>
+                        setQty((q) => Math.min(product.stock, q + 1))
+                      }
                       className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-r-xl"
                     >
                       <Plus className="w-4 h-4" />
@@ -209,7 +277,11 @@ export default function ProductDetailPage() {
                   disabled={outOfStock}
                   className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold py-3 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg transition-shadow"
                 >
-                  {added ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
+                  {added ? (
+                    <Check className="w-5 h-5" />
+                  ) : (
+                    <ShoppingCart className="w-5 h-5" />
+                  )}
                   {added ? "Ajouté !" : "Ajouter au panier"}
                 </button>
                 <button
@@ -227,7 +299,9 @@ export default function ProductDetailPage() {
 
           {related.length > 0 && (
             <div className="mt-16">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Produits similaires</h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">
+                Produits similaires
+              </h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
                 {related.map((p) => (
                   <ProductCard key={p.id} product={p} />

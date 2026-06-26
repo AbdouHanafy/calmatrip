@@ -9,6 +9,8 @@ import SectionService from '@/components/home/SectionService';
 import SectionTravelNotes from '@/components/home/SectionTravelNotes';
 import CTASection from '@/components/home/CTASection';
 import ExploreSection from '@/components/home/ExploreSection';
+import ReviewForm from '@/components/review/ReviewForm';
+import ReviewsSection from '@/components/home/ReviewsSection';
 
 export default function Home() {
   const [services, setServices] = useState<any[]>([]);
@@ -102,6 +104,21 @@ function parseImages(raw: string | null | undefined): string[] {
         <ExploreSection />
         <SectionTravelNotes />
         <CTASection />
+        <ReviewsSection />
+
+<section className="py-20 bg-white">
+  <div className="max-w-2xl mx-auto px-4">
+    <div className="text-center mb-10">
+      <h2 className="text-3xl font-bold text-gray-900">
+        Leave your review
+      </h2>
+      <p className="text-gray-500 mt-2">
+        Your experience matters to us and to other travelers.
+      </p>
+    </div>
+    < ReviewForm />
+  </div>
+</section>
 
       </div>
       <Footer />
