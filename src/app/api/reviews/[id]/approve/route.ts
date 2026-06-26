@@ -4,16 +4,16 @@ import { auth } from "@/auth";
 
 export async function PATCH(
   req: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   const session = await auth();
-
+ const { id } = await params;
   if (session?.user?.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   const review = await prisma.review.update({
-    where: { id: Number(params.id) },
+    where: { id: Number(id) },
     data: { approved: true },
   });
 
