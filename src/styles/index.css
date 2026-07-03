@@ -8,6 +8,7 @@
 @layer base {
   body {
     @apply bg-gray-50 text-gray-900;
+    cursor: url("/images/gazelle_cursor.png") 16 16, auto;
   }
 }
 

@@ -13,7 +13,10 @@ export async function GET(req: NextRequest) {
 
 
   const where = {
-    userId: session.user.id,
+    OR: [
+      { userId: session.user.id },
+      { recipient: "admin" }
+    ],
     ...(onlyUnread ? { isRead: false } : {}),
   };
 

@@ -14,7 +14,7 @@ export async function PATCH(req: NextRequest) {
       OR: [{ recipient }, { userId: session.user?.id }],
       isRead: false,
     },
-    data: { isRead: true },
+    data: { isRead: true, readAt: new Date() },
   });
 
   return NextResponse.json({ success: true });

@@ -1,22 +1,13 @@
 'use client';
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import {
-  Menu,
-  X,
-  User,
-  LogIn,
-  LogOut,
-  Phone,
-  Mail,
-  ChevronDown,
-} from "lucide-react";
-
+import { Menu, X, User, LogIn, LogOut, Search } from "lucide-react";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
   const pathname = usePathname();
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
@@ -30,238 +21,190 @@ export const Navbar = () => {
     { path: "/about", label: "About Us" },
     { path: "/contact", label: "Contact" },
   ];
+
   return (
-    <nav className="bg-white shadow-md sticky top-0 z-50">
-      <div className="border-b border-gray-100">
-      
-        {/* Top Bar - Version professionnelle */}
-        <div className="hidden lg:block bg-gradient-to-r from-gray-50 to-white py-2">
-          <div className="max-w-7xl mx-auto px-6">
-            <div className="flex justify-between items-center text-xs">
-              <div className="flex items-center space-x-6">
-                <div className="flex items-center space-x-2 text-gray-500">
-                  <Phone className="w-3 h-3" />
-                  <span>+216 21 622 972</span>
-                </div>
-                <div className="flex items-center space-x-2 text-gray-500">
-                  <Mail className="w-3 h-3" />
-                  <span>contact@calmatrip.com</span>
-                </div>
-              </div>
-              <div className="flex items-center space-x-4">
-                <span className="text-gray-400">|</span>
-                <Link
-                  href="/faq"
-                  className="text-gray-500 hover:text-[#87CEEB] transition-colors"
-                >
-                  FAQ
-                </Link>
-                <Link
-                  href="/support"
-                  className="text-gray-500 hover:text-[#87CEEB] transition-colors"
-                >
-                  Support
-                </Link>
-                <span className="text-gray-400">|</span>
-                <div className="flex items-center space-x-2">
-                  <span className="text-gray-500">EN</span>
-                  <ChevronDown className="w-3 h-3 text-gray-400" />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
+    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
 
-        {/* Main Navigation */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16 lg:h-20">
-            {/* Logo */}
-            <Link href="/" className="flex items-center gap-3 group">
-              <div className="relative">
-                <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-[#87CEEB] via-[#4CAF50] to-[#FFD700] flex items-center justify-center shadow-lg group-hover:scale-105 transition-all duration-300">
-                  <img src='/images/logo-calma-trip.jpg' />
-                </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-amber-400 border-2 border-white rounded-full shadow-sm"></div>
-              </div>
-
-              <div className="flex flex-col leading-tight">
-                <span className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">
-                  Calmatrip
-                </span>
-                <span className="text-[11px] uppercase tracking-[0.25em] text-gray-500 font-medium">
-                  Travel & Services
-                </span>
-              </div>
-            </Link>
-
-            {/* Desktop Navigation */}
-            <div className="hidden lg:flex items-center space-x-1">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.path}
-                  href={link.path}
-                  className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-200 ${
-                    pathname === link.path
-                      ? "text-[#4CAF50] bg-[#4CAF50]/5"
-                      : "text-gray-600 hover:text-[#4CAF50] hover:bg-gray-50"
-                  }`}
-                >
-                  {link.label}
-                  {pathname === link.path && (
-                    <div className="absolute bottom-0 left-4 right-4 h-0.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] rounded-full"></div>
-                  )}
-                </Link>
-              ))}
-            </div>
-
-            {/* User Actions */}
-            <div className="hidden lg:flex items-center space-x-3">
-              {isAuthenticated ? (
-                <>
-                  <Link
-                    href="/dashboard"
-                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#4CAF50] rounded-lg hover:bg-gray-50 transition-all duration-200"
-                  >
-                    {session.user?.image ? (
-                      <img src={session.user.image} alt="" className="w-6 h-6 rounded-full" />
-                    ) : (
-                      <User className="w-4 h-4" />
-                    )}
-                    <span>{session.user?.name?.split(" ")[0] ?? "Dashboard"}</span>
-                  </Link>
-                  {isAdmin && (
-                    <Link
-                      href="/admin"
-                      className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#4CAF50] rounded-lg hover:bg-gray-50 transition-all duration-200"
-                    >
-                      Admin
-                    </Link>
-                  )}
-                  <button
-                    onClick={() => signOut({ callbackUrl: "/" })}
-                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-red-500 rounded-lg hover:bg-red-50 transition-all duration-200"
-                  >
-                    <LogOut className="w-4 h-4" />
-                    <span>Sign out</span>
-                  </button>
-                </>
-              ) : (
-                <>
-                  <Link
-                    href="/login"
-                    className="flex items-center space-x-2 px-4 py-2 text-sm font-medium text-gray-600 hover:text-[#4CAF50] rounded-lg hover:bg-gray-50 transition-all duration-200"
-                  >
-                    <LogIn className="w-4 h-4" />
-                    <span>Sign in</span>
-                  </Link>
-                  <Link
-                    href="/register"
-                    className="flex items-center space-x-2 px-5 py-2 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white text-sm font-semibold rounded-lg hover:shadow-md hover:shadow-[#4CAF50]/20 hover:scale-105 transition-all duration-300"
-                  >
-                    Sign up
-                  </Link>
-                </>
-              )}
-            </div>
-
-            {/* Mobile Menu Button */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          {/* Logo — serif style like the image */}
+          <Link href="/" className="flex-shrink-0">
+            <span
+              className="text-2xl font-bold text-[#1B4D3E] tracking-tight"
+              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
             >
-              {mobileMenuOpen ? (
-                <X className="w-5 h-5 text-[#4CAF50]" />
-              ) : (
-                <Menu className="w-5 h-5 text-gray-600" />
-              )}
-            </button>
+              Calma Trip
+            </span>
+          </Link>
+
+          {/* Desktop Nav Links — centered */}
+          <div className="hidden lg:flex items-center space-x-1">
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150 ${
+                  pathname === link.path
+                    ? "text-[#1B4D3E] font-semibold"
+                    : "text-gray-600 hover:text-[#1B4D3E]"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
-          {/* Mobile Menu */}
-          {mobileMenuOpen && (
-            <div className="lg:hidden py-4 border-t border-gray-100">
-              <div className="flex flex-col space-y-1">
-                {/* Navigation Links */}
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.path}
-                    href={link.path}
-                    onClick={() => setMobileMenuOpen(false)}
-                    className={`px-4 py-3 rounded-lg transition-all duration-200 ${
-                      pathname === link.path
-                        ? "bg-gradient-to-r from-[#87CEEB]/10 to-[#4CAF50]/10 text-[#4CAF50] font-medium"
-                        : "text-gray-600 hover:bg-gray-50"
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                ))}
-
-                <div className="h-px bg-gray-100 my-2"></div>
-
-                {isAuthenticated ? (
-                  <>
-                    <Link
-                      href="/dashboard"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all duration-200"
-                    >
-                      My Dashboard
-                    </Link>
-                    {isAdmin && (
-                      <Link
-                        href="/admin"
-                        onClick={() => setMobileMenuOpen(false)}
-                        className="px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all duration-200"
-                      >
-                        Admin Panel
-                      </Link>
-                    )}
-                    <button
-                      onClick={() => {
-                        setMobileMenuOpen(false);
-                        signOut({ callbackUrl: "/" });
-                      }}
-                      className="mx-4 my-2 px-4 py-2.5 border border-gray-200 text-gray-700 text-center font-medium rounded-lg w-[calc(100%-2rem)]"
-                    >
-                      Sign out
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <Link
-                      href="/login"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="px-4 py-3 rounded-lg text-gray-600 hover:bg-gray-50 transition-all duration-200"
-                    >
-                      Sign in
-                    </Link>
-                    <Link
-                      href="/register"
-                      onClick={() => setMobileMenuOpen(false)}
-                      className="mx-4 my-2 px-4 py-2.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white text-center font-medium rounded-lg"
-                    >
-                      Sign up
-                    </Link>
-                  </>
-                )}
-
-                {/* Mobile Contact Info */}
-                <div className="mt-4 pt-4 border-t border-gray-100 px-4 space-y-2">
-                  <div className="flex items-center space-x-3 text-sm text-gray-500">
-                    <Phone className="w-4 h-4" />
-                    <span>+216 21 622 972</span>
-                  </div>
-                  <div className="flex items-center space-x-3 text-sm text-gray-500">
-                    <Mail className="w-4 h-4" />
-                    <span>contact@calmatrip.com</span>
-                  </div>
-                </div>
-              </div>
+          {/* Right side: Search + Auth */}
+          <div className="hidden lg:flex items-center gap-3">
+            {/* Search pill */}
+            <div className="flex items-center gap-2 bg-[#1B2D2A] rounded-full px-4 py-2 w-52">
+              <Search className="w-4 h-4 text-white flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="Where are you going?"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="bg-transparent text-sm text-gray-300 placeholder-gray-400 outline-none w-full"
+              />
             </div>
-          )}
+
+            {/* Auth */}
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/dashboard"
+                  className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-[#1B4D3E] transition-colors px-2 py-1"
+                >
+                  {session.user?.image ? (
+                    <img src={session.user.image} alt="" className="w-7 h-7 rounded-full" />
+                  ) : (
+                    <div className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center">
+                      <User className="w-4 h-4 text-gray-500" />
+                    </div>
+                  )}
+                  <span>{session.user?.name?.split(" ")[0] ?? "Account"}</span>
+                </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    className="text-sm font-medium text-gray-600 hover:text-[#1B4D3E] px-2 py-1 transition-colors"
+                  >
+                    Admin
+                  </Link>
+                )}
+                <button
+                  onClick={() => signOut({ callbackUrl: "/" })}
+                  className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-500 px-2 py-1 transition-colors"
+                >
+                  <LogOut className="w-4 h-4" />
+                </button>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <Link
+                  href="/login"
+                  className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-[#1B4D3E] transition-colors px-2 py-1"
+                >
+                  <span>Log in</span>
+                  <div className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center">
+                    <User className="w-4 h-4 text-gray-500" />
+                  </div>
+                </Link>
+              </div>
+            )}
+          </div>
+
+          {/* Mobile burger */}
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+          >
+            {mobileMenuOpen ? (
+              <X className="w-5 h-5 text-gray-600" />
+            ) : (
+              <Menu className="w-5 h-5 text-gray-600" />
+            )}
+          </button>
         </div>
       </div>
+
+      {/* Mobile Menu */}
+      {mobileMenuOpen && (
+        <div className="lg:hidden border-t border-gray-100 bg-white">
+          <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col space-y-1">
+            {/* Mobile search */}
+            <div className="flex items-center gap-2 bg-[#1B2D2A] rounded-full px-4 py-2.5 mb-3">
+              <Search className="w-4 h-4 text-white flex-shrink-0" />
+              <input
+                type="text"
+                placeholder="Where are you going?"
+                className="bg-transparent text-sm text-gray-300 placeholder-gray-400 outline-none w-full"
+              />
+            </div>
+
+            {navLinks.map((link) => (
+              <Link
+                key={link.path}
+                href={link.path}
+                onClick={() => setMobileMenuOpen(false)}
+                className={`px-4 py-3 rounded-lg text-sm transition-colors ${
+                  pathname === link.path
+                    ? "text-[#1B4D3E] font-semibold bg-[#1B4D3E]/5"
+                    : "text-gray-600 hover:bg-gray-50"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+
+            <div className="h-px bg-gray-100 my-2" />
+
+            {isAuthenticated ? (
+              <>
+                <Link
+                  href="/dashboard"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+                >
+                  My Dashboard
+                </Link>
+                {isAdmin && (
+                  <Link
+                    href="/admin"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="px-4 py-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+                  >
+                    Admin Panel
+                  </Link>
+                )}
+                <button
+                  onClick={() => { setMobileMenuOpen(false); signOut({ callbackUrl: "/" }); }}
+                  className="mx-4 mt-2 px-4 py-2.5 border border-gray-200 text-sm text-gray-700 rounded-lg text-left"
+                >
+                  Sign out
+                </button>
+              </>
+            ) : (
+              <>
+                <Link
+                  href="/login"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="px-4 py-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+                >
+                  Log in
+                </Link>
+                <Link
+                  href="/register"
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="mx-4 mt-2 px-4 py-2.5 bg-[#1B4D3E] text-white text-sm text-center font-medium rounded-lg"
+                >
+                  Sign up
+                </Link>
+              </>
+            )}
+          </div>
+        </div>
+      )}
     </nav>
-  )
-}
+  );
+};

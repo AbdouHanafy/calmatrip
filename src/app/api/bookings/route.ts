@@ -2,18 +2,28 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
 import { sendPushToRole, sendPushToUser } from "@/lib/push";
+import { sendBookingConfirmationEmail } from "@/lib/mail";
 
 export const dynamic = "force-dynamic";
 
 interface BookingPayload {
   serviceId: number;
+
+  tripType: "one-way" | "round-trip";
+
   date: string;
   time: string;
+
+  returnDate?: string;
+  returnTime?: string;
+
   fromLocation: string;
   toLocation: string;
+
   passengers?: number;
   hasLuggage?: boolean;
   specialRequests?: string;
+
   customerName: string;
   customerEmail: string;
   customerPhone?: string;
@@ -25,8 +35,11 @@ export async function POST(req: NextRequest) {
 
     const {
       serviceId,
+      tripType,
       date,
       time,
+      returnDate,
+      returnTime,
       fromLocation,
       toLocation,
       passengers,
@@ -39,6 +52,7 @@ export async function POST(req: NextRequest) {
 
     if (
       !serviceId ||
+      !tripType ||
       !date ||
       !time ||
       !fromLocation ||
@@ -47,31 +61,81 @@ export async function POST(req: NextRequest) {
       !customerEmail
     ) {
       return NextResponse.json(
-        { error: "Champs requis manquants" },
+        { error: "Missing required fields" },
         { status: 400 }
       );
     }
 
-    const dayStart = new Date(`${date}T00:00:00.000Z`);
-
-    if (isNaN(dayStart.getTime())) {
+    if (
+      tripType === "round-trip" &&
+      (!returnDate || !returnTime)
+    ) {
       return NextResponse.json(
-        { error: "Date invalide" },
-        { status: 400 }
+        {
+          error: "Return date and return time are required.",
+        },
+        {
+          status: 400,
+        }
+      );
+    }
+
+    const departureDate = new Date(`${date}T00:00:00.000Z`);
+
+    if (isNaN(departureDate.getTime())) {
+      return NextResponse.json(
+        {
+          error: "Invalid departure date",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    if (dayStart < today) {
+    if (departureDate < today) {
       return NextResponse.json(
-        { error: "La date ne peut pas être dans le passé" },
-        { status: 400 }
+        {
+          error: "Departure date cannot be in the past",
+        },
+        {
+          status: 400,
+        }
       );
     }
 
-    // Recherche du user via email
+    let returnDateObject: Date | null = null;
+
+    if (tripType === "round-trip") {
+      returnDateObject = new Date(`${returnDate}T00:00:00.000Z`);
+
+      if (isNaN(returnDateObject.getTime())) {
+        return NextResponse.json(
+          {
+            error: "Invalid return date",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+
+      if (returnDateObject < departureDate) {
+        return NextResponse.json(
+          {
+            error: "Return date must be after departure date.",
+          },
+          {
+            status: 400,
+          }
+        );
+      }
+    }
+
+    // Recherche utilisateur
     const user = await prisma.user.findUnique({
       where: {
         email: customerEmail,
@@ -86,62 +150,77 @@ export async function POST(req: NextRequest) {
       });
 
       if (!service || !service.active) {
-        throw new Error("Service introuvable ou inactif");
+        throw new Error("Service not found or inactive");
       }
 
       return tx.booking.create({
         data: {
           service: service.title,
-          date: dayStart,
+
+          tripType,
+
+          date: departureDate,
           time,
+
+          returnDate: returnDateObject,
+          returnTime:
+            tripType === "round-trip"
+              ? returnTime
+              : null,
+
           fromLocation,
           toLocation,
+
           passengers: passengers ?? 1,
           hasLuggage: hasLuggage ?? false,
+
           specialRequests,
+
           customerName,
           customerEmail,
           customerPhone,
+
           price: service.price,
+
           status: "pending",
         },
       });
     });
 
     const notifications: Promise<any>[] = [
-      // Notification admin
       createNotification({
         recipient: "admin",
         type: "booking_created",
-        title: "Nouvelle réservation",
-        body: `${customerName} a réservé ${booking.service}`,
+        title: "New booking",
+        body: `${customerName} booked ${booking.service}`,
         link: "/admin/bookings",
         metadata: {
           bookingId: booking.id,
+          tripType,
           fromLocation,
           toLocation,
           date,
           time,
+          returnDate,
+          returnTime,
         },
       }),
 
-      // Push admin
       sendPushToRole("ADMIN", {
-        title: "Nouvelle réservation",
-        body: `${customerName} a réservé ${booking.service}`,
+        title: "New booking",
+        body: `${customerName} booked ${booking.service}`,
         link: "/admin/bookings",
       }),
     ];
 
-    // Notification utilisateur connecté
     if (user) {
       notifications.push(
         createNotification({
           recipient: "user",
           userId: user.id,
           type: "booking_created",
-          title: "Réservation créée",
-          body: `Votre réservation pour ${booking.service} a été enregistrée`,
+          title: "Booking created",
+          body: `Your booking for ${booking.service} has been received.`,
           link: "/dashboard",
           metadata: {
             bookingId: booking.id,
@@ -151,14 +230,35 @@ export async function POST(req: NextRequest) {
 
       notifications.push(
         sendPushToUser(user.id, {
-          title: "Réservation créée",
-          body: `Votre réservation pour ${booking.service} a été enregistrée`,
+          title: "Booking created",
+          body: `Your booking for ${booking.service} has been received.`,
           link: "/dashboard/bookings",
         })
       );
     }
 
     await Promise.all(notifications);
+
+    // Envoi de l'email de confirmation — ne doit jamais faire échouer la réservation
+    try {
+      await sendBookingConfirmationEmail({
+        customerName,
+        customerEmail,
+        serviceTitle: booking.service,
+        tripType,
+        date: booking.date.toISOString(),
+        time: booking.time,
+        returnDate: booking.returnDate ? booking.returnDate.toISOString() : null,
+        returnTime: booking.returnTime,
+        fromLocation,
+        toLocation,
+        passengers: booking.passengers,
+        price: booking.price,
+        bookingId: booking.id,
+      });
+    } catch (emailErr) {
+      console.error("[booking email] failed to send confirmation:", emailErr);
+    }
 
     return NextResponse.json(booking, {
       status: 201,
@@ -168,7 +268,7 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(
       {
-        error: err.message || "Échec de la réservation",
+        error: err.message || "Booking failed",
       },
       {
         status: 400,

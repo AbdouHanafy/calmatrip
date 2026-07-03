@@ -19,6 +19,11 @@ interface Booking {
   service: string;
   date: string;
   time: string;
+
+  tripType?: "one-way" | "round-trip";
+  returnDate?: string | null;
+  returnTime?: string | null;
+
   fromLocation: string;
   toLocation: string;
   status: BookingStatus;
@@ -269,15 +274,33 @@ export default function AdminBookings() {
                         </div>
                       </td>
                       <td className="px-6 py-4 text-sm">
-                        <div className="flex items-center gap-1.5 text-gray-600">
-                          <Calendar className="w-3.5 h-3.5 text-gray-400" />
-                          {new Date(booking.date).toLocaleDateString("en-GB")}
-                        </div>
-                        <div className="flex items-center gap-1.5 text-gray-600 mt-1">
-                          <Clock className="w-3.5 h-3.5 text-gray-400" />
-                          {booking.time}
-                        </div>
-                      </td>
+  <div className="flex items-center gap-1.5 text-gray-600">
+    <Calendar className="w-3.5 h-3.5 text-gray-400" />
+    {new Date(booking.date).toLocaleDateString("en-GB")}
+  </div>
+
+  <div className="flex items-center gap-1.5 text-gray-600 mt-1">
+    <Clock className="w-3.5 h-3.5 text-gray-400" />
+    {booking.time}
+  </div>
+
+  {/* ✅ RETURN TRIP */}
+  {booking.tripType === "round-trip" && booking.returnDate && (
+    <div className="mt-2 pt-2 border-t border-gray-100">
+      <div className="flex items-center gap-1.5 text-[#4CAF50]">
+        <Calendar className="w-3.5 h-3.5" />
+        {new Date(booking.returnDate).toLocaleDateString("en-GB")}
+      </div>
+
+      {booking.returnTime && (
+        <div className="flex items-center gap-1.5 text-[#4CAF50] mt-1">
+          <Clock className="w-3.5 h-3.5" />
+          {booking.returnTime}
+        </div>
+      )}
+    </div>
+  )}
+</td>
                       <td className="px-6 py-4 text-sm max-w-[180px]">
                         <div className="flex items-center gap-1.5 text-gray-600">
                           <MapPin className="w-3.5 h-3.5 text-gray-400 flex-shrink-0" />
@@ -472,6 +495,26 @@ export default function AdminBookings() {
                   ))}
                 </div>
               </div>
+
+              {selectedBooking.tripType === "round-trip" && (
+  <>
+    <div className="flex justify-between items-center">
+      <span className="text-sm text-gray-500">Return Date</span>
+      <span className="text-sm font-semibold text-gray-900">
+        {selectedBooking.returnDate
+          ? new Date(selectedBooking.returnDate).toLocaleDateString("en-GB")
+          : "—"}
+      </span>
+    </div>
+
+    <div className="flex justify-between items-center">
+      <span className="text-sm text-gray-500">Return Time</span>
+      <span className="text-sm font-semibold text-gray-900">
+        {selectedBooking.returnTime ?? "—"}
+      </span>
+    </div>
+  </>
+)}
 
               {/* Route */}
               <div>

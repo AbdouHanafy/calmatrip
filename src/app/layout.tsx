@@ -4,6 +4,7 @@ import { AuthProvider } from '@/components/providers/AuthProvider';
 import { MarketplaceProvider } from "@/components/marketplace/Marketplacecontext";
 import InstallPWA from "@/components/ui/InstallPWA";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
+import FloatingWhatsApp from '@/components/ui/FloatingWhatsApp';
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -48,6 +49,7 @@ export default function RootLayout({
                 <MarketplaceProvider>
                 <InstallPWA />
               {children}
+                <FloatingWhatsApp />
                 </MarketplaceProvider>
             </main>
           </div>

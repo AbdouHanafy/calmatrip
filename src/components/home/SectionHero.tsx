@@ -1,10 +1,8 @@
 "use client";
-import { useState, useEffect, useRef, type CSSProperties } from "react";
-import { MapPin, ArrowRight } from "lucide-react";
+import { useState } from "react";
+import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import LocationPickerModal from "@/components/ui/LocationPickerModal";
 
 /* ─── TICKER ──────────────────────────────────────────────────────────────── */
 function Ticker({ items }: { items: string[] }) {
@@ -23,199 +21,43 @@ function Ticker({ items }: { items: string[] }) {
 }
 
 export function SectionHero() {
-  const [bookingType, setBookingType] = useState("Transfer");
-  const router = useRouter();
-  const [isPickupModalOpen, setIsPickupModalOpen] = useState(false);
-  const [isDestinationModalOpen, setIsDestinationModalOpen] = useState(false);
-  const [pickupLocation, setPickupLocation] = useState({
-    address: "Tunis-Carthage Airport",
-    lat: 36.851,
-    lng: 10.227,
-  });
-  const [destinationLocation, setDestinationLocation] = useState({
-    address: "",
-    lat: 0,
-    lng: 0,
-  });
-
   return (
     <>
-      <section className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#0A1A2F]">
-        {/* Background image or gradient */}
-        <div className="absolute inset-0 bg-gradient-to-br from-[#0A1A2F] via-[#1B4F6E] to-[#0A1A2F] opacity-90 z-0">
-          <Image
-            src="/images/tunisia.jpeg"
-            alt="Hero Background"
-            fill
-            className="object-cover opacity-50"
-          />
-        </div>
+      {/* ═══════════════ HERO ═══════════════════════════════════════════════ */}
+      <section className="relative w-full h-[520px] md:h-[600px] overflow-hidden">
+        {/* Background image */}
+        <Image
+          src="/images/homehero.png"
+          alt="Peaceful Tunisian riad courtyard"
+          fill
+          priority
+          className="object-cover object-center"
+        />
 
-        {/* Decorative shapes */}
-        <div className="absolute top-1/4 right-1/4 w-96 h-96 bg-[#87CEEB] rounded-full blur-[150px] opacity-20 z-0 animate-pulse"></div>
-        <div className="absolute bottom-1/4 left-1/4 w-96 h-96 bg-[#4CAF50] rounded-full blur-[150px] opacity-10 z-0"></div>
+        {/* Subtle dark overlay — light enough to keep the image vivid */}
+        <div className="absolute inset-0 bg-black/5" />
 
-        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 items-center pt-20 pb-24">
-          {/* Left Content */}
-          <div className="space-y-8 text-white">
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-tight">
-              Discover the world with{" "}
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#87CEEB] to-[#4CAF50]">
-                Calmatrip
-              </span>
-            </h1>
+        {/* Centered text content */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
+          <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-[#6B3A2A] drop-shadow-sm leading-tight max-w-3xl">
+            Find Your Peaceful<br />Escape in Tunisia
+          </h1>
 
-            <p className="text-xl text-gray-200 max-w-lg leading-relaxed">
-              Seamless airport transfers, breathtaking excursions, and
-              unparalleled comfort. Your journey starts here.
-            </p>
-
-            <div className="flex flex-wrap gap-4 pt-4">
-              <Link
-                href="/services"
-                className="px-8 py-4 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold flex items-center gap-2 hover:shadow-lg hover:shadow-[#4CAF50]/30 transition-all hover:-translate-y-1"
-              >
-                Explore Services <ArrowRight className="w-5 h-5" />
-              </Link>
-              <Link
-                href="/contact"
-                className="px-8 py-4 rounded-xl bg-white/10 text-white font-semibold backdrop-blur-md border border-white/20 hover:bg-white/20 transition-all"
-              >
-                Contact Us
-              </Link>
-            </div>
-
-            {/* Stats */}
-            <div className="grid grid-cols-3 gap-6 pt-10 border-t border-white/10">
-              <div>
-                <div className="text-3xl font-bold text-white">500+</div>
-                <div className="text-sm text-gray-100 uppercase tracking-widest mt-1">
-                  Happy Clients
-                </div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-[#87CEEB]">50+</div>
-                <div className="text-sm text-gray-100 uppercase tracking-widest mt-1">
-                  Destinations
-                </div>
-              </div>
-              <div>
-                <div className="text-3xl font-bold text-[#4CAF50]">4.9</div>
-                <div className="text-sm text-gray-100 uppercase tracking-widest mt-1">
-                  User Rating
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Booking Widget */}
-          <div className="bg-white/95 backdrop-blur-xl rounded-3xl shadow-2xl p-8 border border-white/20 relative">
-            <div className="flex gap-2 bg-gray-100 p-1 rounded-xl mb-6">
-              {["Transfer", "Excursion", "Corporate"].map((tab) => (
-                <button
-                  key={tab}
-                  onClick={() => setBookingType(tab)}
-                  className={`flex-1 py-2.5 px-4 text-sm font-semibold rounded-lg transition-all ${bookingType === tab ? "bg-white shadow-sm text-gray-900" : "text-gray-500 hover:text-gray-700"}`}
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-
-            <div className="space-y-5">
-              {/* Pickup location */}
-              <div>
-                <label className="font-sans-clean text-white text-xs uppercase tracking-wider block mb-2">
-                  Pickup location
-                </label>
-                <div
-                  onClick={() => setIsPickupModalOpen(true)}
-                  className="flex items-center gap-3 bg-black/20 border border-white/10 rounded-xl px-4 py-3 cursor-pointer hover:border-[#D4A373]/50 transition-colors"
-                >
-                  <MapPin className="w-4 h-4 text-[#D4A373] shrink-0" />
-                  <span className="font-sans-clean text-sm text-white flex-1">
-                    {pickupLocation.address || "Choose a location"}
-                  </span>
-                </div>
-              </div>
-
-              {/* Destination */}
-              <div>
-                <label className="font-sans-clean text-white text-xs uppercase tracking-wider block mb-2">
-                  Destination
-                </label>
-                <div
-                  onClick={() => setIsDestinationModalOpen(true)}
-                  className="flex items-center gap-3 bg-black/20 border border-white/10 rounded-xl px-4 py-3 cursor-pointer hover:border-[#1E6091]/50 transition-colors"
-                >
-                  <MapPin className="w-4 h-4 text-[#1E6091] shrink-0" />
-                  <span className="font-sans-clean text-sm text-white flex-1">
-                    {destinationLocation.address ||
-                      "Hammamet, Sousse, Djerba..."}
-                  </span>
-                </div>
-              </div>
-
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                    Date
-                  </label>
-                  <input
-                    type="date"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-gray-800 focus:border-[#87CEEB] transition-all font-sans"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-2">
-                    Time
-                  </label>
-                  <input
-                    type="time"
-                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 outline-none text-gray-800 focus:border-[#87CEEB] transition-all font-sans"
-                  />
-                </div>
-              </div>
-
-              <button
-                className="w-full py-4 mt-4 bg-gradient-to-r from-[#d7f0fa] to-[#4CAF50] text-white rounded-xl font-bold text-lg hover:shadow-lg hover:shadow-[#4CAF50]/30 transition-all hover:-translate-y-0.5"
-                onClick={() => {
-                  router.push(`/dashboard`);
-                }}
-              >
-                Booking Now
-              </button>
-              {/* Modals */}
-                <LocationPickerModal
-                  isOpen={isPickupModalOpen}
-                  onClose={() => setIsPickupModalOpen(false)}
-                  onSelectLocation={(address, lat, lng) =>
-                    setPickupLocation({ address, lat, lng })
-                  }
-                  title="Select pickup location"
-                />
-                <LocationPickerModal
-                  isOpen={isDestinationModalOpen}
-                  onClose={() => setIsDestinationModalOpen(false)}
-                  onSelectLocation={(address, lat, lng) =>
-                    setDestinationLocation({ address, lat, lng })
-                  }
-                  title="Select destination"
-                />
-            </div>
-          </div>
+          <Link
+            href="/services"
+            className="mt-8 inline-flex items-center gap-2 px-8 py-3.5 rounded-full bg-[#1B4D3E] text-white font-semibold text-base tracking-wide hover:bg-[#16402F] transition-colors shadow-lg"
+          >
+            Discover Authentic Experiences
+          </Link>
         </div>
       </section>
+
+      {/* ═══════════════ TICKER ═════════════════════════════════════════════ */}
       <div className="py-4" style={{ background: "#0F2828" }}>
-        {/* ═══════════════ TICKER ═════════════════════════════════════════════ */}
         <Ticker
           items={[
-            "Premium transfers",
-            "Private excursions",
-            "Airport pickups",
-            "Djerba · Tozeur · Carthage · Sousse",
-            "Available 24/7",
-            "Free quotes",
+            "Enjoy The Calm Promise",
+            "Experience Tunisia at the True Local Rate",
           ]}
         />
       </div>

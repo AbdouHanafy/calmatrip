@@ -47,11 +47,11 @@ interface MarketplaceDashboardData {
 }
 
 const STATUS_LABEL: Record<string, string> = {
-  pending: "En attente",
-  confirmed: "Confirmée",
-  shipped: "Expédiée",
-  delivered: "Livrée",
-  cancelled: "Annulée",
+  pending: "Pending",
+  confirmed: "Confirmed",
+  shipped: "Shipped",
+  delivered: "Delivered",
+  cancelled: "Cancelled",
 };
 
 const STATUS_STYLE: Record<string, string> = {
@@ -105,9 +105,9 @@ export function MarketplaceAdminOverview() {
   if (error || !data) {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3">
-        <p className="text-red-500 font-medium">Échec du chargement du dashboard</p>
+        <p className="text-red-500 font-medium">Failed to load dashboard</p>
         <button onClick={load} className="text-sm text-[#87CEEB] underline hover:text-[#4CAF50]">
-          Réessayer
+          Retry
         </button>
       </div>
     );
@@ -117,30 +117,30 @@ export function MarketplaceAdminOverview() {
 
   const statCards = [
     {
-      label: "Produits",
+      label: "Products",
       value: stats.totalProducts.toLocaleString(),
-      sub: `${stats.lowStockProducts} en stock bas`,
+      sub: `${stats.lowStockProducts} low stock`,
       icon: Package,
       gradient: "from-[#87CEEB] to-[#4CAF50]",
     },
     {
-      label: "Commandes",
+      label: "Orders",
       value: stats.totalOrders.toLocaleString(),
-      sub: `${stats.pendingOrders} en attente`,
+      sub: `${stats.pendingOrders} pending`,
       icon: ShoppingCart,
       gradient: "from-[#FFD700] to-[#FFC107]",
     },
     {
-      label: "Stock bas",
+      label: "Low Stock",
       value: stats.lowStockProducts.toLocaleString(),
-      sub: "≤ 5 unités",
+      sub: "≤ 5 units",
       icon: AlertTriangle,
       gradient: "from-red-400 to-orange-400",
     },
     {
-      label: "Revenu",
+      label: "Revenue",
       value: `${stats.revenue.toLocaleString()} TND`,
-      sub: "commandes validées",
+      sub: "confirmed orders",
       icon: DollarSign,
       gradient: "from-[#4CAF50] to-[#45A049]",
     },
@@ -172,14 +172,14 @@ export function MarketplaceAdminOverview() {
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-bold text-gray-900">Commandes récentes</h3>
-              <p className="text-sm text-gray-500">Dernières activités</p>
+              <h3 className="text-lg font-bold text-gray-900">Recent Orders</h3>
+              <p className="text-sm text-gray-500">Latest activities</p>
             </div>
             <TrendingUp className="w-5 h-5 text-[#87CEEB]" />
           </div>
 
           {recentOrders.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-8">Aucune commande encore</p>
+            <p className="text-sm text-gray-400 text-center py-8">No orders yet</p>
           ) : (
             <div className="space-y-4">
               {recentOrders.map((order) => (
@@ -187,7 +187,7 @@ export function MarketplaceAdminOverview() {
                   <div>
                     <p className="font-medium text-gray-900 text-sm">{order.customerName}</p>
                     <p className="text-xs text-gray-500">
-                      #{order.id} · {order.items.length} article{order.items.length > 1 ? "s" : ""}
+                      #{order.id} · {order.items.length} item{order.items.length > 1 ? "s" : ""}
                     </p>
                   </div>
                   <div className="text-right space-y-1">
@@ -205,7 +205,7 @@ export function MarketplaceAdminOverview() {
             href="/admin/marketplace/orders"
             className="mt-4 flex items-center justify-center gap-2 text-sm text-[#87CEEB] hover:text-[#4CAF50] transition-colors"
           >
-            <span>Voir toutes les commandes</span>
+            <span>View all orders</span>
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
@@ -213,21 +213,21 @@ export function MarketplaceAdminOverview() {
         <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
           <div className="flex items-center justify-between mb-6">
             <div>
-              <h3 className="text-lg font-bold text-gray-900">Produits populaires</h3>
-              <p className="text-sm text-gray-500">Meilleures ventes</p>
+              <h3 className="text-lg font-bold text-gray-900">Popular Products</h3>
+              <p className="text-sm text-gray-500">Best sellers</p>
             </div>
             <Star className="w-5 h-5 text-[#FFD700]" />
           </div>
 
           {topProducts.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-8">Pas encore de ventes</p>
+            <p className="text-sm text-gray-400 text-center py-8">No sales yet</p>
           ) : (
             <div className="space-y-4">
               {topProducts.map((product, index) => (
                 <div key={product.name}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">{product.name}</span>
-                    <span className="text-sm font-semibold text-gray-900">{product.sold} vendus</span>
+                    <span className="text-sm font-semibold text-gray-900">{product.sold} sold</span>
                   </div>
                   <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
@@ -248,11 +248,11 @@ export function MarketplaceAdminOverview() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] flex items-center justify-center">
               <Package className="w-5 h-5 text-white" />
             </div>
-            <h3 className="font-semibold text-gray-900">Gérer les produits</h3>
+            <h3 className="font-semibold text-gray-900">Manage Products</h3>
           </div>
-          <p className="text-sm text-gray-600 mb-4">Ajouter, modifier ou retirer des produits</p>
+          <p className="text-sm text-gray-600 mb-4">Add, edit or remove products</p>
           <Link href="/admin/marketplace/products" className="inline-flex items-center gap-2 text-sm font-medium text-[#87CEEB] hover:text-[#4CAF50] transition-colors">
-            Gérer <ChevronRight className="w-4 h-4" />
+            Manage <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -261,11 +261,11 @@ export function MarketplaceAdminOverview() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#FFD700] to-[#FFC107] flex items-center justify-center">
               <ShoppingCart className="w-5 h-5 text-white" />
             </div>
-            <h3 className="font-semibold text-gray-900">Commandes</h3>
+            <h3 className="font-semibold text-gray-900">Orders</h3>
           </div>
-          <p className="text-sm text-gray-600 mb-4">Suivre et mettre à jour les statuts</p>
+          <p className="text-sm text-gray-600 mb-4">Track and update statuses</p>
           <Link href="/admin/marketplace/orders" className="inline-flex items-center gap-2 text-sm font-medium text-[#FFD700] hover:text-[#FFC107] transition-colors">
-            Accéder <ChevronRight className="w-4 h-4" />
+            Access <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
@@ -274,11 +274,11 @@ export function MarketplaceAdminOverview() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-red-400 to-orange-400 flex items-center justify-center">
               <AlertTriangle className="w-5 h-5 text-white" />
             </div>
-            <h3 className="font-semibold text-gray-900">Stock bas</h3>
+            <h3 className="font-semibold text-gray-900">Low Stock</h3>
           </div>
-          <p className="text-sm text-gray-600 mb-4">{stats.lowStockProducts} produit(s) à réapprovisionner</p>
+          <p className="text-sm text-gray-600 mb-4">{stats.lowStockProducts} product(s) to restock</p>
           <Link href="/admin/marketplace/products?filter=low_stock" className="inline-flex items-center gap-2 text-sm font-medium text-red-500 hover:text-orange-500 transition-colors">
-            Vérifier <ChevronRight className="w-4 h-4" />
+            Check <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

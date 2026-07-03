@@ -32,7 +32,7 @@ export const Footer = () => {
             <h3 className="text-lg font-semibold mb-6">Quick Links</h3>
             <ul className="space-y-4">
               {[
-                { name: 'About Us', path: '/about' },
+                { name: 'About Calma', path: '/about' },
                 { name: 'Our Services', path: '/services' },
                 { name: 'Marketplace', path: '/marketplace' },
                 { name: 'Contact', path: '/contact' },

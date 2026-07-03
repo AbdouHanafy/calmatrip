@@ -850,6 +850,9 @@ const removeFeatureRow = (index: number) => {
                     <option value="Transport">Transport</option>
                     <option value="Excursion">Excursion</option>
                     <option value="Group">Group</option>
+                    <option value="Camel Treks">Camel Treks</option>
+                    <option value="4x4 Tours">4x4 Tours</option>
+                    <option value="Catamaran Trips">Catamaran Trips</option>
                   </select>
                 </div>
                 <div>

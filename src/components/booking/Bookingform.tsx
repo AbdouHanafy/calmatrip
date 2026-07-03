@@ -63,6 +63,11 @@ export function BookingForm() {
   const [useManualTime, setUseManualTime] = useState(true);
   const [manualTime, setManualTime] = useState("");
 
+  const [tripType, setTripType] = useState<"one-way" | "round-trip">("one-way");
+
+  const [returnDate, setReturnDate] = useState("");
+  const [returnTime, setReturnTime] = useState("");
+
   
   const [passengers, setPassengers] = useState(1);
   const [hasLuggage, setHasLuggage] = useState(false);
@@ -148,6 +153,12 @@ export function BookingForm() {
       setError("Please enter at least 1 passenger");
       return;
     }
+    if (tripType === "round-trip") {
+  if (!returnDate || !returnTime) {
+    setError("Please select return date and return time");
+    return;
+  }
+}
 
     setSubmitting(true);
 
@@ -156,20 +167,28 @@ export function BookingForm() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          serviceId,
-          date,
-          time: finalTime,
+  serviceId,
 
-          fromLocation: pickupLocation.address,
-          toLocation: destinationLocation.address,
+  tripType,
 
-          passengers,
-          hasLuggage,
-          customerName,
-          customerEmail,
-          customerPhone,
-          specialRequests,
-        }),
+  date,
+  time: finalTime,
+
+  returnDate,
+  returnTime,
+
+  fromLocation: pickupLocation.address,
+  toLocation: destinationLocation.address,
+
+  passengers,
+  hasLuggage,
+
+  customerName,
+  customerEmail,
+  customerPhone,
+
+  specialRequests,
+}),
       });
 
       const data = await res.json();
@@ -291,6 +310,54 @@ export function BookingForm() {
         )}
       </div>
 
+        {/* TRIP TYPE */}
+
+<div>
+  <label className="text-sm font-bold text-gray-700 block mb-3">
+    Trip Type
+  </label>
+
+  <div className="grid grid-cols-2 gap-3">
+
+    <button
+      type="button"
+      onClick={() => setTripType("one-way")}
+      className={`rounded-2xl border-2 p-5 transition-all ${
+        tripType === "one-way"
+          ? "border-[#4CAF50] bg-[#4CAF50]/10 shadow-md"
+          : "border-gray-200 hover:border-[#87CEEB]"
+      }`}
+    >
+      <h3 className="font-bold text-lg">
+        One Trip
+      </h3>
+
+      <p className="text-sm text-gray-500 mt-2">
+        One-way transfer
+      </p>
+    </button>
+
+    <button
+      type="button"
+      onClick={() => setTripType("round-trip")}
+      className={`rounded-2xl border-2 p-5 transition-all ${
+        tripType === "round-trip"
+          ? "border-[#4CAF50] bg-[#4CAF50]/10 shadow-md"
+          : "border-gray-200 hover:border-[#87CEEB]"
+      }`}
+    >
+      <h3 className="font-bold text-lg">
+        Round Trip
+      </h3>
+
+      <p className="text-sm text-gray-500 mt-2">
+        Outbound + Return
+      </p>
+    </button>
+
+  </div>
+</div>
+
       {/* DATE */}
       {serviceId && (
         <div>
@@ -395,6 +462,47 @@ export function BookingForm() {
           )}
         </div>
       )}
+
+      {tripType === "round-trip" && (
+  <div className="space-y-5 rounded-2xl border-2 border-[#87CEEB]/20 bg-[#87CEEB]/5 p-6">
+
+    <h3 className="font-bold text-[#1E3A3A] text-lg">
+      Return Journey
+    </h3>
+
+    <div>
+
+      <label className="text-sm font-bold text-gray-700 block mb-2">
+        Return Date
+      </label>
+
+      <input
+        type="date"
+        value={returnDate}
+        min={date}
+        onChange={(e) => setReturnDate(e.target.value)}
+        className="w-full rounded-2xl border-2 border-gray-100 px-4 py-3.5 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none"
+      />
+
+    </div>
+
+    <div>
+
+      <label className="text-sm font-bold text-gray-700 block mb-2">
+        Return Time
+      </label>
+
+      <input
+        type="time"
+        value={returnTime}
+        onChange={(e) => setReturnTime(e.target.value)}
+        className="w-full rounded-2xl border-2 border-gray-100 px-4 py-3.5 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none"
+      />
+
+    </div>
+
+  </div>
+)}
 
       {/* TRIP DETAILS */}
       <div className="space-y-4">

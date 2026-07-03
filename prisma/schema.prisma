@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url      = env("DATABASE_URL")
 }
 
@@ -78,7 +78,7 @@ model Service {
   category    String?
   features    Json?
   duration    String?
-  image       String?
+  image       String?  @db.Text
   active      Boolean  @default(true)
   popular     Boolean  @default(false)
   order       Int      @default(0)
@@ -109,6 +109,10 @@ model Booking {
   createdAt       DateTime  @default(now())
   updatedAt       DateTime  @updatedAt
   hasLuggage      Boolean   @default(false)
+
+  tripType    String   @default("one-way")
+  returnDate  DateTime?
+  returnTime  String?
 
   @@index([timeSlotId])
   @@map("bookings")
@@ -231,6 +235,7 @@ model Notification {
   body      String   @db.Text
   link      String?
   isRead    Boolean  @default(false)
+  readAt    DateTime?
   metadata  Json?
   createdAt DateTime @default(now())
 
@@ -238,6 +243,7 @@ model Notification {
 
   @@index([recipient, isRead])
   @@index([userId])
+  @@index([isRead, readAt]) // utile pour le cleanup
   @@map("notifications")
 }
 

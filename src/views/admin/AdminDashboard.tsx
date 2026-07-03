@@ -36,7 +36,9 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
     { path: "/admin/clients", label: "Manage Clients", icon: Users },
     { path: "/admin/bookings", label: "Bookings", icon: Calendar },
     { path: "/admin/marketplace", label: "Manage Products", icon: Package },
-  ];
+    { path: "/admin/contacts", label: "Manage Contacts", icon: Users },
+    { path: "/admin/reviews", label: "Manage Reviews", icon: Package },
+  ];  
 
   const isActive = (path: string, exact?: boolean) => {
     if (exact) return pathname === path;
