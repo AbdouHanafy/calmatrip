@@ -3,20 +3,22 @@ import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 
-// ─── GET — récupère les notifs de l'utilisateur connecté ──────
+// ─── GET — récupère les notifs selon le rôle ──────────────────
 export async function GET(req: NextRequest) {
-    const session = await auth();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const session = await auth();
+  if (!session?.user) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
 
   const { searchParams } = new URL(req.url);
   const onlyUnread = searchParams.get("unread") === "true";
 
+  const isAdmin = session.user.role === "ADMIN";
 
   const where = {
-    OR: [
-      { userId: session.user.id },
-      { recipient: "admin" }
-    ],
+    ...(isAdmin
+      ? { recipient: "admin" } // ADMIN => toutes les notifications, sans restriction
+      : { userId: session.user.id }), // USER => uniquement les siennes
     ...(onlyUnread ? { isRead: false } : {}),
   };
 

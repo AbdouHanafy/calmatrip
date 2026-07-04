@@ -9,12 +9,14 @@ export const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
           {/* Brand Info */}
           <div className="space-y-6">
-            <Link href="/" className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#87CEEB] to-[#4CAF50] flex items-center justify-center">
-                <img src='/images/logo-calma-trip.jpg' />
-              </div>
-              <span className="text-xl font-bold tracking-tight">Calmatrip</span>
-            </Link>
+            <Link href="/" className="flex-shrink-0">
+            <span
+              className="text-2xl font-bold text-[#9ed1c2] tracking-tight"
+              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
+              Calma Trip
+            </span>
+          </Link>
             <p className="text-gray-400 text-sm leading-relaxed">
               Your trusted partner to discover the beauty and cultural richness of Tunisia. Premium transport and excursion services.
             </p>

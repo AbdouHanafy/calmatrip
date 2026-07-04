@@ -31,11 +31,17 @@ export default function LocationPickerModal({
   const [address, setAddress] = useState('');
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
-  const { isLoaded, loadError } = useJsApiLoader({
-    id: 'google-map-script',
-    googleMapsApiKey: 'AIzaSyBBHNqVoEUvhgBCDZ9JfV5yLE4Gy3XgHsE',
-    libraries,
-  });
+  const apiKey = process.env.NEXT_PUBLIC_ID_GOOGLEM_APS;
+
+if (!apiKey) {
+  throw new Error("NEXT_PUBLIC_ID_GOOGLEM_APS is not defined");
+}
+
+const { isLoaded, loadError } = useJsApiLoader({
+  id: "google-map-script",
+  googleMapsApiKey: apiKey,
+  libraries,
+});
 
   const onLoadAutocomplete = (autocomplete: google.maps.places.Autocomplete) => {
     autocompleteRef.current = autocomplete;

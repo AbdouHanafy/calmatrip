@@ -35,12 +35,12 @@ export function AuthPage({ mode, callbackUrl = "/dashboard" }: AuthPageProps) {
       <div className="w-full max-w-md relative z-10">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex flex-col items-center gap-3 group">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#87CEEB] via-[#4CAF50] to-[#FFD700] flex items-center justify-center shadow-lg shadow-[#87CEEB]/20 group-hover:scale-105 transition-transform duration-300">
-             <img src="/images/logo-calma-trip.jpg" alt="Calmatrip Logo" className="w-full h-full rounded-2xl" />
-            </div>
-            <span className="text-2xl font-extrabold bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">
-              Calmatrip
+          <Link href="/" className="flex-shrink-0">
+            <span
+              className="text-4xl font-bold text-[#ccf5e9] tracking-tight"
+              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
+            >
+              Calma Trip
             </span>
           </Link>
         </div>
