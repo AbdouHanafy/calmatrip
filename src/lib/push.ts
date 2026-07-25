@@ -1,11 +1,23 @@
 // lib/push.ts
 import webpush from "web-push";
 
-webpush.setVapidDetails(
-  process.env.VAPID_MAILTO!,
-  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
-  process.env.VAPID_PRIVATE_KEY!
-);
+// VAPID keys are optional in local/dev environments where push notifications
+// aren't configured — without this guard, any route importing this module
+// (even ones that never send a push) crashes on load.
+const vapidConfigured =
+  !!process.env.VAPID_MAILTO &&
+  !!process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY &&
+  !!process.env.VAPID_PRIVATE_KEY;
+
+if (vapidConfigured) {
+  webpush.setVapidDetails(
+    process.env.VAPID_MAILTO!,
+    process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+    process.env.VAPID_PRIVATE_KEY!
+  );
+} else {
+  console.warn("[push] VAPID keys not configured — push notifications are disabled.");
+}
 
 type PushPayload = {
   title: string;
@@ -25,6 +37,8 @@ export async function sendPushToSubscriptions(
   subscriptions: TargetSubscription[],
   payload: PushPayload
 ) {
+  if (!vapidConfigured) return [];
+
   const results = await Promise.allSettled(
     subscriptions.map((sub) =>
       webpush.sendNotification(

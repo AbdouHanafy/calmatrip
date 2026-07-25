@@ -148,18 +148,18 @@ function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
         onClick={() => inputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-200 ${
           dragging
-            ? "border-[#87CEEB] bg-[#87CEEB]/5 scale-[1.01]"
-            : "border-gray-200 hover:border-[#87CEEB] hover:bg-[#87CEEB]/5"
+            ? "border-[#F2994A] bg-[#F2994A]/5 scale-[1.01]"
+            : "border-calma-border hover:border-[#F2994A] hover:bg-[#F2994A]/5"
         }`}
       >
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#87CEEB]/20 to-[#4CAF50]/20 flex items-center justify-center">
-          <Upload className="w-6 h-6 text-[#87CEEB]" />
+        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F2994A]/20 to-[#5E8B63]/20 flex items-center justify-center">
+          <Upload className="w-6 h-6 text-[#F2994A]" />
         </div>
         <div className="text-center">
-          <p className="text-sm font-medium text-gray-700">
-            Drop images here or <span className="text-[#87CEEB]">browse</span>
+          <p className="text-sm font-medium text-calma-ink">
+            Drop images here or <span className="text-[#F2994A]">browse</span>
           </p>
-          <p className="text-xs text-gray-400 mt-1">PNG, JPG, WEBP — max 5 MB each</p>
+          <p className="text-xs text-calma-taupe mt-1">PNG, JPG, WEBP — max 5 MB each</p>
         </div>
         <input
           ref={inputRef}
@@ -183,8 +183,8 @@ function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
               onDragEnd={onDragEndThumb}
               onDragOver={(e) => e.preventDefault()}
               className={`relative group aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-grab active:cursor-grabbing ${
-                index === 0 ? "border-[#87CEEB]" : "border-gray-200"
-              } ${dragOverIndex === index && dragItem.current !== index ? "scale-105 border-[#4CAF50]" : ""}`}
+                index === 0 ? "border-[#F2994A]" : "border-calma-border"
+              } ${dragOverIndex === index && dragItem.current !== index ? "scale-105 border-[#5E8B63]" : ""}`}
             >
               <img
                 src={img.url}
@@ -194,7 +194,7 @@ function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
 
               {/* Primary badge */}
               {index === 0 && (
-                <span className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#87CEEB] text-white text-[10px] font-bold rounded-md">
+                <span className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#F2994A] text-white text-[10px] font-bold rounded-md">
                   Main
                 </span>
               )}
@@ -233,16 +233,16 @@ function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="aspect-square rounded-xl border-2 border-dashed border-gray-200 hover:border-[#87CEEB] hover:bg-[#87CEEB]/5 flex flex-col items-center justify-center gap-1 transition-all"
+            className="aspect-square rounded-xl border-2 border-dashed border-calma-border hover:border-[#F2994A] hover:bg-[#F2994A]/5 flex flex-col items-center justify-center gap-1 transition-all"
           >
-            <Plus className="w-5 h-5 text-gray-400" />
-            <span className="text-[10px] text-gray-400">Add more</span>
+            <Plus className="w-5 h-5 text-calma-taupe" />
+            <span className="text-[10px] text-calma-taupe">Add more</span>
           </button>
         </div>
       )}
 
       {images.length > 1 && (
-        <p className="text-xs text-gray-400 flex items-center gap-1">
+        <p className="text-xs text-calma-taupe flex items-center gap-1">
           <GripVertical className="w-3 h-3" />
           Drag thumbnails to reorder — first image is the main one
         </p>
@@ -298,10 +298,10 @@ export default function AdminServices() {
   });
 
   const stats = [
-    { label: "Total Services", value: services.length, icon: Tag, gradient: "from-[#87CEEB] to-[#4CAF50]", change: `${services.length} registered` },
-    { label: "Active", value: services.filter((s) => s.active).length, icon: CheckCircle, gradient: "from-[#4CAF50] to-[#45A049]", change: "Available" },
+    { label: "Total Services", value: services.length, icon: Tag, gradient: "from-[#F2994A] to-[#5E8B63]", change: `${services.length} registered` },
+    { label: "Active", value: services.filter((s) => s.active).length, icon: CheckCircle, gradient: "from-[#5E8B63] to-[#4C7350]", change: "Available" },
     { label: "Inactive", value: services.filter((s) => !s.active).length, icon: EyeOff, gradient: "from-red-500 to-red-600", change: "To reactivate" },
-    { label: "Categories", value: new Set(services.map((s) => s.category).filter(Boolean)).size, icon: Filter, gradient: "from-[#FFD700] to-[#FFC107]", change: "Active" },
+    { label: "Categories", value: new Set(services.map((s) => s.category).filter(Boolean)).size, icon: Filter, gradient: "from-[#D9A441] to-[#D9A441]", change: "Active" },
   ];
 
   // ── Modal helpers ──────────────────────────────────────────────────────────
@@ -507,7 +507,7 @@ const removeFeatureRow = (index: number) => {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#87CEEB]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#F2994A]" />
       </div>
     );
   }
@@ -529,14 +529,14 @@ const removeFeatureRow = (index: number) => {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F2994A] via-[#5E8B63] to-[#D9A441] bg-clip-text text-transparent">
             Manage Services
           </h1>
-          <p className="text-gray-500 mt-1">Add, modify or manage your services</p>
+          <p className="text-calma-taupe mt-1">Add, modify or manage your services</p>
         </div>
         <button
           onClick={openAddModal}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#87CEEB]/30 transform hover:scale-105 transition-all duration-300"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#F2994A] to-[#5E8B63] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#F2994A]/30 transform hover:scale-105 transition-all duration-300"
         >
           <Plus className="w-5 h-5" />
           New Service
@@ -546,57 +546,57 @@ const removeFeatureRow = (index: number) => {
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         {stats.map((stat, index) => (
-          <div key={index} className="group bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100">
+          <div key={index} className="group bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-calma-border">
             <div className="flex items-start justify-between mb-3">
               <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center`}>
                 <stat.icon className="w-5 h-5 text-white" />
               </div>
-              <span className="text-xs text-gray-400 bg-gray-100 px-2 py-1 rounded-full">{stat.change}</span>
+              <span className="text-xs text-calma-taupe bg-calma-sand px-2 py-1 rounded-full">{stat.change}</span>
             </div>
-            <h3 className="text-2xl font-bold text-gray-900 mb-1">{stat.value}</h3>
-            <p className="text-sm text-gray-500">{stat.label}</p>
+            <h3 className="text-2xl font-bold text-calma-ink mb-1">{stat.value}</h3>
+            <p className="text-sm text-calma-taupe">{stat.label}</p>
           </div>
         ))}
       </div>
 
       {/* Search & Filter */}
-      <div className="bg-white rounded-2xl shadow-lg p-4 border border-gray-100">
+      <div className="bg-white rounded-2xl shadow-lg p-4 border border-calma-border">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-calma-taupe" />
             <input
               type="text"
               placeholder="Search for a service..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-2.5 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
             />
           </div>
           <div className="flex gap-3">
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent bg-white"
+              className="px-4 py-2.5 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent bg-white"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat === "all" ? "All categories" : cat}</option>
               ))}
             </select>
-            <button onClick={exportCsv} className="px-4 py-2.5 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors" title="Export CSV">
-              <Download className="w-4 h-4 text-gray-500" />
+            <button onClick={exportCsv} className="px-4 py-2.5 border border-calma-border rounded-xl hover:bg-calma-sand transition-colors" title="Export CSV">
+              <Download className="w-4 h-4 text-calma-taupe" />
             </button>
           </div>
         </div>
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-calma-border">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gradient-to-r from-gray-50 to-white border-b border-gray-200">
+            <thead className="bg-gradient-to-r from-calma-sand to-white border-b border-calma-border">
               <tr>
                 {["ID", "Service", "Category", "Duration", "Price", "Status", "Popular", "Actions"].map((h) => (
-                  <th key={h} className="px-6 py-4 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider">{h}</th>
+                  <th key={h} className="px-6 py-4 text-left text-xs font-semibold text-calma-taupe uppercase tracking-wider">{h}</th>
                 ))}
               </tr>
             </thead>
@@ -604,9 +604,9 @@ const removeFeatureRow = (index: number) => {
               {filteredServices.map((service) => {
                 const images = parseImages(service.image);
                 return (
-                  <tr key={service.id} className="hover:bg-gray-50 transition-colors group">
+                  <tr key={service.id} className="hover:bg-calma-sand transition-colors group">
                     <td className="px-6 py-4">
-                      <span className="text-sm font-mono text-gray-500">#{service.id}</span>
+                      <span className="text-sm font-mono text-calma-taupe">#{service.id}</span>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
@@ -617,43 +617,43 @@ const removeFeatureRow = (index: number) => {
                               <img
                                 src={images[0]}
                                 alt=""
-                                className="w-10 h-10 rounded-xl object-cover border border-gray-200"
+                                className="w-10 h-10 rounded-xl object-cover border border-calma-border"
                               />
                               {images.length > 1 && (
-                                <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#87CEEB] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
+                                <span className="absolute -bottom-1 -right-1 w-4 h-4 bg-[#F2994A] text-white text-[9px] font-bold rounded-full flex items-center justify-center">
                                   +{images.length - 1}
                                 </span>
                               )}
                             </>
                           ) : (
-                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#87CEEB]/10 to-[#4CAF50]/10 flex items-center justify-center">
-                              <ImageIcon className="w-5 h-5 text-gray-300" />
+                            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#F2994A]/10 to-[#5E8B63]/10 flex items-center justify-center">
+                              <ImageIcon className="w-5 h-5 text-calma-taupe" />
                             </div>
                           )}
                         </div>
                         <div>
-                          <div className="font-semibold text-gray-900">{service.title}</div>
-                          <div className="text-xs text-gray-500 max-w-xs truncate">{service.description}</div>
+                          <div className="font-semibold text-calma-ink">{service.title}</div>
+                          <div className="text-xs text-calma-taupe max-w-xs truncate">{service.description}</div>
                         </div>
                       </div>
                     </td>
                     <td className="px-6 py-4">
                       <span className={`inline-flex items-center px-2.5 py-1 rounded-lg text-xs font-medium ${
-                        service.category === "Transport" ? "bg-[#87CEEB]/10 text-[#87CEEB]" :
-                        service.category === "Excursion" ? "bg-[#FFD700]/10 text-[#856B00]" :
-                        "bg-[#4CAF50]/10 text-[#4CAF50]"
+                        service.category === "Transport" ? "bg-[#F2994A]/10 text-[#F2994A]" :
+                        service.category === "Excursion" ? "bg-[#D9A441]/10 text-[#8A6B2E]" :
+                        "bg-[#5E8B63]/10 text-[#5E8B63]"
                       }`}>
                         {service.category ?? "—"}
                       </span>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1 text-sm text-gray-600">
+                      <div className="flex items-center gap-1 text-sm text-calma-taupe">
                         <Clock className="w-3 h-3" />
                         {service.duration || "—"}
                       </div>
                     </td>
                     <td className="px-6 py-4">
-                      <div className="flex items-center gap-1 font-semibold text-[#87CEEB]">
+                      <div className="flex items-center gap-1 font-semibold text-[#F2994A]">
                         <DollarSign className="w-3 h-3" />
                         {service.price}
                       </div>
@@ -663,7 +663,7 @@ const removeFeatureRow = (index: number) => {
                         onClick={() => toggleServiceStatus(service)}
                         className={`inline-flex items-center px-3 py-1.5 rounded-lg text-sm font-medium transition-all ${
                           service.active
-                            ? "bg-[#4CAF50]/10 text-[#4CAF50] hover:bg-[#4CAF50]/20"
+                            ? "bg-[#5E8B63]/10 text-[#5E8B63] hover:bg-[#5E8B63]/20"
                             : "bg-red-500/10 text-red-500 hover:bg-red-500/20"
                         }`}
                       >
@@ -673,17 +673,17 @@ const removeFeatureRow = (index: number) => {
                     <td className="px-6 py-4">
                       <button
                         onClick={() => togglePopular(service)}
-                        className={`p-1.5 rounded-lg transition-all ${service.popular ? "text-[#FFD700] bg-[#FFD700]/10" : "text-gray-300 hover:text-[#FFD700] hover:bg-[#FFD700]/10"}`}
+                        className={`p-1.5 rounded-lg transition-all ${service.popular ? "text-[#D9A441] bg-[#D9A441]/10" : "text-calma-taupe hover:text-[#D9A441] hover:bg-[#D9A441]/10"}`}
                       >
                         <Star className="w-4 h-4" />
                       </button>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-1">
-                        <button onClick={() => openEditModal(service)} className="p-2 text-gray-500 hover:text-[#87CEEB] hover:bg-[#87CEEB]/10 rounded-lg transition-all" title="Edit">
+                        <button onClick={() => openEditModal(service)} className="p-2 text-calma-taupe hover:text-[#F2994A] hover:bg-[#F2994A]/10 rounded-lg transition-all" title="Edit">
                           <Edit className="w-4 h-4" />
                         </button>
-                        <button onClick={() => setShowDeleteConfirm(service.id)} className="p-2 text-gray-500 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
+                        <button onClick={() => setShowDeleteConfirm(service.id)} className="p-2 text-calma-taupe hover:text-red-500 hover:bg-red-50 rounded-lg transition-all" title="Delete">
                           <Trash2 className="w-4 h-4" />
                         </button>
                       </div>
@@ -697,26 +697,26 @@ const removeFeatureRow = (index: number) => {
 
         {filteredServices.length === 0 && (
           <div className="text-center py-12">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center">
-              <Search className="w-10 h-10 text-gray-300" />
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-calma-sand flex items-center justify-center">
+              <Search className="w-10 h-10 text-calma-taupe" />
             </div>
-            <p className="text-gray-500">No services found</p>
-            <p className="text-sm text-gray-400 mt-1">
+            <p className="text-calma-taupe">No services found</p>
+            <p className="text-sm text-calma-taupe mt-1">
               {services.length === 0 ? "Add your first service to get started" : "Try changing your search"}
             </p>
           </div>
         )}
 
         {filteredServices.length > 0 && (
-          <div className="px-6 py-4 border-t border-gray-100 flex items-center justify-between">
-            <p className="text-sm text-gray-500">
+          <div className="px-6 py-4 border-t border-calma-border flex items-center justify-between">
+            <p className="text-sm text-calma-taupe">
               Showing <span className="font-medium">{filteredServices.length}</span> of{" "}
               <span className="font-medium">{services.length}</span> services
             </p>
             <div className="flex gap-2">
-              <button disabled className="p-2 border border-gray-200 rounded-lg opacity-50 cursor-not-allowed"><ChevronLeft className="w-4 h-4" /></button>
-              <button className="px-3 py-2 bg-[#87CEEB]/10 text-[#87CEEB] rounded-lg font-medium">1</button>
-              <button disabled className="p-2 border border-gray-200 rounded-lg opacity-50 cursor-not-allowed"><ChevronRight className="w-4 h-4" /></button>
+              <button disabled className="p-2 border border-calma-border rounded-lg opacity-50 cursor-not-allowed"><ChevronLeft className="w-4 h-4" /></button>
+              <button className="px-3 py-2 bg-[#F2994A]/10 text-[#F2994A] rounded-lg font-medium">1</button>
+              <button disabled className="p-2 border border-calma-border rounded-lg opacity-50 cursor-not-allowed"><ChevronRight className="w-4 h-4" /></button>
             </div>
           </div>
         )}
@@ -733,11 +733,11 @@ const removeFeatureRow = (index: number) => {
             onClick={(e) => e.stopPropagation()}
           >
             <div className="flex items-center justify-between mb-6">
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] bg-clip-text text-transparent">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-[#F2994A] to-[#5E8B63] bg-clip-text text-transparent">
                 {editingService ? "Edit Service" : "New Service"}
               </h3>
-              <button onClick={closeModal} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <X className="w-5 h-5 text-gray-500" />
+              <button onClick={closeModal} className="p-2 hover:bg-calma-sand rounded-lg transition-colors">
+                <X className="w-5 h-5 text-calma-taupe" />
               </button>
             </div>
 
@@ -751,24 +751,24 @@ const removeFeatureRow = (index: number) => {
             <form className="space-y-5" onSubmit={(e) => { e.preventDefault(); handleSave(); }}>
               {/* Images */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center gap-2">
-                  <ImageIcon className="w-4 h-4 text-[#87CEEB]" />
+                <label className="block text-sm font-medium text-calma-ink mb-2 flex items-center gap-2">
+                  <ImageIcon className="w-4 h-4 text-[#F2994A]" />
                   Images
-                  <span className="text-xs text-gray-400 font-normal">(optional — multiple allowed)</span>
+                  <span className="text-xs text-calma-taupe font-normal">(optional — multiple allowed)</span>
                 </label>
                 <ImageUploadZone images={imageEntries} onChange={setImageEntries} />
               </div>
 
               {/* Title */}
 <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Service Name <span className="text-[#87CEEB]">*</span>
+  <label className="block text-sm font-medium text-calma-ink mb-2">
+    Service Name <span className="text-[#F2994A]">*</span>
   </label>
   <input
     type="text"
     value={formData.title}
     onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+    className="w-full px-4 py-3 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
     placeholder="Ex: Airport Transfer"
     required
   />
@@ -776,22 +776,22 @@ const removeFeatureRow = (index: number) => {
 
 {/* Subtitle */}
 <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Subtitle <span className="text-xs text-gray-400 font-normal">(optional)</span>
+  <label className="block text-sm font-medium text-calma-ink mb-2">
+    Subtitle <span className="text-xs text-calma-taupe font-normal">(optional)</span>
   </label>
   <input
     type="text"
     value={formData.subtitle}
     onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+    className="w-full px-4 py-3 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
     placeholder="Ex: Arrival & Departure"
   />
 </div>
 
 {/* Description */}
 <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Description <span className="text-[#87CEEB]">*</span>
+  <label className="block text-sm font-medium text-calma-ink mb-2">
+    Description <span className="text-[#F2994A]">*</span>
   </label>
   <RichTextEditor
     value={formData.description}
@@ -803,9 +803,9 @@ const removeFeatureRow = (index: number) => {
 
 {/* Features */}
 <div>
-  <label className="block text-sm font-medium text-gray-700 mb-2 flex items-center justify-between">
+  <label className="block text-sm font-medium text-calma-ink mb-2 flex items-center justify-between">
     <span>
-      Features <span className="text-xs text-gray-400 font-normal">(optional)</span>
+      Features <span className="text-xs text-calma-taupe font-normal">(optional)</span>
     </span>
   </label>
   <div className="space-y-2">
@@ -816,7 +816,7 @@ const removeFeatureRow = (index: number) => {
           value={feature}
           onChange={(e) => updateFeatureRow(index, e.target.value)}
           placeholder="Ex: Real-time flight tracking"
-          className="flex-1 px-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+          className="flex-1 px-4 py-2.5 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
         />
         <button
           type="button"
@@ -830,7 +830,7 @@ const removeFeatureRow = (index: number) => {
     <button
       type="button"
       onClick={addFeatureRow}
-      className="flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 hover:border-[#87CEEB] hover:bg-[#87CEEB]/5 rounded-xl text-sm text-gray-500 hover:text-[#87CEEB] transition-all w-full justify-center"
+      className="flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-calma-border hover:border-[#F2994A] hover:bg-[#F2994A]/5 rounded-xl text-sm text-calma-taupe hover:text-[#F2994A] transition-all w-full justify-center"
     >
       <Plus className="w-4 h-4" />
       Add feature
@@ -841,11 +841,11 @@ const removeFeatureRow = (index: number) => {
               {/* Category + Price */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Category <span className="text-[#87CEEB]">*</span></label>
+                  <label className="block text-sm font-medium text-calma-ink mb-2">Category <span className="text-[#F2994A]">*</span></label>
                   <select
                     value={formData.category}
                     onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent bg-white"
+                    className="w-full px-4 py-3 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent bg-white"
                   >
                     <option value="Transport">Transport</option>
                     <option value="Excursion">Excursion</option>
@@ -856,13 +856,13 @@ const removeFeatureRow = (index: number) => {
                   </select>
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">Price <span className="text-[#87CEEB]">*</span></label>
+                  <label className="block text-sm font-medium text-calma-ink mb-2">Price <span className="text-[#F2994A]">*</span></label>
                   <input
                     type="text"
                     placeholder="Ex: 50 TND"
                     value={formData.price}
                     onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+                    className="w-full px-4 py-3 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
                     required
                   />
                 </div>
@@ -870,25 +870,25 @@ const removeFeatureRow = (index: number) => {
 
               {/* Duration */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Duration</label>
+                <label className="block text-sm font-medium text-calma-ink mb-2">Duration</label>
                 <input
                   type="text"
                   placeholder="Ex: 2 hours"
                   value={formData.duration}
                   onChange={(e) => setFormData({ ...formData, duration: e.target.value })}
-                  className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+                  className="w-full px-4 py-3 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
                 />
               </div>
 
               {/* Toggles */}
               <div className="flex items-center gap-6">
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={formData.active} onChange={(e) => setFormData({ ...formData, active: e.target.checked })} className="w-4 h-4 text-[#4CAF50] rounded" />
-                  <span className="text-sm text-gray-700">Active</span>
+                  <input type="checkbox" checked={formData.active} onChange={(e) => setFormData({ ...formData, active: e.target.checked })} className="w-4 h-4 text-[#5E8B63] rounded" />
+                  <span className="text-sm text-calma-ink">Active</span>
                 </label>
                 <label className="flex items-center gap-2 cursor-pointer">
-                  <input type="checkbox" checked={formData.popular} onChange={(e) => setFormData({ ...formData, popular: e.target.checked })} className="w-4 h-4 text-[#FFD700] rounded" />
-                  <span className="text-sm text-gray-700">Popular</span>
+                  <input type="checkbox" checked={formData.popular} onChange={(e) => setFormData({ ...formData, popular: e.target.checked })} className="w-4 h-4 text-[#D9A441] rounded" />
+                  <span className="text-sm text-calma-ink">Popular</span>
                 </label>
               </div>
 
@@ -897,12 +897,12 @@ const removeFeatureRow = (index: number) => {
                 <button
                   type="submit"
                   disabled={saving}
-                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-60"
+                  className="flex-1 flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-[#F2994A] to-[#5E8B63] text-white rounded-xl font-semibold hover:shadow-lg transition-all duration-300 disabled:opacity-60"
                 >
                   {saving && <Loader2 className="w-4 h-4 animate-spin" />}
                   {saving ? "Saving..." : editingService ? "Update" : "Create Service"}
                 </button>
-                <button type="button" onClick={closeModal} className="px-6 py-3 border-2 border-gray-200 text-gray-700 rounded-xl font-semibold hover:bg-gray-50 transition-all duration-300">
+                <button type="button" onClick={closeModal} className="px-6 py-3 border-2 border-calma-border text-calma-ink rounded-xl font-semibold hover:bg-calma-sand transition-all duration-300">
                   Cancel
                 </button>
               </div>
@@ -919,10 +919,10 @@ const removeFeatureRow = (index: number) => {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
                 <Trash2 className="w-8 h-8 text-red-500" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Confirm deletion</h3>
-              <p className="text-gray-600 mb-6">Are you sure you want to delete this service? This action is irreversible.</p>
+              <h3 className="text-xl font-bold text-calma-ink mb-2">Confirm deletion</h3>
+              <p className="text-calma-taupe mb-6">Are you sure you want to delete this service? This action is irreversible.</p>
               <div className="flex gap-3">
-                <button onClick={() => setShowDeleteConfirm(null)} className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors">Cancel</button>
+                <button onClick={() => setShowDeleteConfirm(null)} className="flex-1 px-4 py-2.5 border border-calma-border text-calma-ink rounded-xl font-medium hover:bg-calma-sand transition-colors">Cancel</button>
                 <button onClick={() => deleteService(showDeleteConfirm)} className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors">Delete</button>
               </div>
             </div>

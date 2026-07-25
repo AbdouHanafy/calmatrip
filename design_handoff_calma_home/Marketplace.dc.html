@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:#ECE3D0;color:#2A2622;font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}a{color:#9C533E}a:hover{color:#4A4E3F}</style>
+</helmet>
+
+<dc-import name="CalmaHeader" active="marketplace" hint-size="100%,76px"></dc-import>
+<dc-import name="CalmaPageHero" kicker="Marketplace · Tunisie" title="Toutes nos expériences" subtitle="Des activités menées par des locaux, réservées en direct. Filtrez par catégorie et trouvez votre prochaine aventure." hint-size="100%,320px"></dc-import>
+
+<section style="max-width:1240px;margin:0 auto;padding:34px 40px 10px">
+  <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between">
+    <div style="display:flex;flex-wrap:wrap;gap:10px">
+      <sc-for list="{{ filters }}" as="f" hint-placeholder-count="5">
+        <span style="{{ f.style }}">{{ f.label }}</span>
+      </sc-for>
+    </div>
+    <div style="font-size:13.5px;color:#6B665C">Trier : <b style="color:#4A4E3F">Populaires ▾</b></div>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:26px 40px 20px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+    <sc-for list="{{ exps }}" as="exp" hint-placeholder-count="9">
+      <div style="background:#F6EFE0;border:1px solid rgba(74,78,63,.12);border-radius:18px;overflow:hidden;cursor:pointer">
+        <div style="position:relative;aspect-ratio:16/11;background:#3a3d31;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 12px,rgba(255,255,255,.02) 12px 24px);display:grid;place-items:center">
+          <span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.5)">{{ exp.ph }}</span>
+          <div style="position:absolute;top:12px;left:12px;background:#9C533E;color:#F6EFE0;font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px">{{ exp.cat }}</div>
+          <div style="position:absolute;top:12px;right:12px;background:#F6EFE0;color:#4A4E3F;font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px"><span style="color:#9C533E">★</span> {{ exp.rating }}</div>
+        </div>
+        <div style="padding:18px 18px 20px">
+          <div style="font-size:12.5px;font-weight:600;color:#9C533E;margin-bottom:6px">◦ {{ exp.place }}</div>
+          <h3 style="font-family:'Fraunces',serif;font-weight:400;font-size:19px;line-height:1.2;color:#2A2622;margin:0 0 14px;min-height:46px">{{ exp.title }}</h3>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid rgba(74,78,63,.12);padding-top:14px">
+            <div><span style="font-size:12px;color:#6B665C">dès </span><span style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:#4A4E3F">{{ exp.price }}€</span><span style="font-size:12px;color:#6B665C"> /pers.</span></div>
+            <span style="font-size:20px;color:#9C533E">→</span>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="text-align:center;margin-top:40px"><a href="Marketplace.dc.html" style="display:inline-block;background:transparent;color:#4A4E3F;border:1px solid rgba(74,78,63,.4);text-decoration:none;padding:14px 30px;border-radius:999px;font-size:15px;font-weight:600">Charger plus d'expériences</a></div>
+</section>
+
+<dc-import name="CalmaFooter" hint-size="100%,300px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:1900}}">
+class Component extends DCLogic {
+  renderVals(){
+    const chipOn='background:#4A4E3F;color:#F6EFE0;font-size:13px;font-weight:600;padding:9px 16px;border-radius:999px;cursor:pointer';
+    const chipOff='background:#F6EFE0;color:#4A4E3F;border:1px solid rgba(74,78,63,.2);font-size:13px;font-weight:500;padding:9px 16px;border-radius:999px;cursor:pointer';
+    return {
+      filters:[
+        {label:'Toutes',style:chipOn},{label:'Culture & Médina',style:chipOff},{label:'Plage & Mer',style:chipOff},{label:'Désert & Sahara',style:chipOff},{label:'Food & Marché',style:chipOff}
+      ],
+      exps:[
+        {place:'Nabeul',cat:'Culture',title:'Atelier poterie avec un maître céramiste',price:45,rating:'4.9',ph:'PHOTO — ATELIER'},
+        {place:'Tozeur',cat:'Désert',title:'Coucher de soleil en 4×4 dans le Chott el-Jérid',price:60,rating:'4.8',ph:'PHOTO — 4×4'},
+        {place:'Tunis',cat:'Culture',title:'Médina secrète : ruelles, souks et toits',price:25,rating:'5.0',ph:'PHOTO — SOUK'},
+        {place:'Djerba',cat:'Plage',title:'Sortie en voilier au coucher du soleil',price:55,rating:'4.7',ph:'PHOTO — VOILIER'},
+        {place:'Sidi Bou Saïd',cat:'Culture',title:'Café des Délices &amp; ruelles bleues au lever du jour',price:20,rating:'4.9',ph:'PHOTO — SIDI BOU'},
+        {place:'Kairouan',cat:'Food',title:'Route de l\u2019huile d\u2019olive et dégustation',price:38,rating:'4.8',ph:'PHOTO — MARCHÉ'},
+        {place:'Douz',cat:'Désert',title:'Nuit sous tente berbère au cœur du Sahara',price:95,rating:'5.0',ph:'PHOTO — BIVOUAC'},
+        {place:'Hammamet',cat:'Plage',title:'Cours de cuisine tunisienne au bord de mer',price:42,rating:'4.9',ph:'PHOTO — CUISINE'},
+        {place:'Matmata',cat:'Culture',title:'Maisons troglodytes et déjeuner chez l\u2019habitant',price:34,rating:'4.7',ph:'PHOTO — MATMATA'}
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

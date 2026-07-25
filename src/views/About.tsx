@@ -1,290 +1,319 @@
 'use client';
-import { Award, Heart, Users, Target, CheckCircle, Star, MapPin, Clock, Shield, ChevronRight, Quote, Briefcase, GraduationCap, Smile, Globe, Zap, MessageCircle } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Heart, CheckCircle, Shield, ChevronRight, Quote, Smile, Award, Zap, MessageCircle } from "lucide-react";
 import Link from "next/link";
-import { Navbar } from '@/components/layouts/Navbar';
-import { Footer } from '@/components/layouts/Footre';
+import Image from "next/image";
+import { CalmaLangProvider, useCalmaLang } from '@/lib/calma/i18n';
+import CalmaHeader from '@/components/calma/CalmaHeader';
+import CalmaFooter from '@/components/calma/CalmaFooter';
+import AnimatedStat from '@/components/calma/AnimatedStat';
+import ReviewsSection from '@/components/home/ReviewsSection';
 
-export default function About() {
-  const stats = [
-    { value: "2026", label: "Founded in Hammamet", icon: MapPin, gradient: "from-[#87CEEB] to-[#4CAF50]" },
-    { value: "500+", label: "Happy Clients", icon: Users, gradient: "from-[#FFD700] to-[#FFC107]" },
-    { value: "50+", label: "Local Partners", icon: Briefcase, gradient: "from-[#4CAF50] to-[#45A049]" },
-    { value: "98%", label: "Client Satisfaction", icon: Star, gradient: "from-[#87CEEB] to-[#FFD700]" },
-  ];
+interface TeamMember {
+  id: number;
+  name: string;
+  role: string;
+  experience: string;
+  icon: string;
+}
 
-  const offerings = [
-    {
-      icon: Smile,
-      title: "Stress-Free Planning",
-      description:
-        "We remove the complexity from your travel experience by handling all the logistical details, allowing you to focus entirely on enjoying your journey rather than managing it.",
-      gradient: "from-[#87CEEB] to-[#4CAF50]",
-    },
-    {
-      icon: Shield,
-      title: "End-to-End Support",
-      description:
-        "From the moment you begin your booking until you safely return home, our team provides comprehensive oversight, ensuring reliable assistance at every stage of your trip.",
-      gradient: "from-[#FFD700] to-[#FFC107]",
-    },
-    {
-      icon: Award,
-      title: "Local Prices",
-      description:
-        "You get the real Tunisian experience without the inflated tourist rates. Authentic value, every time.",
-      gradient: "from-[#4CAF50] to-[#45A049]",
-    },
-    {
-      icon: Zap,
-      title: "Instant Care",
-      description:
-        "We prioritize your comfort and peace of mind by offering quick, responsive service to address any needs or questions before or during the trip.",
-      gradient: "from-[#87CEEB] to-[#FFD700]",
-    },
-  ];
+/* Motif zellige réutilisable */
+function ZelligePattern({ id, stroke = "#ffffff", opacity = 0.06 }: { id: string; stroke?: string; opacity?: number }) {
+  return (
+    <svg className="absolute inset-0 h-full w-full" style={{ opacity }} aria-hidden="true">
+      <defs>
+        <pattern id={id} width="56" height="56" patternUnits="userSpaceOnUse">
+          <path
+            d="M28 2 L34 22 L54 28 L34 34 L28 54 L22 34 L2 28 L22 22 Z"
+            fill="none"
+            stroke={stroke}
+            strokeWidth="1.2"
+          />
+          <circle cx="28" cy="28" r="4" fill="none" stroke={stroke} strokeWidth="1" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  );
+}
 
-  const languages = [
-    { flag: "🇬🇧", lang: "English" },
-    { flag: "🇫🇷", lang: "French" },
-    { flag: "🇹🇳", lang: "Arabic" },
-  ];
+const OFFER_ICONS = [Smile, Shield, Award, Zap];
+
+function AboutContent() {
+  const { t } = useCalmaLang();
+  const [team, setTeam] = useState<TeamMember[]>([]);
+
+  useEffect(() => {
+    fetch("/api/team")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setTeam(Array.isArray(data) ? data : []))
+      .catch(() => setTeam([]));
+  }, []);
+
+  const statValues = ["2026", "500+", "50+", "98%"];
+  const stats = t.abt.statLabels.map((label, i) => ({ value: statValues[i], label }));
+
+  const offerings = t.abt.offerings.map((o, i) => ({ ...o, icon: OFFER_ICONS[i] }));
+
+  const languages = t.abt.languages;
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
+      <CalmaHeader active="about" />
+      <div className="min-h-screen bg-calma-sand font-hanken">
 
-        {/* Hero Section */}
-        <section className="relative bg-gradient-to-br from-[#0A1A2F] via-[#0F2740] to-[#1B4F6E] text-white overflow-hidden">
-          <div className="absolute inset-0 opacity-5">
-            <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <pattern id="about-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                  <path d="M30 0 L45 15 L30 30 L15 15 Z" fill="#87CEEB" fillOpacity="0.3" />
-                  <circle cx="30" cy="30" r="2" fill="#FFD700" />
-                  <circle cx="15" cy="15" r="1.5" fill="#4CAF50" />
-                </pattern>
-              </defs>
-              <rect width="100%" height="100%" fill="url(#about-pattern)" />
-            </svg>
-          </div>
-
-          <div className="absolute top-20 left-10 w-64 h-64 bg-[#87CEEB] rounded-full blur-[100px] opacity-10"></div>
-          <div className="absolute bottom-20 right-10 w-80 h-80 bg-[#FFD700] rounded-full blur-[120px] opacity-10"></div>
-
-          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-            <div className="text-center max-w-4xl mx-auto">
-              <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-white/20">
-                <Heart className="w-4 h-4 text-[#FFD700]" />
-                <span className="text-sm font-medium tracking-wide">Who we are</span>
-              </div>
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-                About{" "}
-                <span className="bg-gradient-to-r from-[#87CEEB] via-[#FFD700] to-[#4CAF50] bg-clip-text text-transparent">
-                  Calma Trip
-                </span>
-              </h1>
-              <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-                Your ultimate travel hub designed for a truly stress-free journey — founded in Hammamet, Tunisia.
-              </p>
+        {/* ── Hero — cinematic, photo-backed, sand texture ── */}
+        <section className="relative flex min-h-[320px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
+          <Image
+            src={encodeURI('/images/explore/El Jem Amphitheatre.jpg')}
+            alt="El Jem, Tunisie"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.55) 45%,rgba(42,38,34,.82) 100%)',
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[.07]"
+            style={{
+              backgroundImage: 'repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)',
+            }}
+          />
+          <div className="relative z-[2] mx-auto max-w-[640px]">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
+              {t.abt.eyebrow}
             </div>
-
-            {/* Stats Bar */}
-            <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-6">
-              {stats.map((stat, index) => (
-                <div key={index} className="text-center group">
-                  <div className={`w-12 h-12 mx-auto mb-3 rounded-xl bg-gradient-to-r ${stat.gradient} flex items-center justify-center transform group-hover:scale-110 transition-all duration-300`}>
-                    <stat.icon className="w-6 h-6 text-white" />
-                  </div>
-                  <div className="text-2xl font-bold text-white">{stat.value}</div>
-                  <div className="text-sm text-gray-400">{stat.label}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="absolute bottom-0 left-0 right-0">
-            <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0 120L1440 0V120H0Z" fill="white" />
-            </svg>
+            <h1 className="mb-4 text-balance font-fraunces text-[clamp(32px,4.4vw,48px)] font-normal leading-[1.05] tracking-[-0.02em] text-calma-cream">
+              {t.abt.heroTitle}
+            </h1>
+            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
+              {t.abt.heroSub}
+            </p>
           </div>
         </section>
 
-        {/* Our Story Section */}
+        {/* Stats — chiffres Fraunces animés, séparés par des filets */}
+        <section className="border-b border-calma-olive/10 bg-calma-cream py-12">
+          <div className="mx-auto grid max-w-4xl grid-cols-2 gap-y-10 px-4 md:grid-cols-4">
+            {stats.map((stat, index) => (
+              <div
+                key={index}
+                className={`text-center ${index > 0 ? "md:border-l md:border-calma-olive/10" : ""}`}
+              >
+                <div className="font-fraunces text-3xl text-calma-terracotta md:text-4xl">
+                  <AnimatedStat value={stat.value} />
+                </div>
+                <div className="mt-1 text-xs uppercase tracking-[0.14em] text-calma-taupe">{stat.label}</div>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Our Story + The Calm Promise — deux volets éditoriaux */}
         <section className="py-20 lg:py-28">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2">
 
-              {/* Story Card */}
-              <div className="group bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                <div className="h-1.5 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50]"></div>
-                <div className="p-8 lg:p-10">
-                  <div className="w-16 h-16 mb-6 rounded-xl bg-gradient-to-br from-[#87CEEB] to-[#4CAF50] flex items-center justify-center">
-                    <Globe className="w-8 h-8 text-white" />
-                  </div>
-                  <h2 className="text-3xl font-bold mb-4 text-gray-900">Our Story</h2>
-                  <p className="text-gray-600 leading-relaxed mb-4">
-                    Founded in Hammamet, Tunisia in 2026, Calma Trip was born from a simple belief: travel should be peaceful. Our name reflects that vision — empowering you to discover the heart of your destination before you even land.
-                  </p>
-                  <p className="text-gray-600 leading-relaxed mb-6">
-                    We are more than just a tourism platform and marketplace. We connect you with premium travel services through our trusted local partners, while our team provides consistent, proactive follow-up to ensure every detail goes exactly as planned.
-                  </p>
-                  <div className="space-y-3">
-                    {[
-                      "Premium services via trusted local partners",
-                      "Proactive follow-up on every booking",
-                      "Your satisfaction is our primary commitment",
-                    ].map((item, idx) => (
-                      <div key={idx} className="flex items-center group/item">
-                        <div className="w-6 h-6 rounded-full bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] flex items-center justify-center mr-3 flex-shrink-0 transition-transform group-hover/item:scale-110">
-                          <CheckCircle className="w-3.5 h-3.5 text-white" />
-                        </div>
-                        <span className="text-gray-700">{item}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-
-              {/* Calm Promise Card */}
-              <div className="group bg-gradient-to-br from-[#0A1A2F] to-[#0F2740] rounded-2xl shadow-lg overflow-hidden hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2">
-                <div className="h-1.5 bg-gradient-to-r from-[#FFD700] to-[#FFC107]"></div>
-                <div className="p-8 lg:p-10 flex flex-col justify-between h-full">
-                  <div>
-                    <div className="w-20 h-20 mb-6 rounded-full bg-gradient-to-br from-[#FFD700] to-[#FFC107] flex items-center justify-center transform group-hover:scale-110 transition-all duration-300">
-                      <Heart className="w-10 h-10 text-white" />
-                    </div>
-                    <h3 className="text-2xl font-bold mb-4 text-white">The "Calm" Promise</h3>
-                    <p className="text-gray-300 leading-relaxed mb-6">
-                      With Calma Trip, you can finally travel with peace of mind. Forget the hassle of endless negotiations and multiple bookings — we act as your single, trusted hub to secure all your services instantly.
-                    </p>
-                    <p className="text-gray-300 leading-relaxed">
-                      Your satisfaction is our primary commitment. We actively gather your feedback and provide instant care to guarantee a seamless, worry-free experience from start to finish.
-                    </p>
-                  </div>
-                  <div className="mt-8 pt-6 border-t border-white/10">
-                    <div className="flex items-center gap-2 text-[#FFD700]">
-                      <Quote className="w-4 h-4 flex-shrink-0" />
-                      <span className="text-sm italic">One hub. All your services. Zero stress.</span>
-                      <Quote className="w-4 h-4 flex-shrink-0" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* What We Offer Section */}
-        <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-16">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <div className="w-8 h-px bg-gradient-to-r from-[#87CEEB] to-[#4CAF50]"></div>
-                <span className="text-sm font-semibold uppercase tracking-wider text-[#87CEEB]">What We Offer</span>
-                <div className="w-8 h-px bg-gradient-to-r from-[#4CAF50] to-[#FFD700]"></div>
-              </div>
-              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-                Everything you need,{" "}
-                <span className="bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">
-                  handled for you
+              {/* Story */}
+              <div className="rounded-calma-card border border-calma-olive/10 bg-white p-8 lg:p-10">
+                <span className="text-[0.7rem] uppercase tracking-[0.22em] text-calma-terracotta">
+                  {t.abt.storyKicker}
                 </span>
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                From the first click to your safe return home, we've got every detail covered.
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-              {offerings.map((item, index) => (
-                <div key={index} className="group text-center">
-                  <div className={`w-20 h-20 mx-auto mb-5 rounded-2xl bg-gradient-to-br ${item.gradient} flex items-center justify-center transform group-hover:scale-110 group-hover:-translate-y-1 transition-all duration-300 shadow-lg`}>
-                    <item.icon className="w-10 h-10 text-white" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-gray-900">{item.title}</h3>
-                  <p className="text-gray-600 leading-relaxed">{item.description}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* Destination Specialists Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <div className="inline-flex items-center space-x-2 mb-4">
-                <div className="w-8 h-px bg-gradient-to-r from-[#87CEEB] to-[#4CAF50]"></div>
-                <span className="text-sm font-semibold uppercase tracking-wider text-[#87CEEB]">Our Team</span>
-                <div className="w-8 h-px bg-gradient-to-r from-[#4CAF50] to-[#FFD700]"></div>
-              </div>
-              <h2 className="text-3xl md:text-4xl font-bold text-gray-900 mb-4">
-                Destination{" "}
-                <span className="bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">
-                  Specialists
-                </span>
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                Our dedicated specialists are always available to act as your personal guides — answering any question, whether it's about your excursion or simply curious inquiries about life in Tunisia.
-              </p>
-            </div>
-
-            <div className="flex flex-col sm:flex-row justify-center gap-6 mb-12">
-              {languages.map((l, i) => (
-                <div key={i} className="flex items-center gap-3 bg-gray-50 border border-gray-100 rounded-2xl px-8 py-5 shadow-sm hover:shadow-md transition-all duration-300 group">
-                  <span className="text-4xl">{l.flag}</span>
-                  <div>
-                    <p className="font-semibold text-gray-900">{l.lang}</p>
-                    <p className="text-xs text-gray-500">Speaking</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="bg-gradient-to-r from-[#87CEEB]/10 via-[#4CAF50]/10 to-[#FFD700]/10 rounded-2xl p-8 text-center">
-              <MessageCircle className="w-8 h-8 mx-auto mb-4 text-[#4CAF50]" />
-              <p className="text-gray-700 leading-relaxed max-w-2xl mx-auto">
-                Beyond simple bookings, our destination specialists are here to help you get the most out of Tunisia — from hidden gems and local dining to cultural tips and travel logistics. Think of us as your personal connection to the real Tunisia.
-              </p>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
-        <section className="py-20 bg-white">
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="relative bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] rounded-3xl p-12 text-center overflow-hidden shadow-2xl">
-              <div className="absolute inset-0 opacity-10">
-                <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id="cta-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                      <path d="M20 0 L30 20 L20 40 L10 20 Z" fill="white" fillOpacity="0.5" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill="url(#cta-pattern)" />
-                </svg>
-              </div>
-
-              <div className="relative">
-                <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-                  Ready to travel with calm?
+                <h2 className="mb-4 mt-3 font-fraunces text-3xl font-normal text-calma-ink">
+                  {t.abt.storyTitle}
                 </h2>
-                <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-                  Join hundreds of satisfied travelers and discover Tunisia — stress-free, fully supported, at local prices.
+                <p className="mb-4 leading-relaxed text-calma-taupe">
+                  {t.abt.storyP1}
+                </p>
+                <p className="mb-6 leading-relaxed text-calma-taupe">
+                  {t.abt.storyP2}
+                </p>
+                <div className="space-y-3 border-t border-calma-olive/10 pt-6">
+                  {t.abt.storyItems.map((item, idx) => (
+                    <div key={idx} className="flex items-center gap-3">
+                      <CheckCircle className="h-4 w-4 shrink-0 text-calma-terracotta" />
+                      <span className="text-sm text-calma-ink">{item}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Calm Promise */}
+              <div className="relative flex flex-col justify-between overflow-hidden rounded-calma-card bg-calma-olive p-8 text-calma-cream lg:p-10">
+                <ZelligePattern id="promise-zellige" />
+                <div className="relative">
+                  <span className="text-[0.7rem] uppercase tracking-[0.22em] text-calma-terracotta-soft">
+                    {t.abt.promiseKicker}
+                  </span>
+                  <h3 className="mb-4 mt-3 font-fraunces text-3xl font-normal">
+                    {t.abt.promiseTitle1} <em className="italic text-calma-terracotta-soft">{t.abt.promiseTitleEm}</em>
+                  </h3>
+                  <p className="mb-6 leading-relaxed text-calma-cream/75">
+                    {t.abt.promiseP1}
+                  </p>
+                  <p className="leading-relaxed text-calma-cream/75">
+                    {t.abt.promiseP2}
+                  </p>
+                </div>
+                <div className="relative mt-8 border-t border-white/10 pt-6">
+                  <div className="flex items-center gap-2 text-calma-terracotta-soft">
+                    <Quote className="h-4 w-4 flex-shrink-0" />
+                    <span className="font-fraunces text-sm italic">{t.abt.promiseQuote}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* What We Offer — liste éditoriale numérotée */}
+        <section className="bg-calma-sand py-20">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 flex flex-wrap items-baseline justify-between gap-2">
+              <h2 className="font-fraunces text-3xl font-normal text-calma-ink md:text-4xl">
+                {t.abt.offerTitle}
+              </h2>
+              <span className="text-xs uppercase tracking-[0.16em] text-calma-taupe">
+                {t.abt.offerKicker}
+              </span>
+            </div>
+
+            <div className="divide-y divide-calma-olive/10 border-y border-calma-olive/10">
+              {offerings.map((item) => (
+                <div key={item.num} className="group grid grid-cols-[3rem_1fr] gap-4 py-7 md:grid-cols-[5rem_16rem_1fr] md:gap-8">
+                  <span className="font-fraunces text-lg text-calma-terracotta">{item.num}</span>
+                  <h3 className="font-fraunces text-xl font-normal text-calma-ink transition-colors group-hover:text-calma-terracotta md:text-2xl">
+                    {item.title}
+                  </h3>
+                  <p className="col-span-2 text-sm leading-relaxed text-calma-taupe md:col-span-1">
+                    {item.desc}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Team — real staff, fetched from the DB */}
+        {team.length > 0 && (
+          <section className="bg-calma-cream py-20">
+            <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+              <div className="mb-12 text-center">
+                <span className="text-[0.7rem] uppercase tracking-[0.22em] text-calma-terracotta">
+                  {t.abt.teamKicker}
+                </span>
+                <h2 className="mb-4 mt-3 font-fraunces text-3xl font-normal text-calma-ink md:text-4xl">
+                  {t.abt.teamTitle}
+                </h2>
+              </div>
+              <div className="grid grid-cols-2 gap-5 lg:grid-cols-4">
+                {team.map((member) => (
+                  <div
+                    key={member.id}
+                    className="group rounded-calma-card border border-calma-olive/10 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(42,38,34,.3)]"
+                  >
+                    <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-calma-terracotta/10 text-3xl transition-transform duration-300 group-hover:scale-110">
+                      {member.icon}
+                    </div>
+                    <h3 className="font-fraunces text-lg font-normal text-calma-ink">{member.name}</h3>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-calma-terracotta">{member.role}</p>
+                    <p className="mt-1 text-xs text-calma-taupe">{member.experience}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Destination Specialists */}
+        <section className="py-20">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="mb-12 text-center">
+              <span className="text-[0.7rem] uppercase tracking-[0.22em] text-calma-terracotta">
+                {t.abt.specialistsKicker}
+              </span>
+              <h2 className="mb-4 mt-3 font-fraunces text-3xl font-normal text-calma-ink md:text-4xl">
+                {t.abt.specialistsTitle}
+              </h2>
+              <p className="mx-auto max-w-2xl text-calma-taupe">
+                {t.abt.specialistsSub}
+              </p>
+            </div>
+
+            <div className="mb-12 flex flex-col justify-center gap-4 sm:flex-row">
+              {languages.map((l) => (
+                <div
+                  key={l.code}
+                  className="flex items-center gap-4 rounded-calma-card border border-calma-olive/10 bg-white px-8 py-5"
+                >
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-calma-olive font-fraunces text-sm text-calma-terracotta-soft">
+                    {l.code}
+                  </span>
+                  <div>
+                    <p className="font-medium text-calma-ink">{l.lang}</p>
+                    <p className="text-xs text-calma-taupe">{t.abt.spokenFluently}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="rounded-calma-card border border-calma-olive/10 bg-white p-8 text-center">
+              <MessageCircle className="mx-auto mb-4 h-7 w-7 text-calma-terracotta" />
+              <p className="mx-auto max-w-2xl leading-relaxed text-calma-taupe">
+                {t.abt.specialistsBottom}
+              </p>
+            </div>
+          </div>
+        </section>
+
+        {/* Testimonials — real reviews from the DB */}
+        <ReviewsSection />
+
+        {/* CTA — tuile bleu profond zellige */}
+        <section className="pb-20">
+          <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-calma-block bg-calma-olive p-12 text-center text-calma-cream">
+              <ZelligePattern id="about-cta-zellige" opacity={0.08} />
+              <div
+                className="pointer-events-none absolute -right-1/4 -top-1/3 h-[480px] w-[480px] rounded-full opacity-20 blur-[90px]"
+                style={{ background: 'radial-gradient(circle, #F2994A 0%, transparent 70%)' }}
+              />
+              <div className="relative">
+                <h2 className="mb-4 font-fraunces text-3xl font-normal md:text-4xl">
+                  {t.abt.ctaTitle1} <em className="italic text-calma-terracotta-soft">{t.abt.ctaTitleEm}</em> ?
+                </h2>
+                <p className="mx-auto mb-8 max-w-2xl text-lg text-calma-cream/75">
+                  {t.abt.ctaSub}
                 </p>
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-2 px-8 py-3 bg-white text-[#1B4F6E] rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 group"
+                  className="group inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
+                  style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
                 >
-                  <span>Discover our services</span>
-                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                  <span>{t.abt.ctaBtn}</span>
+                  <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
                 </Link>
               </div>
             </div>
           </div>
         </section>
       </div>
-      <Footer />
+      <CalmaFooter />
     </>
+  );
+}
+
+export default function About() {
+  return (
+    <CalmaLangProvider>
+      <AboutContent />
+    </CalmaLangProvider>
   );
 }

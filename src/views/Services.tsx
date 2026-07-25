@@ -1,13 +1,18 @@
 'use client';
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   Car, Plane, MapPin, Clock, Users, Shield, Check, Package,
   Star, Phone, Mail, Award, Calendar, ChevronRight, Headphones,
-  ArrowRight, ChevronLeft, Sparkles,
+  ArrowRight, ChevronLeft,
 } from "lucide-react";
 import Link from "next/link";
-import { Navbar } from '@/components/layouts/Navbar';
-import { Footer } from '@/components/layouts/Footre';
+import Image from "next/image";
+import { motion } from "motion/react";
+import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
+import CalmaHeader from "@/components/calma/CalmaHeader";
+import CalmaFooter from "@/components/calma/CalmaFooter";
+import AnimatedStat from "@/components/calma/AnimatedStat";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -55,17 +60,17 @@ function mapService(s: DBService): MappedService {
   const title = s.title.toLowerCase();
 
   let icon: React.ElementType = Car;
-  let color = "#4CAF50";
+  let color = "#F2994A";
 
   if (category === "transport" || category === "transfer") {
     icon = title.includes("airport") ? Plane : Car;
-    color = "#1B6CA8";
+    color = "#4A667D";
   } else if (category === "excursion") {
     icon = MapPin;
-    color = "#2D8653";
+    color = "#F2994A";
   } else if (category === "group") {
     icon = Users;
-    color = "#B5860D";
+    color = "#F7B77E";
   }
 
   let features: string[] = [];
@@ -97,6 +102,7 @@ const DESCRIPTION_LIMIT = 280;
 // ─── Service Card ─────────────────────────────────────────────────────────────
 
 function ServiceCard({ service, onBook }: { service: MappedService; onBook: (id: string) => void }) {
+  const { t } = useCalmaLang();
   const [imgIdx, setImgIdx] = useState(0);
   const [imgError, setImgError] = useState(false);
   const [expanded, setExpanded] = useState(false);
@@ -159,7 +165,7 @@ function ServiceCard({ service, onBook }: { service: MappedService; onBook: (id:
 
           {/* Price chip on image */}
           <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-1.5 text-right shadow-md">
-            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">From</p>
+            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">{t.svc.fromLabel}</p>
             <p className="text-base font-extrabold leading-none" style={{ color: c }}>{service.price}</p>
           </div>
         </div>
@@ -172,7 +178,7 @@ function ServiceCard({ service, onBook }: { service: MappedService; onBook: (id:
             </div>
           )}
           <div className="ml-auto bg-white rounded-xl px-3 py-1.5 text-right shadow-sm">
-            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">From</p>
+            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">{t.svc.fromLabel}</p>
             <p className="text-base font-extrabold leading-none" style={{ color: c }}>{service.price}</p>
           </div>
         </div>
@@ -215,7 +221,7 @@ function ServiceCard({ service, onBook }: { service: MappedService; onBook: (id:
               className="mt-1.5 text-xs font-semibold hover:underline"
               style={{ color: c }}
             >
-              {expanded ? "Show less ↑" : "Read more ↓"}
+              {expanded ? t.svc.showLess : t.svc.readMore}
             </button>
           )}
         </div>
@@ -236,7 +242,7 @@ function ServiceCard({ service, onBook }: { service: MappedService; onBook: (id:
             ))}
             {service.features.length > 4 && (
               <p className="text-xs font-medium pl-6" style={{ color: c }}>
-                +{service.features.length - 4} more included
+                +{service.features.length - 4} {t.svc.moreIncluded}
               </p>
             )}
           </div>
@@ -249,7 +255,7 @@ function ServiceCard({ service, onBook }: { service: MappedService; onBook: (id:
             className="w-full py-3 px-5 rounded-2xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 group/btn"
             style={{ background: c }}
           >
-            Book this experience
+            {t.svc.bookThis}
             <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
           </button>
         </div>
@@ -260,27 +266,24 @@ function ServiceCard({ service, onBook }: { service: MappedService; onBook: (id:
 
 // ─── Static Data ──────────────────────────────────────────────────────────────
 
-const WHY = [
-  { icon: Shield,     title: "Guaranteed safety",    desc: "Maintained vehicles, full insurance, certified drivers.",        color: "#1B6CA8" },
-  { icon: Clock,      title: "Always on time",        desc: "Real-time GPS tracking. Your schedule is ours.",                color: "#2D8653" },
-  { icon: Award,      title: "Premium quality",       desc: "Handpicked partners, consistent standards, no surprises.",      color: "#B5860D" },
-  { icon: Headphones, title: "24/7 human support",    desc: "English, French, and Arabic-speaking specialists.",            color: "#7C3AED" },
-];
+const WHY_ICONS = [Shield, Clock, Award, Headphones];
+const WHY_COLORS = ["#4A667D", "#F2994A", "#F7B77E", "#4A667D"];
 
-const STATS = [
-  { value: "500+", label: "Happy clients",     icon: Star       },
-  { value: "50+",  label: "Destinations",      icon: MapPin     },
-  { value: "98%",  label: "Satisfaction rate", icon: Award      },
-  { value: "24/7", label: "Support",           icon: Headphones },
-];
+const STATS_ICONS = [Star, MapPin, Award, Headphones];
+const STATS_VALUES = ["500+", "50+", "98%", "24/7"];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-export default function Services() {
+function ServicesContent() {
+  const { t } = useCalmaLang();
+  const WHY = t.svc.why.map((w, i) => ({ ...w, icon: WHY_ICONS[i], color: WHY_COLORS[i] }));
+  const STATS = t.svc.statLabels.map((label, i) => ({ label, value: STATS_VALUES[i], icon: STATS_ICONS[i] }));
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [services, setServices] = useState<MappedService[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const searchParams = useSearchParams();
+  const q = (searchParams?.get("q") ?? "").trim();
 
   useEffect(() => {
     fetch("/api/services")
@@ -291,67 +294,76 @@ export default function Services() {
   }, []);
 
   const categories = ["all", ...Array.from(new Set(services.map(s => s.subtitle).filter(Boolean)))];
-  const filtered = activeCategory === "all" ? services : services.filter(s => s.subtitle === activeCategory);
+  const byCategory = activeCategory === "all" ? services : services.filter(s => s.subtitle === activeCategory);
+  const needle = q.toLowerCase();
+  const filtered = needle
+    ? byCategory.filter(s =>
+        `${s.title} ${s.subtitle} ${s.description.replace(/<[^>]+>/g, " ")}`
+          .toLowerCase()
+          .includes(needle)
+      )
+    : byCategory;
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-[#F7F8FA]">
+      <CalmaHeader active="services" />
+      <div className="min-h-screen bg-calma-sand font-hanken">
 
-        {/* ── Hero — clean, editorial ── */}
-        <section className="relative bg-[#0C1F14] text-white overflow-hidden">
-          {/* Subtle grid texture */}
-          <div className="absolute inset-0 opacity-[0.04]"
-            style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "32px 32px" }}
+        {/* ── Hero — luxury concierge, photo-backed, topographic texture ── */}
+        <section className="relative flex min-h-[300px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
+          <Image
+            src="/images/tunisia.jpeg"
+            alt="Sidi Bou Saïd, Tunisie"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
           />
-          {/* Green glow */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] rounded-full blur-[160px] opacity-20"
-            style={{ background: "radial-gradient(circle, #4CAF50, #1B6CA8)" }}
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.6) 45%,rgba(42,38,34,.8) 100%)',
+            }}
+          />
+          {/* subtle sand-ripple texture, replaces literal decorative shapes */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[.07]"
+            style={{
+              backgroundImage: 'repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)',
+            }}
           />
 
-          <div className="relative max-w-7xl mx-auto px-6 lg:px-12 py-24 lg:py-32">
-            <div className="max-w-3xl">
-              <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm border border-white/15 rounded-full px-4 py-1.5 mb-8">
-                <Sparkles className="w-3.5 h-3.5 text-[#FFD700]" />
-                <span className="text-xs font-semibold tracking-wider uppercase text-gray-300">Premium services in Tunisia</span>
-              </div>
-
-              <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold leading-[1.05] mb-6 tracking-tight">
-                Every journey,{" "}
-                <span className="text-[#4CAF50]">perfectly</span>{" "}
-                <span className="text-[#87CEEB]">handled.</span>
-              </h1>
-
-              <p className="text-lg text-gray-400 max-w-xl leading-relaxed mb-10">
-                Let the rheem gazelle guide you
-              </p>
-
-              <div className="flex flex-wrap gap-3">
-                <Link href="/contact"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#4CAF50] text-white rounded-xl font-semibold text-sm hover:bg-[#43A047] transition-colors shadow-lg shadow-[#4CAF50]/30">
-                  Talk to a specialist <ArrowRight className="w-4 h-4" />
-                </Link>
-                <Link href="/dashboard"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-white/10 text-white rounded-xl font-semibold text-sm border border-white/15 hover:bg-white/15 transition-colors backdrop-blur-sm">
-                  Browse all bookings
-                </Link>
-              </div>
+          <div className="relative z-[2] mx-auto max-w-[640px]">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
+              {t.svc.eyebrow}
             </div>
+            <h1 className="mb-4 text-balance font-fraunces text-[clamp(32px,4.4vw,48px)] font-normal leading-[1.05] tracking-[-0.02em] text-calma-cream">
+              {t.svc.heroTitle}
+            </h1>
+            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
+              {t.svc.heroSub}
+            </p>
+          </div>
+        </section>
 
-            {/* Stats row */}
-            <div className="mt-16 pt-12 border-t border-white/10 grid grid-cols-2 sm:grid-cols-4 gap-6">
-              {STATS.map((s, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center flex-shrink-0">
-                    <s.icon className="w-5 h-5 text-[#4CAF50]" />
-                  </div>
-                  <div>
-                    <p className="text-xl font-extrabold text-white">{s.value}</p>
-                    <p className="text-xs text-gray-500 font-medium">{s.label}</p>
-                  </div>
+        {/* ── Stats strip — animated count-up ── */}
+        <section className="border-b border-calma-olive/10 bg-calma-cream py-12">
+          <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-2 sm:grid-cols-4 gap-8">
+            {STATS.map((s, i) => (
+              <div key={i} className="flex items-center gap-4">
+                <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-calma-terracotta/10">
+                  <s.icon className="h-5 w-5 text-calma-terracotta" />
                 </div>
-              ))}
-            </div>
+                <div>
+                  <p className="font-fraunces text-2xl font-semibold text-calma-ink">
+                    <AnimatedStat value={s.value} />
+                  </p>
+                  <p className="text-xs font-medium text-calma-taupe">{s.label}</p>
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
@@ -362,31 +374,52 @@ export default function Services() {
             {/* Section header + category filter */}
             <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-400 mb-2">What we offer</p>
-                <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900 leading-tight">
-                  Services tailored<br />to every traveller
+                <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#F2994A]">{t.svc.offerKicker}</p>
+                <h2 className="font-fraunces text-3xl font-normal leading-tight text-[#2D2926] lg:text-4xl">
+                  {t.svc.offerTitle1}<br />{t.svc.offerTitle2}
                 </h2>
               </div>
 
               {/* Category pills */}
               {categories.length > 1 && (
-                <div className="flex flex-wrap gap-2">
+                <div className="flex flex-wrap gap-1.5 rounded-full border border-calma-olive/10 bg-white p-1.5">
                   {categories.map(cat => (
                     <button
                       key={cat}
                       onClick={() => setActiveCategory(cat)}
-                      className={`px-4 py-2 rounded-full text-sm font-semibold border transition-all duration-200 capitalize ${
-                        activeCategory === cat
-                          ? "bg-[#0C1F14] text-white border-[#0C1F14]"
-                          : "bg-white text-gray-500 border-gray-200 hover:border-gray-400 hover:text-gray-700"
-                      }`}
+                      className="relative rounded-full px-4 py-2 text-sm font-semibold capitalize text-calma-taupe transition-colors duration-200 data-[active=true]:text-white"
+                      data-active={activeCategory === cat}
                     >
-                      {cat}
+                      {activeCategory === cat && (
+                        <motion.span
+                          layoutId="services-cat-pill"
+                          className="absolute inset-0 rounded-full bg-calma-olive"
+                          transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                        />
+                      )}
+                      <span className="relative z-[1]">{cat}</span>
                     </button>
                   ))}
                 </div>
               )}
             </div>
+
+            {/* Bandeau de recherche active */}
+            {q && !loading && (
+              <div className="mb-8 flex flex-wrap items-center gap-3 rounded-2xl border border-[#F1EBE1] bg-white px-5 py-3.5">
+                <p className="text-sm text-[#726C64]">
+                  {filtered.length > 0
+                    ? <>{filtered.length} {filtered.length > 1 ? t.svc.resultsWord : t.svc.resultWord} {t.svc.forWord} <b className="font-fraunces text-[#2D2926]">“{q}”</b></>
+                    : <>{t.svc.noResultsFor} <b className="font-fraunces text-[#2D2926]">“{q}”</b> {t.svc.noResultsHint}</>}
+                </p>
+                <Link
+                  href="/services"
+                  className="ml-auto rounded-full border border-[#F1EBE1] px-4 py-1.5 text-xs uppercase tracking-[0.12em] text-[#726C64] transition-colors hover:border-[#F2994A] hover:text-[#2D2926]"
+                >
+                  {t.svc.clearSearch}
+                </Link>
+              </div>
+            )}
 
             {/* Grid */}
             {loading ? (
@@ -405,7 +438,9 @@ export default function Services() {
             ) : filtered.length === 0 ? (
               <div className="text-center py-24">
                 <MapPin className="w-12 h-12 text-gray-200 mx-auto mb-4" />
-                <p className="text-gray-400 font-medium">No services in this category yet.</p>
+                <p className="text-gray-400 font-medium">
+                  {q ? t.svc.emptySearch : t.svc.emptyCategory}
+                </p>
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -421,14 +456,14 @@ export default function Services() {
         <section className="py-20 bg-white border-y border-gray-100">
           <div className="max-w-7xl mx-auto px-6 lg:px-12">
             <div className="text-center mb-14">
-              <p className="text-xs font-bold uppercase tracking-[0.3em] text-gray-400 mb-3">Why Calma Trip</p>
-              <h2 className="text-3xl lg:text-4xl font-extrabold text-gray-900">Built around your peace of mind</h2>
+              <p className="mb-3 text-xs uppercase tracking-[0.3em] text-[#F2994A]">{t.svc.whyKicker}</p>
+              <h2 className="font-fraunces text-3xl font-normal text-[#2D2926] lg:text-4xl">{t.svc.whyTitle}</h2>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {WHY.map((item, i) => (
                 <div key={i}
-                  className="group rounded-3xl border border-gray-100 bg-[#F7F8FA] hover:bg-white hover:shadow-lg hover:border-gray-200 p-7 transition-all duration-300"
+                  className="group rounded-3xl border border-gray-100 bg-[#F1EBE1] hover:bg-white hover:shadow-lg hover:border-gray-200 p-7 transition-all duration-300"
                 >
                   <div
                     className="w-12 h-12 rounded-2xl flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110"
@@ -445,64 +480,70 @@ export default function Services() {
         </section>
 
         {/* ── Contact strip ── */}
-        <section className="py-20 bg-[#0C1F14]">
-          <div className="max-w-7xl mx-auto px-6 lg:px-12">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+        <section className="relative overflow-hidden bg-calma-olive py-20">
+          <div
+            className="pointer-events-none absolute -right-1/4 -top-1/3 h-[520px] w-[520px] rounded-full opacity-20 blur-[90px]"
+            style={{ background: 'radial-gradient(circle, #F2994A 0%, transparent 70%)' }}
+          />
+          <div className="relative mx-auto max-w-7xl px-6 lg:px-12">
+            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.3em] text-[#4CAF50] mb-4">Get in touch</p>
-                <h2 className="text-3xl lg:text-4xl font-extrabold text-white mb-6 leading-tight">
-                  Not sure what you need?<br />
-                  <span className="text-[#87CEEB]">We'll figure it out together.</span>
+                <p className="mb-4 text-xs font-bold uppercase tracking-[.3em] text-calma-terracotta-soft">{t.svc.contactKicker}</p>
+                <h2 className="mb-6 font-fraunces text-3xl font-normal leading-tight text-calma-cream lg:text-4xl">
+                  {t.svc.contactTitle1}<br />
+                  <em className="italic text-calma-terracotta-soft">{t.svc.contactTitle2}</em>
                 </h2>
-                <div className="space-y-3 mb-8">
-                  {[
-                    "Certified professional drivers",
-                    "Modern, air-conditioned fleet",
-                    "Instant booking confirmation",
-                    "Multi-language support 24/7",
-                  ].map((f, i) => (
+                <div className="mb-8 space-y-3">
+                  {t.svc.contactFeatures.map((f, i) => (
                     <div key={i} className="flex items-center gap-3">
-                      <div className="w-5 h-5 rounded-full bg-[#4CAF50]/20 flex items-center justify-center flex-shrink-0">
-                        <Check className="w-3 h-3 text-[#4CAF50]" />
+                      <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta-soft/20">
+                        <Check className="h-3 w-3 text-calma-terracotta-soft" />
                       </div>
-                      <span className="text-gray-300 text-sm">{f}</span>
+                      <span className="text-sm text-calma-cream/75">{f}</span>
                     </div>
                   ))}
                 </div>
-                <Link href="/contact"
-                  className="inline-flex items-center gap-2 px-7 py-3.5 bg-[#4CAF50] text-white rounded-xl font-semibold text-sm hover:bg-[#43A047] transition-colors shadow-lg shadow-[#4CAF50]/30">
-                  Request a quote <ArrowRight className="w-4 h-4" />
+                <Link
+                  href="/contact"
+                  className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
+                  style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+                >
+                  {t.svc.contactCta} <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
 
               {/* Contact card */}
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-3xl p-8">
-                <div className="flex items-center justify-between mb-8">
+              <div className="rounded-calma-block border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
+                <div className="mb-8 flex items-center justify-between">
                   <div>
-                    <p className="text-xs text-gray-500 uppercase tracking-wider font-semibold mb-1">Response time</p>
-                    <p className="text-4xl font-extrabold text-[#FFD700]">&lt; 30 min</p>
+                    <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-calma-cream/50">{t.svc.responseTime}</p>
+                    <p className="text-4xl font-extrabold text-calma-terracotta-soft">&lt; 30 min</p>
                   </div>
-                  <Calendar className="w-14 h-14 text-white/20" />
+                  <Calendar className="h-14 w-14 text-white/20" />
                 </div>
                 <div className="space-y-4">
-                  <a href="mailto:contact@calmatrip.com"
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group">
-                    <div className="w-10 h-10 rounded-xl bg-[#4CAF50]/20 flex items-center justify-center flex-shrink-0">
-                      <Mail className="w-5 h-5 text-[#4CAF50]" />
+                  <a
+                    href="mailto:contact@calmatrip.com"
+                    className="group flex items-center gap-4 rounded-2xl bg-white/5 p-4 transition-colors hover:bg-white/10"
+                  >
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-calma-terracotta-soft/20">
+                      <Mail className="h-5 w-5 text-calma-terracotta-soft" />
                     </div>
                     <div>
-                      <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider">Email</p>
-                      <p className="text-white text-sm font-medium group-hover:text-[#87CEEB] transition-colors">contact@calmatrip.com</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-calma-cream/50">{t.svc.emailLabel}</p>
+                      <p className="text-sm font-medium text-calma-cream transition-colors group-hover:text-calma-terracotta-soft">contact@calmatrip.com</p>
                     </div>
                   </a>
-                  <a href="tel:+21621622972"
-                    className="flex items-center gap-4 p-4 rounded-2xl bg-white/5 hover:bg-white/10 transition-colors group">
-                    <div className="w-10 h-10 rounded-xl bg-[#87CEEB]/20 flex items-center justify-center flex-shrink-0">
-                      <Phone className="w-5 h-5 text-[#87CEEB]" />
+                  <a
+                    href="tel:+21621622972"
+                    className="group flex items-center gap-4 rounded-2xl bg-white/5 p-4 transition-colors hover:bg-white/10"
+                  >
+                    <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-calma-terracotta-soft/20">
+                      <Phone className="h-5 w-5 text-calma-terracotta-soft" />
                     </div>
                     <div>
-                      <p className="text-[11px] text-gray-500 font-semibold uppercase tracking-wider">Phone</p>
-                      <p className="text-white text-sm font-medium group-hover:text-[#87CEEB] transition-colors">+216 21 622 972</p>
+                      <p className="text-[11px] font-semibold uppercase tracking-wider text-calma-cream/50">{t.svc.phoneLabel}</p>
+                      <p className="text-sm font-medium text-calma-cream transition-colors group-hover:text-calma-terracotta-soft">+216 21 622 972</p>
                     </div>
                   </a>
                 </div>
@@ -512,28 +553,34 @@ export default function Services() {
         </section>
 
         {/* ── CTA ── */}
-        <section className="py-20 bg-[#F7F8FA]">
-          <div className="max-w-4xl mx-auto px-6 lg:px-12 text-center">
-            <div className="bg-gradient-to-br from-[#0C1F14] to-[#1B4F6E] rounded-3xl p-12 shadow-2xl relative overflow-hidden">
-              <div className="absolute inset-0 opacity-[0.03]"
-                style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "24px 24px" }}
+        <section className="bg-calma-sand py-20">
+          <div className="mx-auto max-w-4xl px-6 text-center lg:px-12">
+            <div className="relative overflow-hidden rounded-calma-block bg-calma-olive p-12">
+              <div
+                className="pointer-events-none absolute -bottom-1/3 -left-1/4 h-[420px] w-[420px] rounded-full opacity-[.15] blur-[90px]"
+                style={{ background: 'radial-gradient(circle, #F2994A 0%, transparent 70%)' }}
               />
               <div className="relative">
-                <p className="text-[#4CAF50] text-xs font-bold uppercase tracking-[0.3em] mb-4">Ready when you are</p>
-                <h2 className="text-3xl md:text-4xl font-extrabold text-white mb-4">
-                  Your next journey starts here.
+                <p className="mb-4 text-xs font-bold uppercase tracking-[.3em] text-calma-terracotta-soft">{t.svc.ctaKicker}</p>
+                <h2 className="mb-4 font-fraunces text-3xl font-normal text-calma-cream md:text-4xl">
+                  {t.svc.ctaTitle}
                 </h2>
-                <p className="text-gray-400 mb-8 max-w-lg mx-auto">
-                  Join hundreds of travellers who explore Tunisia without the stress.
+                <p className="mx-auto mb-8 max-w-lg text-calma-cream/70">
+                  {t.svc.ctaSub}
                 </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Link href="/contact"
-                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-[#4CAF50] text-white rounded-xl font-semibold text-sm hover:bg-[#43A047] transition-colors shadow-lg shadow-[#4CAF50]/30">
-                    <Phone className="w-4 h-4" /> Contact us
+                <div className="flex flex-col justify-center gap-3 sm:flex-row">
+                  <Link
+                    href="/contact"
+                    className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
+                    style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+                  >
+                    <Phone className="h-4 w-4" /> {t.svc.ctaBtn1}
                   </Link>
-                  <Link href="/dashboard"
-                    className="inline-flex items-center justify-center gap-2 px-8 py-3.5 bg-white/10 text-white rounded-xl font-semibold text-sm border border-white/15 hover:bg-white/15 transition-colors backdrop-blur-sm">
-                    <Calendar className="w-4 h-4" /> Book now
+                  <Link
+                    href="/dashboard"
+                    className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-8 py-3.5 text-sm font-semibold text-calma-cream backdrop-blur-sm transition-colors hover:bg-white/15"
+                  >
+                    <Calendar className="h-4 w-4" /> {t.svc.ctaBtn2}
                   </Link>
                 </div>
               </div>
@@ -552,29 +599,39 @@ export default function Services() {
               onClick={e => e.stopPropagation()}
             >
               <div className="text-center mb-6">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#4CAF50] flex items-center justify-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#4A667D] flex items-center justify-center">
                   <Check className="w-8 h-8 text-white" />
                 </div>
-                <h3 className="text-xl font-extrabold text-gray-900 mb-2">Almost there!</h3>
-                <p className="text-gray-500 text-sm">Log in to your account to confirm your booking.</p>
+                <h3 className="text-xl font-extrabold text-gray-900 mb-2">{t.svc.modalTitle}</h3>
+                <p className="text-gray-500 text-sm">{t.svc.modalSub}</p>
               </div>
               <div className="flex gap-3">
                 <Link href="/dashboard"
-                  className="flex-1 py-3 bg-[#4CAF50] text-white rounded-2xl font-semibold text-sm text-center hover:bg-[#43A047] transition-colors">
-                  Log in &amp; book
+                  className="flex-1 py-3 bg-[#4A667D] text-white rounded-2xl font-semibold text-sm text-center hover:bg-[#3A5164] transition-colors">
+                  {t.svc.modalLogin}
                 </Link>
                 <button
                   onClick={() => setSelectedService(null)}
                   className="px-5 py-3 border border-gray-200 text-gray-600 rounded-2xl font-semibold text-sm hover:bg-gray-50 transition-colors"
                 >
-                  Close
+                  {t.svc.modalClose}
                 </button>
               </div>
             </div>
           </div>
         )}
       </div>
-      <Footer />
+      <CalmaFooter />
     </>
+  );
+}
+
+export default function Services() {
+  return (
+    <CalmaLangProvider>
+      <Suspense fallback={<div className="min-h-screen bg-calma-sand" />}>
+        <ServicesContent />
+      </Suspense>
+    </CalmaLangProvider>
   );
 }

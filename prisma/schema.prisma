@@ -13,8 +13,11 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  password      String?
   role          String    @default("USER")
   status        String    @default("active")
+  b2bType       String?
+  b2bStatus     String?   @default("pending")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
@@ -22,6 +25,8 @@ model User {
 
   notifications     Notification[]
   pushSubscriptions PushSubscription[]
+  products          Product[]
+  services          Service[]
 
   @@map("users")
 }
@@ -68,23 +73,28 @@ model VerificationToken {
 }
 
 model Service {
-  id          Int      @id @default(autoincrement())
-  title       String
-  subtitle    String?
-  description String   @db.Text
-  price       String
-  icon        String   @default("Car")
-  color       String?
-  category    String?
-  features    Json?
-  duration    String?
-  image       String?  @db.Text
-  active      Boolean  @default(true)
-  popular     Boolean  @default(false)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  id               Int      @id @default(autoincrement())
+  title            String
+  subtitle         String?
+  description      String   @db.Text
+  price            String
+  icon             String   @default("Car")
+  color            String?
+  category         String?
+  features         Json?
+  duration         String?
+  image            String?  @db.Text
+  active           Boolean  @default(true)
+  popular          Boolean  @default(false)
+  order            Int      @default(0)
+  ownerId          String?
+  owner            User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  submissionStatus String   @default("approved")
+  rejectionReason  String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
 
+  @@index([ownerId])
   @@map("services")
 }
 
@@ -114,6 +124,8 @@ model Booking {
   returnDate  DateTime?
   returnTime  String?
 
+  review Review?
+
   @@index([timeSlotId])
   @@map("bookings")
 }
@@ -133,18 +145,23 @@ model TimeSlot {
 }
 
 model Product {
-  id          Int         @id @default(autoincrement())
-  name        String
-  price       Float
-  category    String
-  image       String?
-  description String      @db.Text
-  stock       Int         @default(100)
-  sizes       Json?
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  items       OrderItem[]
+  id               Int         @id @default(autoincrement())
+  name             String
+  price            Float
+  category         String
+  image            String?
+  description      String      @db.Text
+  stock            Int         @default(100)
+  sizes            Json?
+  ownerId          String?
+  owner            User?       @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  submissionStatus String      @default("approved")
+  rejectionReason  String?     @db.Text
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  items            OrderItem[]
 
+  @@index([ownerId])
   @@map("products")
 }
 
@@ -178,6 +195,15 @@ model FAQ {
   order    Int    @default(0)
 
   @@map("faqs")
+}
+
+model NewsletterSubscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  active    Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  @@map("newsletter_subscribers")
 }
 
 model Order {
@@ -273,6 +299,9 @@ model Review {
   service   String?
   approved  Boolean  @default(false)
   createdAt DateTime @default(now())
+
+  bookingId Int?     @unique
+  booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
 
   @@map("reviews")
 }

@@ -103,10 +103,10 @@ async function main() {
   // Team Members
   await prisma.teamMember.createMany({
     data: [
-      { name: "Mohamed Ben Salah", role: "General Manager", experience: "15 years experience", icon: "👨‍💼", gradient: "from-[#87CEEB] to-[#4CAF50]", order: 1 },
-      { name: "Fatima Trabelsi", role: "Operations Manager", experience: "10 years experience", icon: "👩‍💼", gradient: "from-[#FFD700] to-[#FFC107]", order: 2 },
-      { name: "Ahmed Gharbi", role: "Driver Team Leader", experience: "12 years experience", icon: "👨‍✈️", gradient: "from-[#4CAF50] to-[#45A049]", order: 3 },
-      { name: "Nadia Mansour", role: "Sales Manager", experience: "8 years experience", icon: "👩‍💻", gradient: "from-[#87CEEB] to-[#FFD700]", order: 4 },
+      { name: "Mohamed Ben Salah", role: "Directeur général", experience: "15 ans d'expérience", icon: "👨‍💼", gradient: "from-[#87CEEB] to-[#4CAF50]", order: 1 },
+      { name: "Fatima Trabelsi", role: "Responsable des opérations", experience: "10 ans d'expérience", icon: "👩‍💼", gradient: "from-[#FFD700] to-[#FFC107]", order: 2 },
+      { name: "Ahmed Gharbi", role: "Chef d'équipe chauffeurs", experience: "12 ans d'expérience", icon: "👨‍✈️", gradient: "from-[#4CAF50] to-[#45A049]", order: 3 },
+      { name: "Nadia Mansour", role: "Responsable commerciale", experience: "8 ans d'expérience", icon: "👩‍💻", gradient: "from-[#87CEEB] to-[#FFD700]", order: 4 },
     ],
   });
 

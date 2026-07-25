@@ -1,14 +1,23 @@
 'use client';
 import React, { useState } from 'react';
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useSession, signOut } from "next-auth/react";
-import { Menu, X, User, LogIn, LogOut, Search } from "lucide-react";
+import { Menu, X, User, LogOut, Search } from "lucide-react";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const pathname = usePathname();
+  const router = useRouter();
+
+  const submitSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (!q) return;
+    setMobileMenuOpen(false);
+    router.push(`/services?q=${encodeURIComponent(q)}`);
+  };
   const { data: session, status } = useSession();
   const isAuthenticated = status === "authenticated";
   const isAdmin = session?.user?.role === "ADMIN";
@@ -23,30 +32,27 @@ export const Navbar = () => {
   ];
 
   return (
-    <nav className="bg-white border-b border-gray-100 sticky top-0 z-50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+    <nav className="sticky top-0 z-50 border-b border-[#e6ddcd] bg-[#faf6ef]/95 backdrop-blur-sm">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="flex h-16 items-center justify-between">
 
-          {/* Logo — serif style like the image */}
+          {/* Logo serif, « Trip » en italique bleu mer */}
           <Link href="/" className="flex-shrink-0">
-            <span
-              className="text-2xl font-bold text-[#1B4D3E] tracking-tight"
-              style={{ fontFamily: "Georgia, 'Times New Roman', serif" }}
-            >
-              Calma Trip
+            <span className="font-serif text-2xl tracking-tight text-[#1c2430]">
+              Calma <em className="italic text-[#1E6091]">Trip</em>
             </span>
           </Link>
 
-          {/* Desktop Nav Links — centered */}
-          <div className="hidden lg:flex items-center space-x-1">
+          {/* Liens desktop — petites capitales espacées, soulignement sable */}
+          <div className="hidden items-center gap-1 lg:flex">
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
-                className={`px-4 py-2 text-sm font-medium rounded-md transition-colors duration-150 ${
+                className={`border-b-2 px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.14em] transition-colors ${
                   pathname === link.path
-                    ? "text-[#1B4D3E] font-semibold"
-                    : "text-gray-600 hover:text-[#1B4D3E]"
+                    ? "border-[#D4A373] text-[#1c2430]"
+                    : "border-transparent text-[#6b6353] hover:border-[#D4A373]/50 hover:text-[#1c2430]"
                 }`}
               >
                 {link.label}
@@ -54,32 +60,36 @@ export const Navbar = () => {
             ))}
           </div>
 
-          {/* Right side: Search + Auth */}
-          <div className="hidden lg:flex items-center gap-3">
-            {/* Search pill */}
-            <div className="flex items-center gap-2 bg-[#1B2D2A] rounded-full px-4 py-2 w-52">
-              <Search className="w-4 h-4 text-white flex-shrink-0" />
+          {/* Droite : recherche + auth */}
+          <div className="hidden items-center gap-3 lg:flex">
+            {/* Recherche discrète, assortie au fond ivoire */}
+            <form
+              onSubmit={submitSearch}
+              className="group flex w-44 items-center gap-2 rounded-full border border-[#e6ddcd] bg-white/60 px-3.5 py-1.5 transition-all focus-within:w-56 focus-within:border-[#D4A373] focus-within:bg-white hover:border-[#D4A373]/60"
+            >
+              <Search className="h-3.5 w-3.5 flex-shrink-0 text-[#9a9284] transition-colors group-focus-within:text-[#D4A373]" />
               <input
-                type="text"
-                placeholder="Where are you going?"
+                type="search"
+                placeholder="Search services"
+                aria-label="Search services"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="bg-transparent text-sm text-gray-300 placeholder-gray-400 outline-none w-full"
+                className="w-full bg-transparent text-sm text-[#1c2430] outline-none placeholder:text-[#9a9284] [&::-webkit-search-cancel-button]:hidden"
               />
-            </div>
+            </form>
 
             {/* Auth */}
             {isAuthenticated ? (
               <div className="flex items-center gap-2">
                 <Link
                   href="/dashboard"
-                  className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-[#1B4D3E] transition-colors px-2 py-1"
+                  className="flex items-center gap-1.5 px-2 py-1 text-sm text-[#1c2430] transition-colors hover:text-[#1E6091]"
                 >
                   {session.user?.image ? (
-                    <img src={session.user.image} alt="" className="w-7 h-7 rounded-full" />
+                    <img src={session.user.image} alt="" className="h-7 w-7 rounded-full border border-[#D4A373]/60" />
                   ) : (
-                    <div className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center">
-                      <User className="w-4 h-4 text-gray-500" />
+                    <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#D4A373]/60">
+                      <User className="h-4 w-4 text-[#6b6353]" />
                     </div>
                   )}
                   <span>{session.user?.name?.split(" ")[0] ?? "Account"}</span>
@@ -87,84 +97,90 @@ export const Navbar = () => {
                 {isAdmin && (
                   <Link
                     href="/admin"
-                    className="text-sm font-medium text-gray-600 hover:text-[#1B4D3E] px-2 py-1 transition-colors"
+                    className="px-2 py-1 text-[0.72rem] uppercase tracking-[0.14em] text-[#6b6353] transition-colors hover:text-[#1E6091]"
                   >
                     Admin
                   </Link>
                 )}
                 <button
                   onClick={() => signOut({ callbackUrl: "/" })}
-                  className="flex items-center gap-1 text-sm text-gray-500 hover:text-red-500 px-2 py-1 transition-colors"
+                  className="flex items-center gap-1 px-2 py-1 text-sm text-[#6b6353] transition-colors hover:text-red-500"
                 >
-                  <LogOut className="w-4 h-4" />
+                  <LogOut className="h-4 w-4" />
                 </button>
               </div>
             ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  href="/login"
-                  className="flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-[#1B4D3E] transition-colors px-2 py-1"
-                >
-                  <span>Log in</span>
-                  <div className="w-7 h-7 rounded-full border border-gray-300 flex items-center justify-center">
-                    <User className="w-4 h-4 text-gray-500" />
-                  </div>
-                </Link>
-              </div>
+              <Link
+                href="/login"
+                className="flex items-center gap-2 rounded-full border border-[#1c2430]/15 py-1.5 pl-4 pr-1.5 text-sm text-[#1c2430] transition-colors hover:border-[#1E6091] hover:text-[#1E6091]"
+              >
+                <span>Log in</span>
+                <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#D4A373]">
+                  <User className="h-4 w-4 text-[#143f5f]" />
+                </div>
+              </Link>
             )}
           </div>
 
-          {/* Mobile burger */}
+          {/* Burger mobile */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={mobileMenuOpen}
+            className="rounded-lg p-2.5 transition-colors hover:bg-[#e6ddcd]/50 lg:hidden"
           >
             {mobileMenuOpen ? (
-              <X className="w-5 h-5 text-gray-600" />
+              <X className="h-5 w-5 text-[#1c2430]" />
             ) : (
-              <Menu className="w-5 h-5 text-gray-600" />
+              <Menu className="h-5 w-5 text-[#1c2430]" />
             )}
           </button>
         </div>
       </div>
 
-      {/* Mobile Menu */}
+      {/* Menu mobile */}
       {mobileMenuOpen && (
-        <div className="lg:hidden border-t border-gray-100 bg-white">
-          <div className="max-w-7xl mx-auto px-4 py-4 flex flex-col space-y-1">
-            {/* Mobile search */}
-            <div className="flex items-center gap-2 bg-[#1B2D2A] rounded-full px-4 py-2.5 mb-3">
-              <Search className="w-4 h-4 text-white flex-shrink-0" />
+        <div className="border-t border-[#e6ddcd] bg-[#faf6ef] lg:hidden">
+          <div className="mx-auto flex max-w-7xl flex-col space-y-1 px-4 py-4">
+            {/* Recherche mobile */}
+            <form
+              onSubmit={submitSearch}
+              className="mb-3 flex items-center gap-2 rounded-full border border-[#e6ddcd] bg-white px-4 py-2.5"
+            >
+              <Search className="h-4 w-4 flex-shrink-0 text-[#9a9284]" />
               <input
-                type="text"
-                placeholder="Where are you going?"
-                className="bg-transparent text-sm text-gray-300 placeholder-gray-400 outline-none w-full"
+                type="search"
+                placeholder="Search services"
+                aria-label="Search services"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-transparent text-sm text-[#1c2430] outline-none placeholder:text-[#9a9284] [&::-webkit-search-cancel-button]:hidden"
               />
-            </div>
+            </form>
 
             {navLinks.map((link) => (
               <Link
                 key={link.path}
                 href={link.path}
                 onClick={() => setMobileMenuOpen(false)}
-                className={`px-4 py-3 rounded-lg text-sm transition-colors ${
+                className={`rounded-lg px-4 py-3 text-[0.78rem] uppercase tracking-[0.14em] transition-colors ${
                   pathname === link.path
-                    ? "text-[#1B4D3E] font-semibold bg-[#1B4D3E]/5"
-                    : "text-gray-600 hover:bg-gray-50"
+                    ? "bg-[#1E6091]/5 font-semibold text-[#1E6091]"
+                    : "text-[#6b6353] hover:bg-[#e6ddcd]/40"
                 }`}
               >
                 {link.label}
               </Link>
             ))}
 
-            <div className="h-px bg-gray-100 my-2" />
+            <div className="my-2 h-px bg-[#e6ddcd]" />
 
             {isAuthenticated ? (
               <>
                 <Link
                   href="/dashboard"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+                  className="rounded-lg px-4 py-3 text-sm text-[#6b6353] hover:bg-[#e6ddcd]/40"
                 >
                   My Dashboard
                 </Link>
@@ -172,14 +188,14 @@ export const Navbar = () => {
                   <Link
                     href="/admin"
                     onClick={() => setMobileMenuOpen(false)}
-                    className="px-4 py-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+                    className="rounded-lg px-4 py-3 text-sm text-[#6b6353] hover:bg-[#e6ddcd]/40"
                   >
                     Admin Panel
                   </Link>
                 )}
                 <button
                   onClick={() => { setMobileMenuOpen(false); signOut({ callbackUrl: "/" }); }}
-                  className="mx-4 mt-2 px-4 py-2.5 border border-gray-200 text-sm text-gray-700 rounded-lg text-left"
+                  className="mx-4 mt-2 rounded-lg border border-[#e6ddcd] px-4 py-2.5 text-left text-sm text-[#1c2430]"
                 >
                   Sign out
                 </button>
@@ -189,14 +205,14 @@ export const Navbar = () => {
                 <Link
                   href="/login"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="px-4 py-3 rounded-lg text-sm text-gray-600 hover:bg-gray-50"
+                  className="rounded-lg px-4 py-3 text-sm text-[#6b6353] hover:bg-[#e6ddcd]/40"
                 >
                   Log in
                 </Link>
                 <Link
                   href="/register"
                   onClick={() => setMobileMenuOpen(false)}
-                  className="mx-4 mt-2 px-4 py-2.5 bg-[#1B4D3E] text-white text-sm text-center font-medium rounded-lg"
+                  className="mx-4 mt-2 rounded-full bg-[#1E6091] px-4 py-2.5 text-center text-sm font-medium text-white transition-colors hover:bg-[#0e3a5c]"
                 >
                   Sign up
                 </Link>

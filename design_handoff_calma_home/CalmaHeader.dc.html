@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+</helmet>
+<header style="background:#4A4E3F;color:#F6EFE0;display:flex;align-items:center;justify-content:space-between;padding:20px 40px;font-family:'Hanken Grotesk',sans-serif">
+  <a href="Calma Trip 2b.dc.html" style="display:flex;align-items:center;gap:12px;text-decoration:none">
+    <div style="width:40px;height:33px;background:#F6EFE0;-webkit-mask:url(assets/ct-mark.png) center/contain no-repeat;mask:url(assets/ct-mark.png) center/contain no-repeat"></div>
+    <span style="font-family:'Poppins',sans-serif;font-weight:700;font-size:20px;letter-spacing:-.02em;color:#F6EFE0">Calma Trip</span>
+  </a>
+  <nav style="display:flex;gap:28px;font-size:14px;font-weight:500">
+    <a href="Calma Trip 2b.dc.html" style="{{ sHome }}">Accueil</a>
+    <a href="Services.dc.html" style="{{ sServices }}">Services</a>
+    <a href="Marketplace.dc.html" style="{{ sMarket }}">Marketplace</a>
+    <a href="Explorer.dc.html" style="{{ sExplore }}">Explorer</a>
+    <a href="A-propos.dc.html" style="{{ sAbout }}">À propos</a>
+  </nav>
+  <a href="A-propos.dc.html" style="background:#9C533E;color:#F6EFE0;text-decoration:none;padding:10px 18px;border-radius:999px;font-size:13.5px;font-weight:600">Contact</a>
+</header>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:76},&quot;active&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;home&quot;,&quot;services&quot;,&quot;marketplace&quot;,&quot;explore&quot;,&quot;about&quot;],&quot;default&quot;:&quot;home&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  renderVals(){
+    const on = 'color:#F6EFE0;text-decoration:none;border-bottom:2px solid #d59a86;padding-bottom:3px;font-weight:600';
+    const off = 'color:rgba(246,239,224,.82);text-decoration:none;border-bottom:2px solid transparent;padding-bottom:3px';
+    const a = this.props.active;
+    return {
+      sHome: a==='home'?on:off,
+      sServices: a==='services'?on:off,
+      sMarket: a==='marketplace'?on:off,
+      sExplore: a==='explore'?on:off,
+      sAbout: a==='about'?on:off
+    };
+  }
+}
+</script>
+</body>
+</html>

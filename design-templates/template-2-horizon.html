@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calma Trip — Template 2 · Horizon (Triptyque immersif)</title>
+<style>
+  :root{
+    --ink:#12222e;
+    --sea:#1E6091;
+    --sea-deep:#0e3a5c;
+    --sand:#D4A373;
+    --dune:#c2854a;
+    --cream:#fdf9f1;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{font-family:"Segoe UI",system-ui,sans-serif;color:var(--ink);background:var(--cream)}
+  a{color:inherit;text-decoration:none}
+  .display{font-family:Georgia,"Times New Roman",serif;font-weight:400}
+
+  /* ---------- Nav flottante ---------- */
+  nav{
+    position:absolute;top:0;left:0;right:0;z-index:10;
+    display:flex;justify-content:space-between;align-items:center;
+    padding:1.3rem 3vw;color:#fff;
+  }
+  .brand{font-family:Georgia,serif;font-size:1.3rem}
+  nav ul{display:flex;gap:1.8rem;list-style:none;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase}
+  nav ul a{opacity:.85}
+  nav ul a:hover{opacity:1;border-bottom:1px solid var(--sand)}
+
+  /* ---------- HERO : horizon plein écran, ancré en bas à gauche ---------- */
+  .hero{
+    position:relative;height:92vh;min-height:560px;overflow:hidden;
+    background:linear-gradient(180deg,
+      #f6e7c9 0%, #f0cf9a 18%, #e8b678 30%,
+      #7fb2c9 30.2%, #3d84a8 55%, var(--sea-deep) 100%);
+    color:#fff;
+  }
+  .sun{
+    position:absolute;left:62%;top:12%;width:150px;height:150px;border-radius:50%;
+    background:radial-gradient(circle,#fff3d6 0%,#f5c877 60%,rgba(245,200,119,0) 72%);
+  }
+  .hero svg.waves{position:absolute;left:0;right:0;bottom:0;width:100%}
+  .hero-inner{
+    position:absolute;left:3vw;bottom:14vh;max-width:52rem;
+    text-shadow:0 2px 24px rgba(14,58,92,.4);
+  }
+  .hero-inner .tag{
+    display:inline-block;font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;
+    border:1px solid rgba(255,255,255,.5);border-radius:999px;padding:.4rem 1rem;margin-bottom:1.4rem;
+  }
+  .hero-inner h1{
+    font-family:Georgia,serif;font-weight:400;
+    font-size:clamp(2.6rem,6vw,5rem);line-height:1.03;letter-spacing:-.01em;
+  }
+  .hero-inner h1 em{font-style:italic;color:#ffe0ae}
+  .hero-inner p{margin-top:1.1rem;max-width:36rem;font-size:1.05rem;opacity:.92}
+
+  /* barre de réservation "carte d'embarquement" chevauchant l'horizon */
+  .board{
+    position:relative;z-index:5;margin:-4.2rem auto 0;max-width:1060px;width:92%;
+    background:#fff;border-radius:14px;box-shadow:0 18px 50px rgba(14,58,92,.25);
+    display:grid;grid-template-columns:1.2fr 1fr 1fr auto;overflow:hidden;
+  }
+  .board>div{padding:1.2rem 1.6rem;border-right:1px solid #eee7d9}
+  .board label{display:block;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase;color:#9a9284;margin-bottom:.25rem}
+  .board b{font-family:Georgia,serif;font-weight:400;font-size:1.05rem}
+  .board button{
+    border:0;cursor:pointer;background:var(--sea);color:#fff;
+    padding:0 2.4rem;font-size:.82rem;letter-spacing:.16em;text-transform:uppercase;
+  }
+  .board button:hover{background:var(--sea-deep)}
+
+  /* ---------- CATÉGORIES : triptyque vertical extensible ---------- */
+  .triptych-head{max-width:1060px;margin:4.5rem auto 1.6rem;width:92%;display:flex;justify-content:space-between;align-items:baseline}
+  .triptych-head h2{font-family:Georgia,serif;font-weight:400;font-size:2rem}
+  .triptych-head span{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#9a9284}
+
+  .triptych{display:flex;height:76vh;min-height:520px}
+  .panel{
+    position:relative;flex:1;overflow:hidden;cursor:pointer;color:#fff;
+    transition:flex .55s cubic-bezier(.6,.05,.2,1);
+    display:flex;flex-direction:column;justify-content:flex-end;
+  }
+  .panel:hover{flex:2.4}
+  .panel .scene{position:absolute;inset:0;transition:transform .6s}
+  .panel:hover .scene{transform:scale(1.05)}
+  .panel .veil{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,0) 40%,rgba(10,20,28,.55) 100%)}
+  .panel-body{position:relative;padding:2rem;transform:translateY(2.4rem);transition:transform .45s}
+  .panel:hover .panel-body{transform:translateY(0)}
+  .panel small{display:block;font-size:.7rem;letter-spacing:.24em;text-transform:uppercase;opacity:.85;margin-bottom:.5rem}
+  .panel h3{font-family:Georgia,serif;font-weight:400;font-size:2.1rem;letter-spacing:.01em}
+  .panel p{
+    max-width:26rem;margin-top:.7rem;font-size:.92rem;line-height:1.5;
+    opacity:0;transition:opacity .4s .1s;
+  }
+  .panel:hover p{opacity:.95}
+  .panel .go{
+    display:inline-flex;align-items:center;gap:.5rem;margin-top:1rem;
+    font-size:.8rem;letter-spacing:.14em;text-transform:uppercase;
+    border-bottom:1px solid var(--sand);padding-bottom:3px;
+    opacity:0;transition:opacity .4s .15s;
+  }
+  .panel:hover .go{opacity:1}
+
+  /* scènes CSS/SVG par catégorie (placeholders → photos Cloudinary) */
+  .scene-med{background:linear-gradient(180deg,#bfe0ec 0%,#5ea3c4 45%,#1E6091 46%,#123f61 100%)}
+  .scene-medina{
+    background:
+      repeating-linear-gradient(90deg,rgba(255,255,255,.06) 0 2px,transparent 2px 46px),
+      linear-gradient(180deg,#c88d55 0%,#a96a38 60%,#7c4a24 100%);
+  }
+  .scene-sahara{
+    background:
+      radial-gradient(140% 60% at 80% 108%,#8a5a2b 0%,transparent 60%),
+      radial-gradient(160% 70% at 10% 118%,#c2854a 0%,transparent 65%),
+      linear-gradient(180deg,#f8e2b8 0%,#eabf7d 55%,#d09a55 100%);
+  }
+  .panel + .panel{border-left:2px solid var(--cream)}
+
+  /* strip de réassurance sobre */
+  .assure{
+    max-width:1060px;margin:3.5rem auto 4rem;width:92%;
+    display:flex;gap:0;border:1px solid #e7dfd0;border-radius:12px;overflow:hidden;background:#fff;
+  }
+  .assure div{flex:1;padding:1.4rem 1.6rem;border-right:1px solid #e7dfd0}
+  .assure div:last-child{border-right:0}
+  .assure b{font-family:Georgia,serif;font-weight:400;font-size:1.2rem;display:block;color:var(--sea)}
+  .assure span{font-size:.82rem;color:#7d7668}
+
+  footer{padding:1.6rem 3vw;font-size:.78rem;color:#9a9284;display:flex;justify-content:space-between;border-top:1px solid #e7dfd0}
+
+  @media(max-width:900px){
+    .board{grid-template-columns:1fr 1fr}
+    .board button{grid-column:1/-1;padding:1rem}
+    .triptych{flex-direction:column;height:auto}
+    .panel{min-height:220px;flex:none}
+    .panel-body{transform:none}
+    .panel p,.panel .go{opacity:1}
+    .panel + .panel{border-left:0;border-top:2px solid var(--cream)}
+    .assure{flex-direction:column}
+    .assure div{border-right:0;border-bottom:1px solid #e7dfd0}
+    nav ul{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="#">Calma Trip</a>
+  <ul>
+    <li><a href="#">Transfers</a></li>
+    <li><a href="#">Excursions</a></li>
+    <li><a href="#">Marketplace</a></li>
+    <li><a href="#">Sign in</a></li>
+  </ul>
+</nav>
+
+<!-- HERO : paysage-horizon, texte ancré bas-gauche, un seul CTA implicite (la barre) -->
+<header class="hero">
+  <div class="sun"></div>
+  <svg class="waves" viewBox="0 0 1440 120" preserveAspectRatio="none" height="120">
+    <path d="M0,64 C240,96 480,32 720,56 C960,80 1200,40 1440,72 L1440,120 L0,120 Z" fill="rgba(255,255,255,.10)"/>
+    <path d="M0,84 C280,116 520,60 760,80 C1000,100 1240,64 1440,92 L1440,120 L0,120 Z" fill="rgba(255,255,255,.14)"/>
+  </svg>
+  <div class="hero-inner">
+    <span class="tag">Founded in Hammamet · 24/7 support</span>
+    <h1>Where the sea ends,<br>the <em>desert</em> begins.</h1>
+    <p>One country, three worlds. Book transfers and excursions at real local
+       prices — instantly confirmed, always answered.</p>
+  </div>
+</header>
+
+<!-- Barre de réservation chevauchant l'horizon -->
+<section class="board">
+  <div><label>Pick-up</label><b>Tunis–Carthage Airport</b></div>
+  <div><label>Destination</label><b>Sousse</b></div>
+  <div><label>When</label><b>Fri 25 July · 14:30</b></div>
+  <button type="button">See fare</button>
+</section>
+
+<!-- CATÉGORIES : triptyque pleine hauteur, panneaux extensibles au survol -->
+<div class="triptych-head">
+  <h2>Pick your world</h2>
+  <span>Méditerranée · Médina · Sahara</span>
+</div>
+
+<main class="triptych">
+  <a class="panel" href="#">
+    <div class="scene scene-med"></div><div class="veil"></div>
+    <div class="panel-body">
+      <small>The coast</small>
+      <h3>Méditerranée</h3>
+      <p>Catamaran days out of Hammamet, snorkeling off Cap Bon, sunset
+         sails with grilled fish on board.</p>
+      <span class="go">8 experiences →</span>
+    </div>
+  </a>
+  <a class="panel" href="#">
+    <div class="scene scene-medina"></div><div class="veil"></div>
+    <div class="panel-body">
+      <small>The old cities</small>
+      <h3>Médina</h3>
+      <p>Souk walks with a local guide, Carthage and Sidi Bou Saïd,
+         ceramics workshops and long mint teas.</p>
+      <span class="go">7 experiences →</span>
+    </div>
+  </a>
+  <a class="panel" href="#">
+    <div class="scene scene-sahara"></div><div class="veil"></div>
+    <div class="panel-body">
+      <small>The south</small>
+      <h3>Sahara</h3>
+      <p>Camel treks at golden hour, 4×4 dune crossings, one unforgettable
+         night in a Douz camp.</p>
+      <span class="go">9 experiences →</span>
+    </div>
+  </a>
+</main>
+
+<!-- Réassurance, sans grille de cartes-icônes -->
+<section class="assure">
+  <div><b>Local prices</b><span>No tourist markup, ever.</span></div>
+  <div><b>Instant confirmation</b><span>Ticket in your inbox in seconds.</span></div>
+  <div><b>24/7 · 3 languages</b><span>English, français, العربية.</span></div>
+</section>
+
+<footer>
+  <span>© Calma Trip — Hammamet</span>
+  <span>Template 2 · « Horizon » triptyque immersif</span>
+</footer>
+
+</body>
+</html>

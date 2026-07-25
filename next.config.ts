@@ -16,6 +16,11 @@ export default withPWANext({
         protocol: "https",
         hostname: "res.cloudinary.com",
       },
+      {
+        // seeded demo product images only — real uploads go through Cloudinary
+        protocol: "https",
+        hostname: "images.unsplash.com",
+      },
     ],
   },
 

@@ -1,0 +1,85 @@
+'use client';
+import React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { Compass, Users } from 'lucide-react';
+import { useCalmaLang } from '@/lib/calma/i18n';
+
+export default function CalmaWhyBanner() {
+  const { t } = useCalmaLang();
+
+  return (
+    <section className="mx-auto mt-28 max-w-[1240px] px-6">
+      <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_1fr]">
+        {/* Layered photo collage */}
+        <div className="relative mx-auto h-[420px] w-full max-w-[460px] lg:h-[460px]">
+          <div className="absolute left-0 top-0 h-[85%] w-[82%] overflow-hidden rounded-calma-block shadow-[0_30px_60px_-24px_rgba(20,15,10,.4)]">
+            <Image
+              src="/images/explore/sahara_camel.png"
+              alt="Caravane dans le désert tunisien"
+              fill
+              sizes="(min-width: 1024px) 380px, 80vw"
+              className="object-cover"
+            />
+          </div>
+          <div className="absolute left-4 top-4 rounded-2xl bg-calma-olive px-4 py-3 text-calma-cream shadow-[0_16px_30px_-12px_rgba(20,15,10,.5)]">
+            <div className="font-fraunces text-2xl leading-none">500+</div>
+            <div className="mt-1 text-[11px] font-semibold uppercase tracking-[.08em] text-calma-cream/75">
+              Voyages réussis
+            </div>
+          </div>
+          <div className="absolute bottom-0 right-0 h-[62%] w-[52%] overflow-hidden rounded-calma-card border-4 border-white shadow-[0_24px_50px_-16px_rgba(20,15,10,.45)]">
+            <Image
+              src="/images/explore/sidi_bou_said.png"
+              alt="Ruelle de Sidi Bou Saïd"
+              fill
+              sizes="(min-width: 1024px) 220px, 45vw"
+              className="object-cover"
+            />
+          </div>
+        </div>
+
+        {/* Text + stats + CTA */}
+        <div>
+          <div className="mb-4 text-xs font-bold uppercase tracking-[.16em] text-calma-terracotta">
+            {t.whyKicker}
+          </div>
+          <h2 className="mb-5 font-fraunces text-[clamp(32px,4vw,46px)] font-normal leading-[1.06] tracking-[-0.02em] text-calma-ink">
+            {t.whyHeading}
+          </h2>
+          <p className="mb-8 max-w-[440px] text-base leading-[1.65] text-calma-taupe">{t.whySub}</p>
+
+          <div className="mb-9 flex flex-wrap gap-8">
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-calma-terracotta/[.1] text-calma-terracotta">
+                <Users size={20} strokeWidth={1.75} />
+              </span>
+              <div>
+                <div className="font-fraunces text-xl leading-none text-calma-ink">500+</div>
+                <div className="mt-1 text-[12.5px] text-calma-taupe">Voyageurs satisfaits</div>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-calma-olive/[.1] text-calma-olive">
+                <Compass size={20} strokeWidth={1.75} />
+              </span>
+              <div>
+                <div className="font-fraunces text-xl leading-none text-calma-ink">98%</div>
+                <div className="mt-1 text-[12.5px] text-calma-taupe">Taux de satisfaction</div>
+              </div>
+            </div>
+          </div>
+
+          <Link
+            href="/about"
+            className="group inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-hanken text-[14.5px] font-semibold text-calma-cream no-underline shadow-[0_10px_24px_-8px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-8px_rgba(242,153,74,.75)]"
+            style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+          >
+            {t.whyBtn}
+            <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>
+          </Link>
+        </div>
+      </div>
+    </section>
+  );
+}

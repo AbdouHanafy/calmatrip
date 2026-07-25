@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:#ECE3D0;color:#2A2622;font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}a{color:#9C533E}a:hover{color:#4A4E3F}</style>
+</helmet>
+
+<dc-import name="CalmaHeader" active="explore" hint-size="100%,76px"></dc-import>
+<dc-import name="CalmaPageHero" kicker="Explorer · Tunisie" title="Du nord bleu au Sahara doré" subtitle="Six régions, mille visages. Choisissez une destination et découvrez les expériences qui l'incarnent." hint-size="100%,320px"></dc-import>
+
+<section style="max-width:1240px;margin:0 auto;padding:64px 40px 10px">
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+    <sc-for list="{{ dests }}" as="d" hint-placeholder-count="6">
+      <a href="Marketplace.dc.html" style="{{ d.wrap }}">
+        <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.09) 0 12px,rgba(255,255,255,.02) 12px 24px);display:grid;place-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:10.5px;letter-spacing:.08em;color:rgba(246,239,224,.5)">{{ d.ph }}</span></div>
+        <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,16,.85),rgba(20,18,16,.1) 55%,transparent)"></div>
+        <div style="position:absolute;top:14px;right:14px;background:rgba(246,239,224,.9);color:#4A4E3F;font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px">{{ d.count }}</div>
+        <div style="position:absolute;left:18px;right:18px;bottom:18px">
+          <h3 style="font-family:'Fraunces',serif;font-weight:400;font-size:24px;color:#F6EFE0;margin:0 0 5px">{{ d.name }}</h3>
+          <p style="font-size:13px;line-height:1.4;color:rgba(246,239,224,.82);margin:0">{{ d.desc }}</p>
+        </div>
+      </a>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:64px 40px 20px">
+  <div style="background:#4A4E3F;border-radius:26px;padding:56px clamp(28px,5vw,60px);color:#F6EFE0;display:grid;grid-template-columns:1.1fr .9fr;gap:44px;align-items:center">
+    <div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#d59a86;margin-bottom:12px">Carte des régions</div>
+      <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(26px,3.2vw,38px);letter-spacing:-.02em;line-height:1.1;margin:0 0 16px">Repérez-vous d'un coup d'œil</h2>
+      <p style="font-size:15.5px;line-height:1.6;color:rgba(246,239,224,.75);margin:0 0 22px;max-width:400px">Chaque région a son caractère : le bleu méditerranéen au nord, les oasis et le désert au sud, les sites antiques au centre. Dites-nous où vous rêvez d'aller.</p>
+      <a href="Services.dc.html" style="display:inline-block;background:#9C533E;color:#F6EFE0;text-decoration:none;padding:14px 26px;border-radius:999px;font-size:14.5px;font-weight:600">Planifier mon itinéraire</a>
+    </div>
+    <div style="border-radius:18px;overflow:hidden;aspect-ratio:4/3;background:#3a3d31;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0 12px,rgba(255,255,255,.02) 12px 24px);display:grid;place-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;color:rgba(246,239,224,.5)">CARTE — TUNISIE</span></div>
+  </div>
+</section>
+
+<dc-import name="CalmaFooter" hint-size="100%,300px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:1600}}">
+class Component extends DCLogic {
+  renderVals(){
+    const wrap='position:relative;display:block;text-decoration:none;border-radius:18px;overflow:hidden;height:300px;background:#4A4E3F';
+    const mk=o=>({...o,wrap});
+    return {
+      dests:[
+        mk({name:'Tunis & Carthage',desc:'Médina, souks et ruines antiques',count:'52 exp.',ph:'PHOTO — TUNIS'}),
+        mk({name:'Sidi Bou Saïd',desc:'Le village bleu et blanc',count:'18 exp.',ph:'PHOTO — SIDI BOU'}),
+        mk({name:'Djerba',desc:'Plages, lagunes et douceur insulaire',count:'34 exp.',ph:'PHOTO — DJERBA'}),
+        mk({name:'Tozeur & le Sud',desc:'Oasis, dunes et chott salé',count:'27 exp.',ph:'PHOTO — TOZEUR'}),
+        mk({name:'Kairouan',desc:'Ville sainte et artisanat du tapis',count:'15 exp.',ph:'PHOTO — KAIROUAN'}),
+        mk({name:'Hammamet',desc:'Station balnéaire et médina fortifiée',count:'23 exp.',ph:'PHOTO — HAMMAMET'})
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

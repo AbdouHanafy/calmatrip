@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Spectral:ital,wght@0,300;0,500;0,600;1,300;1,500&family=Hanken+Grotesk:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  :root{--bg:#ECE3D0;--surface:#F6EFE0;--ink:#2A2622;--muted:#6B665C;--primary:#4A4E3F;--accent:#9C533E;--accentSoft:#d59a86;--deep:#3a3d31;--darker:#2e3128;--onDark:#F6EFE0;--g1:#4A4E3F;--g2:#43473a;--g3:#575a49}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:'Hanken Grotesk',system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+  a{color:var(--accent);text-decoration:none}
+  a:hover{color:var(--primary)}
+  ::selection{background:var(--accent);color:var(--onDark)}
+  @keyframes dust{0%{transform:translateY(0);opacity:0}12%{opacity:.5}88%{opacity:.5}100%{transform:translateY(-120px) translateX(22px);opacity:0}}
+  @keyframes sunpulse{0%,100%{box-shadow:0 0 60px 8px rgba(156,83,62,.32)}50%{box-shadow:0 0 96px 20px rgba(156,83,62,.5)}}
+  @media (prefers-reduced-motion:reduce){.dust{animation:none!important}}
+  image-slot:not(:defined){display:block;width:100%;height:100%;background:linear-gradient(180deg,var(--g1),var(--g3))}
+  .catitem:hover .caticon{border-color:var(--accentSoft);background:rgba(255,255,255,.14)}
+  [data-catrow]::-webkit-scrollbar{display:none}
+</style>
+<script src="./image-slot.js"></script>
+</helmet>
+
+<div style="{{ paletteVars }}">
+
+<section data-hero style="position:relative;overflow:hidden;min-height:640px;height:88vh;max-height:820px;perspective:1300px;background:linear-gradient(180deg,var(--g1) 0%,var(--g2) 48%,var(--g3) 100%)">
+
+  <div data-bg style="position:absolute;inset:0;transform-origin:center;transition:transform .12s ease-out;will-change:transform">
+    <image-slot id="hero-bg" shape="rect" placeholder="Déposez votre photo de héros (paysage tunisien)"></image-slot>
+  </div>
+  <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(38,40,30,.5) 0%,rgba(38,40,30,.12) 36%,rgba(38,40,30,.32) 60%,rgba(46,49,40,.86) 100%);pointer-events:none"></div>
+  {{ particles }}
+
+  <header style="position:relative;z-index:20;display:flex;align-items:center;justify-content:space-between;padding:22px 40px">
+    <div style="display:flex;align-items:center;gap:11px">
+      <div style="width:44px;height:36px;background:var(--onDark);-webkit-mask:url(assets/ct-mark.png) center/contain no-repeat;mask:url(assets/ct-mark.png) center/contain no-repeat"></div>
+      <span style="font-family:'Poppins',sans-serif;font-size:21px;font-weight:700;letter-spacing:-.02em;color:var(--onDark)">Calma Trip</span>
+    </div>
+    <nav style="display:flex;gap:28px;font-size:14px;font-weight:500;color:var(--onDark)">
+      <a href="Calma Trip 2b.dc.html" style="color:var(--onDark)">{{ t.navHome }}</a>
+      <a href="Services.dc.html" style="color:var(--onDark)">{{ t.navServices }}</a>
+      <a href="Marketplace.dc.html" style="color:var(--onDark)">{{ t.navMarket }}</a>
+      <a href="Explorer.dc.html" style="color:var(--onDark)">{{ t.navExplore }}</a>
+      <a href="A-propos.dc.html" style="color:var(--onDark)">{{ t.navAbout }}</a>
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px">
+      <div style="display:flex;border:1px solid rgba(255,255,255,.35);border-radius:999px;overflow:hidden;font-size:12.5px;font-weight:600">
+        <button onClick="{{ setFr }}" style="{{ frBtnStyle }}">FR</button>
+        <button onClick="{{ setEn }}" style="{{ enBtnStyle }}">EN</button>
+      </div>
+      <button style="background:var(--accent);color:var(--onDark);border:none;padding:10px 18px;border-radius:999px;font-family:'Hanken Grotesk';font-size:13.5px;font-weight:600;cursor:pointer" onClick="{{ goContact }}">{{ t.navContact }}</button>
+    </div>
+  </header>
+
+  <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:70px 24px 132px;z-index:10;pointer-events:none">
+    <div style="pointer-events:auto;max-width:720px">
+      <div style="display:inline-flex;align-items:center;gap:8px;background:rgba(255,255,255,.12);backdrop-filter:blur(4px);border:1px solid rgba(255,255,255,.22);padding:6px 15px;border-radius:999px;font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accentSoft);margin-bottom:20px">
+        <span style="width:6px;height:6px;border-radius:50%;background:var(--accent)"></span>{{ t.heroEyebrow }}
+      </div>
+      <h1 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(42px,6vw,74px);line-height:1;letter-spacing:-.02em;color:var(--onDark);margin:0 0 18px;text-wrap:balance;text-shadow:0 2px 24px rgba(0,0,0,.35)">{{ t.heroTitle }} <em style="font-style:italic;color:var(--accentSoft)">{{ t.heroTitleEm }}</em></h1>
+      <p style="font-size:17px;line-height:1.55;color:rgba(255,255,255,.9);max-width:520px;margin:0 auto;text-wrap:pretty;text-shadow:0 1px 14px rgba(0,0,0,.4)">{{ t.heroSub }}</p>
+    </div>
+
+    <div data-parallax style="pointer-events:auto;position:absolute;left:0;right:0;bottom:96px;display:flex;justify-content:center">
+      <div data-catrow style="display:flex;gap:6px;overflow-x:auto;scroll-behavior:smooth;padding:6px 2px;scrollbar-width:none;max-width:1160px">
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9h18M4 9l8-5 8 5M6 9v9M10 9v9M14 9v9M18 9v9M3 21h18"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icCulture }}</span>
+        </button>
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 21V10a7 7 0 0 1 14 0v11M5 21h14M12 21v-6"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icMedina }}</span>
+        </button>
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M4 12a8 8 0 0 1 16 0Z"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icBeach }}</span>
+        </button>
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="17" cy="7" r="3"/><path d="M2 18c3-4 6-1 9-3s6-3 11 1"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icDesert }}</span>
+        </button>
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11h18a9 9 0 0 1-18 0ZM7 11c0-3 2-5 5-5"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icFood }}</span>
+        </button>
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3c4 5 6 8 6 11a6 6 0 0 1-12 0c0-3 2-6 6-11Z"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icHammam }}</span>
+        </button>
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v13M12 4l7 12H5zM4 19h16l-2 2H6z"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icSail }}</span>
+        </button>
+        <button class="catitem" style="flex:none;width:118px;display:flex;flex-direction:column;align-items:center;gap:10px;background:transparent;border:none;cursor:pointer;color:#F6EFE0;font-family:'Hanken Grotesk';padding:6px 0">
+          <span class="caticon" style="width:62px;height:62px;border-radius:50%;border:1px solid rgba(255,255,255,.32);display:grid;place-items:center;transition:all .2s"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#F6EFE0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M15 9l-2 5-4 1 2-5z"/></svg></span>
+          <span style="font-size:14px;font-weight:600">{{ t.icAdv }}</span>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="margin:-72px auto 0;position:relative;z-index:15;max-width:920px;padding:0 40px">
+  <div style="background:var(--surface);border-radius:16px;box-shadow:0 22px 50px -22px rgba(42,38,34,.5);display:flex;flex-wrap:wrap;align-items:center;padding:12px;gap:6px">
+    <label style="flex:2 1 240px;display:block;padding:8px 18px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--muted);margin-bottom:4px">{{ t.searchDestL }}</div>
+      <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--accent);font-size:15px">◉</span><input placeholder="{{ t.searchDest }}" style="width:100%;border:none;background:transparent;outline:none;font-family:'Hanken Grotesk';font-size:15.5px;color:var(--ink)" /></div>
+    </label>
+    <div style="width:1px;height:42px;background:rgba(74,78,63,.14)"></div>
+    <label style="flex:1 1 170px;display:block;padding:8px 18px">
+      <div style="font-size:11px;font-weight:700;letter-spacing:.05em;color:var(--muted);margin-bottom:4px">{{ t.searchDateL }}</div>
+      <div style="display:flex;align-items:center;gap:8px"><span style="color:var(--accent);font-size:15px">▦</span><input placeholder="{{ t.searchDatePh }}" style="width:100%;border:none;background:transparent;outline:none;font-family:'Hanken Grotesk';font-size:15.5px;color:var(--ink)" /></div>
+    </label>
+    <button style="background:var(--accent);color:var(--onDark);border:none;padding:17px 30px;border-radius:12px;font-family:'Hanken Grotesk';font-size:15px;font-weight:700;cursor:pointer;flex:1 1 auto;min-width:180px">{{ t.browse }}</button>
+  </div>
+</div>
+
+<section style="max-width:1240px;margin:0 auto;padding:80px 40px 20px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:10px">{{ t.catsKicker }}</div>
+      <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(30px,3.6vw,44px);letter-spacing:-.02em;margin:0;color:var(--ink)">{{ t.catsHeading }}</h2>
+    </div>
+    <p style="font-size:15.5px;line-height:1.5;color:var(--muted);max-width:340px;margin:0">{{ t.catsSub }}</p>
+  </div>
+  <div style="display:flex;justify-content:center;flex-wrap:wrap">
+    <sc-for list="{{ cats }}" as="cat" hint-placeholder-count="4">
+      <div style="{{ cat.wrapStyle }}">
+        <div style="position:relative;width:230px;height:300px;border-radius:16px;overflow:hidden;cursor:pointer;background:var(--primary)">
+          <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0 12px,rgba(255,255,255,.02) 12px 24px);display:grid;place-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.5)">{{ cat.ph }}</span></div>
+          <div style="position:absolute;inset:0;background:linear-gradient(to top,rgba(20,18,16,.85),rgba(20,18,16,.1) 55%,transparent)"></div>
+          <div style="position:absolute;top:14px;left:14px;background:var(--accent);color:var(--onDark);font-size:11px;font-weight:700;padding:5px 11px;border-radius:999px">{{ cat.count }}</div>
+          <div style="position:absolute;left:16px;right:16px;bottom:16px">
+            <h3 style="font-family:'Fraunces',serif;font-weight:400;font-size:21px;color:#fff;margin:0 0 4px">{{ cat.title }}</h3>
+            <p style="font-size:12.5px;line-height:1.4;color:rgba(255,255,255,.78);margin:0">{{ cat.desc }}</p>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:70px 40px 20px">
+  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:34px;flex-wrap:wrap">
+    <div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin-bottom:10px">{{ t.expKicker }}</div>
+      <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(30px,3.6vw,44px);letter-spacing:-.02em;margin:0;color:var(--ink)">{{ t.expHeading }}</h2>
+    </div>
+    <a href="#" style="font-size:14.5px;font-weight:600;color:var(--accent)">{{ t.expViewAll }} →</a>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+    <sc-for list="{{ exps }}" as="exp" hint-placeholder-count="3">
+      <div style="background:var(--surface);border:1px solid rgba(74,78,63,.12);border-radius:18px;overflow:hidden;cursor:pointer">
+        <div style="position:relative;aspect-ratio:16/11;background:var(--deep);background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.07) 0 12px,rgba(255,255,255,.02) 12px 24px);display:grid;place-items:center">
+          <span style="font-family:ui-monospace,Menlo,monospace;font-size:10px;letter-spacing:.08em;color:rgba(255,255,255,.5)">{{ exp.ph }}</span>
+          <div style="position:absolute;top:12px;right:12px;background:var(--surface);color:var(--primary);font-size:12px;font-weight:700;padding:5px 10px;border-radius:999px"><span style="color:var(--accent)">★</span> {{ exp.rating }}</div>
+        </div>
+        <div style="padding:18px 18px 20px">
+          <div style="font-size:12.5px;font-weight:600;color:var(--accent);margin-bottom:6px">◦ {{ exp.place }}</div>
+          <h3 style="font-family:'Fraunces',serif;font-weight:400;font-size:19px;line-height:1.2;color:var(--ink);margin:0 0 14px;min-height:46px">{{ exp.title }}</h3>
+          <div style="display:flex;align-items:baseline;justify-content:space-between;border-top:1px solid rgba(74,78,63,.12);padding-top:14px">
+            <div><span style="font-size:12px;color:var(--muted)">{{ t.expFrom }} </span><span style="font-family:'Fraunces',serif;font-size:22px;font-weight:600;color:var(--primary)">{{ exp.price }}€</span><span style="font-size:12px;color:var(--muted)"> {{ t.expPer }}</span></div>
+            <span style="font-size:20px;color:var(--accent)">→</span>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:80px auto 0;padding:0 24px"><div style="background:var(--primary);border-radius:26px;padding:60px clamp(28px,5vw,64px);color:var(--onDark)">
+  <div style="display:grid;grid-template-columns:1fr 1.15fr;gap:56px;align-items:center">
+    <div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--accentSoft);margin-bottom:12px">{{ t.whyKicker }}</div>
+      <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(30px,3.6vw,42px);letter-spacing:-.02em;line-height:1.08;margin:0 0 18px">{{ t.whyHeading }}</h2>
+      <p style="font-size:16px;line-height:1.6;color:rgba(255,255,255,.75);margin:0 0 26px;max-width:400px">{{ t.whySub }}</p>
+      <button style="background:var(--accent);color:var(--onDark);border:none;padding:14px 24px;border-radius:999px;font-family:'Hanken Grotesk';font-size:14.5px;font-weight:600;cursor:pointer">{{ t.whyBtn }}</button>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:1px;background:rgba(255,255,255,.14);border-radius:16px;overflow:hidden">
+      <sc-for list="{{ whys }}" as="w" hint-placeholder-count="4">
+        <div style="background:var(--primary);padding:26px 22px">
+          <div style="font-family:'Fraunces',serif;font-size:30px;color:var(--accentSoft);margin-bottom:12px">{{ w.n }}</div>
+          <h3 style="font-size:16px;font-weight:700;margin:0 0 7px;color:var(--onDark)">{{ w.title }}</h3>
+          <p style="font-size:13.5px;line-height:1.5;color:rgba(255,255,255,.68);margin:0">{{ w.desc }}</p>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div></section>
+
+<section style="max-width:1240px;margin:0 auto;padding:84px 40px 20px">
+  <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(28px,3.4vw,40px);letter-spacing:-.02em;text-align:center;margin:0 0 44px;color:var(--ink)">{{ t.testiHeading }}</h2>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:22px">
+    <sc-for list="{{ testis }}" as="ts" hint-placeholder-count="3">
+      <div style="background:var(--surface);border:1px solid rgba(74,78,63,.12);border-radius:18px;padding:28px 26px">
+        <div style="color:var(--accent);font-size:15px;letter-spacing:2px;margin-bottom:14px">★★★★★</div>
+        <p style="font-family:'Fraunces',serif;font-style:italic;font-size:17px;line-height:1.5;color:var(--ink);margin:0 0 22px;text-wrap:pretty">“{{ ts.quote }}”</p>
+        <div style="display:flex;align-items:center;gap:12px">
+          <div style="width:40px;height:40px;border-radius:50%;background:var(--accent);color:var(--onDark);display:grid;place-items:center;font-family:'Fraunces',serif;font-weight:600;font-size:16px">{{ ts.init }}</div>
+          <div><div style="font-size:14.5px;font-weight:700;color:var(--primary)">{{ ts.name }}</div><div style="font-size:12.5px;color:var(--muted)">{{ ts.role }}</div></div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:80px auto 24px;padding:0 24px"><div style="position:relative;border-radius:26px;overflow:hidden;background:radial-gradient(120% 140% at 85% 15%,var(--accent) 0%,var(--deep) 45%,var(--darker) 100%);padding:72px clamp(28px,6vw,72px);color:var(--onDark);text-align:center">
+  <div style="position:absolute;inset:0;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.05) 0 14px,transparent 14px 30px);pointer-events:none"></div>
+  <div style="position:relative;max-width:640px;margin:0 auto">
+    <div style="display:inline-flex;align-items:center;gap:8px;font-size:11.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;color:var(--accentSoft);margin-bottom:16px"><span style="width:6px;height:6px;border-radius:50%;background:var(--accentSoft)"></span>{{ t.newsKicker }}</div>
+    <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(32px,4.4vw,54px);letter-spacing:-.02em;line-height:1.02;margin:0 0 16px">{{ t.newsTitle }}</h2>
+    <p style="font-size:16.5px;line-height:1.6;color:rgba(255,255,255,.82);margin:0 auto 30px;max-width:520px;text-wrap:pretty">{{ t.newsSub }}</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:26px">
+      <button style="background:var(--surface);color:var(--primary);border:none;padding:15px 30px;border-radius:999px;font-family:'Hanken Grotesk';font-size:15px;font-weight:600;cursor:pointer">{{ t.newsBtn1 }}</button>
+      <button style="background:transparent;color:var(--onDark);border:1px solid rgba(255,255,255,.4);padding:15px 30px;border-radius:999px;font-family:'Hanken Grotesk';font-size:15px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:8px">☏ {{ t.newsBtn2 }}</button>
+    </div>
+    <div style="font-size:13px;font-weight:600;letter-spacing:.04em;color:rgba(255,255,255,.7)">{{ t.newsTrust }}</div>
+  </div>
+</div></section>
+
+<footer style="background:var(--primary);color:var(--onDark);margin-top:80px"><div style="max-width:1240px;margin:0 auto;padding:52px 40px 56px;display:flex;flex-wrap:wrap;justify-content:space-between;gap:32px">
+  <div style="max-width:280px">
+    <div style="display:flex;align-items:center;gap:10px">
+      <div style="width:33px;height:27px;background:var(--onDark);-webkit-mask:url(assets/ct-mark.png) center/contain no-repeat;mask:url(assets/ct-mark.png) center/contain no-repeat"></div>
+      <span style="font-family:'Poppins',sans-serif;font-size:18px;font-weight:700;letter-spacing:-.02em;color:var(--onDark)">Calma Trip</span>
+    </div>
+    <p style="font-size:13.5px;line-height:1.55;color:rgba(255,255,255,.68);margin:10px 0 0">{{ t.footTag }}</p>
+  </div>
+  <div style="display:flex;gap:56px;flex-wrap:wrap">
+    <div><div style="font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accentSoft);margin-bottom:14px">{{ t.footExplore }}</div><div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><a href="Marketplace.dc.html" style="color:rgba(255,255,255,.82)">{{ t.catCulture }}</a><a href="Marketplace.dc.html" style="color:rgba(255,255,255,.82)">{{ t.catBeach }}</a><a href="Marketplace.dc.html" style="color:rgba(255,255,255,.82)">{{ t.catDesert }}</a><a href="Marketplace.dc.html" style="color:rgba(255,255,255,.82)">{{ t.catFood }}</a></div></div>
+    <div><div style="font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--accentSoft);margin-bottom:14px">{{ t.footCompany }}</div><div style="display:flex;flex-direction:column;gap:9px;font-size:14px"><a href="A-propos.dc.html" style="color:rgba(255,255,255,.82)">{{ t.navAbout }}</a><a href="Services.dc.html" style="color:rgba(255,255,255,.82)">{{ t.navServices }}</a><a href="A-propos.dc.html" style="color:rgba(255,255,255,.82)">{{ t.navContact }}</a></div></div>
+  </div>
+</div></footer>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1280,&quot;height&quot;:2600},&quot;palette&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;olive&quot;,&quot;sidi-bou&quot;,&quot;oasis&quot;,&quot;ink&quot;],&quot;default&quot;:&quot;olive&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Palette&quot;},&quot;defaultLang&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;fr&quot;,&quot;en&quot;],&quot;default&quot;:&quot;fr&quot;,&quot;tsType&quot;:&quot;string&quot;,&quot;section&quot;:&quot;Contenu&quot;},&quot;enable3D&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Hero&quot;}}">
+class Component extends DCLogic {
+  constructor(props){
+    super(props);
+    this.state = { lang: (props.defaultLang === 'en' ? 'en' : 'fr') };
+    this.setFr = () => this.setState({lang:'fr'});
+    this.setEn = () => this.setState({lang:'en'});
+    this.scrollCats = (dir) => { const row = document.querySelector('[data-catrow]'); if(row) row.scrollBy({left:dir*360,behavior:'smooth'}); };
+    this.heroRef = (el) => {
+      if(!el || this._bound) return; this._bound = true;
+      const bg = el.querySelector('[data-bg]');
+      const row = el.querySelector('[data-parallax]');
+      if(matchMedia('(prefers-reduced-motion: reduce)').matches || this.props.enable3D === false){ if(bg) bg.style.transform='scale(1.06)'; return; }
+      let tx=0,ty=0,cx=0,cy=0;
+      el.addEventListener('mousemove',(e)=>{const r=el.getBoundingClientRect();tx=(e.clientX-r.left)/r.width-0.5;ty=(e.clientY-r.top)/r.height-0.5;});
+      el.addEventListener('mouseleave',()=>{tx=0;ty=0;});
+      const tick=()=>{
+        cx+=(tx-cx)*0.06; cy+=(ty-cy)*0.06;
+        if(bg) bg.style.transform=`scale(1.08) translate(${cx*-22}px, ${cy*-15}px)`;
+        if(row) row.style.transform=`translate(${cx*14}px, ${cy*8}px)`;
+        this._raf=requestAnimationFrame(tick);
+      };
+      tick();
+    };
+  }
+  componentDidMount(){
+    const el = document.querySelector('[data-hero]');
+    if(el) this.heroRef(el);
+  }
+  componentWillUnmount(){ if(this._raf) cancelAnimationFrame(this._raf); }
+  makeParticles(){
+    return React.createElement('div',{'data-depth':'2.1',style:{position:'absolute',inset:0,overflow:'hidden',pointerEvents:'none',willChange:'transform'}},
+      Array.from({length:22}).map((_,i)=>{const s=2+Math.round(Math.random()*4);return React.createElement('div',{key:i,className:'dust',style:{position:'absolute',left:(Math.random()*100)+'%',bottom:(Math.random()*40)+'%',width:s+'px',height:s+'px',borderRadius:'50%',background:i%3===0?'rgba(197,107,79,.65)':'rgba(255,255,255,.7)',animation:`dust ${7+Math.random()*7}s linear ${Math.random()*8}s infinite`}});})
+    );
+  }
+  palette(){
+    const P = {
+      olive:{'--bg':'#ECE3D0','--surface':'#F6EFE0','--ink':'#2A2622','--muted':'#6B665C','--primary':'#4A4E3F','--accent':'#9C533E','--accentSoft':'#d59a86','--deep':'#3a3d31','--darker':'#2e3128','--onDark':'#F6EFE0','--g1':'#4A4E3F','--g2':'#43473a','--g3':'#575a49'},
+      'sidi-bou':{'--bg':'#F2E9D8','--surface':'#ffffff','--ink':'#21303A','--muted':'#4a5a63','--primary':'#1E5F74','--accent':'#C4472B','--accentSoft':'#e0a48c','--deep':'#164a5b','--darker':'#123a48','--onDark':'#F2E9D8','--g1':'#1E5F74','--g2':'#1a5468','--g3':'#2a7186'},
+      oasis:{'--bg':'#F4EFE2','--surface':'#ffffff','--ink':'#1E2620','--muted':'#5a6157','--primary':'#0B3D2E','--accent':'#C98A2B','--accentSoft':'#e0b878','--deep':'#0a3427','--darker':'#08281e','--onDark':'#F4EFE2','--g1':'#0B3D2E','--g2':'#12513c','--g3':'#1c6249'},
+      ink:{'--bg':'#EFEAE1','--surface':'#ffffff','--ink':'#201C1A','--muted':'#5c534c','--primary':'#201C1A','--accent':'#B85C3C','--accentSoft':'#d0714f','--deep':'#2a2420','--darker':'#17130f','--onDark':'#EFEAE1','--g1':'#201C1A','--g2':'#2a2420','--g3':'#3a332e'}
+    };
+    return P[this.props.palette] || P.olive;
+  }
+  renderVals(){
+    const DICT = {
+      fr:{navHome:'Accueil',navServices:'Services',navMarket:'Marketplace',navExplore:'Explorer',navAbout:'À propos',navContact:'Contact',
+        heroEyebrow:'Expériences locales · Tunisie',heroTitle:'Une Tunisie qui se',heroTitleEm:'vit',
+        heroSub:'Pas qui se visite. Des activités menées par des locaux — de la médina de Tunis aux dunes de Tozeur, réservées en direct.',
+        searchCatL:'Activité',searchCat:'Toutes',searchDestL:'Destination',searchDest:'Commencez à taper ou choisissez…',searchWhenL:'Quand',searchWhen:'Ajouter des dates',searchGo:'Rechercher',searchDateL:'Date',searchDatePh:'JJ/MM/AAAA',browse:'Parcourir les expériences',
+        icCulture:'Culture',icMedina:'Médina',icBeach:'Plage',icDesert:'Désert',icFood:'Food',icHammam:'Hammam',icSail:'Voile',icAdv:'Aventure',
+        catsKicker:'Par type d’activité',catsHeading:'Choisissez votre Tunisie',catsSub:'De la médina au désert, de la mer à la table.',
+        expKicker:'Marketplace',expHeading:'Expériences à la une',expViewAll:'Tout voir',expFrom:'dès',expPer:'/pers.',
+        whyKicker:'Pourquoi calma·trip',whyHeading:'Le voyage juste, pensé avec les Tunisiens',whySub:'Nous travaillons directement avec des guides et artisans locaux. Vous payez le juste prix, ils sont payés équitablement.',whyBtn:'Notre démarche',
+        testiHeading:'Ce que disent nos voyageurs',
+        newsKicker:'Commencez l’aventure',newsTitle:'Prêt à explorer la Tunisie ?',newsSub:'Réservez maintenant et profitez de services de transport et de voyage premium partout en Tunisie. Réponse garantie sous 30 minutes.',newsBtn1:'Voir les services',newsBtn2:'Appeler',newsTrust:'Paiement sécurisé · Sans engagement · Support 24/7',
+        footTag:'La marketplace des expériences authentiques en Tunisie, réservées directement auprès des locaux.',footExplore:'Explorer',footCompany:'Société',
+        catCulture:'Culture & Médina',catBeach:'Plage & Méditerranée',catDesert:'Désert & Sahara',catFood:'Food & Marché',
+        cats:[{title:'Culture & Médina',desc:'Ateliers, patrimoine, artisans',count:'48 exp.',ph:'PHOTO — MÉDINA'},{title:'Plage & Méditerranée',desc:'Djerba, Hammamet, Kélibia',count:'32 exp.',ph:'PHOTO — MER'},{title:'Désert & Sahara',desc:'Tozeur, Douz, Matmata',count:'27 exp.',ph:'PHOTO — DÉSERT'},{title:'Food & Marché',desc:'Épices, huile d’olive, street food',count:'21 exp.',ph:'PHOTO — MARCHÉ'}],
+        exps:[{place:'Nabeul',title:'Atelier poterie avec un maître céramiste',price:45,rating:'4.9',ph:'PHOTO — ATELIER'},{place:'Tozeur',title:'Coucher de soleil en 4×4 dans le Chott el-Jérid',price:60,rating:'4.8',ph:'PHOTO — 4×4'},{place:'Tunis',title:'Médina secrète : ruelles, souks et toits',price:25,rating:'5.0',ph:'PHOTO — SOUK'}],
+        whys:[{n:'01',title:'Guides locaux',desc:'Des habitants qui connaissent chaque ruelle.'},{n:'02',title:'Sans intermédiaire',desc:'Vous réservez en direct, au juste prix.'},{n:'03',title:'Petits groupes',desc:'Des expériences intimes, jamais en masse.'},{n:'04',title:'Annulation souple',desc:'Remboursé jusqu’à 24 h avant.'}],
+        testis:[{quote:'On a pétri l’argile avec un artisan de Nabeul — un moment qu’aucune agence ne nous aurait offert.',name:'Camille Reyer',role:'Lyon, France',init:'C'},{quote:'Le désert au coucher du soleil, sans la foule. Notre guide connaissait chaque piste.',name:'Marco Bianchi',role:'Milan, Italie',init:'M'},{quote:'Réservation limpide, prix honnête, et un guide passionné dans la médina de Tunis.',name:'Sophie Laurent',role:'Bruxelles, Belgique',init:'S'}]},
+      en:{navHome:'Home',navServices:'Services',navMarket:'Marketplace',navExplore:'Explore',navAbout:'About Us',navContact:'Contact',
+        heroEyebrow:'Local experiences · Tunisia',heroTitle:'A Tunisia you',heroTitleEm:'live',
+        heroSub:'Not just visit. Activities led by locals — from the Tunis medina to the dunes of Tozeur, booked direct.',
+        searchCatL:'Activity',searchCat:'All',searchDestL:'Destination',searchDest:'Start typing or select below…',searchWhenL:'When',searchWhen:'Add dates',searchGo:'Search',searchDateL:'Date',searchDatePh:'MM/DD/YYYY',browse:'Browse experiences',
+        icCulture:'Culture',icMedina:'Medina',icBeach:'Beach',icDesert:'Desert',icFood:'Food',icHammam:'Hammam',icSail:'Sailing',icAdv:'Adventure',
+        catsKicker:'By type of activity',catsHeading:'Choose your Tunisia',catsSub:'From the medina to the desert, from the sea to the table.',
+        expKicker:'Marketplace',expHeading:'Featured experiences',expViewAll:'View all',expFrom:'from',expPer:'/person',
+        whyKicker:'Why calma·trip',whyHeading:'Travel done right, built with Tunisians',whySub:'We work directly with local guides and artisans. You pay a fair price, and they are paid fairly.',whyBtn:'How we work',
+        testiHeading:'What our travelers say',
+        newsKicker:'Start the adventure',newsTitle:'Ready to explore Tunisia?',newsSub:'Book now and enjoy premium transport and travel services across Tunisia. Response guaranteed within 30 minutes.',newsBtn1:'View services',newsBtn2:'Call now',newsTrust:'Secure Payment · No Obligation · 24/7 Support',
+        footTag:'The marketplace for authentic experiences in Tunisia, booked directly with locals.',footExplore:'Explore',footCompany:'Company',
+        catCulture:'Culture & Medina',catBeach:'Beach & Mediterranean',catDesert:'Desert & Sahara',catFood:'Food & Market',
+        cats:[{title:'Culture & Medina',desc:'Workshops, heritage, artisans',count:'48 exp.',ph:'PHOTO — MEDINA'},{title:'Beach & Mediterranean',desc:'Djerba, Hammamet, Kelibia',count:'32 exp.',ph:'PHOTO — SEA'},{title:'Desert & Sahara',desc:'Tozeur, Douz, Matmata',count:'27 exp.',ph:'PHOTO — DESERT'},{title:'Food & Market',desc:'Spices, olive oil, street food',count:'21 exp.',ph:'PHOTO — MARKET'}],
+        exps:[{place:'Nabeul',title:'Pottery workshop with a master ceramist',price:45,rating:'4.9',ph:'PHOTO — WORKSHOP'},{place:'Tozeur',title:'Sunset 4×4 across the Chott el-Jerid',price:60,rating:'4.8',ph:'PHOTO — 4×4'},{place:'Tunis',title:'Secret medina: alleys, souks and rooftops',price:25,rating:'5.0',ph:'PHOTO — SOUK'}],
+        whys:[{n:'01',title:'Local guides',desc:'Locals who know every alley.'},{n:'02',title:'No middleman',desc:'Book direct, at a fair price.'},{n:'03',title:'Small groups',desc:'Intimate experiences, never crowds.'},{n:'04',title:'Flexible cancellation',desc:'Refunded up to 24 h before.'}],
+        testis:[{quote:'We shaped clay with an artisan in Nabeul — a moment no agency could have given us.',name:'Camille Reyer',role:'Lyon, France',init:'C'},{quote:'The desert at sunset, without the crowds. Our guide knew every track.',name:'Marco Bianchi',role:'Milan, Italy',init:'M'},{quote:'Seamless booking, honest price, and a passionate guide in the Tunis medina.',name:'Sophie Laurent',role:'Brussels, Belgium',init:'S'}]}
+    };
+    const t = DICT[this.state.lang];
+    const cats = t.cats.map((c,i)=>({...c, wrapStyle:`margin-top:${[0,22,44,22][i]||0}px;margin-left:${i?-18:0}px;z-index:${4-i}`}));
+    const p = this.palette();
+    const paletteVars = Object.entries(p).map(([k,v])=>k+':'+v).join(';');
+    const active={background:'var(--accent)',color:'var(--onDark)',border:'none',padding:'6px 12px',cursor:'pointer',fontFamily:'Hanken Grotesk'};
+    const idle={background:'transparent',color:'var(--onDark)',border:'none',padding:'6px 12px',cursor:'pointer',fontFamily:'Hanken Grotesk'};
+    return {t,cats,exps:t.exps,whys:t.whys,testis:t.testis,paletteVars,
+      setFr:this.setFr,setEn:this.setEn,goContact:()=>{window.location.href='A-propos.dc.html';},
+      scrollCatsLeft:()=>this.scrollCats(-1),scrollCatsRight:()=>this.scrollCats(1),
+      frBtnStyle:this.state.lang==='fr'?active:idle,enBtnStyle:this.state.lang==='en'?active:idle,
+      particles:this.makeParticles()};
+  }
+}
+</script>
+</body>
+</html>

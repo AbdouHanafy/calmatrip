@@ -10,7 +10,7 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get("category") || "";
     const sort = searchParams.get("sort") || "newest";
 
-    const where: any = {};
+    const where: any = { submissionStatus: "approved" };
     if (search) {
       where.OR = [
         { name: { contains: search } },
@@ -32,6 +32,7 @@ export async function GET(req: NextRequest) {
 
     const products = await prisma.product.findMany({ where, orderBy });
     const categories = await prisma.product.findMany({
+      where: { submissionStatus: "approved" },
       select: { category: true },
       distinct: ["category"],
     });

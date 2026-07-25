@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calma Trip — Template 1 · Carnet de Voyage (Editorial)</title>
+<style>
+  :root{
+    --ink:#22201c;
+    --paper:#faf6ef;
+    --sea:#1E6091;
+    --sand:#D4A373;
+    --clay:#b0713f;
+    --line:#e2dacc;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Gill Sans","Segoe UI",system-ui,sans-serif;
+    line-height:1.5;
+  }
+  .serif{font-family:Georgia,"Times New Roman",serif}
+  a{color:inherit;text-decoration:none}
+
+  /* ---------- Nav ---------- */
+  nav{
+    display:flex;justify-content:space-between;align-items:baseline;
+    padding:1.4rem 4vw;border-bottom:1px solid var(--line);
+  }
+  .brand{font-family:Georgia,serif;font-size:1.35rem;letter-spacing:.02em}
+  .brand em{font-style:italic;color:var(--sea)}
+  nav ul{display:flex;gap:2.2rem;list-style:none;font-size:.82rem;letter-spacing:.12em;text-transform:uppercase}
+  nav ul a{border-bottom:1px solid transparent;padding-bottom:2px}
+  nav ul a:hover{border-color:var(--sand)}
+
+  /* ---------- Hero : split éditorial asymétrique ---------- */
+  .hero{
+    display:grid;
+    grid-template-columns:minmax(0,7fr) minmax(0,5fr);
+    border-bottom:1px solid var(--line);
+  }
+  .hero-copy{padding:5.5rem 4vw 4rem;display:flex;flex-direction:column;justify-content:center}
+  .kicker{
+    font-size:.78rem;letter-spacing:.22em;text-transform:uppercase;color:var(--clay);
+    display:flex;align-items:center;gap:.8rem;margin-bottom:2rem;
+  }
+  .kicker::before{content:"";width:2.4rem;height:1px;background:var(--clay)}
+  h1{
+    font-family:Georgia,serif;font-weight:400;
+    font-size:clamp(2.6rem,5.6vw,4.6rem);
+    line-height:1.06;letter-spacing:-.01em;
+  }
+  h1 em{font-style:italic;color:var(--sea)}
+  .hero-copy p{max-width:34rem;margin:1.8rem 0 2.4rem;color:#5c554a;font-size:1.02rem}
+  .hero-cta{display:flex;align-items:center;gap:2rem;flex-wrap:wrap}
+  .cta-main{
+    display:inline-flex;align-items:center;gap:.7rem;
+    background:var(--ink);color:var(--paper);
+    padding:.95rem 1.8rem;border-radius:999px;font-size:.9rem;letter-spacing:.04em;
+    transition:background .2s;
+  }
+  .cta-main:hover{background:var(--sea)}
+  .cta-main span{font-size:1.1rem;transform:translateY(-1px)}
+  .cta-quiet{font-size:.9rem;border-bottom:1px solid var(--sand);padding-bottom:2px}
+
+  /* colonne droite : pile de "planches" photo légendées */
+  .hero-plates{
+    border-left:1px solid var(--line);
+    display:flex;flex-direction:column;
+  }
+  .plate{flex:1;position:relative;overflow:hidden;min-height:170px}
+  .plate + .plate{border-top:1px solid var(--line)}
+  .plate .ph{position:absolute;inset:0}
+  .plate figcaption{
+    position:absolute;left:1.2rem;bottom:1rem;
+    background:var(--paper);padding:.35rem .8rem;
+    font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;
+  }
+  /* placeholders picturaux en pur CSS (à remplacer par des photos Cloudinary) */
+  .ph-sea{background:
+    linear-gradient(180deg,#cfe6ef 0%,#8fc3d8 45%,#1E6091 46%,#164d75 100%)}
+  .ph-medina{background:
+    repeating-linear-gradient(90deg,#e8d5b8 0 26px,#dfc7a3 26px 28px),
+    linear-gradient(180deg,rgba(176,113,63,.25),rgba(176,113,63,.55))}
+  .ph-sahara{background:
+    radial-gradient(120% 90% at 20% 0%,#f4e3c6 0%,#e6c894 45%,#c99a5b 100%)}
+
+  /* bande recherche façon billet */
+  .ticket{
+    display:grid;grid-template-columns:repeat(3,1fr) auto;
+    border-bottom:1px solid var(--line);background:#fff;
+  }
+  .ticket>div{padding:1.1rem 1.6rem;border-right:1px dashed var(--line)}
+  .ticket label{display:block;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:#98917f;margin-bottom:.2rem}
+  .ticket b{font-family:Georgia,serif;font-weight:400;font-size:1.05rem}
+  .ticket button{
+    border:0;background:var(--sea);color:#fff;padding:0 2.6rem;
+    font-size:.85rem;letter-spacing:.14em;text-transform:uppercase;cursor:pointer;
+  }
+  .ticket button:hover{background:#174e77}
+
+  /* ---------- Catégories : sommaire éditorial numéroté ---------- */
+  .toc{padding:5rem 4vw 6rem}
+  .toc-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:2.5rem}
+  .toc-head h2{font-family:Georgia,serif;font-weight:400;font-size:1.9rem}
+  .toc-head span{font-size:.8rem;letter-spacing:.16em;text-transform:uppercase;color:#98917f}
+
+  .row{
+    display:grid;grid-template-columns:5rem 1fr 16rem auto;gap:2rem;align-items:center;
+    padding:2.2rem 0;border-top:1px solid var(--line);cursor:pointer;
+    transition:background .25s;
+  }
+  .row:last-child{border-bottom:1px solid var(--line)}
+  .row:hover{background:#fff}
+  .row .num{font-family:Georgia,serif;font-size:1.1rem;color:var(--clay)}
+  .row h3{
+    font-family:Georgia,serif;font-weight:400;
+    font-size:clamp(1.8rem,3.4vw,2.8rem);letter-spacing:-.01em;
+    transition:color .2s;
+  }
+  .row:hover h3{color:var(--sea)}
+  .row .meta{font-size:.86rem;color:#5c554a}
+  .row .meta small{display:block;letter-spacing:.14em;text-transform:uppercase;font-size:.68rem;color:#98917f;margin-bottom:.3rem}
+  .row .swatch{
+    width:110px;height:74px;border-radius:4px;overflow:hidden;
+    transform:rotate(-2deg);box-shadow:0 6px 14px rgba(34,32,28,.14);
+    transition:transform .25s;
+  }
+  .row:hover .swatch{transform:rotate(0) scale(1.06)}
+  .swatch div{width:100%;height:100%}
+
+  footer{padding:2rem 4vw;font-size:.78rem;color:#98917f;display:flex;justify-content:space-between}
+
+  @media(max-width:900px){
+    .hero{grid-template-columns:1fr}
+    .hero-plates{flex-direction:row;border-left:0;border-top:1px solid var(--line)}
+    .plate + .plate{border-top:0;border-left:1px solid var(--line)}
+    .ticket{grid-template-columns:1fr 1fr}
+    .ticket button{grid-column:1/-1;padding:1rem}
+    .row{grid-template-columns:3rem 1fr auto;gap:1rem}
+    .row .meta{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="#">Calma <em>Trip</em></a>
+  <ul>
+    <li><a href="#">Transfers</a></li>
+    <li><a href="#">Excursions</a></li>
+    <li><a href="#">Marketplace</a></li>
+    <li><a href="#">Journal</a></li>
+    <li><a href="#">Sign in</a></li>
+  </ul>
+</nav>
+
+<!-- HERO : split asymétrique, typographie éditoriale, pas de bloc centré -->
+<header class="hero">
+  <div class="hero-copy">
+    <p class="kicker">Hammamet, Tunisia — field notes nº 01</p>
+    <h1>The calm way<br>through <em>Tunisia</em>.</h1>
+    <p>Private transfers, camel treks, catamaran days and medina walks —
+       booked at real local prices, confirmed instantly, with a human on
+       the line 24/7 in English, French and Arabic.</p>
+    <div class="hero-cta">
+      <a class="cta-main" href="#">Plan my trip <span>→</span></a>
+      <a class="cta-quiet" href="#">Browse all 24 experiences</a>
+    </div>
+  </div>
+  <aside class="hero-plates">
+    <figure class="plate"><div class="ph ph-sea"></div><figcaption>Cap Bon · 10:40</figcaption></figure>
+    <figure class="plate"><div class="ph ph-medina"></div><figcaption>Médina de Tunis</figcaption></figure>
+    <figure class="plate"><div class="ph ph-sahara"></div><figcaption>Douz, grand erg</figcaption></figure>
+  </aside>
+</header>
+
+<!-- Recherche façon billet composté -->
+<section class="ticket">
+  <div><label>From</label><b>Enfidha Airport (NBE)</b></div>
+  <div><label>To</label><b>Hammamet</b></div>
+  <div><label>Date</label><b>Sat 26 July, 09:00</b></div>
+  <button type="button">Check price</button>
+</section>
+
+<!-- CATÉGORIES : sommaire numéroté façon table des matières -->
+<main class="toc">
+  <div class="toc-head">
+    <h2>Three ways in</h2>
+    <span>Choose your landscape</span>
+  </div>
+
+  <a class="row" href="#">
+    <span class="num">01</span>
+    <h3>Méditerranée</h3>
+    <div class="meta">
+      <small>Coast &amp; sea</small>
+      Catamaran sails, pirate boats, snorkeling coves from Hammamet to Cap Bon.
+    </div>
+    <div class="swatch"><div class="ph-sea"></div></div>
+  </a>
+
+  <a class="row" href="#">
+    <span class="num">02</span>
+    <h3>Médina</h3>
+    <div class="meta">
+      <small>Culture &amp; craft</small>
+      Guided souk walks, Sidi Bou Saïd, Carthage, artisan workshops and mint tea.
+    </div>
+    <div class="swatch"><div class="ph-medina"></div></div>
+  </a>
+
+  <a class="row" href="#">
+    <span class="num">03</span>
+    <h3>Sahara</h3>
+    <div class="meta">
+      <small>Desert &amp; dunes</small>
+      Camel treks at dusk, 4×4 crossings, a night under Douz’s sky.
+    </div>
+    <div class="swatch"><div class="ph-sahara"></div></div>
+  </a>
+</main>
+
+<footer>
+  <span>© Calma Trip — Hammamet</span>
+  <span>Template 1 · « Carnet de voyage » éditorial</span>
+</footer>
+
+</body>
+</html>

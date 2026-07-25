@@ -23,9 +23,9 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="group relative bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden">
+    <div className="group relative bg-calma-cream rounded-calma-card border border-calma-olive/10 shadow-sm hover:shadow-[0_28px_50px_-24px_rgba(42,38,34,.35)] transition-all duration-300 overflow-hidden">
       <Link href={`/marketplace/${product.id}`} className="block">
-        <div className="relative aspect-square bg-gray-50 overflow-hidden">
+        <div className="relative aspect-square bg-calma-sand overflow-hidden">
           <Image
             src={getImageSrc(product.image)}
             alt={product.name}
@@ -41,7 +41,7 @@ export function ProductCard({ product }: { product: Product }) {
             </div>
           )}
           {lowStock && !outOfStock && (
-            <span className="absolute top-3 left-3 text-xs font-medium px-2 py-1 rounded-lg bg-[#FFD700]/90 text-[#856B00]">
+            <span className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-calma-terracotta text-white">
               Plus que {product.stock}
             </span>
           )}
@@ -54,27 +54,28 @@ export function ProductCard({ product }: { product: Product }) {
           toggleWishlist(product.id);
         }}
         aria-label={wishlisted ? "Retirer des favoris" : "Ajouter aux favoris"}
-        className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 shadow-md flex items-center justify-center hover:scale-110 transition-transform"
+        className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-transform hover:scale-110"
       >
         <Heart
-          className={`w-4 h-4 ${wishlisted ? "fill-red-500 text-red-500" : "text-gray-400"}`}
+          className={`w-4 h-4 ${wishlisted ? "fill-calma-terracotta text-calma-terracotta" : "text-calma-taupe"}`}
         />
       </button>
 
       <div className="p-4">
-        <p className="text-xs text-gray-400 uppercase tracking-wide mb-1">{product.category}</p>
+        <p className="text-xs text-calma-taupe uppercase tracking-wide mb-1">{product.category}</p>
         <Link href={`/marketplace/${product.id}`}>
-          <h3 className="font-semibold text-gray-900 text-sm mb-2 line-clamp-1 hover:text-[#87CEEB] transition-colors">
+          <h3 className="font-semibold text-calma-ink text-sm mb-2 line-clamp-1 transition-colors hover:text-calma-terracotta">
             {product.name}
           </h3>
         </Link>
         <div className="flex items-center justify-between">
-          <span className="text-lg font-bold text-gray-900">{product.price.toFixed(2)} TND</span>
+          <span className="font-fraunces text-lg font-semibold text-calma-ink">{product.price.toFixed(2)} TND</span>
           <button
             onClick={() => addToCart(product, 1)}
             disabled={outOfStock}
             aria-label="Ajouter au panier"
-            className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#87CEEB] to-[#4CAF50] flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg transition-shadow"
+            className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
+            style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
           >
             <ShoppingCart className="w-4 h-4 text-white" />
           </button>

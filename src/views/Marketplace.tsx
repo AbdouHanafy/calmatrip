@@ -1,16 +1,17 @@
 'use client';
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
+import Image from "next/image";
 import { PackageSearch } from "lucide-react";
 import { MarketplaceHeader } from "@/components/marketplace/Marketplaceheader";
 import { ProductCard } from "@/components/marketplace/Productcard";
 import { Product } from "@/components/marketplace/Marketplacecontext";
-import { Navbar } from "@/components/layouts/Navbar";
-import { Footer } from "@/components/layouts/Footre";
-import { Clock3, ShoppingBag, Sparkles } from "lucide-react";
-
+import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
+import CalmaHeader from "@/components/calma/CalmaHeader";
+import CalmaFooter from "@/components/calma/CalmaFooter";
 
 function MarketplaceContent() {
+  const { t } = useCalmaLang();
   const searchParams = useSearchParams();
   const search = searchParams?.get("search") || "";
   const category = searchParams?.get("category") || "all";
@@ -37,135 +38,102 @@ function MarketplaceContent() {
   }, [search, category, sort]);
 
   return (
-    // <>
-    // <Navbar />
-    // <div className="min-h-screen bg-gray-50/50">
-    //   <MarketplaceHeader categories={categories} />
-
-    //   <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-    //     <div className="flex items-center justify-between mb-6">
-    //       <p className="text-sm text-gray-500">
-    //         {loading ? "Chargement..." : `${products.length} produit${products.length !== 1 ? "s" : ""}`}
-    //       </p>
-    //       <select
-    //         value={sort}
-    //         onChange={(e) => {
-    //           const params = new URLSearchParams(searchParams?.toString());
-    //           params.set("sort", e.target.value);
-    //           window.location.href = `/marketplace?${params.toString()}`;
-    //         }}
-    //         className="text-sm border border-gray-200 rounded-xl px-3 py-2 bg-white focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
-    //       >
-    //         <option value="newest">Plus récents</option>
-    //         <option value="price_asc">Prix croissant</option>
-    //         <option value="price_desc">Prix décroissant</option>
-    //         <option value="name">Nom A-Z</option>
-    //       </select>
-    //     </div>
-
-    //     {loading ? (
-    //       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-    //         {Array.from({ length: 8 }).map((_, i) => (
-    //           <div key={i} className="bg-gray-100 animate-pulse rounded-2xl aspect-[3/4]" />
-    //         ))}
-    //       </div>
-    //     ) : products.length === 0 ? (
-    //       <div className="flex flex-col items-center justify-center py-24 text-center">
-    //         <PackageSearch className="w-12 h-12 text-gray-300 mb-4" />
-    //         <h3 className="text-lg font-semibold text-gray-900 mb-1">Aucun produit trouvé</h3>
-    //         <p className="text-sm text-gray-500">Essaie une autre recherche ou catégorie</p>
-    //       </div>
-    //     ) : (
-    //       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-    //         {products.map((product) => (
-    //           <ProductCard key={product.id} product={product} />
-    //         ))}
-    //       </div>
-    //     )}
-    //   </div>
-    // </div>
-    // <Footer />
-    // </>
     <>
-      <Navbar />
+      <CalmaHeader active="marketplace" />
+      <div className="min-h-screen bg-calma-sand font-hanken">
 
-      <main className="relative min-h-[calc(100vh-160px)] overflow-hidden bg-gradient-to-br from-sky-50 via-white to-cyan-50 flex items-center justify-center px-6">
-
-        {/* Background Blurs */}
-        <div className="absolute -top-32 -left-32 h-80 w-80 rounded-full bg-sky-200/40 blur-3xl" />
-        <div className="absolute -bottom-40 -right-32 h-96 w-96 rounded-full bg-cyan-200/40 blur-3xl" />
-
-        <div className="relative z-10 max-w-2xl text-center">
-
-          {/* Icon */}
-          <div className="mx-auto mb-8 flex h-28 w-28 items-center justify-center rounded-full bg-gradient-to-br from-sky-500 to-cyan-500 shadow-2xl shadow-sky-200">
-            <ShoppingBag className="h-14 w-14 text-white" />
-          </div>
-
-          {/* Badge */}
-          <div className="inline-flex items-center gap-2 rounded-full border border-sky-100 bg-white px-5 py-2 text-sm font-medium text-sky-600 shadow-sm">
-            <Sparkles className="h-4 w-4" />
-            Something exciting is coming
-          </div>
-
-          {/* Title */}
-          <h1 className="mt-8 text-5xl font-extrabold tracking-tight text-gray-900">
-            Marketplace
-            <span className="block bg-gradient-to-r from-sky-500 to-cyan-500 bg-clip-text text-transparent">
-              Coming Soon
-            </span>
-          </h1>
-
-          {/* Description */}
-          <p className="mt-6 text-lg leading-8 text-gray-600">
-            We're preparing an amazing marketplace where you'll be able to
-            discover premium travel products, accessories, souvenirs, and much
-            more.
-          </p>
-
-          {/* Features */}
-          <div className="mt-12 grid gap-4 sm:grid-cols-3">
-
-            <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-sm backdrop-blur">
-              <ShoppingBag className="mx-auto mb-3 h-8 w-8 text-sky-500" />
-              <h3 className="font-semibold text-gray-900">
-                Premium Products
-              </h3>
+        {/* ── Hero — short, photo-backed, sand texture ── */}
+        <section className="relative flex min-h-[260px] items-center justify-center overflow-hidden px-6 py-14 text-center sm:px-10">
+          <Image
+            src="/images/explore/carthage_ports.png"
+            alt="Artisanat tunisien"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.6) 45%,rgba(42,38,34,.8) 100%)',
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[.07]"
+            style={{
+              backgroundImage: 'repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)',
+            }}
+          />
+          <div className="relative z-[2] mx-auto max-w-[640px]">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
+              {t.mkt.eyebrow}
             </div>
+            <h1 className="mb-4 text-balance font-fraunces text-[clamp(32px,4.4vw,48px)] font-normal leading-[1.05] tracking-[-0.02em] text-calma-cream">
+              {t.mkt.heroTitle}
+            </h1>
+            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
+              {t.mkt.heroSub}
+            </p>
+          </div>
+        </section>
 
-            <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-sm backdrop-blur">
-              <Clock3 className="mx-auto mb-3 h-8 w-8 text-sky-500" />
-              <h3 className="font-semibold text-gray-900">
-                Fast Delivery
-              </h3>
-            </div>
+        <MarketplaceHeader categories={categories} />
 
-            <div className="rounded-2xl border border-white/70 bg-white/80 p-6 shadow-sm backdrop-blur">
-              <Sparkles className="mx-auto mb-3 h-8 w-8 text-sky-500" />
-              <h3 className="font-semibold text-gray-900">
-                Exclusive Offers
-              </h3>
-            </div>
-
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-10">
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-sm text-calma-taupe">
+              {loading ? t.mkt.loading : `${products.length} ${products.length !== 1 ? t.mkt.productsWord : t.mkt.productWord}`}
+            </p>
+            <select
+              value={sort}
+              onChange={(e) => {
+                const params = new URLSearchParams(searchParams?.toString());
+                params.set("sort", e.target.value);
+                window.location.href = `/marketplace?${params.toString()}`;
+              }}
+              className="text-sm border border-calma-olive/15 rounded-full px-4 py-2 bg-white text-calma-ink outline-none focus:border-calma-terracotta transition-colors"
+            >
+              <option value="newest">{t.mkt.sortNewest}</option>
+              <option value="price_asc">{t.mkt.sortPriceAsc}</option>
+              <option value="price_desc">{t.mkt.sortPriceDesc}</option>
+              <option value="name">{t.mkt.sortNameAz}</option>
+            </select>
           </div>
 
-          {/* Bottom */}
-          <div className="mt-14 inline-flex items-center gap-3 rounded-full bg-sky-500 px-8 py-4 text-white shadow-lg shadow-sky-200">
-            🚀 Launching Soon
-          </div>
-
+          {loading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {Array.from({ length: 8 }).map((_, i) => (
+                <div key={i} className="bg-calma-cream animate-pulse rounded-calma-card aspect-[3/4]" />
+              ))}
+            </div>
+          ) : products.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <PackageSearch className="w-12 h-12 text-calma-taupe/40 mb-4" />
+              <h3 className="text-lg font-semibold text-calma-ink mb-1">{t.mkt.emptyTitle}</h3>
+              <p className="text-sm text-calma-taupe">{t.mkt.emptySub}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
         </div>
-      </main>
-
-      <Footer />
+      </div>
+      <CalmaFooter />
     </>
   );
 }
 
 export default function MarketplacePage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50/50" />}>
-      <MarketplaceContent />
-    </Suspense>
+    <CalmaLangProvider>
+      <Suspense fallback={<div className="min-h-screen bg-calma-sand" />}>
+        <MarketplaceContent />
+      </Suspense>
+    </CalmaLangProvider>
   );
 }

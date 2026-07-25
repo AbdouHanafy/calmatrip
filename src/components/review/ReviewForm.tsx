@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { Star } from "lucide-react";
+import { Star, Send } from "lucide-react";
 
 interface ReviewFormProps {
   onSuccess?: () => void;
@@ -19,24 +19,24 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
   const [error, setError] = useState("");
 
   const services = [
-    "Airport transfer",
-    "Chauffeur service",
+    "Transfert aéroport",
+    "Service chauffeur",
     "Excursion",
-    "Event transportation",
-    "Other",
+    "Transport événementiel",
+    "Autre",
   ];
 
   const handleSubmit = async () => {
     if (!session) {
-      setError("Please log in to leave a review.");
+      setError("Connectez-vous pour laisser un avis.");
       return;
     }
     if (rating === 0) {
-      setError("Please select a rating.");
+      setError("Veuillez sélectionner une note.");
       return;
     }
     if (comment.trim().length < 10) {
-      setError("Your comment must be at least 10 characters long.");
+      setError("Votre commentaire doit contenir au moins 10 caractères.");
       return;
     }
 
@@ -55,7 +55,7 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
       setSubmitted(true);
       onSuccess?.();
     } catch {
-      setError("An error occurred. Please try again.");
+      setError("Une erreur est survenue. Veuillez réessayer.");
     } finally {
       setLoading(false);
     }
@@ -63,113 +63,122 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
 
   if (submitted) {
     return (
-      <div className="bg-green-50 border border-green-200 rounded-2xl p-8 text-center">
+      <div
+        className="rounded-calma-block border border-calma-olive/10 bg-calma-cream p-10 text-center font-hanken"
+        style={{ boxShadow: "0 22px 50px -22px rgba(42,38,34,.3)" }}
+      >
         <div className="text-4xl mb-3">🎉</div>
-        <h3 className="text-xl font-semibold text-green-800 mb-2">
-          Thank you for your review!
+        <h3 className="font-fraunces text-2xl font-normal text-calma-olive mb-2">
+          Merci pour votre avis !
         </h3>
-        <p className="text-green-600">
-          It will be published after validation by our team.
+        <p className="text-calma-taupe">
+          Il sera publié après validation par notre équipe.
         </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 max-w-xl mx-auto">
-      <h3 className="text-2xl font-bold text-gray-900 mb-1">
-        Share your experience
-      </h3>
-      <p className="text-gray-500 mb-6 text-sm">
-        Your review helps other travelers choose with confidence.
-      </p>
-
+    <div
+      className="rounded-calma-block border border-calma-olive/10 bg-calma-cream p-8 sm:p-10 font-hanken"
+      style={{ boxShadow: "0 28px 60px -28px rgba(42,38,34,.35)" }}
+    >
       {!session && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 mb-6 text-sm text-amber-700">
-          Log in to leave a review.
+        <div className="bg-calma-terracotta/10 border border-calma-terracotta/25 rounded-2xl p-4 mb-6 text-sm text-calma-terracotta">
+          Connectez-vous pour laisser un avis.
         </div>
       )}
 
-      {/* Stars */}
-      <div className="mb-5">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Overall rating
-        </label>
-        <div className="flex gap-1">
-          {[1, 2, 3, 4, 5].map((star) => (
-            <button
-              key={star}
-              type="button"
-              onClick={() => setRating(star)}
-              onMouseEnter={() => setHovered(star)}
-              onMouseLeave={() => setHovered(0)}
-              className="transition-transform hover:scale-110"
-            >
-              <Star
-                size={32}
-                className={
-                  star <= (hovered || rating)
-                    ? "fill-amber-400 text-amber-400"
-                    : "text-gray-300"
-                }
-              />
-            </button>
-          ))}
-          {rating > 0 && (
-            <span className="ml-2 self-center text-sm text-gray-500">
-              {["", "Poor", "Average", "Good", "Very good", "Excellent"][rating]}
-            </span>
-          )}
+      <div className="space-y-5">
+        {/* Stars */}
+        <div className="rounded-2xl border border-calma-olive/15 bg-white px-5 py-4 transition-colors focus-within:border-calma-terracotta">
+          <div className="mb-2 text-[11px] font-bold uppercase tracking-[.05em] text-calma-taupe">
+            Note globale
+          </div>
+          <div className="flex items-center gap-1">
+            {[1, 2, 3, 4, 5].map((star) => (
+              <button
+                key={star}
+                type="button"
+                onClick={() => setRating(star)}
+                onMouseEnter={() => setHovered(star)}
+                onMouseLeave={() => setHovered(0)}
+                className="transition-transform hover:scale-110"
+              >
+                <Star
+                  size={28}
+                  className={
+                    star <= (hovered || rating)
+                      ? "fill-calma-gold text-calma-gold"
+                      : "text-calma-olive/20"
+                  }
+                />
+              </button>
+            ))}
+            {rating > 0 && (
+              <span className="ml-2 self-center text-sm text-calma-taupe">
+                {["", "Décevant", "Moyen", "Bien", "Très bien", "Excellent"][rating]}
+              </span>
+            )}
+          </div>
         </div>
-      </div>
 
-      {/* Service */}
-      <div className="mb-5">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Service used (optional)
+        {/* Service */}
+        <label className="block rounded-2xl border border-calma-olive/15 bg-white px-5 py-3 transition-colors focus-within:border-calma-terracotta">
+          <span className="mb-1 block text-[11px] font-bold uppercase tracking-[.05em] text-calma-taupe">
+            Service utilisé (optionnel)
+          </span>
+          <select
+            value={service}
+            onChange={(e) => setService(e.target.value)}
+            className="w-full cursor-pointer border-none bg-transparent text-[15px] text-calma-ink outline-none"
+          >
+            <option value="">Sélectionner un service</option>
+            {services.map((s) => (
+              <option key={s} value={s}>
+                {s}
+              </option>
+            ))}
+          </select>
         </label>
-        <select
-          value={service}
-          onChange={(e) => setService(e.target.value)}
-          className="w-full border border-gray-200 rounded-xl px-4 py-2.5 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50"
+
+        {/* Comment */}
+        <label className="block rounded-2xl border border-calma-olive/15 bg-white px-5 py-3 transition-colors focus-within:border-calma-terracotta">
+          <span className="mb-1 block text-[11px] font-bold uppercase tracking-[.05em] text-calma-taupe">
+            Votre commentaire
+          </span>
+          <textarea
+            value={comment}
+            onChange={(e) => setComment(e.target.value)}
+            rows={4}
+            placeholder="Décrivez votre expérience avec notre service..."
+            className="w-full resize-none border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
+          />
+        </label>
+        <p className="text-xs text-calma-taupe -mt-3">{comment.length} / 500 caractères</p>
+
+        {error && (
+          <p className="text-red-600 text-sm bg-red-50 rounded-2xl px-4 py-3">
+            {error}
+          </p>
+        )}
+
+        <button
+          onClick={handleSubmit}
+          disabled={loading || !session}
+          className="group flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-[15px] font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
         >
-          <option value="">Select a service</option>
-          {services.map((s) => (
-            <option key={s} value={s}>
-              {s}
-            </option>
-          ))}
-        </select>
+          {loading ? (
+            "Envoi en cours..."
+          ) : (
+            <>
+              Publier mon avis
+              <Send size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+            </>
+          )}
+        </button>
       </div>
-
-      {/* Comment */}
-      <div className="mb-6">
-        <label className="block text-sm font-medium text-gray-700 mb-2">
-          Your comment
-        </label>
-        <textarea
-          value={comment}
-          onChange={(e) => setComment(e.target.value)}
-          rows={4}
-          placeholder="Describe your experience with our service..."
-          className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 bg-gray-50 resize-none"
-        />
-        <p className="text-xs text-gray-400 mt-1">{comment.length} / 500 characters</p>
-      </div>
-
-      {error && (
-        <p className="text-red-500 text-sm mb-4 bg-red-50 rounded-xl px-4 py-3">
-          {error}
-        </p>
-      )}
-
-      <button
-        onClick={handleSubmit}
-        disabled={loading || !session}
-        className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors"
-      >
-        {loading ? "Submitting..." : "Publish my review"}
-      </button>
     </div>
   );
 }

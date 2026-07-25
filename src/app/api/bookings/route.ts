@@ -299,6 +299,9 @@ export async function GET(req: NextRequest) {
       orderBy: {
         date: "desc",
       },
+      include: {
+        review: { select: { id: true, rating: true, comment: true, approved: true } },
+      },
     });
 
     return NextResponse.json(bookings);

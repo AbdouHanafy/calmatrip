@@ -26,3 +26,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local portable MySQL runtime artifacts
+scripts/.mysql-portable.pid
+scripts/.mysql-portable.log
+
+# local Claude Code tooling config
+.claude/

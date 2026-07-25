@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics="">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@300;500&amp;family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&amp;family=Poppins:wght@600;700&amp;display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#ded7c6;font-family:'Hanken Grotesk',system-ui,sans-serif;color:#2A2622}
+  .swatch{border-radius:12px;height:96px;display:flex;align-items:flex-end;padding:12px;position:relative;overflow:hidden}
+</style>
+</helmet>
+
+<div style="max-width:940px;margin:0 auto;padding:40px 24px 64px">
+<div style="background:#ECE3D0;border-radius:22px;overflow:hidden;box-shadow:0 24px 60px -30px rgba(42,38,34,.5)">
+
+  <!-- header band -->
+  <div style="background:#4A4E3F;color:#F6EFE0;padding:40px 48px;display:flex;align-items:center;justify-content:space-between;gap:24px;flex-wrap:wrap">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div style="width:58px;height:47px;background:#F6EFE0;-webkit-mask:url(assets/ct-mark.png) center/contain no-repeat;mask:url(assets/ct-mark.png) center/contain no-repeat"></div>
+      <div>
+        <div style="font-family:'Poppins',sans-serif;font-weight:700;font-size:26px;letter-spacing:-.02em">Calma Trip</div>
+        <div style="font-size:12.5px;letter-spacing:.14em;text-transform:uppercase;color:#d59a86;margin-top:3px">Expériences locales · Tunisie</div>
+      </div>
+    </div>
+    <div style="text-align:right">
+      <div style="font-family:'Fraunces',serif;font-style:italic;font-size:22px;color:#F6EFE0">Guide de style</div>
+      <div style="font-size:12px;color:rgba(246,239,224,.6);margin-top:2px">Mini-rapport · v1</div>
+    </div>
+  </div>
+
+  <div style="padding:44px 48px">
+
+    <!-- COULEURS -->
+    <div style="display:flex;align-items:baseline;gap:12px;margin-bottom:20px">
+      <span style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#2A2622">Couleurs</span>
+      <span style="flex:1;height:1px;background:rgba(74,78,63,.2)"></span>
+      <span style="font-size:12px;color:#6B665C">Palette « Olive &amp; Terre cuite »</span>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9C533E;margin-bottom:12px">Couleurs de marque</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px">
+      <div>
+        <div class="swatch" style="background:#4A4E3F;height:120px"><span style="color:#F6EFE0;font-family:'Poppins';font-weight:600;font-size:13px">Olive · Primaire</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:8px"><span style="color:#6B665C">Headers, fonds, nav</span><b style="font-family:ui-monospace,Menlo,monospace;color:#4A4E3F">#4A4E3F</b></div>
+      </div>
+      <div>
+        <div class="swatch" style="background:#9C533E;height:120px"><span style="color:#F6EFE0;font-family:'Poppins';font-weight:600;font-size:13px">Terre cuite · Accent</span></div>
+        <div style="display:flex;justify-content:space-between;font-size:13px;margin-top:8px"><span style="color:#6B665C">CTA, liens, détails</span><b style="font-family:ui-monospace,Menlo,monospace;color:#9C533E">#9C533E</b></div>
+      </div>
+    </div>
+
+    <div style="font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:#9C533E;margin-bottom:12px">Neutres &amp; support</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px">
+      <div><div class="swatch" style="background:#ECE3D0"></div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:7px"><span style="color:#6B665C">Sable · fond</span><b style="font-family:ui-monospace,Menlo,monospace">#ECE3D0</b></div></div>
+      <div><div class="swatch" style="background:#F6EFE0;border:1px solid rgba(74,78,63,.12)"></div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:7px"><span style="color:#6B665C">Crème · surfaces</span><b style="font-family:ui-monospace,Menlo,monospace">#F6EFE0</b></div></div>
+      
+      <div><div class="swatch" style="background:#2A2622"><span style="color:#F6EFE0;font-size:11px">Aa</span></div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:7px"><span style="color:#6B665C">Encre · texte</span><b style="font-family:ui-monospace,Menlo,monospace">#2A2622</b></div></div>
+      <div><div class="swatch" style="background:#6B665C"><span style="color:#F6EFE0;font-size:11px">Aa</span></div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:7px"><span style="color:#6B665C">Taupe · secondaire</span><b style="font-family:ui-monospace,Menlo,monospace">#6B665C</b></div></div>
+      <div><div class="swatch" style="background:#2e3128"></div><div style="display:flex;justify-content:space-between;font-size:12.5px;margin-top:7px"><span style="color:#6B665C">Olive profond</span><b style="font-family:ui-monospace,Menlo,monospace">#2E3128</b></div></div>
+    </div>
+
+    <!-- TYPOGRAPHIE -->
+    <div style="display:flex;align-items:baseline;gap:12px;margin:40px 0 24px">
+      <span style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#2A2622">Typographie</span>
+      <span style="flex:1;height:1px;background:rgba(74,78,63,.2)"></span>
+      <span style="font-size:12px;color:#6B665C">3 rôles</span>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:20px">
+      <div style="background:#F6EFE0;border:1px solid rgba(74,78,63,.12);border-radius:14px;padding:24px 26px;display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center">
+        <div>
+          <div style="font-family:'Fraunces',serif;font-size:20px;font-weight:600;color:#9C533E">Fraunces</div>
+          <div style="font-size:12px;color:#6B665C;margin-top:4px">Titres · display</div>
+          <div style="font-size:11px;color:#6B665C;margin-top:2px">Regular · Italic · Semibold</div>
+        </div>
+        <div>
+          <div style="font-family:'Fraunces',serif;font-size:38px;font-weight:400;line-height:1;color:#2A2622">Une Tunisie qui se <em style="color:#9C533E">vit</em></div>
+          <div style="font-family:'Fraunces',serif;font-size:14px;color:#6B665C;margin-top:8px;letter-spacing:.01em">ABCDEFGHIJKLM · abcdefghijklm · 0123456789</div>
+        </div>
+      </div>
+
+      <div style="background:#F6EFE0;border:1px solid rgba(74,78,63,.12);border-radius:14px;padding:24px 26px;display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center">
+        <div>
+          <div style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:700;color:#9C533E">Poppins</div>
+          <div style="font-size:12px;color:#6B665C;margin-top:4px">Logo · wordmark</div>
+          <div style="font-size:11px;color:#6B665C;margin-top:2px">SemiBold · Bold</div>
+        </div>
+        <div>
+          <div style="font-family:'Poppins',sans-serif;font-size:34px;font-weight:700;letter-spacing:-.02em;color:#2A2622">Calma Trip</div>
+          <div style="font-family:'Poppins',sans-serif;font-size:14px;color:#6B665C;margin-top:8px;font-weight:600">ABCDEFGHIJKLM · abcdefghijklm · 0123456789</div>
+        </div>
+      </div>
+
+      <div style="background:#F6EFE0;border:1px solid rgba(74,78,63,.12);border-radius:14px;padding:24px 26px;display:grid;grid-template-columns:150px 1fr;gap:24px;align-items:center">
+        <div>
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:20px;font-weight:700;color:#9C533E">Hanken Grotesk</div>
+          <div style="font-size:12px;color:#6B665C;margin-top:4px">Corps · interface</div>
+          <div style="font-size:11px;color:#6B665C;margin-top:2px">Regular · Medium · Semibold · Bold</div>
+        </div>
+        <div>
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:16px;line-height:1.55;color:#2A2622;max-width:440px">Des activités menées par des locaux — de la médina de Tunis aux dunes de Tozeur, réservées en direct, au juste prix.</div>
+          <div style="font-family:'Hanken Grotesk',sans-serif;font-size:14px;color:#6B665C;margin-top:8px">ABCDEFGHIJKLM · abcdefghijklm · 0123456789</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- LOGO -->
+    <div style="display:flex;align-items:baseline;gap:12px;margin:40px 0 24px">
+      <span style="font-family:'Fraunces',serif;font-size:26px;font-weight:600;color:#2A2622">Logo</span>
+      <span style="flex:1;height:1px;background:rgba(74,78,63,.2)"></span>
+      <span style="font-size:12px;color:#6B665C">Monogramme « ct » + wordmark</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div style="background:#ECE3D0;border:1px solid rgba(74,78,63,.14);border-radius:14px;height:140px;display:flex;align-items:center;justify-content:center;gap:14px">
+        <div style="width:52px;height:42px;background:#4A4E3F;-webkit-mask:url(assets/ct-mark.png) center/contain no-repeat;mask:url(assets/ct-mark.png) center/contain no-repeat"></div>
+        <span style="font-family:'Poppins';font-weight:700;font-size:24px;letter-spacing:-.02em;color:#4A4E3F">Calma Trip</span>
+      </div>
+      <div style="background:#4A4E3F;border-radius:14px;height:140px;display:flex;align-items:center;justify-content:center;gap:14px">
+        <div style="width:52px;height:42px;background:#F6EFE0;-webkit-mask:url(assets/ct-mark.png) center/contain no-repeat;mask:url(assets/ct-mark.png) center/contain no-repeat"></div>
+        <span style="font-family:'Poppins';font-weight:700;font-size:24px;letter-spacing:-.02em;color:#F6EFE0">Calma Trip</span>
+      </div>
+    </div>
+    <p style="font-size:13px;color:#6B665C;line-height:1.5;margin:14px 0 0">Le monogramme se recolore selon le fond : olive sur clair, crème sur olive. Toujours conserver la contre-forme ouverte entre le <b style="color:#2A2622">C</b> et le <b style="color:#2A2622">t</b>.</p>
+
+  </div>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:940,&quot;height&quot;:1400}}"></script>
+</body>
+</html>

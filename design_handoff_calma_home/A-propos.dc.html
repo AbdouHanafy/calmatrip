@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet data-dc-atomics>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,600;1,9..144,400&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+<style>*{box-sizing:border-box}body{margin:0;background:#ECE3D0;color:#2A2622;font-family:'Hanken Grotesk',sans-serif;-webkit-font-smoothing:antialiased}a{color:#9C533E}a:hover{color:#4A4E3F}</style>
+</helmet>
+
+<dc-import name="CalmaHeader" active="about" hint-size="100%,76px"></dc-import>
+<dc-import name="CalmaPageHero" kicker="À propos · Calma Trip" title="Le voyage, pensé avec les Tunisiens" subtitle="Nous connectons les voyageurs aux guides, artisans et hôtes locaux — pour un tourisme plus juste, plus vrai, plus calme." hint-size="100%,320px"></dc-import>
+
+<section style="max-width:1240px;margin:0 auto;padding:64px 40px 10px">
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:44px;align-items:center">
+    <div style="border-radius:20px;overflow:hidden;aspect-ratio:4/5;background:#4A4E3F;background-image:repeating-linear-gradient(135deg,rgba(255,255,255,.08) 0 12px,rgba(255,255,255,.02) 12px 24px);display:grid;place-items:center"><span style="font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.08em;color:rgba(246,239,224,.5)">PHOTO — ÉQUIPE / MÉDINA</span></div>
+    <div>
+      <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#9C533E;margin-bottom:12px">Notre histoire</div>
+      <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(28px,3.4vw,40px);letter-spacing:-.02em;line-height:1.08;margin:0 0 16px;color:#2A2622">Né d'une médina, pour le monde</h2>
+      <p style="font-size:16px;line-height:1.65;color:#6B665C;margin:0 0 14px;max-width:460px">Calma Trip est parti d'un constat simple : les plus belles expériences de Tunisie ne sont pas dans les brochures — elles sont chez l'artisan de Nabeul, le guide de Tozeur, la cuisinière de Hammamet.</p>
+      <p style="font-size:16px;line-height:1.65;color:#6B665C;margin:0;max-width:460px">Nous avons créé une marketplace qui les met en avant, sans intermédiaire, avec une rémunération juste. Vous voyagez autrement ; eux vivent de leur savoir-faire.</p>
+    </div>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:56px 40px 10px">
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:18px">
+    <sc-for list="{{ stats }}" as="s" hint-placeholder-count="4">
+      <div style="background:#F6EFE0;border:1px solid rgba(74,78,63,.12);border-radius:16px;padding:28px 22px;text-align:center">
+        <div style="font-family:'Fraunces',serif;font-size:40px;font-weight:600;color:#9C533E;line-height:1">{{ s.n }}</div>
+        <div style="font-size:13.5px;color:#6B665C;margin-top:8px">{{ s.label }}</div>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:0 auto;padding:56px 40px 10px">
+  <div style="text-align:center;margin-bottom:36px">
+    <div style="font-size:12px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:#9C533E;margin-bottom:10px">Nos valeurs</div>
+    <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(26px,3.2vw,38px);letter-spacing:-.02em;margin:0;color:#2A2622">Ce qui nous guide</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px">
+    <sc-for list="{{ values }}" as="v" hint-placeholder-count="3">
+      <div style="background:#F6EFE0;border:1px solid rgba(74,78,63,.12);border-radius:18px;padding:28px 26px">
+        <div style="width:44px;height:44px;border-radius:12px;background:#4A4E3F;color:#F6EFE0;display:grid;place-items:center;font-size:20px;margin-bottom:16px">{{ v.icon }}</div>
+        <h3 style="font-family:'Fraunces',serif;font-weight:400;font-size:20px;color:#2A2622;margin:0 0 8px">{{ v.title }}</h3>
+        <p style="font-size:14px;line-height:1.55;color:#6B665C;margin:0">{{ v.desc }}</p>
+      </div>
+    </sc-for>
+  </div>
+</section>
+
+<section style="max-width:1240px;margin:64px auto 24px;padding:0 24px">
+  <div style="border-radius:26px;overflow:hidden;background:radial-gradient(120% 140% at 85% 15%,#9C533E 0%,#3a3d31 45%,#2e3128 100%);padding:64px clamp(28px,6vw,72px);color:#F6EFE0;text-align:center">
+    <h2 style="font-family:'Fraunces',serif;font-weight:400;font-size:clamp(28px,3.6vw,44px);letter-spacing:-.02em;line-height:1.05;margin:0 0 14px">Une question ? Parlons-en</h2>
+    <p style="font-size:16.5px;line-height:1.55;color:rgba(246,239,224,.82);margin:0 auto 28px;max-width:480px">Notre équipe locale vous répond en moins de 30 minutes, 7j/7.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="Services.dc.html" style="background:#F6EFE0;color:#4A4E3F;text-decoration:none;padding:15px 30px;border-radius:999px;font-size:15px;font-weight:600">Voir les services</a>
+      <a href="A-propos.dc.html" style="background:transparent;color:#F6EFE0;border:1px solid rgba(246,239,224,.4);text-decoration:none;padding:15px 30px;border-radius:999px;font-size:15px;font-weight:600">☏ Nous appeler</a>
+    </div>
+  </div>
+</section>
+
+<dc-import name="CalmaFooter" hint-size="100%,300px"></dc-import>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:1240,&quot;height&quot;:2000}}">
+class Component extends DCLogic {
+  renderVals(){
+    return {
+      stats:[
+        {n:'180+',label:'Expériences vérifiées'},
+        {n:'12',label:'Régions couvertes'},
+        {n:'4,9★',label:'Note moyenne'},
+        {n:'30 min',label:'Temps de réponse'}
+      ],
+      values:[
+        {icon:'♥',title:'Local d\u2019abord',desc:'Chaque expérience est portée par un habitant, rémunéré équitablement.'},
+        {icon:'◇',title:'Transparence',desc:'Prix clairs, pas d\u2019intermédiaire caché, avis authentiques.'},
+        {icon:'❋',title:'Voyage responsable',desc:'Petits groupes, respect des lieux et des communautés.'}
+      ]
+    };
+  }
+}
+</script>
+</body>
+</html>

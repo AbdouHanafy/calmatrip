@@ -1,11 +1,77 @@
 'use client';
-import { useState } from "react";
-import { Mail, Phone, MapPin, Clock, Send, CheckCircle, ChevronDown, ChevronUp, Star, Award, Headphones, MessageCircle, Globe, CreditCard, Car, Users, Shield } from "lucide-react";
+import { useState, useEffect } from "react";
+import { motion } from "motion/react";
+import {
+  Mail,
+  Phone,
+  MapPin,
+  Clock,
+  Send,
+  CheckCircle,
+  ChevronDown,
+  Headphones,
+  MessageCircle,
+  Facebook,
+  ArrowRight,
+  ExternalLink,
+} from "lucide-react";
 import Link from "next/link";
-import { Navbar } from '@/components/layouts/Navbar';
-import { Footer } from '@/components/layouts/Footre';
+import Image from "next/image";
+import { CalmaLangProvider, useCalmaLang } from '@/lib/calma/i18n';
+import CalmaHeader from '@/components/calma/CalmaHeader';
+import CalmaFooter from '@/components/calma/CalmaFooter';
 
-export default function Contact() {
+/* Motif zellige réutilisable */
+function ZelligePattern({ id, opacity = 0.06 }: { id: string; opacity?: number }) {
+  return (
+    <svg className="absolute inset-0 h-full w-full" style={{ opacity }} aria-hidden="true">
+      <defs>
+        <pattern id={id} width="56" height="56" patternUnits="userSpaceOnUse">
+          <path
+            d="M28 2 L34 22 L54 28 L34 34 L28 54 L22 34 L2 28 L22 22 Z"
+            fill="none"
+            stroke="#ffffff"
+            strokeWidth="1.2"
+          />
+          <circle cx="28" cy="28" r="4" fill="none" stroke="#ffffff" strokeWidth="1" />
+        </pattern>
+      </defs>
+      <rect width="100%" height="100%" fill={`url(#${id})`} />
+    </svg>
+  );
+}
+
+/* Reveal-on-scroll wrapper — consistent, subtle fade + rise used across every section */
+function Reveal({
+  children,
+  delay = 0,
+  className,
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <motion.div
+      className={className}
+      initial={{ opacity: 0, y: 24 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-80px" }}
+      transition={{ duration: 0.7, delay, ease: [0.16, 1, 0.3, 1] }}
+    >
+      {children}
+    </motion.div>
+  );
+}
+
+const inputClass =
+  "h-14 w-full rounded-2xl border border-[#F1EBE1] bg-[#FBF8F1] px-5 text-[15px] text-[#2D2926] outline-none transition-all duration-300 placeholder:text-[#726C64]/60 focus:border-[#F2994A] focus:bg-white focus:ring-4 focus:ring-[#F2994A]/[.12]";
+
+const GOOGLE_MAPS_URL =
+  "https://www.google.com/maps/search/?api=1&query=Avenue+Habib+Bourguiba%2C+Hammamet%2C+Tunisie";
+
+function ContactContent() {
+  const { t } = useCalmaLang();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -15,7 +81,17 @@ export default function Contact() {
   });
 
   const [submitted, setSubmitted] = useState(false);
-  const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [faqs, setFaqs] = useState<{ q: string; a: string }[]>([]);
+
+  useEffect(() => {
+    fetch("/api/faq")
+      .then((res) => res.json())
+      .then((data: { question: string; answer: string }[]) => {
+        setFaqs(Array.isArray(data) ? data.map((f) => ({ q: f.question, a: f.answer })) : []);
+      })
+      .catch(() => setFaqs([]));
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,477 +108,496 @@ export default function Contact() {
           setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
         }, 3000);
       } else {
-        alert("Failed to send message: Server error");
+        alert("Échec de l'envoi du message : erreur serveur");
       }
     } catch (error) {
       console.error(error);
-      alert("Failed to send message: Network error");
+      alert("Échec de l'envoi du message : erreur réseau");
     }
   };
 
   const contactInfo = [
     {
       icon: Phone,
-      title: "Phone",
-      details: ["+216 21 622 972", "+216 70 000 001"],
-      description: "Available 24/7",
-      gradient: "from-[#87CEEB] to-[#4CAF50]",
-      action: "Call now",
+      title: t.cnt.infoPhoneTitle,
+      details: ["+216 21 622 972"],
+      description: t.cnt.infoPhoneDesc,
     },
     {
       icon: Mail,
-      title: "Email",
-      details: ["contact@sahara-tunisia.com", "reservations@sahara-tunisia.com"],
-      description: "Response within 24h",
-      gradient: "from-[#FFD700] to-[#FFC107]",
-      action: "Send email",
+      title: t.cnt.infoEmailTitle,
+      details: ["contact@calmatrip.com"],
+      description: t.cnt.infoEmailDesc,
     },
     {
       icon: MapPin,
-      title: "Address",
-      details: ["Avenue Habib Bourguiba", "Tunis 1000, Tunisia"],
-      description: "Visit our office",
-      gradient: "from-[#4CAF50] to-[#45A049]",
-      action: "View on map",
+      title: t.cnt.infoAddressTitle,
+      details: ["Avenue Habib Bourguiba", "Hammamet, Tunisie"],
+      description: t.cnt.infoAddressDesc,
     },
     {
       icon: Clock,
-      title: "Hours",
-      details: ["Mon-Fri: 8:00 - 20:00", "Sat-Sun: 9:00 - 18:00"],
-      description: "Customer service",
-      gradient: "from-[#87CEEB] to-[#FFD700]",
-      action: "Schedule a call",
-    },
-  ];
-
-  const faqs = [
-    {
-      q: "How can I book a service?",
-      a: "You can book online via our platform, by phone at +216 21 622 972, or by visiting our office in Tunis. Our team is available 24/7 to assist you.",
-      icon: Car,
-    },
-    {
-      q: "What payment methods are accepted?",
-      a: "We accept cash payments, credit cards (Visa, Mastercard), and bank transfers. Online payment is secure through our platform.",
-      icon: CreditCard,
-    },
-    {
-      q: "Can I cancel my reservation?",
-      a: "Yes, you can cancel free of charge up to 24 hours before the scheduled date for a full refund. For late cancellations, fees may apply.",
-      icon: Clock,
-    },
-    {
-      q: "Do you offer services for groups?",
-      a: "Absolutely! We have solutions adapted for groups of all sizes, with minibuses and buses accommodating up to 50 people. Contact us for a custom quote.",
-      icon: Users,
-    },
-    {
-      q: "Are the vehicles insured?",
-      a: "Yes, all our vehicles are fully insured and regularly maintained. The safety of our passengers is our top priority.",
-      icon: Shield,
-    },
-    {
-      q: "Do you provide tour guides?",
-      a: "Yes, we provide professional multilingual tour guides (French, English, Arabic) for all our excursions.",
-      icon: Award,
+      title: t.cnt.infoHoursTitle,
+      details: [t.cnt.infoHours1, t.cnt.infoHours2],
+      description: t.cnt.infoHoursDesc,
     },
   ];
 
   return (
-        <>
-          <Navbar />
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-[#0A1A2F] via-[#0F2740] to-[#1B4F6E] text-white overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 opacity-5">
-          <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-            <defs>
-              <pattern id="contact-pattern" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
-                <path d="M30 0 L45 15 L30 30 L15 15 Z" fill="#87CEEB" fillOpacity="0.3" />
-                <circle cx="30" cy="30" r="2" fill="#FFD700" />
-                <circle cx="15" cy="15" r="1.5" fill="#4CAF50" />
-              </pattern>
-            </defs>
-            <rect width="100%" height="100%" fill="url(#contact-pattern)" />
-          </svg>
-        </div>
+    <>
+      <CalmaHeader active="contact" />
+      <div className="min-h-screen bg-[#F1EBE1]">
 
-        {/* Decorative elements */}
-        <div className="absolute top-20 right-10 w-64 h-64 bg-[#87CEEB] rounded-full blur-[100px] opacity-10"></div>
-        <div className="absolute bottom-20 left-10 w-80 h-80 bg-[#FFD700] rounded-full blur-[120px] opacity-10"></div>
-
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-          <div className="text-center max-w-4xl mx-auto">
-            <div className="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6 border border-white/20">
-              <MessageCircle className="w-4 h-4 text-[#87CEEB]" />
-              <span className="text-sm font-medium tracking-wide">24/7 Customer Support</span>
+        {/* ── Hero — cinematic, photo-backed, breadcrumb + welcoming intro ── */}
+        <section className="relative flex min-h-[340px] items-center justify-center overflow-hidden px-6 py-20 text-center sm:px-10">
+          <Image
+            src="/images/explore/chebika_oasis.png"
+            alt="Chebika, Tunisie"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.55) 45%,rgba(42,38,34,.82) 100%)',
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[.07]"
+            style={{
+              backgroundImage: 'repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)',
+            }}
+          />
+          <div className="relative z-[2] mx-auto max-w-[640px]">
+            {/* Breadcrumb */}
+            <nav aria-label="Fil d'Ariane" className="mb-6 flex items-center justify-center gap-2 text-[12.5px] font-medium text-white/60">
+              <Link href="/" className="transition-colors hover:text-white">{t.cnt.breadcrumbHome}</Link>
+              <span>/</span>
+              <span className="text-white/85">{t.navContact}</span>
+            </nav>
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-[#F8F5F0] backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-[#F2994A]" />
+              {t.cnt.eyebrow}
             </div>
-            <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6">
-              Contact <span className="bg-gradient-to-r from-[#87CEEB] via-[#FFD700] to-[#4CAF50] bg-clip-text text-transparent">Us</span>
+            <h1 className="mb-4 text-balance font-fraunces text-[clamp(34px,4.8vw,48px)] font-normal leading-[1.08] tracking-[-0.02em] text-[#F8F5F0]">
+              {t.cnt.heroTitle1} <em className="not-italic text-[#F7B77E]">{t.cnt.heroTitleEm}</em>
             </h1>
-            <p className="text-xl md:text-2xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Our team is here to answer all your questions and support you in your travel plans
+            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.7] text-white/80">
+              {t.cnt.heroSub}
             </p>
           </div>
+        </section>
 
-          {/* Quick contact badges */}
-          <div className="mt-12 flex flex-wrap justify-center gap-4">
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-              <Headphones className="w-4 h-4 text-[#87CEEB]" />
-              <span className="text-sm">24/7 Support</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-              <Globe className="w-4 h-4 text-[#FFD700]" />
-              <span className="text-sm">French - English - Arabic</span>
-            </div>
-            <div className="flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full backdrop-blur-sm border border-white/20">
-              <Shield className="w-4 h-4 text-[#4CAF50]" />
-              <span className="text-sm">100% secure service</span>
+        {/* ── Coordonnées — cartes flottantes premium ── */}
+        <section className="bg-[#F1EBE1] pb-4 pt-16 sm:pt-20">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {contactInfo.map((info, index) => (
+                <Reveal key={index} delay={index * 0.08}>
+                  <div className="group h-full rounded-[20px] border border-[#2D2926]/[.06] bg-white p-7 shadow-[0_2px_16px_-8px_rgba(42,38,34,.12)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_44px_-20px_rgba(42,38,34,.28)]">
+                    <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#F2994A]/20 bg-[#F2994A]/[.08] text-[#F2994A] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#F2994A] group-hover:text-white">
+                      <info.icon className="h-5 w-5" strokeWidth={1.75} />
+                    </div>
+                    <h3 className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#726C64]">{info.title}</h3>
+                    {info.details.map((detail, idx) => (
+                      <p key={idx} className="mt-1.5 font-fraunces text-[17px] leading-snug text-[#2D2926]">
+                        {detail}
+                      </p>
+                    ))}
+                    <p className="mt-2 text-[12.5px] text-[#F2994A]">{info.description}</p>
+                  </div>
+                </Reveal>
+              ))}
             </div>
           </div>
-        </div>
+        </section>
 
-        {/* Curved bottom */}
-        <div className="absolute bottom-0 left-0 right-0">
-          <svg viewBox="0 0 1440 120" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M0 120L1440 0V120H0Z" fill="white"/>
-          </svg>
-        </div>
-      </section>
-
-      {/* Contact Info Cards */}
-      <section className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-            {contactInfo.map((info, index) => (
-              <div
-                key={index}
-                className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-gray-100"
-              >
-                <div className={`w-14 h-14 rounded-xl bg-gradient-to-br ${info.gradient} flex items-center justify-center mb-5 transform group-hover:scale-110 transition-all duration-300`}>
-                  <info.icon className="w-7 h-7 text-white" />
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">{info.title}</h3>
-                {info.details.map((detail, idx) => (
-                  <p key={idx} className="text-gray-600 text-sm">
-                    {detail}
-                  </p>
-                ))}
-                <p className="text-xs text-gray-400 mt-2">{info.description}</p>
-                <button className="mt-4 text-sm font-medium text-[#87CEEB] hover:text-[#4CAF50] transition-colors flex items-center gap-1 group">
-                  <span>{info.action}</span>
-                  <ChevronDown className="w-3 h-3 group-hover:translate-y-0.5 transition-transform" />
-                </button>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Contact Form & Map Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <div className="w-8 h-px bg-gradient-to-r from-[#87CEEB] to-[#4CAF50]"></div>
-              <span className="text-sm font-semibold uppercase tracking-wider text-[#87CEEB]">Write to us</span>
-              <div className="w-8 h-px bg-gradient-to-r from-[#4CAF50] to-[#FFD700]"></div>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Send us a <span className="bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">Message</span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto mt-4">
-              Fill out the form below and we will get back to you as soon as possible
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            {/* Form */}
-            <div>
-              {submitted ? (
-                <div className="bg-gradient-to-r from-[#87CEEB]/10 via-[#4CAF50]/10 to-[#FFD700]/10 border border-[#4CAF50]/20 rounded-2xl p-8 text-center">
-                  <div className="w-20 h-20 mx-auto mb-5 rounded-full bg-gradient-to-r from-[#4CAF50] to-[#45A049] flex items-center justify-center animate-scale-in">
-                    <CheckCircle className="w-10 h-10 text-white" />
+        {/* ── Formulaire & colonne infos ── */}
+        <section className="py-24 sm:py-28">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-[55fr_45fr] lg:gap-10">
+              {/* Formulaire */}
+              <Reveal>
+                <div className="rounded-[28px] border border-[#2D2926]/[.06] bg-white p-8 shadow-[0_30px_70px_-32px_rgba(42,38,34,.22)] sm:p-10">
+                  <div className="mb-8">
+                    <h2 className="font-fraunces text-[28px] font-normal leading-tight text-[#2D2926] sm:text-[32px]">
+                      {t.cnt.formTitle}
+                    </h2>
+                    <p className="mt-2 text-[15px] leading-relaxed text-[#726C64]">
+                      {t.cnt.formSub}
+                    </p>
                   </div>
-                  <h3 className="text-2xl font-bold text-[#4CAF50] mb-2">Message Sent!</h3>
-                  <p className="text-gray-600">
-                    Thank you for contacting us. Our team will get back to you shortly.
-                  </p>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Full Name <span className="text-[#87CEEB]">*</span>
-                      </label>
-                      <input
-                        type="text"
-                        required
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                        placeholder="Your name"
-                      />
+
+                  {submitted ? (
+                    <div className="animate-scale-in rounded-2xl border border-[#F2994A]/40 bg-[#FBF8F1] p-10 text-center">
+                      <CheckCircle className="mx-auto mb-5 h-12 w-12 text-[#4A667D]" />
+                      <h3 className="mb-2 font-fraunces text-2xl font-normal text-[#2D2926]">{t.cnt.sentTitle}</h3>
+                      <p className="text-[#726C64]">
+                        {t.cnt.sentSub}
+                      </p>
                     </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Email <span className="text-[#87CEEB]">*</span>
-                      </label>
-                      <input
-                        type="email"
-                        required
-                        value={formData.email}
-                        onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                        placeholder="your@email.com"
-                      />
-                    </div>
-                  </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Phone
-                      </label>
-                      <input
-                        type="tel"
-                        value={formData.phone}
-                        onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                        placeholder="+216 XX XXX XXX"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Subject <span className="text-[#87CEEB]">*</span>
-                      </label>
-                      <select
-                        required
-                        value={formData.subject}
-                        onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
-                        className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
-                      >
-                        <option value="">Select a subject</option>
-                        <option value="reservation">Booking</option>
-                        <option value="information">Information request</option>
-                        <option value="reclamation">Complaint</option>
-                        <option value="devis">Quote request</option>
-                        <option value="autre">Other</option>
-                      </select>
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Message <span className="text-[#87CEEB]">*</span>
-                    </label>
-                    <textarea
-                      required
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      rows={5}
-                      className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all resize-none"
-                      placeholder="Your message..."
-                    />
-                  </div>
-
-                  <button
-                    type="submit"
-                    className="w-full px-8 py-4 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#87CEEB]/30 transform hover:scale-105 transition-all duration-300 flex items-center justify-center gap-2 group"
-                  >
-                    <Send className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                    Send Message
-                  </button>
-                </form>
-              )}
-            </div>
-
-            {/* Map & Info */}
-            <div>
-              <div className="bg-gradient-to-br from-gray-100 to-gray-50 rounded-2xl h-80 mb-8 flex items-center justify-center relative overflow-hidden">
-                <div className="absolute inset-0 opacity-5">
-                  <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                    <defs>
-                      <pattern id="map-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                        <circle cx="20" cy="20" r="2" fill="#87CEEB" />
-                      </pattern>
-                    </defs>
-                    <rect width="100%" height="100%" fill="url(#map-pattern)" />
-                  </svg>
-                </div>
-                <MapPin className="w-20 h-20 text-[#87CEEB] opacity-50" />
-                <div className="absolute bottom-4 left-4 bg-white rounded-lg px-3 py-1.5 shadow-md">
-                  <p className="text-xs text-gray-600">📍 Avenue Habib Bourguiba, Hammamet</p>
-                </div>
-              </div>
-
-              <div className="bg-gradient-to-r from-[#87CEEB]/5 via-[#4CAF50]/5 to-[#FFD700]/5 rounded-2xl p-8 border border-gray-100">
-                <h3 className="text-xl font-bold mb-5 text-gray-900 flex items-center gap-2">
-                  <Star className="w-5 h-5 text-[#FFD700]" />
-                  Practical Information
-                </h3>
-                <ul className="space-y-4">
-                  {[
-                    "Free parking available for visitors",
-                    "Office accessible for people with reduced mobility",
-                    "Customer service available in French, Arabic, and English",
-                    "Cash and credit card payments accepted",
-                    "Secure online booking 24/7",
-                    "Phone support available 24 hours a day, 7 days a week",
-                  ].map((info, idx) => (
-                    <li key={idx} className="flex items-start group">
-                      <div className="w-5 h-5 rounded-full bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] flex items-center justify-center mr-3 flex-shrink-0 mt-0.5 transition-transform group-hover:scale-110">
-                        <CheckCircle className="w-3 h-3 text-white" />
-                      </div>
-                      <span className="text-gray-700 text-sm">{info}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Responsive Badge */}
-              <div className="mt-6 flex items-center justify-between p-4 bg-white rounded-xl border border-gray-100">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] flex items-center justify-center">
-                    <Headphones className="w-5 h-5 text-white" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-gray-500">Average response time</p>
-                    <p className="text-sm font-semibold text-gray-900">Less than 30 minutes</p>
-                  </div>
-                </div>
-                <div className="text-right">
-                  <p className="text-xs text-gray-500">Satisfaction rate</p>
-                  <p className="text-sm font-semibold text-[#4CAF50]">98%</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* FAQ Section */}
-      <section className="py-20 bg-gradient-to-b from-white to-gray-50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center space-x-2 mb-4">
-              <div className="w-8 h-px bg-gradient-to-r from-[#87CEEB] to-[#4CAF50]"></div>
-              <span className="text-sm font-semibold uppercase tracking-wider text-[#87CEEB]">FAQ</span>
-              <div className="w-8 h-px bg-gradient-to-r from-[#4CAF50] to-[#FFD700]"></div>
-            </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900">
-              Frequently Asked <span className="bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">Questions</span>
-            </h2>
-            <p className="text-gray-600 max-w-2xl mx-auto mt-4">
-              Quickly find answers to your most common questions
-            </p>
-          </div>
-
-          <div className="space-y-4">
-            {faqs.map((faq, index) => (
-              <div
-                key={index}
-                className="bg-white rounded-2xl shadow-sm hover:shadow-md transition-all duration-300 border border-gray-100 overflow-hidden"
-              >
-                <button
-                  onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full px-6 py-5 flex items-center justify-between text-left hover:bg-gray-50 transition-colors"
-                >
-                  <div className="flex items-center gap-4">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] flex items-center justify-center flex-shrink-0">
-                      <faq.icon className="w-5 h-5 text-white" />
-                    </div>
-                    <span className="font-semibold text-gray-900">{faq.q}</span>
-                  </div>
-                  {openFaq === index ? (
-                    <ChevronUp className="w-5 h-5 text-[#87CEEB]" />
                   ) : (
-                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                    <form onSubmit={handleSubmit} className="space-y-6">
+                      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div>
+                          <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
+                            {t.cnt.labelName} <span className="text-[#F2994A]">*</span>
+                          </label>
+                          <input
+                            type="text"
+                            required
+                            value={formData.name}
+                            onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                            className={inputClass}
+                            placeholder={t.cnt.phName}
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
+                            {t.cnt.labelEmail} <span className="text-[#F2994A]">*</span>
+                          </label>
+                          <input
+                            type="email"
+                            required
+                            value={formData.email}
+                            onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                            className={inputClass}
+                            placeholder={t.cnt.phEmail}
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                        <div>
+                          <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
+                            {t.cnt.labelPhone}
+                          </label>
+                          <input
+                            type="tel"
+                            value={formData.phone}
+                            onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                            className={inputClass}
+                            placeholder="+216 XX XXX XXX"
+                          />
+                        </div>
+                        <div>
+                          <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
+                            {t.cnt.labelSubject} <span className="text-[#F2994A]">*</span>
+                          </label>
+                          <select
+                            required
+                            value={formData.subject}
+                            onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                            className={`${inputClass} cursor-pointer`}
+                          >
+                            <option value="">{t.cnt.subjSelect}</option>
+                            <option value="reservation">{t.cnt.subjReservation}</option>
+                            <option value="information">{t.cnt.subjInfo}</option>
+                            <option value="reclamation">{t.cnt.subjComplaint}</option>
+                            <option value="devis">{t.cnt.subjQuote}</option>
+                            <option value="autre">{t.cnt.subjOther}</option>
+                          </select>
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
+                          {t.cnt.labelMessage} <span className="text-[#F2994A]">*</span>
+                        </label>
+                        <textarea
+                          required
+                          value={formData.message}
+                          onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                          rows={6}
+                          className="w-full resize-none rounded-2xl border border-[#F1EBE1] bg-[#FBF8F1] px-5 py-4 text-[15px] leading-relaxed text-[#2D2926] outline-none transition-all duration-300 placeholder:text-[#726C64]/60 focus:border-[#F2994A] focus:bg-white focus:ring-4 focus:ring-[#F2994A]/[.12]"
+                          placeholder={t.cnt.phMessage}
+                        />
+                      </div>
+
+                      <button
+                        type="submit"
+                        className="group flex w-full items-center justify-center gap-2.5 rounded-2xl px-8 py-[18px] text-[15px] font-bold text-white shadow-[0_16px_32px_-12px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.75)] active:translate-y-0"
+                        style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+                      >
+                        <Send className="h-[18px] w-[18px] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-1" />
+                        {t.cnt.sendBtn}
+                      </button>
+                    </form>
                   )}
-                </button>
-                {openFaq === index && (
-                  <div className="px-6 pb-5 pt-0 border-t border-gray-100">
-                    <p className="text-gray-600 leading-relaxed pl-14">{faq.a}</p>
+                </div>
+              </Reveal>
+
+              {/* Colonne droite — carte, infos, assistance, réseaux */}
+              <div className="flex flex-col gap-6">
+                {/* Carte interactive */}
+                <Reveal delay={0.05}>
+                  <div className="group relative h-80 overflow-hidden rounded-[26px] border border-[#2D2926]/[.06] shadow-[0_24px_50px_-24px_rgba(42,38,34,.35)] transition-shadow duration-300 hover:shadow-[0_32px_64px_-20px_rgba(42,38,34,.45)]">
+                    <iframe
+                      title="Localisation Calma Trip — Avenue Habib Bourguiba, Hammamet"
+                      src="https://maps.google.com/maps?q=Avenue%20Habib%20Bourguiba%2C%20Hammamet%2C%20Tunisie&z=15&output=embed"
+                      className="absolute inset-0 h-full w-full grayscale-[15%] transition-[filter] duration-300 group-hover:grayscale-0"
+                      style={{ border: 0 }}
+                      loading="lazy"
+                      referrerPolicy="no-referrer-when-downgrade"
+                    />
+                    <div className="pointer-events-none absolute inset-0 rounded-[26px] ring-1 ring-inset ring-black/[.06]" />
+                    <div className="absolute bottom-5 left-5 rounded-xl bg-white/95 px-3.5 py-2 shadow-md backdrop-blur-sm">
+                      <p className="text-xs font-medium text-[#2D2926]">{t.cnt.mapAddress}</p>
+                    </div>
+                    <a
+                      href={GOOGLE_MAPS_URL}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="absolute bottom-5 right-5 flex items-center gap-1.5 rounded-full bg-white px-4 py-2.5 text-[12.5px] font-bold text-[#2D2926] shadow-lg transition-all duration-300 hover:-translate-y-0.5 hover:bg-[#F2994A] hover:text-white"
+                    >
+                      {t.cnt.openInMaps}
+                      <ExternalLink className="h-3.5 w-3.5" />
+                    </a>
                   </div>
-                )}
+                </Reveal>
+
+                {/* Informations pratiques */}
+                <Reveal delay={0.1}>
+                  <div className="rounded-[22px] border border-[#2D2926]/[.06] bg-white p-7 shadow-[0_2px_16px_-8px_rgba(42,38,34,.1)] sm:p-8">
+                    <div className="mb-5 flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F2994A]/[.08] text-[#F2994A]">
+                        <CheckCircle className="h-5 w-5" strokeWidth={1.75} />
+                      </div>
+                      <h3 className="font-fraunces text-lg font-normal text-[#2D2926]">
+                        {t.cnt.practicalTitle}
+                      </h3>
+                    </div>
+                    <ul className="space-y-3.5">
+                      {t.cnt.practicalItems.map((info, idx) => (
+                        <li key={idx} className="flex items-start gap-3">
+                          <CheckCircle className="mt-0.5 h-4 w-4 shrink-0 text-[#F2994A]" />
+                          <span className="text-sm leading-relaxed text-[#2D2926]">{info}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                </Reveal>
+
+                {/* Assistance immédiate */}
+                <Reveal delay={0.15}>
+                  <div className="rounded-[22px] border border-[#2D2926]/[.06] bg-white p-7 shadow-[0_2px_16px_-8px_rgba(42,38,34,.1)] sm:p-8">
+                    <div className="mb-5 flex items-center gap-3">
+                      <div className="flex h-10 w-10 items-center justify-center rounded-full bg-[#F2994A]/[.08] text-[#F2994A]">
+                        <Headphones className="h-5 w-5" strokeWidth={1.75} />
+                      </div>
+                      <h3 className="font-fraunces text-lg font-normal text-[#2D2926]">
+                        {t.cnt.helpTitle}
+                      </h3>
+                    </div>
+                    <div className="mb-5 flex items-center justify-between rounded-xl bg-[#FBF8F1] px-4 py-3.5">
+                      <div>
+                        <p className="text-[11.5px] text-[#726C64]">{t.cnt.avgResponseLabel}</p>
+                        <p className="font-fraunces text-sm text-[#2D2926]">{t.cnt.avgResponseValue}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-[11.5px] text-[#726C64]">{t.cnt.satisfactionLabel}</p>
+                        <p className="font-fraunces text-sm text-[#4A667D]">98%</p>
+                      </div>
+                    </div>
+                    <div className="flex flex-col gap-2.5 sm:flex-row">
+                      <a
+                        href="tel:+21621622972"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-[#4A667D] px-4 py-3 text-[13.5px] font-semibold text-white transition-colors duration-300 hover:bg-[#3A5164]"
+                      >
+                        <Phone className="h-4 w-4" /> {t.cnt.callBtn}
+                      </a>
+                      <a
+                        href="https://wa.me/21621622972"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-xl border border-[#F1EBE1] px-4 py-3 text-[13.5px] font-semibold text-[#2D2926] transition-colors duration-300 hover:border-[#F2994A] hover:text-[#F2994A]"
+                      >
+                        <MessageCircle className="h-4 w-4" /> {t.cnt.whatsappBtn}
+                      </a>
+                    </div>
+                  </div>
+                </Reveal>
+
+                {/* Réseaux sociaux */}
+                <Reveal delay={0.2}>
+                  <div className="flex items-center gap-3 rounded-[22px] border border-[#2D2926]/[.06] bg-white p-6 shadow-[0_2px_16px_-8px_rgba(42,38,34,.1)]">
+                    <span className="text-xs font-bold uppercase tracking-[0.16em] text-[#726C64]">{t.cnt.followUs}</span>
+                    <a
+                      href="https://www.facebook.com/profile.php?id=61590996770536"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="Facebook"
+                      className="ml-auto flex h-10 w-10 items-center justify-center rounded-full border border-[#F1EBE1] text-[#2D2926] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F2994A] hover:text-[#F2994A]"
+                    >
+                      <Facebook className="h-4 w-4" />
+                    </a>
+                    <a
+                      href="https://wa.me/21621622972"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      aria-label="WhatsApp"
+                      className="flex h-10 w-10 items-center justify-center rounded-full border border-[#F1EBE1] text-[#2D2926] transition-all duration-300 hover:-translate-y-0.5 hover:border-[#F2994A] hover:text-[#F2994A]"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                    </a>
+                  </div>
+                </Reveal>
               </div>
-            ))}
+            </div>
           </div>
+        </section>
 
-          <div className="mt-10 text-center">
-            <p className="text-gray-600">
-              Didn't find an answer?{" "}
-              <Link href="/services" className="text-[#87CEEB] hover:text-[#4CAF50] font-semibold transition-colors">
-                Contact our support
-              </Link>
-            </p>
-          </div>
-        </div>
-      </section>
+        {/* ── FAQ — accordéon premium ── */}
+        <section className="bg-white py-24 sm:py-28">
+          <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <Reveal>
+              <div className="mb-14 text-center">
+                <span className="text-xs font-bold uppercase tracking-[0.18em] text-[#F2994A]">{t.cnt.faqKicker}</span>
+                <h2 className="mt-3 font-fraunces text-[32px] font-normal text-[#2D2926] sm:text-[36px]">
+                  {t.cnt.faqTitle}
+                </h2>
+                <p className="mx-auto mt-3 max-w-md text-[15px] leading-relaxed text-[#726C64]">
+                  {t.cnt.faqSub}
+                </p>
+              </div>
+            </Reveal>
 
-      {/* CTA Section */}
-      <section className="py-20 bg-white">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="relative bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] rounded-3xl p-12 text-center overflow-hidden shadow-2xl">
-            <div className="absolute inset-0 opacity-10">
-              <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                  <pattern id="cta-pattern" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse">
-                    <path d="M20 0 L30 20 L20 40 L10 20 Z" fill="white" fillOpacity="0.5" />
-                  </pattern>
-                </defs>
-                <rect width="100%" height="100%" fill="url(#cta-pattern)" />
-              </svg>
+            <div className="space-y-3">
+              {faqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+                return (
+                  <Reveal key={index} delay={Math.min(index * 0.05, 0.3)}>
+                    <div
+                      className={`overflow-hidden rounded-2xl border transition-colors duration-300 ${
+                        isOpen ? "border-[#F2994A]/30 bg-[#FBF8F1]" : "border-[#F1EBE1] bg-white hover:bg-[#FBF8F1]/60"
+                      }`}
+                    >
+                      <button
+                        onClick={() => setOpenFaq(isOpen ? null : index)}
+                        className="flex w-full items-center justify-between gap-4 px-6 py-6 text-left sm:px-8"
+                      >
+                        <div className="flex items-baseline gap-5">
+                          <span className="font-fraunces text-sm text-[#F2994A]">
+                            {String(index + 1).padStart(2, "0")}
+                          </span>
+                          <span className={`font-fraunces text-[18px] transition-colors sm:text-[19px] ${isOpen ? "text-[#4A667D]" : "text-[#2D2926]"}`}>
+                            {faq.q}
+                          </span>
+                        </div>
+                        <ChevronDown
+                          className={`h-5 w-5 shrink-0 text-[#F2994A] transition-transform duration-300 ${isOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                      <div
+                        className="grid transition-all duration-300 ease-out"
+                        style={{ gridTemplateRows: isOpen ? "1fr" : "0fr" }}
+                      >
+                        <div className="overflow-hidden">
+                          <p className="border-t border-[#F2994A]/15 px-6 pb-6 pt-4 leading-relaxed text-[#726C64] sm:px-8 sm:pl-[4.75rem]">
+                            {faq.a}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </Reveal>
+                );
+              })}
             </div>
 
-            <div className="relative">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-white">
-                Need immediate assistance?
-              </h2>
-              <p className="text-lg text-white/90 mb-8 max-w-2xl mx-auto">
-                Our team is available 24/7 to answer your questions
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <a
-                  href="tel:+21621622972"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-white text-[#1B4F6E] rounded-xl font-semibold hover:shadow-lg transform hover:scale-105 transition-all duration-300 group"
-                >
-                  <Phone className="w-4 h-4" />
-                  <span>Call now</span>
-                </a>
-                <Link
-                  href="https://wa.me/21621622972"
-                  className="inline-flex items-center justify-center gap-2 px-8 py-3 bg-black/20 backdrop-blur-sm text-white rounded-xl font-semibold hover:bg-black/30 transition-all duration-300 border border-white/30"
-                >
-                  <MessageCircle className="w-4 h-4" />
-                  <span>WhatsApp</span>
-                </Link>
+            <Reveal delay={0.1}>
+              <div className="mt-10 text-center">
+                <p className="text-[#726C64]">
+                  {t.cnt.faqNoAnswer}{" "}
+                  <Link href="/services" className="border-b border-[#F2994A] pb-0.5 text-[#4A667D] transition-colors hover:text-[#3A5164]">
+                    {t.cnt.faqContactSupport}
+                  </Link>
+                </p>
               </div>
-            </div>
+            </Reveal>
           </div>
-        </div>
-      </section>
+        </section>
 
-      <style>{`
-        @keyframes scale-in {
-          from {
-            opacity: 0;
-            transform: scale(0.8);
+        {/* ── CTA — banner de réservation immersif ── */}
+        <section className="py-24 sm:py-28">
+          <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+            <Reveal>
+              <div className="relative isolate flex min-h-[440px] items-center overflow-hidden rounded-calma-block text-center text-calma-cream">
+                <Image
+                  src="/images/explore/sahara_camel.png"
+                  alt="Désert du Sahara, Tunisie"
+                  fill
+                  sizes="(min-width: 1024px) 1152px, 100vw"
+                  className="-z-10 object-cover"
+                />
+                <div
+                  className="absolute inset-0 -z-10"
+                  style={{
+                    background:
+                      'linear-gradient(160deg,rgba(52,34,18,.88) 0%,rgba(36,51,63,.8) 45%,rgba(29,42,52,.9) 100%)',
+                  }}
+                />
+                <ZelligePattern id="contact-cta-zellige" opacity={0.08} />
+                <div
+                  className="pointer-events-none absolute -right-1/4 -top-1/3 h-[460px] w-[460px] rounded-full opacity-25 blur-[100px]"
+                  style={{ background: 'radial-gradient(circle, #F2994A 0%, transparent 70%)' }}
+                />
+                <div className="relative mx-auto max-w-2xl px-8 py-20 sm:px-14">
+                  <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-terracotta-soft backdrop-blur-md">
+                    <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta-soft" />
+                    {t.cnt.ctaKicker}
+                  </div>
+                  <h2 className="mb-5 text-balance font-fraunces text-[clamp(30px,4.2vw,44px)] font-normal leading-[1.08]">
+                    {t.cnt.ctaTitle}
+                  </h2>
+                  <p className="mx-auto mb-9 max-w-xl text-[17px] leading-[1.7] text-calma-cream/80">
+                    {t.cnt.ctaSub}
+                  </p>
+                  <div className="flex flex-col justify-center gap-4 sm:flex-row">
+                    <a
+                      href="tel:+21621622972"
+                      className="group inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-[15.5px] font-semibold text-calma-cream shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)]"
+                      style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+                    >
+                      <Phone className="h-4 w-4" />
+                      <span>{t.cnt.ctaCallBtn}</span>
+                      <ArrowRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1" />
+                    </a>
+                    <Link
+                      href="https://wa.me/21621622972"
+                      className="inline-flex items-center justify-center gap-2 rounded-full border border-white/40 px-9 py-4 text-[15.5px] font-semibold text-calma-cream transition-all duration-300 hover:-translate-y-1 hover:border-calma-terracotta-soft hover:text-calma-terracotta-soft"
+                    >
+                      <MessageCircle className="h-4 w-4" />
+                      <span>{t.cnt.ctaWhatsappBtn}</span>
+                    </Link>
+                  </div>
+                </div>
+              </div>
+            </Reveal>
+          </div>
+        </section>
+
+        <style>{`
+          @keyframes scale-in {
+            from { opacity: 0; transform: scale(0.96); }
+            to { opacity: 1; transform: scale(1); }
           }
-          to {
-            opacity: 1;
-            transform: scale(1);
+          .animate-scale-in {
+            animation: scale-in 0.3s ease-out forwards;
           }
-        }
-        
-        .animate-scale-in {
-          animation: scale-in 0.3s ease-out forwards;
-        }
-      `}</style>
-    </div>
-    <Footer />
-        </>
+        `}</style>
+      </div>
+      <CalmaFooter />
+    </>
+  );
+}
+
+export default function Contact() {
+  return (
+    <CalmaLangProvider>
+      <ContactContent />
+    </CalmaLangProvider>
   );
 }

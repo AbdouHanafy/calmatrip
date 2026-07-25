@@ -23,7 +23,7 @@ function StarRating({ rating }: { rating: number }) {
           key={s}
           size={14}
           className={
-            s <= rating ? "fill-amber-400 text-amber-400" : "text-gray-200"
+            s <= rating ? "fill-amber-400 text-amber-400" : "text-calma-taupe"
           }
         />
       ))}
@@ -69,8 +69,8 @@ export default function ReviewsAdminPage() {
     <div className="p-6 max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Reviews management</h1>
-          <p className="text-gray-500 text-sm mt-1">
+          <h1 className="text-2xl font-bold text-calma-ink">Reviews management</h1>
+          <p className="text-calma-taupe text-sm mt-1">
             {pending > 0 ? (
               <span className="text-amber-600 font-medium">
                 {pending} reviews awaiting validation
@@ -90,8 +90,8 @@ export default function ReviewsAdminPage() {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
               filter === f
-                ? "bg-blue-600 text-white"
-                : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                ? "bg-calma-olive text-white"
+                : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
             }`}
           >
             {f === "all" ? "All" : f === "pending" ? "Pending" : "Approved"}
@@ -109,11 +109,11 @@ export default function ReviewsAdminPage() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="animate-pulse bg-gray-100 rounded-2xl h-32" />
+            <div key={i} className="animate-pulse bg-calma-sand rounded-2xl h-32" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
-        <div className="text-center py-16 text-gray-400">
+        <div className="text-center py-16 text-calma-taupe">
           <Star size={40} className="mx-auto mb-3 opacity-30" />
           <p>No reviews in this category</p>
         </div>
@@ -125,7 +125,7 @@ export default function ReviewsAdminPage() {
               className={`bg-white rounded-2xl border p-6 flex gap-4 ${
                 !review.approved
                   ? "border-amber-200 bg-amber-50/30"
-                  : "border-gray-100"
+                  : "border-calma-border"
               }`}
             >
               {/* Avatar */}
@@ -137,7 +137,7 @@ export default function ReviewsAdminPage() {
                     className="w-11 h-11 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center">
+                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-calma-olive to-calma-olive-deep flex items-center justify-center">
                     <span className="text-white font-bold">
                       {review.name.charAt(0)}
                     </span>
@@ -148,13 +148,13 @@ export default function ReviewsAdminPage() {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-1 flex-wrap">
-                  <span className="font-semibold text-gray-900">
+                  <span className="font-semibold text-calma-ink">
                     {review.name}
                   </span>
-                  <span className="text-xs text-gray-400">{review.email}</span>
+                  <span className="text-xs text-calma-taupe">{review.email}</span>
                   <StarRating rating={review.rating} />
                   {review.service && (
-                    <span className="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full">
+                    <span className="text-xs bg-calma-olive/10 text-calma-olive px-2 py-0.5 rounded-full">
                       {review.service}
                     </span>
                   )}
@@ -168,10 +168,10 @@ export default function ReviewsAdminPage() {
                     </span>
                   )}
                 </div>
-                <p className="text-gray-600 text-sm line-clamp-3">
+                <p className="text-calma-taupe text-sm line-clamp-3">
                   {review.comment}
                 </p>
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-calma-taupe mt-2">
                   {new Date(review.createdAt).toLocaleDateString("fr-FR", {
                     day: "numeric",
                     month: "long",

@@ -7,6 +7,36 @@ import FloatingWhatsApp from '@/components/ui/FloatingWhatsApp';
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { SITE, organizationSchema } from "@/lib/seo";
+import { Fraunces, Poppins, Hanken_Grotesk, Space_Grotesk } from "next/font/google";
+
+const fraunces = Fraunces({
+  subsets: ["latin"],
+  weight: ["400", "600"],
+  style: ["normal", "italic"],
+  variable: "--font-fraunces",
+  display: "swap",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-space",
+  display: "swap",
+});
+
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["700"],
+  variable: "--font-poppins",
+  display: "swap",
+});
+
+const hankenGrotesk = Hanken_Grotesk({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-hanken",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: {
@@ -56,7 +86,11 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={`${fraunces.variable} ${poppins.variable} ${hankenGrotesk.variable} ${spaceGrotesk.variable}`}
+    >
       <head>
         {/* Preconnect */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -115,7 +115,7 @@ export default function AdminContactsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#87CEEB]" />
+        <Loader2 className="w-8 h-8 animate-spin text-[#F2994A]" />
       </div>
     );
   }
@@ -135,35 +135,35 @@ export default function AdminContactsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#87CEEB] via-[#4CAF50] to-[#FFD700] bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F2994A] via-[#5E8B63] to-[#D9A441] bg-clip-text text-transparent">
             Messages
           </h1>
-          <p className="text-gray-500 mt-1">
+          <p className="text-calma-taupe mt-1">
             {unreadCount > 0 ? `${unreadCount} unread message${unreadCount > 1 ? "s" : ""}` : "All messages read"}
           </p>
         </div>
       </div>
 
       {/* Search & Filter */}
-      <div className="bg-white rounded-2xl shadow-lg p-4 border border-gray-100">
+      <div className="bg-white rounded-2xl shadow-lg p-4 border border-calma-border">
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-calma-taupe" />
             <input
               type="text"
               placeholder="Search by name, email, or message..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#87CEEB] focus:border-transparent transition-all"
+              className="w-full pl-10 pr-4 py-2.5 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
             />
           </div>
-          <div className="flex gap-2 bg-gray-100 p-1 rounded-xl">
+          <div className="flex gap-2 bg-calma-sand p-1 rounded-xl">
             {(["all", "unread", "read"] as const).map((f) => (
               <button
                 key={f}
                 onClick={() => setFilter(f)}
                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-all capitalize ${
-                  filter === f ? "bg-white shadow-md text-gray-900" : "text-gray-500 hover:text-gray-700"
+                  filter === f ? "bg-white shadow-md text-calma-ink" : "text-calma-taupe hover:text-calma-ink"
                 }`}
               >
                 {f}
@@ -174,13 +174,13 @@ export default function AdminContactsPage() {
       </div>
 
       {/* List */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-gray-100">
+      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-calma-border">
         {filteredContacts.length === 0 ? (
           <div className="text-center py-16">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gray-100 flex items-center justify-center">
-              <Inbox className="w-10 h-10 text-gray-300" />
+            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-calma-sand flex items-center justify-center">
+              <Inbox className="w-10 h-10 text-calma-taupe" />
             </div>
-            <p className="text-gray-500">No messages found</p>
+            <p className="text-calma-taupe">No messages found</p>
           </div>
         ) : (
           <div className="divide-y divide-gray-100">
@@ -188,47 +188,47 @@ export default function AdminContactsPage() {
               <button
                 key={contact.id}
                 onClick={() => openMessage(contact)}
-                className={`w-full text-left px-6 py-4 flex items-start gap-4 hover:bg-gray-50 transition-colors ${
-                  !contact.isRead ? "bg-[#87CEEB]/5" : ""
+                className={`w-full text-left px-6 py-4 flex items-start gap-4 hover:bg-calma-sand transition-colors ${
+                  !contact.isRead ? "bg-[#F2994A]/5" : ""
                 }`}
               >
                 <div className="mt-1 shrink-0">
                   {contact.isRead ? (
-                    <MailOpen className="w-5 h-5 text-gray-300" />
+                    <MailOpen className="w-5 h-5 text-calma-taupe" />
                   ) : (
-                    <Mail className="w-5 h-5 text-[#87CEEB]" />
+                    <Mail className="w-5 h-5 text-[#F2994A]" />
                   )}
                 </div>
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`font-semibold ${!contact.isRead ? "text-gray-900" : "text-gray-600"}`}>
+                    <span className={`font-semibold ${!contact.isRead ? "text-calma-ink" : "text-calma-taupe"}`}>
                       {contact.name}
                     </span>
-                    <span className="text-xs text-gray-400">{contact.email}</span>
+                    <span className="text-xs text-calma-taupe">{contact.email}</span>
                   </div>
-                  <p className="text-sm font-medium text-gray-700 mb-1">
+                  <p className="text-sm font-medium text-calma-ink mb-1">
                     {subjectLabels[contact.subject] ?? contact.subject}
                   </p>
-                  <p className="text-sm text-gray-500 truncate">{contact.message}</p>
+                  <p className="text-sm text-calma-taupe truncate">{contact.message}</p>
                 </div>
 
                 <div className="flex flex-col items-end gap-2 shrink-0">
-                  <span className="text-xs text-gray-400 flex items-center gap-1">
+                  <span className="text-xs text-calma-taupe flex items-center gap-1">
                     <Calendar className="w-3 h-3" />
                     {new Date(contact.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                   </span>
                   <div className="flex items-center gap-1">
                     <button
                       onClick={(e) => toggleRead(contact, e)}
-                      className="p-1.5 text-gray-400 hover:text-[#87CEEB] hover:bg-[#87CEEB]/10 rounded-lg transition-all"
+                      className="p-1.5 text-calma-taupe hover:text-[#F2994A] hover:bg-[#F2994A]/10 rounded-lg transition-all"
                       title={contact.isRead ? "Mark as unread" : "Mark as read"}
                     >
                       {contact.isRead ? <Mail className="w-4 h-4" /> : <MailOpen className="w-4 h-4" />}
                     </button>
                     <button
                       onClick={(e) => { e.stopPropagation(); setDeleteConfirm(contact.id); }}
-                      className="p-1.5 text-gray-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
+                      className="p-1.5 text-calma-taupe hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                       title="Delete"
                     >
                       <Trash2 className="w-4 h-4" />
@@ -253,29 +253,29 @@ export default function AdminContactsPage() {
           >
             <div className="flex items-start justify-between mb-4">
               <div>
-                <h3 className="text-lg font-bold text-gray-900">{selected.name}</h3>
-                <p className="text-sm text-gray-500">{selected.email}</p>
+                <h3 className="text-lg font-bold text-calma-ink">{selected.name}</h3>
+                <p className="text-sm text-calma-taupe">{selected.email}</p>
                 {selected.phone && (
-                  <p className="text-sm text-gray-500 flex items-center gap-1 mt-1">
+                  <p className="text-sm text-calma-taupe flex items-center gap-1 mt-1">
                     <Phone className="w-3 h-3" /> {selected.phone}
                   </p>
                 )}
               </div>
-              <button onClick={() => setSelected(null)} className="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-                <X className="w-5 h-5 text-gray-500" />
+              <button onClick={() => setSelected(null)} className="p-2 hover:bg-calma-sand rounded-lg transition-colors">
+                <X className="w-5 h-5 text-calma-taupe" />
               </button>
             </div>
 
             <div className="mb-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-[#87CEEB]/10 text-[#87CEEB]">
+              <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-[#F2994A]/10 text-[#F2994A]">
                 {subjectLabels[selected.subject] ?? selected.subject}
               </span>
             </div>
 
-            <p className="text-gray-700 leading-relaxed whitespace-pre-wrap mb-6">{selected.message}</p>
+            <p className="text-calma-ink leading-relaxed whitespace-pre-wrap mb-6">{selected.message}</p>
 
-            <div className="flex items-center justify-between pt-4 border-t border-gray-100">
-              <span className="text-xs text-gray-400 flex items-center gap-1">
+            <div className="flex items-center justify-between pt-4 border-t border-calma-border">
+              <span className="text-xs text-calma-taupe flex items-center gap-1">
                 <Calendar className="w-3 h-3" />
                 {new Date(selected.createdAt).toLocaleDateString("en-US", {
                   weekday: "long", year: "numeric", month: "long", day: "numeric",
@@ -304,12 +304,12 @@ export default function AdminContactsPage() {
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
                 <Trash2 className="w-8 h-8 text-red-500" />
               </div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">Delete this message?</h3>
-              <p className="text-gray-600 mb-6">This action is irreversible.</p>
+              <h3 className="text-xl font-bold text-calma-ink mb-2">Delete this message?</h3>
+              <p className="text-calma-taupe mb-6">This action is irreversible.</p>
               <div className="flex gap-3">
                 <button
                   onClick={() => setDeleteConfirm(null)}
-                  className="flex-1 px-4 py-2.5 border border-gray-200 text-gray-700 rounded-xl font-medium hover:bg-gray-50 transition-colors"
+                  className="flex-1 px-4 py-2.5 border border-calma-border text-calma-ink rounded-xl font-medium hover:bg-calma-sand transition-colors"
                 >
                   Cancel
                 </button>

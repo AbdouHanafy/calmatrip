@@ -15,8 +15,10 @@ import {
   Clock,
   ChevronRight
 } from 'lucide-react';
-import { Navbar } from '@/components/layouts/Navbar';
-import { Footer } from '@/components/layouts/Footre';
+import { motion } from 'motion/react';
+import { CalmaLangProvider, useCalmaLang } from '@/lib/calma/i18n';
+import CalmaHeader from '@/components/calma/CalmaHeader';
+import CalmaFooter from '@/components/calma/CalmaFooter';
 import Image from 'next/image';
 import dynamic from 'next/dynamic';
 
@@ -44,13 +46,8 @@ interface Place {
   };
 }
 
-const categories = [
-  { id: "all", label: "All", icon: Sparkles },
-  { id: "Food & Drink", label: "Food & Drink", icon: Coffee },
-  { id: "Sight", label: "Sights", icon: Landmark },
-  { id: "Activity", label: "Activities", icon: Mountain },
-  { id: "Hidden Gem", label: "Hidden Gems", icon: MapPinned },
-];
+const CATEGORY_IDS = ["all", "Food & Drink", "Sight", "Activity", "Hidden Gem"];
+const CATEGORY_ICONS = [Sparkles, Coffee, Landmark, Mountain, MapPinned];
 
 const cities = ["All Cities", "Tunis", "Kairouan", "Douz", "Tozeur", "Carthage", "Sidi Bou Said"];
 
@@ -140,7 +137,13 @@ const allPlaces: Place[] = [
   
 ];
 
-export default function ExplorePage() {
+function ExplorePageContent() {
+  const { t } = useCalmaLang();
+  const categories = CATEGORY_IDS.map((id, i) => ({
+    id,
+    label: [t.exp.catAll, t.exp.catFood, t.exp.catSights, t.exp.catActivities, t.exp.catHidden][i],
+    icon: CATEGORY_ICONS[i],
+  }));
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCity, setSelectedCity] = useState("All Cities");
   const [budgetLimit, setBudgetLimit] = useState(3);
@@ -195,88 +198,105 @@ export default function ExplorePage() {
 
   return (
     <>
-      <Navbar />
-      <main className="min-h-screen bg-[#FAEDCD]/20 font-sans pb-32">
-        
-        {/* HERO SECTION */}
-        <section className="relative h-[45vh] min-h-[350px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 z-0">
-            <Image 
-              src="/images/tunisia.jpeg" 
-              alt="Explore Tunisia" 
-              fill 
-              className="object-cover transition-transform duration-1000"
-              priority
-            />
-            <div className="absolute inset-0 bg-gradient-to-b from-[#1E3A3A]/90 via-[#1E3A3A]/50 to-transparent" />
-          </div>
+      <CalmaHeader active="explore" />
+      <main className="min-h-screen bg-calma-sand font-hanken pb-32">
 
-          <div className="relative z-10 max-w-4xl mx-auto px-6 text-center">
-            <div className="inline-flex items-center gap-3 mb-4 animate-fade-in">
-              <Sparkles size={16} className="text-[#D4A373]" />
-              <span className="text-xs uppercase tracking-[0.4em] text-[#D4A373] font-bold">The Calmatrip Guide</span>
+        {/* ── Hero — cinematic, photo-backed, sand texture ── */}
+        <section className="relative flex min-h-[320px] items-center justify-center overflow-hidden px-6 pb-24 pt-16 text-center sm:px-10">
+          <Image
+            src="/images/explore/sahara_camel.png"
+            alt="Sahara, Tunisie"
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'linear-gradient(180deg,rgba(42,38,34,.68) 0%,rgba(42,38,34,.5) 45%,rgba(42,38,34,.82) 100%)',
+            }}
+          />
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[.07]"
+            style={{
+              backgroundImage: 'repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)',
+            }}
+          />
+          <div className="relative z-[2] mx-auto max-w-[640px]">
+            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
+              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
+              {t.exp.eyebrow}
             </div>
-            
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-6 leading-tight drop-shadow-xl">
-              Discover the <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#D4A373] to-[#FAEDCD] italic">Soul</span> of Tunisia
+            <h1 className="mb-4 text-balance font-fraunces text-[clamp(32px,4.4vw,48px)] font-normal leading-[1.05] tracking-[-0.02em] text-calma-cream">
+              {t.exp.heroTitle}
             </h1>
+            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
+              {t.exp.heroSub}
+            </p>
+          </div>
+        </section>
 
-            <div className="max-w-xl mx-auto relative group translate-y-4 animate-fade-in [animation-delay:200ms]">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-white/40 group-focus-within:text-[#D4A373] transition-colors" />
-              <input 
-                type="text" 
-                placeholder="Where do you want to go?" 
-                className="w-full h-14 pl-14 pr-6 rounded-2xl bg-white/5 backdrop-blur-xl border border-white/10 text-white placeholder:text-white/40 outline-none focus:ring-2 focus:ring-[#D4A373]/50 focus:bg-white/10 transition-all shadow-xl"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
+        <section className="max-w-2xl mx-auto px-6 -mt-16 relative z-20 mb-10">
+          <div className="relative group" style={{ boxShadow: '0 24px 56px -24px rgba(42,38,34,.5)' }}>
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-calma-taupe group-focus-within:text-calma-terracotta transition-colors" />
+            <input
+              type="text"
+              placeholder={t.exp.searchPh}
+              className="w-full h-14 rounded-[28px] border border-white/50 bg-white/90 pl-14 pr-6 text-calma-ink outline-none backdrop-blur-xl transition-all placeholder:text-calma-taupe focus:ring-2 focus:ring-calma-terracotta/50"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
           </div>
         </section>
 
         {/* FILTERS SECTION */}
-        <section className="max-w-7xl mx-auto px-6 -mt-10 relative z-20">
-          <div className="bg-white/95 backdrop-blur-2xl p-4 md:p-6 rounded-[2rem] shadow-[0_20px_50px_-20px_rgba(30,58,58,0.2)] border border-white flex flex-col gap-6">
-            
+        <section className="max-w-7xl mx-auto px-6 relative z-20">
+          <div className="flex flex-col gap-6 rounded-[28px] border border-calma-olive/10 bg-calma-cream/95 p-4 backdrop-blur-2xl md:p-6" style={{ boxShadow: '0 20px 50px -24px rgba(42,38,34,.3)' }}>
+
             <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-              {/* Category Scroll */}
-              <div className="flex gap-2 min-w-0 max-w-full overflow-x-auto pb-2 md:pb-0 scrollbar-hide">
+              {/* Category Scroll — sliding pill */}
+              <div className="flex gap-1.5 min-w-0 max-w-full overflow-x-auto pb-1 calma-scrollbar-hide rounded-full">
                 {categories.map((cat) => (
                   <button
                     key={cat.id}
                     onClick={() => setSelectedCategory(cat.id)}
-                    className={`
-                      flex items-center gap-2 px-6 py-3 rounded-xl font-bold transition-all duration-500 whitespace-nowrap text-sm
-                      ${selectedCategory === cat.id 
-                        ? "bg-[#1E3A3A] text-white shadow-xl scale-[1.02]" 
-                        : "bg-gray-50 text-gray-400 hover:bg-gray-100 hover:text-gray-600"}
-                    `}
+                    className="relative flex items-center gap-2 whitespace-nowrap rounded-full px-5 py-2.5 text-sm font-semibold text-calma-taupe transition-colors data-[active=true]:text-white"
+                    data-active={selectedCategory === cat.id}
                   >
-                    <cat.icon size={16} />
-                    {cat.label}
+                    {selectedCategory === cat.id && (
+                      <motion.span
+                        layoutId="explore-cat-pill"
+                        className="absolute inset-0 rounded-full bg-calma-olive"
+                        transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                      />
+                    )}
+                    <cat.icon size={15} className="relative z-[1]" />
+                    <span className="relative z-[1]">{cat.label}</span>
                   </button>
                 ))}
               </div>
 
-              <div className="flex items-center gap-4 w-full md:w-auto">
-                <div className="h-8 w-px bg-gray-200 hidden md:block" />
-                
-                <select 
-                  value={selectedCity} 
+              <div className="flex items-center gap-3 w-full md:w-auto">
+                <div className="h-8 w-px bg-calma-olive/10 hidden md:block" />
+
+                <select
+                  value={selectedCity}
                   onChange={(e) => setSelectedCity(e.target.value)}
-                  className="bg-gray-50 px-4 py-3 rounded-xl border border-gray-100 text-xs font-bold text-gray-500 outline-none focus:ring-2 focus:ring-[#D4A373]/30 transition-all cursor-pointer"
+                  className="bg-white px-4 py-2.5 rounded-full border border-calma-olive/15 text-xs font-bold text-calma-ink outline-none focus:border-calma-terracotta transition-colors cursor-pointer"
                 >
-                  {cities.map(city => <option key={city} value={city}>{city}</option>)}
+                  {cities.map(city => <option key={city} value={city}>{city === "All Cities" ? t.exp.allCities : city}</option>)}
                 </select>
 
-                <div className="flex items-center gap-2 bg-gray-50 px-4 py-3 rounded-xl border border-gray-100">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-1">Budget</span>
+                <div className="flex items-center gap-1.5 bg-white px-3.5 py-2.5 rounded-full border border-calma-olive/15">
+                  <span className="text-[10px] font-bold text-calma-taupe uppercase tracking-widest mr-1">{t.exp.budgetLabel}</span>
                   {[1, 2, 3].map(b => (
-                    <button 
+                    <button
                       key={b}
                       onClick={() => setBudgetLimit(b)}
-                      className={`w-7 h-7 rounded-lg flex items-center justify-center text-[11px] font-extrabold transition-all
-                        ${budgetLimit === b ? "bg-[#D4A373] text-white shadow-md" : "bg-white text-gray-300 hover:text-gray-500 border border-gray-100"}
+                      className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-extrabold transition-all
+                        ${budgetLimit === b ? "bg-calma-terracotta text-white shadow-sm" : "bg-calma-sand text-calma-taupe hover:text-calma-ink"}
                       `}
                     >
                       {"$".repeat(b)}
@@ -285,26 +305,26 @@ export default function ExplorePage() {
                 </div>
               </div>
 
-              <div className="flex items-center gap-3 ml-auto">
-                <button 
+              <div className="flex items-center gap-2 ml-auto">
+                <button
                   onClick={handleGeolocation}
-                  className="p-3.5 bg-gray-50 rounded-xl text-gray-400 hover:bg-[#1E3A3A] hover:text-white transition-all border border-gray-100"
-                  title="Use My Location"
+                  className="p-3 bg-white rounded-full text-calma-taupe hover:bg-calma-olive hover:text-white transition-colors border border-calma-olive/15"
+                  title={t.exp.useLocation}
                 >
-                  <Navigation size={18} />
+                  <Navigation size={17} />
                 </button>
-                <div className="bg-gray-100 p-1.5 rounded-2xl flex gap-1 shadow-inner">
-                  <button 
+                <div className="bg-calma-sand p-1 rounded-full flex gap-1">
+                  <button
                     onClick={() => setViewMode("list")}
-                    className={`px-5 py-2.5 rounded-xl text-xs font-black tracking-widest uppercase transition-all ${viewMode === "list" ? "bg-white shadow-md text-[#1E3A3A]" : "text-gray-400 hover:text-gray-600"}`}
+                    className={`px-4 py-2 rounded-full text-xs font-bold tracking-wide uppercase transition-all ${viewMode === "list" ? "bg-white shadow-sm text-calma-ink" : "text-calma-taupe hover:text-calma-ink"}`}
                   >
-                    List
+                    {t.exp.listLabel}
                   </button>
-                  <button 
+                  <button
                     onClick={() => setViewMode("map")}
-                    className={`px-5 py-2.5 rounded-xl text-xs font-black tracking-widest uppercase transition-all ${viewMode === "map" ? "bg-white shadow-md text-[#1E3A3A]" : "text-gray-400 hover:text-gray-600"}`}
+                    className={`px-4 py-2 rounded-full text-xs font-bold tracking-wide uppercase transition-all ${viewMode === "map" ? "bg-white shadow-sm text-calma-ink" : "text-calma-taupe hover:text-calma-ink"}`}
                   >
-                    Map
+                    {t.exp.mapLabel}
                   </button>
                 </div>
               </div>
@@ -312,32 +332,32 @@ export default function ExplorePage() {
 
             {/* Active Tags & Sorting */}
             {activeFilters.length > 0 && (
-              <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-gray-50">
+              <div className="flex flex-wrap items-center justify-between gap-4 pt-4 border-t border-calma-olive/10">
                 <div className="flex flex-wrap items-center gap-2">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mr-2">Filters:</span>
+                  <span className="text-[10px] font-bold text-calma-taupe uppercase tracking-widest mr-2">{t.exp.filtersLabel}:</span>
                   {activeFilters.map(filter => (
-                    <button 
+                    <button
                       key={filter.id}
                       onClick={filter.onClear}
-                      className="px-3 py-1.5 bg-[#D4A373]/10 text-[#D4A373] text-[11px] font-bold rounded-lg border border-[#D4A373]/20 flex items-center gap-2 hover:bg-[#D4A373] hover:text-white transition-all group"
+                      className="px-3 py-1.5 bg-calma-terracotta/10 text-calma-terracotta text-[11px] font-bold rounded-full border border-calma-terracotta/20 flex items-center gap-2 hover:bg-calma-terracotta hover:text-white transition-all group"
                     >
                       {filter.label}
                       <span className="text-lg leading-none opacity-50 group-hover:opacity-100">&times;</span>
                     </button>
                   ))}
-                  <button onClick={clearFilters} className="text-[11px] font-bold text-gray-400 hover:text-[#1E3A3A] underline underline-offset-4 ml-2">Clear All</button>
+                  <button onClick={clearFilters} className="text-[11px] font-bold text-calma-taupe hover:text-calma-ink underline underline-offset-4 ml-2">{t.exp.clearAll}</button>
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Sort:</span>
-                  <select 
+                  <span className="text-[10px] font-bold text-calma-taupe uppercase tracking-widest">{t.exp.sortLabel}:</span>
+                  <select
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
-                    className="text-[11px] font-bold text-gray-600 outline-none bg-transparent cursor-pointer hover:text-[#D4A373]"
+                    className="text-[11px] font-bold text-calma-ink outline-none bg-transparent cursor-pointer hover:text-calma-terracotta"
                   >
-                    <option>Popularity</option>
-                    <option>Rating</option>
-                    <option>Reviews</option>
+                    <option value="Popularity">{t.exp.sortPopularity}</option>
+                    <option value="Rating">{t.exp.sortRating}</option>
+                    <option value="Reviews">{t.exp.sortReviews}</option>
                   </select>
                 </div>
               </div>
@@ -354,7 +374,7 @@ export default function ExplorePage() {
                   {filteredPlaces.map((place, idx) => (
                     <div 
                       key={place.id} 
-                      className={`group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-[0_40px_80px_-30px_rgba(30,58,58,0.15)] transition-all duration-700 border border-transparent hover:border-[#D4A373]/10 animate-fade-in`}
+                      className={`group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-[0_40px_80px_-30px_rgba(30,58,58,0.15)] transition-all duration-700 border border-transparent hover:border-[#F2994A]/10 animate-fade-in`}
                       style={{ animationDelay: `${idx * 50}ms` }}
                     >
                       <div className="relative h-72 overflow-hidden">
@@ -365,14 +385,14 @@ export default function ExplorePage() {
                           className="object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out" 
                         />
                         <div className="absolute top-6 left-6 flex flex-col gap-2">
-                          <span className="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-widest text-[#1E3A3A] shadow-xl">
+                          <span className="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-widest text-[#4A667D] shadow-xl">
                             {place.category}
                           </span>
                         </div>
                         <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
                            <div className="flex gap-2">
                              {place.tags?.slice(0, 2).map((tag) => (
-                               <span key={tag} className="px-3 py-1 bg-[#1E3A3A]/40 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-tighter rounded-md border border-white/20">
+                               <span key={tag} className="px-3 py-1 bg-[#4A667D]/40 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-tighter rounded-md border border-white/20">
                                  {tag}
                                </span>
                              ))}
@@ -382,13 +402,13 @@ export default function ExplorePage() {
 
                       <div className="p-8">
                         <div className="flex items-center justify-between mb-5">
-                          <div className="flex items-center gap-1.5 bg-gray-50 px-3 py-1.5 rounded-full">
-                            <Star className="w-3.5 h-3.5 fill-[#D4A373] text-[#D4A373]" />
-                            <span className="text-sm font-black text-gray-900">{place.rating}</span>
-                            <span className="text-[10px] text-gray-400 font-bold uppercase">({place.reviews})</span>
+                          <div className="flex items-center gap-1.5 bg-calma-sand px-3 py-1.5 rounded-full">
+                            <Star className="w-3.5 h-3.5 fill-[#F2994A] text-[#F2994A]" />
+                            <span className="text-sm font-black text-calma-ink">{place.rating}</span>
+                            <span className="text-[10px] text-calma-taupe font-bold uppercase">({place.reviews})</span>
                           </div>
-                          <div className="flex items-center gap-1.5 text-gray-400 text-[11px] font-bold uppercase tracking-wide">
-                            {place.duration ? <><Clock size={14} className="text-[#D4A373]" /> {place.duration}</> : <><MapPin size={14} className="text-[#D4A373]" /> {place.city}</>}
+                          <div className="flex items-center gap-1.5 text-calma-taupe text-[11px] font-bold uppercase tracking-wide">
+                            {place.duration ? <><Clock size={14} className="text-[#F2994A]" /> {place.duration}</> : <><MapPin size={14} className="text-[#F2994A]" /> {place.city}</>}
                           </div>
                         </div>
                         
@@ -401,16 +421,16 @@ export default function ExplorePage() {
                 </div>
               ) : (
                 <div className="py-32 text-center animate-fade-in">
-                   <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
-                      <Search size={32} className="text-gray-300" />
+                   <div className="w-24 h-24 bg-calma-cream rounded-full flex items-center justify-center mx-auto mb-8">
+                      <Search size={32} className="text-calma-taupe/50" />
                    </div>
-                   <h3 className="text-3xl font-bold text-[#1E3A3A] mb-4">No treasures found...</h3>
-                   <p className="text-gray-500 max-w-md mx-auto mb-10 leading-relaxed">We couldn't find anything matching your exact criteria. Try broadening your search or exploring a different category.</p>
-                   <button 
+                   <h3 className="mb-4 font-fraunces text-3xl font-normal text-calma-ink">{t.exp.emptyTitle}</h3>
+                   <p className="text-calma-taupe max-w-md mx-auto mb-10 leading-relaxed">{t.exp.emptySub}</p>
+                   <button
                     onClick={clearFilters}
-                    className="px-10 py-4 bg-[#1E3A3A] text-white rounded-2xl font-bold hover:bg-[#D4A373] transition-all shadow-2xl"
+                    className="px-10 py-4 bg-[#4A667D] text-white rounded-2xl font-bold hover:bg-[#F2994A] transition-all shadow-2xl"
                    >
-                     Reset All Filters
+                     {t.exp.resetFilters}
                    </button>
                 </div>
               )}
@@ -423,7 +443,7 @@ export default function ExplorePage() {
         </section>
 
       </main>
-      <Footer />
+      <CalmaFooter />
 
       <style jsx global>{`
         @keyframes fade-in {
@@ -442,5 +462,13 @@ export default function ExplorePage() {
         }
       `}</style>
     </>
+  );
+}
+
+export default function ExplorePage() {
+  return (
+    <CalmaLangProvider>
+      <ExplorePageContent />
+    </CalmaLangProvider>
   );
 }

@@ -1,0 +1,221 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calma Trip — Template 3 · Zellige (Mosaïque bento)</title>
+<style>
+  :root{
+    --ink:#1c2430;
+    --white:#ffffff;
+    --bone:#f4efe6;
+    --sea:#1E6091;
+    --sea-ink:#143f5f;
+    --sand:#D4A373;
+    --clay:#a3623a;
+    --mint:#3f7d6c;
+    --line:#e6ddcd;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--bone);color:var(--ink);font-family:"Segoe UI",system-ui,sans-serif;line-height:1.5}
+  a{color:inherit;text-decoration:none}
+  .display{font-family:Georgia,"Times New Roman",serif;font-weight:400}
+
+  .wrap{max-width:1180px;margin:0 auto;padding:0 4vw}
+
+  /* ---------- Nav ---------- */
+  nav{display:flex;justify-content:space-between;align-items:center;padding:1.3rem 4vw;border-bottom:1px solid var(--line)}
+  .brand{font-family:Georgia,serif;font-size:1.3rem}
+  .brand b{color:var(--sea);font-weight:400;font-style:italic}
+  nav ul{display:flex;gap:1.8rem;list-style:none;font-size:.82rem;letter-spacing:.1em;text-transform:uppercase}
+  nav ul a:hover{color:var(--sea)}
+
+  /* ---------- GRILLE BENTO : le hero est UNE tuile de la mosaïque ---------- */
+  .mosaic{
+    display:grid;gap:14px;margin:2.2rem auto 3rem;
+    grid-template-columns:repeat(12,1fr);
+    grid-auto-rows:96px;
+  }
+  .tile{
+    border-radius:18px;overflow:hidden;position:relative;
+    background:var(--white);border:1px solid var(--line);
+  }
+  a.tile{transition:transform .25s,box-shadow .25s}
+  a.tile:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(28,36,48,.14)}
+
+  /* Tuile hero typographique avec motif zellige */
+  .t-hero{grid-column:span 7;grid-row:span 4;background:var(--sea-ink);color:#fff;display:flex;flex-direction:column;justify-content:space-between;padding:2.4rem}
+  .t-hero .pattern{position:absolute;inset:0;opacity:.12}
+  .t-hero small{position:relative;font-size:.74rem;letter-spacing:.22em;text-transform:uppercase;color:var(--sand)}
+  .t-hero h1{
+    position:relative;font-family:Georgia,serif;font-weight:400;
+    font-size:clamp(2.2rem,4.6vw,3.7rem);line-height:1.05;margin-top:1rem;
+  }
+  .t-hero h1 em{font-style:italic;color:var(--sand)}
+  .t-hero .foot{position:relative;display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+  .t-hero .foot p{max-width:26rem;font-size:.94rem;opacity:.88}
+  .btn{
+    display:inline-flex;align-items:center;gap:.6rem;white-space:nowrap;
+    background:var(--sand);color:var(--sea-ink);padding:.85rem 1.6rem;border-radius:999px;
+    font-size:.86rem;letter-spacing:.06em;
+  }
+  .btn:hover{background:#e0b585}
+
+  /* Tuile recherche rapide */
+  .t-search{grid-column:span 5;grid-row:span 2;padding:1.6rem;display:flex;flex-direction:column;justify-content:center;gap:.8rem}
+  .t-search label{font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:#9a9284}
+  .t-search .field{
+    display:flex;justify-content:space-between;align-items:center;
+    border:1px solid var(--line);border-radius:10px;padding:.75rem 1rem;
+    font-family:Georgia,serif;font-size:1rem;background:var(--bone);
+  }
+  .t-search .field span{color:var(--sea);font-size:.8rem;letter-spacing:.1em;text-transform:uppercase}
+
+  /* Tuiles stats — chiffres en sérif, pas d'icônes */
+  .t-stat{grid-column:span 5;grid-row:span 2;padding:1.4rem 1.6rem;display:flex;gap:0}
+  .t-stat>div{flex:1;display:flex;flex-direction:column;justify-content:center}
+  .t-stat>div+div{border-left:1px solid var(--line);padding-left:1.4rem;margin-left:1.4rem}
+  .t-stat b{font-family:Georgia,serif;font-weight:400;font-size:1.9rem;color:var(--sea)}
+  .t-stat span{font-size:.78rem;color:#7d7668}
+
+  /* ---- Catégories : 3 tuiles de tailles VOLONTAIREMENT inégales ---- */
+  .t-cat{color:#fff;display:flex;flex-direction:column;justify-content:flex-end;padding:1.8rem}
+  .t-cat .bg{position:absolute;inset:0;transition:transform .5s}
+  a.t-cat:hover .bg{transform:scale(1.06)}
+  .t-cat .shade{position:absolute;inset:0;background:linear-gradient(180deg,transparent 35%,rgba(15,22,30,.62))}
+  .t-cat *{position:relative}
+  .t-cat small{font-size:.68rem;letter-spacing:.22em;text-transform:uppercase;opacity:.85}
+  .t-cat h3{font-family:Georgia,serif;font-weight:400;font-size:1.9rem;margin:.3rem 0 .2rem}
+  .t-cat p{font-size:.86rem;opacity:.9;max-width:24rem}
+  .t-cat .count{
+    position:absolute;top:1.2rem;right:1.4rem;
+    background:rgba(255,255,255,.16);backdrop-filter:blur(4px);
+    border:1px solid rgba(255,255,255,.35);border-radius:999px;
+    padding:.3rem .9rem;font-size:.72rem;letter-spacing:.1em;
+  }
+  .cat-med{grid-column:span 7;grid-row:span 3}
+  .cat-medina{grid-column:span 5;grid-row:span 5}
+  .cat-sahara{grid-column:span 7;grid-row:span 2}
+
+  .bg-med{background:linear-gradient(180deg,#a8d3e4 0%,#4d94b8 48%,#16527e 100%)}
+  .bg-medina{
+    background:
+      repeating-linear-gradient(0deg,rgba(255,255,255,.05) 0 3px,transparent 3px 40px),
+      linear-gradient(200deg,#c9905c 0%,#a3623a 55%,#6f3f20 100%);
+  }
+  .bg-sahara{background:radial-gradient(130% 130% at 15% -10%,#f6e3bf 0%,#e3bc82 50%,#bd8a4c 100%)}
+  .cat-sahara{color:#4a331a}
+  .cat-sahara .shade{background:linear-gradient(180deg,transparent 30%,rgba(122,84,40,.28))}
+  .cat-sahara .count{border-color:rgba(74,51,26,.35);background:rgba(255,255,255,.35)}
+
+  /* Tuile avis */
+  .t-review{grid-column:span 5;grid-row:span 2;padding:1.6rem;display:flex;flex-direction:column;justify-content:center;background:var(--white)}
+  .t-review q{font-family:Georgia,serif;font-size:1.02rem;line-height:1.45}
+  .t-review cite{margin-top:.7rem;font-style:normal;font-size:.78rem;letter-spacing:.12em;text-transform:uppercase;color:#9a9284}
+  .stars{color:var(--sand);letter-spacing:.15em;font-size:.9rem;margin-bottom:.5rem}
+
+  footer{padding:1.8rem 4vw;font-size:.78rem;color:#9a9284;display:flex;justify-content:space-between;border-top:1px solid var(--line)}
+
+  @media(max-width:900px){
+    .mosaic{grid-template-columns:1fr;grid-auto-rows:auto}
+    .mosaic>*{grid-column:auto !important;grid-row:auto !important;min-height:120px}
+    .t-hero{min-height:320px}
+    .t-cat{min-height:220px}
+    nav ul{display:none}
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <a class="brand" href="#">Calma <b>Trip</b></a>
+  <ul>
+    <li><a href="#">Transfers</a></li>
+    <li><a href="#">Excursions</a></li>
+    <li><a href="#">Marketplace</a></li>
+    <li><a href="#">Sign in</a></li>
+  </ul>
+</nav>
+
+<main class="wrap">
+  <!-- MOSAÏQUE : hero, recherche, catégories et preuves dans UNE seule grille -->
+  <div class="mosaic">
+
+    <!-- Hero = tuile dominante, typographique, motif zellige en fond -->
+    <section class="tile t-hero">
+      <svg class="pattern" width="100%" height="100%">
+        <defs>
+          <pattern id="zellige" width="56" height="56" patternUnits="userSpaceOnUse">
+            <path d="M28 2 L34 22 L54 28 L34 34 L28 54 L22 34 L2 28 L22 22 Z"
+                  fill="none" stroke="#ffffff" stroke-width="1.2"/>
+            <circle cx="28" cy="28" r="4" fill="none" stroke="#ffffff" stroke-width="1"/>
+          </pattern>
+        </defs>
+        <rect width="100%" height="100%" fill="url(#zellige)"/>
+      </svg>
+      <small>Calma Trip · Hammamet, Tunisia</small>
+      <h1>Tunisia,<br>tile by <em>tile</em>.</h1>
+      <div class="foot">
+        <p>Transfers, sea days, medina walks and Sahara nights — real local
+           prices, instant confirmation, humans on call 24/7.</p>
+        <a class="btn" href="#">Start exploring →</a>
+      </div>
+    </section>
+
+    <!-- Recherche rapide -->
+    <section class="tile t-search">
+      <label>Quick transfer quote</label>
+      <div class="field">Enfidha Airport → Hammamet <span>Edit</span></div>
+      <div class="field">Sat 26 July · 2 travelers <span>Price →</span></div>
+    </section>
+
+    <!-- Stats -->
+    <section class="tile t-stat">
+      <div><b>4.9/5</b><span>620+ traveler reviews</span></div>
+      <div><b>24/7</b><span>EN · FR · AR support</span></div>
+      <div><b>0 %</b><span>tourist markup</span></div>
+    </section>
+
+    <!-- CATÉGORIES : tuiles inégales, la mosaïque hiérarchise -->
+    <a class="tile t-cat cat-med" href="#">
+      <div class="bg bg-med"></div><div class="shade"></div>
+      <span class="count">8 experiences</span>
+      <small>The coast</small>
+      <h3>Méditerranée</h3>
+      <p>Catamaran sails, snorkeling coves, sunset cruises off Cap Bon.</p>
+    </a>
+
+    <a class="tile t-cat cat-medina" href="#">
+      <div class="bg bg-medina"></div><div class="shade"></div>
+      <span class="count">7 experiences</span>
+      <small>The old cities</small>
+      <h3>Médina</h3>
+      <p>Souks, Carthage, Sidi Bou Saïd, artisan workshops and mint tea.</p>
+    </a>
+
+    <a class="tile t-cat cat-sahara" href="#">
+      <div class="bg bg-sahara"></div><div class="shade"></div>
+      <span class="count">9 experiences</span>
+      <small>The south</small>
+      <h3>Sahara</h3>
+      <p>Camel treks at dusk, 4×4 dunes, one night under Douz’s sky.</p>
+    </a>
+
+    <!-- Avis -->
+    <section class="tile t-review">
+      <div class="stars">★★★★★</div>
+      <q>Picked up on time at 4 a.m., fair price, and the camel trek at
+         sunset was the best moment of our trip.</q>
+      <cite>— Léa &amp; Marc, July 2026</cite>
+    </section>
+
+  </div>
+</main>
+
+<footer>
+  <span>© Calma Trip — Hammamet</span>
+  <span>Template 3 · « Zellige » mosaïque bento</span>
+</footer>
+
+</body>
+</html>
