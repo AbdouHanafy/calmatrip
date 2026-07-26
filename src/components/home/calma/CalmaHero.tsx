@@ -40,9 +40,9 @@ const CARD_SIZE = 92;
 // Rotating hero background — cycles through these every 5s.
 const HERO_IMAGES = [
   "/images/hero/sea.png",
-  "/images/hero/sahara.PNG",
+  "/images/hero/sahara.png",
   "/images/hero/color.png",
-  "/images/hero/sea1.PNG",
+  "/images/hero/sea1.png",
 ];
 
 interface Particle {
@@ -70,7 +70,7 @@ export default function CalmaHero() {
   useEffect(() => {
     const id = setInterval(() => {
       setActiveImage((i) => (i + 1) % HERO_IMAGES.length);
-    }, 5000);
+    }, 3000);
     return () => clearInterval(id);
   }, []);
 
