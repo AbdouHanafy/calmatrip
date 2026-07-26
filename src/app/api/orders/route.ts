@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
 import { sendPushToRole, sendPushToUser } from "@/lib/push";
 import { auth } from "@/auth";
 import { checkoutSchema } from "@/schemas/order";
+import { createOrder, getOrders } from "@/repositories/orderRepository";
 
 // POST /api/orders (checkout)
 export async function POST(req: NextRequest) {
@@ -27,78 +27,15 @@ export async function POST(req: NextRequest) {
     } = parsed.data;
 
     // 1. CREATE ORDER (transaction safe)
-    const order = await prisma.$transaction(async (tx) => {
-      let total = 0;
-
-      const orderItemsData: {
-        productId: number;
-        productName: string;
-        price: number;
-        quantity: number;
-        ownerId: string | null;
-        commissionRate: number | null;
-        commissionAmount: number | null;
-      }[] = [];
-
-      for (const item of items) {
-        const product = await tx.product.findUnique({
-          where: { id: item.productId },
-          include: { owner: { select: { commissionRate: true } } },
-        });
-
-        if (!product) {
-          throw new Error(`Produit ${item.productId} introuvable`);
-        }
-
-        if (product.stock < item.quantity) {
-          throw new Error(
-            `Stock insuffisant pour "${product.name}" (disponible: ${product.stock})`,
-          );
-        }
-
-        // update stock
-        await tx.product.update({
-          where: { id: product.id },
-          data: { stock: product.stock - item.quantity },
-        });
-
-        total += product.price * item.quantity + 7;
-
-        // Commission only applies to products owned by a B2B partner — house
-        // products (ownerId null) never carry a commission.
-        const commissionRate = product.ownerId ? (product.owner?.commissionRate ?? 10) : null;
-        const commissionAmount =
-          commissionRate !== null
-            ? Math.round(product.price * item.quantity * (commissionRate / 100) * 100) / 100
-            : null;
-
-        orderItemsData.push({
-          productId: product.id,
-          productName: product.name,
-          price: product.price,
-          quantity: item.quantity,
-          ownerId: product.ownerId,
-          commissionRate,
-          commissionAmount,
-        });
-      }
-
-      const newOrder = await tx.order.create({
-        data: {
-          customerName,
-          customerEmail,
-          customerPhone,
-          address,
-          city,
-          total,
-          paymentMethod: paymentMethod || "cod",
-          notes,
-          items: { create: orderItemsData },
-        },
-        include: { items: true },
-      });
-
-      return newOrder;
+    const order = await createOrder({
+      customerName,
+      customerEmail,
+      customerPhone,
+      address,
+      city,
+      paymentMethod,
+      notes,
+      items,
     });
 
     // 2. NOTIFICATIONS SYSTEM
@@ -191,16 +128,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const where: Prisma.OrderWhereInput = {};
-
-    if (email) where.customerEmail = email;
-    if (status && status !== "all") where.status = status;
-
-    const orders = await prisma.order.findMany({
-      where,
-      include: { items: true },
-      orderBy: { createdAt: "desc" },
-    });
+    const orders = await getOrders({ email, status });
 
     return NextResponse.json(orders);
   } catch (err) {

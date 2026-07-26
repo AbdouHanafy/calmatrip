@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
 import { sendPushToRole, sendPushToUser } from "@/lib/push";
@@ -7,6 +6,7 @@ import { sendBookingConfirmationEmail } from "@/lib/mail";
 import { auth } from "@/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import { bookingSchema } from "@/schemas/booking";
+import { createBooking, getBookings } from "@/repositories/bookingRepository";
 
 export const dynamic = "force-dynamic";
 
@@ -104,63 +104,21 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    const booking = await prisma.$transaction(async (tx) => {
-      const service = await tx.service.findUnique({
-        where: {
-          id: serviceId,
-        },
-        include: {
-          owner: { select: { commissionRate: true } },
-        },
-      });
-
-      if (!service || !service.active) {
-        throw new Error("Service not found or inactive");
-      }
-
-      // Commission only applies to services owned by a B2B partner — house
-      // services (ownerId null) never carry a commission.
-      const commissionRate = service.ownerId ? (service.owner?.commissionRate ?? 10) : null;
-      const priceNumeric = parseFloat(service.price.replace(/[^\d.]/g, "") || "0");
-      const commissionAmount =
-        commissionRate !== null && !isNaN(priceNumeric)
-          ? Math.round(priceNumeric * (commissionRate / 100) * 100) / 100
-          : null;
-
-      return tx.booking.create({
-        data: {
-          service: service.title,
-
-          tripType,
-
-          date: departureDate,
-          time,
-
-          returnDate: returnDateObject,
-          returnTime: tripType === "round-trip" ? returnTime : null,
-
-          fromLocation,
-          toLocation,
-
-          passengers: passengers ?? 1,
-          hasLuggage: hasLuggage ?? false,
-
-          specialRequests,
-
-          customerName,
-          customerEmail,
-          customerPhone,
-
-          price: service.price,
-
-          serviceId: service.id,
-          ownerId: service.ownerId,
-          commissionRate,
-          commissionAmount,
-
-          status: "pending",
-        },
-      });
+    const booking = await createBooking({
+      serviceId,
+      tripType,
+      date: departureDate,
+      time,
+      returnDate: returnDateObject,
+      returnTime,
+      fromLocation,
+      toLocation,
+      passengers: passengers ?? 1,
+      hasLuggage: hasLuggage ?? false,
+      specialRequests,
+      customerName,
+      customerEmail,
+      customerPhone,
     });
 
     const notifications: Promise<unknown>[] = [
@@ -273,25 +231,7 @@ export async function GET(req: NextRequest) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const where: Prisma.BookingWhereInput = {};
-
-    if (email) {
-      where.customerEmail = email;
-    }
-
-    if (status && status !== "all") {
-      where.status = status;
-    }
-
-    const bookings = await prisma.booking.findMany({
-      where,
-      orderBy: {
-        date: "desc",
-      },
-      include: {
-        review: { select: { id: true, rating: true, comment: true, approved: true } },
-      },
-    });
+    const bookings = await getBookings({ email, status });
 
     return NextResponse.json(bookings);
   } catch (err) {
