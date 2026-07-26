@@ -119,7 +119,7 @@ export default function CalmaHero() {
   return (
     <section
       ref={heroRef}
-      className="relative h-[84vh] min-h-[640px] max-h-[840px] overflow-hidden"
+      className="relative h-auto min-h-[80vh] overflow-hidden md:h-[84vh] md:min-h-[640px] md:max-h-[840px]"
       style={{ background: "linear-gradient(180deg,#4A667D 0%,#3A5164 48%,#5B7A90 100%)" }}
     >
       <motion.div className="absolute inset-0" style={{ y: parallaxY, opacity: parallaxOpacity }}>
@@ -146,7 +146,7 @@ export default function CalmaHero() {
 
       {/* Dark blue-grey cinematic scrim — preserves the landscape while carrying the brand's tertiary color into the hero */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 hidden md:block"
         style={{
           background:
             "linear-gradient(180deg,rgba(36,51,63,.55) 0%,rgba(36,51,63,.35) 45%,rgba(36,51,63,.60) 100%)",
@@ -154,10 +154,25 @@ export default function CalmaHero() {
       />
       {/* Soft blue-grey radial scrim behind the text block — just enough for AA contrast, not a wall of black */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 hidden md:block"
         style={{
           background:
             "radial-gradient(60% 44% at 50% 36%, rgba(28,40,50,.4) 0%, rgba(28,40,50,0) 72%)",
+        }}
+      />
+      {/* Mobile-only scrim — lighter than desktop so the landscape reads clearly, plus a soft edge vignette */}
+      <div
+        className="pointer-events-none absolute inset-0 md:hidden"
+        style={{
+          background:
+            "linear-gradient(180deg,rgba(36,51,63,.40) 0%,rgba(36,51,63,.18) 42%,rgba(36,51,63,.50) 100%)",
+        }}
+      />
+      <div
+        className="pointer-events-none absolute inset-0 md:hidden"
+        style={{
+          background:
+            "radial-gradient(120% 85% at 50% 45%, transparent 55%, rgba(20,18,16,.32) 100%)",
         }}
       />
       {/* Atmospheric golden-hour glow, upper right — adds depth without darkening the frame */}
@@ -172,7 +187,7 @@ export default function CalmaHero() {
       />
 
       {particles && (
-        <div className="pointer-events-none absolute inset-0 overflow-hidden will-change-transform">
+        <div className="pointer-events-none absolute inset-0 hidden overflow-hidden will-change-transform md:block">
           {particles.map((p) => (
             <div
               key={p.id}
@@ -204,7 +219,7 @@ export default function CalmaHero() {
       <CalmaPromoTicker />
       <CalmaHeader active="home" variant="overlay" withTicker />
 
-      <div className="pointer-events-none absolute inset-0 z-10 flex flex-col items-center justify-center px-6 pb-[164px] pt-16 text-center">
+      <div className="pointer-events-none absolute inset-0 z-10 hidden flex-col items-center justify-center px-6 pb-[164px] pt-16 text-center md:flex">
         <motion.div
           className="pointer-events-auto max-w-[760px]"
           initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
@@ -278,6 +293,63 @@ export default function CalmaHero() {
             })}
           </div>
         </div>
+      </div>
+
+      {/* Mobile-only hero content — compact, single-viewport layout. Desktop/tablet block above (md:flex) is untouched. */}
+      <div className="relative z-10 flex flex-col items-center px-5 pb-8 pt-[104px] text-center md:hidden">
+        <motion.div
+          className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[.14em] text-calma-cream backdrop-blur-md"
+          style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
+          initial={reduceMotion ? undefined : { opacity: 0, y: 10 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
+          {t.heroEyebrow}
+        </motion.div>
+
+        <motion.h1
+          className="mb-5 w-full text-balance font-space text-[clamp(30px,8.6vw,40px)] font-extrabold leading-[1.15] tracking-[-0.02em] text-calma-cream"
+          style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
+          initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {t.heroTitle}{" "}
+          <span className="not-italic text-calma-terracotta-soft">{t.heroTitleEm}</span>
+        </motion.h1>
+
+        <motion.p
+          className="mx-auto mb-7 w-full max-w-[320px] line-clamp-3 text-pretty font-hanken text-[16px] font-normal leading-[1.6] text-white/85"
+          style={{ textShadow: "0 1px 14px rgba(0,0,0,.4)" }}
+          initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {t.heroSub}
+        </motion.p>
+
+        <motion.div
+          className="flex w-full gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
+          initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
+        >
+          {CATEGORY_ICONS.map((Icon, i) => (
+            <Link
+              key={CATEGORY_SLUGS[i]}
+              href={`/explore?category=${CATEGORY_SLUGS[i]}`}
+              className="flex h-[90px] w-20 flex-none snap-start flex-col items-center justify-center gap-2 rounded-2xl border border-white/[.18] bg-white/[.12] no-underline backdrop-blur-md transition-transform active:scale-95"
+            >
+              <span className="grid h-9 w-9 place-items-center rounded-full bg-white/[.16]">
+                <Icon size={17} stroke="#F8F5F0" />
+              </span>
+              <span className="px-1 text-center text-[10px] font-semibold leading-tight text-white">
+                {CATEGORY_LABELS[i](t)}
+              </span>
+            </Link>
+          ))}
+        </motion.div>
       </div>
     </section>
   );
