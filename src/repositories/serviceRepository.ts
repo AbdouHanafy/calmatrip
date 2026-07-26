@@ -20,6 +20,8 @@ interface CreateServiceInput {
   image?: string | null;
   active?: boolean;
   popular?: boolean;
+  ownerId?: string;
+  submissionStatus?: string;
 }
 
 export async function createService(input: CreateServiceInput) {
@@ -39,8 +41,20 @@ export async function createService(input: CreateServiceInput) {
       active: input.active ?? true,
       popular: input.popular ?? false,
       order: (maxOrder._max.order ?? 0) + 1,
+      ownerId: input.ownerId,
+      ...(input.submissionStatus && { submissionStatus: input.submissionStatus }),
     },
   });
+}
+
+export async function getOwnedServices(ownerId: string) {
+  return prisma.service.findMany({ where: { ownerId }, orderBy: { createdAt: "desc" } });
+}
+
+export async function getOwnedServiceById(id: number, ownerId: string) {
+  const service = await prisma.service.findUnique({ where: { id } });
+  if (!service || service.ownerId !== ownerId) return null;
+  return service;
 }
 
 export async function updateService(id: number, data: Prisma.ServiceUpdateInput) {

@@ -1,8 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { reviewSchema } from "@/schemas/review";
-import { getApprovedReviews } from "@/repositories/reviewRepository";
+import { createReview, getAllReviews, getApprovedReviews } from "@/repositories/reviewRepository";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -15,7 +14,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (all) {
-    const reviews = await prisma.review.findMany({ orderBy: { createdAt: "desc" } });
+    const reviews = await getAllReviews();
     return NextResponse.json(reviews);
   }
 
@@ -37,16 +36,13 @@ export async function POST(req: NextRequest) {
   }
   const { rating, comment, service } = parsed.data;
 
-  const review = await prisma.review.create({
-    data: {
-      name: session.user.name ?? "Anonyme",
-      email: session.user.email ?? "",
-      avatar: session.user.image ?? null,
-      rating,
-      comment,
-      service: service ?? null,
-      approved: false,
-    },
+  const review = await createReview({
+    name: session.user.name ?? "Anonyme",
+    email: session.user.email ?? "",
+    avatar: session.user.image ?? null,
+    rating,
+    comment,
+    service: service ?? null,
   });
 
   return NextResponse.json(review, { status: 201 });

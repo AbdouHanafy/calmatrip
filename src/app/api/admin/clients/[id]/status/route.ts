@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { updateClientStatus } from "@/repositories/clientRepository";
 
 export async function PATCH(
   req: Request,
@@ -22,14 +22,7 @@ export async function PATCH(
 
     const body = await req.json();
 
-    const user = await prisma.user.update({
-      where: {
-        id,
-      },
-      data: {
-        status: body.status,
-      },
-    });
+    const user = await updateClientStatus(id, body.status);
 
     return NextResponse.json({
       success: true,

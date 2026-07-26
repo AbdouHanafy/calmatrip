@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { deleteContact, updateContactReadStatus } from "@/repositories/contactRepository";
 
 export const dynamic = "force-dynamic";
 
@@ -24,10 +24,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
       return NextResponse.json({ error: "isRead doit être un booléen" }, { status: 400 });
     }
 
-    const contact = await prisma.contact.update({
-      where: { id },
-      data: { isRead },
-    });
+    const contact = await updateContactReadStatus(id, isRead);
 
     return NextResponse.json(contact);
   } catch (err) {
@@ -49,7 +46,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: "Identifiant invalide" }, { status: 400 });
     }
 
-    await prisma.contact.delete({ where: { id } });
+    await deleteContact(id);
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error(err);

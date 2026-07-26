@@ -1,10 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
 import { productCreateSchema } from "@/schemas/product";
+import { createProduct, getOwnedProducts } from "@/repositories/productRepository";
 
 function requireArtisan(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "ARTISAN";
@@ -17,10 +17,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const products = await prisma.product.findMany({
-    where: { ownerId: session!.user.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const products = await getOwnedProducts(session!.user.id);
 
   return NextResponse.json({ products });
 }
@@ -43,18 +40,16 @@ export async function POST(req: NextRequest) {
     const normalizedSizes: string[] | typeof Prisma.JsonNull =
       sizes && sizes.length > 0 ? sizes : Prisma.JsonNull;
 
-    const product = await prisma.product.create({
-      data: {
-        name,
-        price,
-        category,
-        image: image || "/placeholder-product.png",
-        description,
-        stock: stock ?? 100,
-        sizes: normalizedSizes,
-        ownerId: session!.user.id,
-        submissionStatus: "pending",
-      },
+    const product = await createProduct({
+      name,
+      price,
+      category,
+      image,
+      description,
+      stock,
+      sizes: normalizedSizes,
+      ownerId: session!.user.id,
+      submissionStatus: "pending",
     });
 
     await createNotification({

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { createService, getOwnedServices } from "@/repositories/serviceRepository";
 
 function requireAgency(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "AGENCY";
@@ -16,10 +16,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const services = await prisma.service.findMany({
-    where: { ownerId: session!.user.id },
-    orderBy: { createdAt: "desc" },
-  });
+  const services = await getOwnedServices(session!.user.id);
 
   return NextResponse.json({ services });
 }
@@ -37,25 +34,20 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const maxOrder = await prisma.service.aggregate({ _max: { order: true } });
-
-    const service = await prisma.service.create({
-      data: {
-        title: json.title,
-        subtitle: json.subtitle ?? null,
-        description: sanitizeHtml(json.description),
-        price: json.price.toString(),
-        category: json.category,
-        duration: json.duration ?? null,
-        icon: json.icon ?? "Car",
-        color: json.color ?? null,
-        image: json.image ?? null,
-        active: true,
-        popular: false,
-        order: (maxOrder._max.order ?? 0) + 1,
-        ownerId: session!.user.id,
-        submissionStatus: "pending",
-      },
+    const service = await createService({
+      title: json.title,
+      subtitle: json.subtitle,
+      description: sanitizeHtml(json.description),
+      price: json.price.toString(),
+      category: json.category,
+      duration: json.duration,
+      icon: json.icon,
+      color: json.color,
+      image: json.image,
+      active: true,
+      popular: false,
+      ownerId: session!.user.id,
+      submissionStatus: "pending",
     });
 
     await createNotification({

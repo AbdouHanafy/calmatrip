@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { getClientsForExport } from "@/repositories/clientRepository";
 
 export async function GET() {
   const session = await auth();
@@ -9,14 +9,7 @@ export async function GET() {
   }
 
   try {
-    const users = await prisma.user.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      where: {
-        role: "USER",
-      },
-    });
+    const users = await getClientsForExport();
 
     const headers = ["Name", "Email", "Phone", "Status", "Registered Date", "Total Bookings"];
 

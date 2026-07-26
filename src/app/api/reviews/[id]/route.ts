@@ -1,11 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
-import {auth} from "@/auth";
+import { auth } from "@/auth";
+import { deleteReview } from "@/repositories/reviewRepository";
 
-export async function DELETE(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
 
   if (session?.user?.role !== "ADMIN") {
@@ -13,7 +10,7 @@ export async function DELETE(
   }
 
   const { id } = await params;
-  await prisma.review.delete({ where: { id: Number(id) } });
+  await deleteReview(Number(id));
 
   return NextResponse.json({ success: true });
 }

@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import type { Prisma } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 import { contactSchema } from "@/schemas/contact";
+import { createContact, getContacts } from "@/repositories/contactRepository";
 
 export const dynamic = "force-dynamic";
 
@@ -30,14 +29,12 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: true }, { status: 201 });
     }
 
-    const contact = await prisma.contact.create({
-      data: {
-        name: name.trim(),
-        email: email.trim(),
-        phone: phone?.trim() || null,
-        subject: subject.trim(),
-        message: message.trim(),
-      },
+    const contact = await createContact({
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone?.trim() || null,
+      subject: subject.trim(),
+      message: message.trim(),
     });
 
     return NextResponse.json(contact, { status: 201 });
@@ -58,15 +55,8 @@ export async function GET(req: NextRequest) {
     const { searchParams } = new URL(req.url);
     const isReadParam = searchParams.get("isRead");
 
-    const where: Prisma.ContactWhereInput = {};
-    if (isReadParam === "true" || isReadParam === "false") {
-      where.isRead = isReadParam === "true";
-    }
-
-    const contacts = await prisma.contact.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-    });
+    const isRead = isReadParam === "true" ? true : isReadParam === "false" ? false : undefined;
+    const contacts = await getContacts(isRead);
 
     return NextResponse.json(contacts);
   } catch (err) {

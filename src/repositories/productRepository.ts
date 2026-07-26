@@ -64,6 +64,8 @@ interface CreateProductInput {
   description: string;
   stock?: number;
   sizes?: string[] | typeof Prisma.JsonNull;
+  ownerId?: string;
+  submissionStatus?: string;
 }
 
 export async function createProduct(input: CreateProductInput) {
@@ -76,8 +78,20 @@ export async function createProduct(input: CreateProductInput) {
       description: input.description,
       stock: input.stock ?? 100,
       sizes: input.sizes,
+      ownerId: input.ownerId,
+      ...(input.submissionStatus && { submissionStatus: input.submissionStatus }),
     },
   });
+}
+
+export async function getOwnedProducts(ownerId: string) {
+  return prisma.product.findMany({ where: { ownerId }, orderBy: { createdAt: "desc" } });
+}
+
+export async function getOwnedProductById(id: number, ownerId: string) {
+  const product = await prisma.product.findUnique({ where: { id } });
+  if (!product || product.ownerId !== ownerId) return null;
+  return product;
 }
 
 export async function updateProduct(id: number, data: Prisma.ProductUpdateInput) {

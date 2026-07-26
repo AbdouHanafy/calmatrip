@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { getClientStats } from "@/repositories/clientRepository";
 
 export async function GET() {
   const session = await auth();
@@ -9,28 +9,9 @@ export async function GET() {
   }
 
   try {
-    const totalClients = await prisma.user.count();
+    const stats = await getClientStats();
 
-    const activeClients = await prisma.user.count({
-      where: {
-        status: "active",
-      },
-    });
-
-    const blockedClients = await prisma.user.count({
-      where: {
-        status: "blocked",
-      },
-    });
-
-    const totalBookings = await prisma.booking.count();
-
-    return NextResponse.json({
-      totalClients,
-      activeClients,
-      blockedClients,
-      totalBookings,
-    });
+    return NextResponse.json(stats);
   } catch (error) {
     console.error(error);
     return NextResponse.json(

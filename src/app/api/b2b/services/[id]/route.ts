@@ -1,18 +1,17 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
 import { sanitizeHtml } from "@/lib/sanitize";
+import {
+  deleteService,
+  getOwnedServiceById,
+  updateService,
+} from "@/repositories/serviceRepository";
 
 function requireAgency(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "AGENCY";
-}
-
-async function loadOwnedService(id: number, ownerId: string) {
-  const service = await prisma.service.findUnique({ where: { id } });
-  if (!service || service.ownerId !== ownerId) return null;
-  return service;
 }
 
 // PATCH /api/b2b/services/[id] — edit own service; re-queues for review
@@ -27,14 +26,17 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
   }
 
-  const existing = await loadOwnedService(id, session!.user.id);
+  const existing = await getOwnedServiceById(id, session!.user.id);
   if (!existing) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
   try {
     const json = await req.json();
-    const data: Record<string, unknown> = { submissionStatus: "pending", rejectionReason: null };
+    const data: Prisma.ServiceUpdateInput = {
+      submissionStatus: "pending",
+      rejectionReason: null,
+    };
 
     if (json.title !== undefined) data.title = json.title;
     if (json.subtitle !== undefined) data.subtitle = json.subtitle;
@@ -46,7 +48,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (json.color !== undefined) data.color = json.color;
     if (json.image !== undefined) data.image = json.image;
 
-    const service = await prisma.service.update({ where: { id }, data });
+    const service = await updateService(id, data);
 
     await createNotification({
       recipient: "admin",
@@ -75,11 +77,11 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
     return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
   }
 
-  const existing = await loadOwnedService(id, session!.user.id);
+  const existing = await getOwnedServiceById(id, session!.user.id);
   if (!existing) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  await prisma.service.delete({ where: { id } });
+  await deleteService(id);
   return new NextResponse(null, { status: 204 });
 }

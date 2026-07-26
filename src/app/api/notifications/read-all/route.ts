@@ -1,7 +1,7 @@
 // app/api/notifications/read-all/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { markAllNotificationsRead } from "@/lib/notifications";
 
 export async function PATCH(req: NextRequest) {
   const session = await auth();
@@ -9,13 +9,7 @@ export async function PATCH(req: NextRequest) {
 
   const recipient = session.user?.role === "ADMIN" ? "admin" : "user";
 
-  await prisma.notification.updateMany({
-    where: {
-      OR: [{ recipient }, { userId: session.user?.id }],
-      isRead: false,
-    },
-    data: { isRead: true, readAt: new Date() },
-  });
+  await markAllNotificationsRead(recipient, session.user?.id);
 
   return NextResponse.json({ success: true });
 }

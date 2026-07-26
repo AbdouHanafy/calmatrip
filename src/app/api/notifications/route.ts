@@ -1,7 +1,7 @@
 // app/api/notifications/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { prisma } from "@/lib/prisma";
+import { getNotifications } from "@/lib/notifications";
 
 // ─── GET — récupère les notifs selon le rôle ──────────────────
 export async function GET(req: NextRequest) {
@@ -12,26 +12,9 @@ export async function GET(req: NextRequest) {
 
   const { searchParams } = new URL(req.url);
   const onlyUnread = searchParams.get("unread") === "true";
-
   const isAdmin = session.user.role === "ADMIN";
 
-  const where = {
-    ...(isAdmin
-      ? { recipient: "admin" } // ADMIN => toutes les notifications, sans restriction
-      : { userId: session.user.id }), // USER => uniquement les siennes
-    ...(onlyUnread ? { isRead: false } : {}),
-  };
+  const result = await getNotifications({ isAdmin, userId: session.user.id, onlyUnread });
 
-  const [notifications, unreadCount] = await Promise.all([
-    prisma.notification.findMany({
-      where,
-      orderBy: { createdAt: "desc" },
-      take: 50,
-    }),
-    prisma.notification.count({
-      where: { ...where, isRead: false },
-    }),
-  ]);
-
-  return NextResponse.json({ notifications, unreadCount });
+  return NextResponse.json(result);
 }

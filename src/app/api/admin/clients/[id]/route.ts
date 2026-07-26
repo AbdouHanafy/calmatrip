@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { getClientById } from "@/repositories/clientRepository";
 
 export async function GET(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -10,13 +10,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
 
   try {
     const { id } = await params;
-    const user = await prisma.user.findUnique({
-      where: {
-        id,
-      },
-    });
+    const client = await getClientById(id);
 
-    if (!user) {
+    if (!client) {
       return NextResponse.json(
         {
           success: false,
@@ -28,25 +24,9 @@ export async function GET(req: NextRequest, { params }: { params: Promise<{ id: 
       );
     }
 
-    const bookings = await prisma.booking.findMany({
-      where: {
-        customerEmail: user.email || "",
-      },
-      orderBy: {
-        createdAt: "desc",
-      },
-    });
-
-    const totalSpent = bookings.reduce((sum, booking) => sum + Number(booking.price || 0), 0);
-
     return NextResponse.json({
       success: true,
-      data: {
-        ...user,
-        bookings,
-        totalBookings: bookings.length,
-        totalSpent,
-      },
+      data: client,
     });
   } catch (error) {
     console.error(error);

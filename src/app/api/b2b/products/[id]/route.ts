@@ -1,19 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
 import { productUpdateSchema } from "@/schemas/product";
+import {
+  deleteProduct,
+  getOwnedProductById,
+  updateProduct,
+} from "@/repositories/productRepository";
 
 function requireArtisan(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "ARTISAN";
-}
-
-async function loadOwnedProduct(id: string, ownerId: string) {
-  const product = await prisma.product.findUnique({ where: { id: parseInt(id) } });
-  if (!product || product.ownerId !== ownerId) return null;
-  return product;
 }
 
 // PATCH /api/b2b/products/[id] — edit own product; re-queues for review
@@ -24,7 +22,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }
 
   const { id } = await params;
-  const existing = await loadOwnedProduct(id, session!.user.id);
+  const existing = await getOwnedProductById(parseInt(id), session!.user.id);
   if (!existing) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
@@ -40,19 +38,16 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const sizesUpdate: { sizes?: string[] | typeof Prisma.JsonNull } =
       sizes !== undefined ? { sizes: sizes && sizes.length > 0 ? sizes : Prisma.JsonNull } : {};
 
-    const product = await prisma.product.update({
-      where: { id: parseInt(id) },
-      data: {
-        ...(name !== undefined && { name }),
-        ...(price !== undefined && { price }),
-        ...(category !== undefined && { category }),
-        ...(image !== undefined && { image }),
-        ...(description !== undefined && { description }),
-        ...(stock !== undefined && { stock }),
-        ...sizesUpdate,
-        submissionStatus: "pending",
-        rejectionReason: null,
-      },
+    const product = await updateProduct(parseInt(id), {
+      ...(name !== undefined && { name }),
+      ...(price !== undefined && { price }),
+      ...(category !== undefined && { category }),
+      ...(image !== undefined && { image }),
+      ...(description !== undefined && { description }),
+      ...(stock !== undefined && { stock }),
+      ...sizesUpdate,
+      submissionStatus: "pending",
+      rejectionReason: null,
     });
 
     await createNotification({
@@ -78,11 +73,11 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
   }
 
   const { id } = await params;
-  const existing = await loadOwnedProduct(id, session!.user.id);
+  const existing = await getOwnedProductById(parseInt(id), session!.user.id);
   if (!existing) {
     return NextResponse.json({ error: "Not found" }, { status: 404 });
   }
 
-  await prisma.product.delete({ where: { id: parseInt(id) } });
+  await deleteProduct(parseInt(id));
   return NextResponse.json({ success: true });
 }

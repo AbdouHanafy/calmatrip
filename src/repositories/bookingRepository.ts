@@ -88,3 +88,70 @@ export async function createBooking(input: CreateBookingInput) {
     });
   });
 }
+
+interface AdminBookingListFilters {
+  status?: string;
+  search?: string;
+  page: number;
+  limit: number;
+}
+
+export async function getAdminBookings({ status, search, page, limit }: AdminBookingListFilters) {
+  const where: Prisma.BookingWhereInput = {
+    ...(status && status !== "all" && { status }),
+    ...(search && {
+      OR: [
+        { customerName: { contains: search } },
+        { customerEmail: { contains: search } },
+        { service: { contains: search } },
+      ],
+    }),
+  };
+
+  const [bookings, total] = await Promise.all([
+    prisma.booking.findMany({
+      where,
+      orderBy: { createdAt: "desc" },
+      skip: (page - 1) * limit,
+      take: limit,
+    }),
+    prisma.booking.count({ where }),
+  ]);
+
+  const [totalCount, confirmedCount, pendingCount, allForRevenue] = await Promise.all([
+    prisma.booking.count(),
+    prisma.booking.count({ where: { status: "confirmed" } }),
+    prisma.booking.count({ where: { status: "pending" } }),
+    prisma.booking.findMany({ select: { price: true, status: true } }),
+  ]);
+
+  const revenue = allForRevenue
+    .filter((b) => b.status === "confirmed")
+    .reduce((sum, b) => {
+      const n = parseFloat(b.price?.replace(/[^\d.]/g, "") ?? "0");
+      return sum + (isNaN(n) ? 0 : n);
+    }, 0);
+
+  return {
+    bookings,
+    total,
+    stats: {
+      total: totalCount,
+      confirmed: confirmedCount,
+      pending: pendingCount,
+      revenue: Math.round(revenue),
+    },
+  };
+}
+
+export async function getBookingById(id: number) {
+  return prisma.booking.findUnique({ where: { id } });
+}
+
+export async function updateBookingStatus(id: number, status: string) {
+  return prisma.booking.update({ where: { id }, data: { status } });
+}
+
+export async function deleteBooking(id: number) {
+  return prisma.booking.delete({ where: { id } });
+}

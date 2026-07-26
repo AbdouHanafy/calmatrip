@@ -4,6 +4,12 @@ import { createNotification } from "@/lib/notifications";
 import { sendPushToUser } from "@/lib/push";
 import { sendWhatsAppMessage } from "@/lib/whatsapp";
 import { auth } from "@/auth";
+import {
+  deleteBooking,
+  getAdminBookings,
+  getBookingById,
+  updateBookingStatus,
+} from "@/repositories/bookingRepository";
 
 // GET /api/admin/bookings?status=all&search=&page=1
 export async function GET(req: NextRequest) {
@@ -19,41 +25,7 @@ export async function GET(req: NextRequest) {
     const page = Math.max(1, parseInt(searchParams.get("page") ?? "1"));
     const limit = 10;
 
-    const where = {
-      ...(status !== "all" && { status }),
-      ...(search && {
-        OR: [
-          { customerName: { contains: search } },
-          { customerEmail: { contains: search } },
-          { service: { contains: search } },
-        ],
-      }),
-    };
-
-    const [bookings, total] = await Promise.all([
-      prisma.booking.findMany({
-        where,
-        orderBy: { createdAt: "desc" },
-        skip: (page - 1) * limit,
-        take: limit,
-      }),
-      prisma.booking.count({ where }),
-    ]);
-
-    // Stats (always over all bookings, ignoring filters)
-    const [totalCount, confirmedCount, pendingCount, allForRevenue] = await Promise.all([
-      prisma.booking.count(),
-      prisma.booking.count({ where: { status: "confirmed" } }),
-      prisma.booking.count({ where: { status: "pending" } }),
-      prisma.booking.findMany({ select: { price: true, status: true } }),
-    ]);
-
-    const revenue = allForRevenue
-      .filter((b) => b.status === "confirmed")
-      .reduce((sum, b) => {
-        const n = parseFloat(b.price?.replace(/[^\d.]/g, "") ?? "0");
-        return sum + (isNaN(n) ? 0 : n);
-      }, 0);
+    const { bookings, total, stats } = await getAdminBookings({ status, search, page, limit });
 
     return NextResponse.json({
       bookings,
@@ -63,12 +35,7 @@ export async function GET(req: NextRequest) {
         limit,
         totalPages: Math.ceil(total / limit),
       },
-      stats: {
-        total: totalCount,
-        confirmed: confirmedCount,
-        pending: pendingCount,
-        revenue: Math.round(revenue),
-      },
+      stats,
     });
   } catch (error) {
     console.error("[ADMIN_BOOKINGS_GET]", error);
@@ -94,19 +61,14 @@ export async function PATCH(req: NextRequest) {
     }
 
     // 1. récupérer booking actuelle
-    const existing = await prisma.booking.findUnique({
-      where: { id },
-    });
+    const existing = await getBookingById(id);
 
     if (!existing) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 });
     }
 
     // 2. update booking
-    const updated = await prisma.booking.update({
-      where: { id },
-      data: { status },
-    });
+    const updated = await updateBookingStatus(id, status);
 
     // 3. notifications
     const notifications: Promise<unknown>[] = [];
@@ -176,7 +138,7 @@ export async function DELETE(req: NextRequest) {
       return NextResponse.json({ error: "Missing id" }, { status: 400 });
     }
 
-    await prisma.booking.delete({ where: { id } });
+    await deleteBooking(id);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("[ADMIN_BOOKINGS_DELETE]", error);
