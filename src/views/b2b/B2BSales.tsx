@@ -96,67 +96,69 @@ export default function B2BSales() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-calma-border bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-calma-sand text-xs uppercase tracking-wide text-calma-taupe">
-              <tr>
-                <th className="px-5 py-3 font-medium">{isAgency ? "Service" : "Produit"}</th>
-                <th className="px-5 py-3 font-medium">Client</th>
-                <th className="px-5 py-3 font-medium">Date</th>
-                <th className="px-5 py-3 font-medium">Statut</th>
-                <th className="px-5 py-3 font-medium">Prix</th>
-                <th className="px-5 py-3 font-medium">Commission</th>
-              </tr>
-            </thead>
-            <tbody>
-              {rows.map((row) => {
-                if (isAgency) {
-                  const b = row as BookingRow;
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-calma-sand text-xs uppercase tracking-wide text-calma-taupe">
+                <tr>
+                  <th className="px-5 py-3 font-medium">{isAgency ? "Service" : "Produit"}</th>
+                  <th className="px-5 py-3 font-medium">Client</th>
+                  <th className="px-5 py-3 font-medium">Date</th>
+                  <th className="px-5 py-3 font-medium">Statut</th>
+                  <th className="px-5 py-3 font-medium">Prix</th>
+                  <th className="px-5 py-3 font-medium">Commission</th>
+                </tr>
+              </thead>
+              <tbody>
+                {rows.map((row) => {
+                  if (isAgency) {
+                    const b = row as BookingRow;
+                    return (
+                      <tr key={b.id} className="border-t border-calma-border">
+                        <td className="px-5 py-3.5 font-medium text-calma-ink">{b.service}</td>
+                        <td className="px-5 py-3.5 text-calma-taupe">{b.customerName ?? "—"}</td>
+                        <td className="px-5 py-3.5 text-calma-taupe">
+                          {new Date(b.date).toLocaleDateString("fr-FR")} {b.time}
+                        </td>
+                        <td className="px-5 py-3.5">
+                          <StatusBadge status={b.status} />
+                        </td>
+                        <td className="px-5 py-3.5 text-calma-ink">{b.price ?? "—"}</td>
+                        <td className="px-5 py-3.5 text-calma-terracotta">
+                          {b.commissionAmount !== null
+                            ? `${b.commissionAmount.toFixed(2)} TND (${b.commissionRate}%)`
+                            : "—"}
+                        </td>
+                      </tr>
+                    );
+                  }
+                  const o = row as OrderItemRow;
                   return (
-                    <tr key={b.id} className="border-t border-calma-border">
-                      <td className="px-5 py-3.5 font-medium text-calma-ink">{b.service}</td>
-                      <td className="px-5 py-3.5 text-calma-taupe">{b.customerName ?? "—"}</td>
+                    <tr key={o.id} className="border-t border-calma-border">
+                      <td className="px-5 py-3.5 font-medium text-calma-ink">
+                        {o.productName}{" "}
+                        <span className="text-xs text-calma-taupe">×{o.quantity}</span>
+                      </td>
+                      <td className="px-5 py-3.5 text-calma-taupe">{o.order.customerName}</td>
                       <td className="px-5 py-3.5 text-calma-taupe">
-                        {new Date(b.date).toLocaleDateString("fr-FR")} {b.time}
+                        {new Date(o.order.createdAt).toLocaleDateString("fr-FR")}
                       </td>
                       <td className="px-5 py-3.5">
-                        <StatusBadge status={b.status} />
+                        <StatusBadge status={o.order.status} />
                       </td>
-                      <td className="px-5 py-3.5 text-calma-ink">{b.price ?? "—"}</td>
+                      <td className="px-5 py-3.5 text-calma-ink">
+                        {(o.price * o.quantity).toFixed(2)} TND
+                      </td>
                       <td className="px-5 py-3.5 text-calma-terracotta">
-                        {b.commissionAmount !== null
-                          ? `${b.commissionAmount.toFixed(2)} TND (${b.commissionRate}%)`
+                        {o.commissionAmount !== null
+                          ? `${o.commissionAmount.toFixed(2)} TND (${o.commissionRate}%)`
                           : "—"}
                       </td>
                     </tr>
                   );
-                }
-                const o = row as OrderItemRow;
-                return (
-                  <tr key={o.id} className="border-t border-calma-border">
-                    <td className="px-5 py-3.5 font-medium text-calma-ink">
-                      {o.productName}{" "}
-                      <span className="text-xs text-calma-taupe">×{o.quantity}</span>
-                    </td>
-                    <td className="px-5 py-3.5 text-calma-taupe">{o.order.customerName}</td>
-                    <td className="px-5 py-3.5 text-calma-taupe">
-                      {new Date(o.order.createdAt).toLocaleDateString("fr-FR")}
-                    </td>
-                    <td className="px-5 py-3.5">
-                      <StatusBadge status={o.order.status} />
-                    </td>
-                    <td className="px-5 py-3.5 text-calma-ink">
-                      {(o.price * o.quantity).toFixed(2)} TND
-                    </td>
-                    <td className="px-5 py-3.5 text-calma-terracotta">
-                      {o.commissionAmount !== null
-                        ? `${o.commissionAmount.toFixed(2)} TND (${o.commissionRate}%)`
-                        : "—"}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

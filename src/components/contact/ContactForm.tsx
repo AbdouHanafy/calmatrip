@@ -5,7 +5,7 @@ import { useCalmaLang } from "@/lib/calma/i18n";
 import { Reveal } from "./Reveal";
 
 const inputClass =
-  "h-14 w-full rounded-2xl border border-[#F1EBE1] bg-[#FBF8F1] px-5 text-[15px] text-[#2D2926] outline-none transition-all duration-300 placeholder:text-[#726C64]/60 focus:border-[#F2994A] focus:bg-white focus:ring-4 focus:ring-[#F2994A]/[.12]";
+  "h-14 w-full rounded-2xl border border-[#F1EBE1] bg-[#FBF8F1] px-5 text-base text-[#2D2926] outline-none transition-all duration-300 placeholder:text-[#726C64]/60 focus:border-[#F2994A] focus:bg-white focus:ring-4 focus:ring-[#F2994A]/[.12]";
 
 export function ContactForm() {
   const { t } = useCalmaLang();

@@ -1,23 +1,24 @@
-@import 'tailwindcss';
+@import "tailwindcss";
+@import "tw-animate-css";
 
 @theme {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
   /* Calma Trip design tokens — Primary (cream) / Secondary (orange) / Tertiary (blue-grey) / Neutral (charcoal) */
-  --color-calma-olive: #4A667D;
-  --color-calma-olive-deep: #3A5164;
-  --color-calma-olive-deeper: #24333F;
-  --color-calma-terracotta: #F2994A;
-  --color-calma-terracotta-soft: #F7B77E;
-  --color-calma-terracotta-deep: #C97A34;
-  --color-calma-gold: #D9A441;
-  --color-calma-sand: #F1EBE1;
-  --color-calma-cream: #F8F5F0;
-  --color-calma-ink: #2D2926;
-  --color-calma-taupe: #726C64;
-  --color-calma-border: #DED7C9;
-  --color-calma-success: #5E8B63;
+  --color-calma-olive: #4a667d;
+  --color-calma-olive-deep: #3a5164;
+  --color-calma-olive-deeper: #24333f;
+  --color-calma-terracotta: #f2994a;
+  --color-calma-terracotta-soft: #f7b77e;
+  --color-calma-terracotta-deep: #c97a34;
+  --color-calma-gold: #d9a441;
+  --color-calma-sand: #f1ebe1;
+  --color-calma-cream: #f8f5f0;
+  --color-calma-ink: #2d2926;
+  --color-calma-taupe: #726c64;
+  --color-calma-border: #ded7c9;
+  --color-calma-success: #5e8b63;
 
   --radius-calma-card: 18px;
   --radius-calma-block: 26px;
@@ -95,7 +96,9 @@
 
   body {
     @apply bg-gray-50 text-gray-900;
-    cursor: url("/images/gazelle_cursor.png") 16 16, auto;
+    cursor:
+      url("/images/gazelle_cursor.png") 16 16,
+      auto;
     -webkit-font-smoothing: antialiased;
   }
 

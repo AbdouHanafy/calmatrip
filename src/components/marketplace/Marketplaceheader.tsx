@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Search, ShoppingCart, Heart, X } from "lucide-react";
@@ -22,7 +22,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
       else params.delete("search");
       router.push(`/marketplace?${params.toString()}`);
     },
-    [router, searchParams]
+    [router, searchParams],
   );
 
   useEffect(() => {
@@ -45,7 +45,10 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
     <div className="sticky top-0 z-20 border-b border-calma-olive/10 bg-calma-cream/95 backdrop-blur-md">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4">
         <div className="flex items-center gap-4">
-          <Link href="/marketplace" className="text-xl font-bold text-calma-ink shrink-0 font-space">
+          <Link
+            href="/marketplace"
+            className="text-xl font-bold text-calma-ink shrink-0 font-space"
+          >
             Marketplace
           </Link>
 
@@ -57,7 +60,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Rechercher un produit..."
-              className="w-full pl-11 pr-9 py-2.5 rounded-full bg-white border border-calma-olive/15 text-sm text-calma-ink outline-none focus:border-calma-terracotta transition-colors"
+              className="w-full pl-11 pr-9 py-2.5 rounded-full bg-white border border-calma-olive/15 text-base text-calma-ink outline-none focus:border-calma-terracotta transition-colors sm:text-sm"
             />
             {search && (
               <button
@@ -122,7 +125,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
                 <motion.span
                   layoutId="marketplace-cat-pill"
                   className="absolute inset-0 rounded-full bg-calma-olive"
-                  transition={{ type: 'spring', stiffness: 400, damping: 32 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}
               <span className="relative z-[1]">{cat === "all" ? "Tout" : cat}</span>

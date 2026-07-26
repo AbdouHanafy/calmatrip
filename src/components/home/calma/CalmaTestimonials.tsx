@@ -1,8 +1,8 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
-import { ChevronLeft, ChevronRight, BadgeCheck } from 'lucide-react';
-import { useCalmaLang } from '@/lib/calma/i18n';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import { ChevronLeft, ChevronRight, BadgeCheck } from "lucide-react";
+import { useCalmaLang } from "@/lib/calma/i18n";
 
 function wrappedOffset(index: number, current: number, length: number) {
   let d = index - current;
@@ -12,16 +12,16 @@ function wrappedOffset(index: number, current: number, length: number) {
 }
 
 const COUNTRY_FLAGS: Record<string, string> = {
-  France: '🇫🇷',
-  Italie: '🇮🇹',
-  Italy: '🇮🇹',
-  Belgique: '🇧🇪',
-  Belgium: '🇧🇪',
+  France: "🇫🇷",
+  Italie: "🇮🇹",
+  Italy: "🇮🇹",
+  Belgique: "🇧🇪",
+  Belgium: "🇧🇪",
 };
 
 function flagFor(role: string) {
-  const country = role.split(',').pop()?.trim() ?? '';
-  return COUNTRY_FLAGS[country] ?? '';
+  const country = role.split(",").pop()?.trim() ?? "";
+  return COUNTRY_FLAGS[country] ?? "";
 }
 
 export default function CalmaTestimonials() {
@@ -54,66 +54,70 @@ export default function CalmaTestimonials() {
 
       <div
         className="relative mx-auto h-[320px] max-w-[900px] sm:h-[290px]"
-        style={{ perspective: reduceMotion ? undefined : 1400 }}
         onMouseEnter={() => setPaused(true)}
         onMouseLeave={() => setPaused(false)}
       >
-        <AnimatePresence initial={false}>
-          {testis.map((ts, i) => {
-            const offset = wrappedOffset(i, current, testis.length);
-            if (Math.abs(offset) > 1) return null;
+        <div
+          className="absolute inset-0 overflow-hidden"
+          style={{ perspective: reduceMotion ? undefined : 1400 }}
+        >
+          <AnimatePresence initial={false}>
+            {testis.map((ts, i) => {
+              const offset = wrappedOffset(i, current, testis.length);
+              if (Math.abs(offset) > 1) return null;
 
-            const isCenter = offset === 0;
-            const target = reduceMotion
-              ? { opacity: isCenter ? 1 : 0, x: 0, rotateY: 0, scale: 1 }
-              : {
-                  opacity: isCenter ? 1 : 0.5,
-                  x: `${offset * 62}%`,
-                  rotateY: offset * -32,
-                  scale: isCenter ? 1 : 0.82,
-                };
+              const isCenter = offset === 0;
+              const target = reduceMotion
+                ? { opacity: isCenter ? 1 : 0, x: 0, rotateY: 0, scale: 1 }
+                : {
+                    opacity: isCenter ? 1 : 0.5,
+                    x: `${offset * 62}%`,
+                    rotateY: offset * -32,
+                    scale: isCenter ? 1 : 0.82,
+                  };
 
-            return (
-              <motion.div
-                key={ts.name}
-                className="absolute inset-x-0 top-0 mx-auto w-full max-w-[560px] cursor-pointer rounded-calma-card border border-white/60 bg-calma-cream/85 p-[30px_28px] backdrop-blur-xl"
-                style={{
-                  transformStyle: 'preserve-3d',
-                  zIndex: isCenter ? 3 : 2,
-                  pointerEvents: isCenter ? 'auto' : 'none',
-                  boxShadow: isCenter ? '0 32px 60px -28px rgba(42,38,34,.4)' : 'none',
-                }}
-                initial={false}
-                animate={target}
-                transition={{ type: 'spring', stiffness: 220, damping: 28 }}
-                onClick={() => !isCenter && setCurrent(i)}
-              >
-                <div className="mb-1 flex items-center justify-between">
-                  <div className="text-[15px] tracking-[2px] text-calma-gold">★★★★★</div>
-                  <div className="flex items-center gap-1 rounded-full bg-calma-olive/[.06] px-2.5 py-1 text-[10.5px] font-semibold text-calma-olive">
-                    <BadgeCheck size={13} className="text-calma-terracotta" />
-                    Voyageur vérifié
-                  </div>
-                </div>
-                <p className="text-pretty mb-[22px] mt-4 font-fraunces text-[17px] italic leading-[1.5] text-calma-ink">
-                  &ldquo;{ts.quote}&rdquo;
-                </p>
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-full bg-calma-terracotta font-fraunces text-base font-semibold text-calma-cream">
-                    {ts.init}
-                  </div>
-                  <div>
-                    <div className="text-[14.5px] font-bold text-calma-olive">{ts.name}</div>
-                    <div className="flex items-center gap-1.5 text-[12.5px] text-calma-taupe">
-                      <span>{flagFor(ts.role)}</span>
-                      {ts.role}
+              return (
+                <motion.div
+                  key={ts.name}
+                  className="absolute inset-x-0 top-0 mx-auto w-full max-w-[560px] cursor-pointer rounded-calma-card border border-white/60 bg-calma-cream/85 p-[30px_28px] backdrop-blur-xl"
+                  style={{
+                    transformStyle: "preserve-3d",
+                    zIndex: isCenter ? 3 : 2,
+                    pointerEvents: isCenter ? "auto" : "none",
+                    boxShadow: isCenter ? "0 32px 60px -28px rgba(42,38,34,.4)" : "none",
+                  }}
+                  initial={false}
+                  animate={target}
+                  transition={{ type: "spring", stiffness: 220, damping: 28 }}
+                  onClick={() => !isCenter && setCurrent(i)}
+                >
+                  <div className="mb-1 flex items-center justify-between">
+                    <div className="text-[15px] tracking-[2px] text-calma-gold">★★★★★</div>
+                    <div className="flex items-center gap-1 rounded-full bg-calma-olive/[.06] px-2.5 py-1 text-[10.5px] font-semibold text-calma-olive">
+                      <BadgeCheck size={13} className="text-calma-terracotta" />
+                      Voyageur vérifié
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </AnimatePresence>
+                  <p className="text-pretty mb-[22px] mt-4 font-fraunces text-[17px] italic leading-[1.5] text-calma-ink">
+                    &ldquo;{ts.quote}&rdquo;
+                  </p>
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-calma-terracotta font-fraunces text-base font-semibold text-calma-cream">
+                      {ts.init}
+                    </div>
+                    <div>
+                      <div className="text-[14.5px] font-bold text-calma-olive">{ts.name}</div>
+                      <div className="flex items-center gap-1.5 text-[12.5px] text-calma-taupe">
+                        <span>{flagFor(ts.role)}</span>
+                        {ts.role}
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
 
         <button
           type="button"
@@ -141,7 +145,9 @@ export default function CalmaTestimonials() {
             aria-label={`Go to testimonial ${i + 1}`}
             onClick={() => setCurrent(i)}
             className={`rounded-full transition-all ${
-              i === current ? 'h-2.5 w-8 bg-calma-terracotta' : 'h-2.5 w-2.5 bg-calma-olive/20 hover:bg-calma-olive/40'
+              i === current
+                ? "h-2.5 w-8 bg-calma-terracotta"
+                : "h-2.5 w-2.5 bg-calma-olive/20 hover:bg-calma-olive/40"
             }`}
           />
         ))}

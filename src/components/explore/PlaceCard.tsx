@@ -24,6 +24,7 @@ export function PlaceCard({ place, index, isFavorited, onToggleFavorite }: Place
           src={place.image}
           alt={place.title}
           fill
+          sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
           className="object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
         />
         <div className="absolute top-6 left-6 flex flex-col gap-2">

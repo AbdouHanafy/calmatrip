@@ -152,77 +152,83 @@ export default function B2BProducts() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-calma-border bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-calma-border text-left text-calma-taupe">
-              <th className="px-4 py-3 font-medium">Produit</th>
-              <th className="px-4 py-3 font-medium">Catégorie</th>
-              <th className="px-4 py-3 font-medium">Prix</th>
-              <th className="px-4 py-3 font-medium">Statut</th>
-              <th className="px-4 py-3 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                  Chargement...
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-calma-border text-left text-calma-taupe">
+                <th className="px-4 py-3 font-medium">Produit</th>
+                <th className="px-4 py-3 font-medium">Catégorie</th>
+                <th className="px-4 py-3 font-medium">Prix</th>
+                <th className="px-4 py-3 font-medium">Statut</th>
+                <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
-            ) : products.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                  Aucun produit pour l&apos;instant
-                </td>
-              </tr>
-            ) : (
-              products.map((p) => (
-                <tr key={p.id} className="border-b border-calma-border hover:bg-calma-sand/50">
-                  <td className="px-4 py-3">
-                    <div className="flex items-center gap-3">
-                      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-calma-sand">
-                        <Image
-                          src={p.image || "/placeholder-product.png"}
-                          alt={p.name}
-                          fill
-                          className="object-cover"
-                          sizes="40px"
-                        />
-                      </div>
-                      <span className="line-clamp-1 font-medium text-calma-ink">{p.name}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3 capitalize text-calma-taupe">{p.category}</td>
-                  <td className="px-4 py-3 font-medium text-calma-ink">{p.price.toFixed(2)} TND</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={p.submissionStatus} />
-                    {p.submissionStatus === "rejected" && p.rejectionReason && (
-                      <p className="mt-1 max-w-[200px] text-xs text-red-600">{p.rejectionReason}</p>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => openEdit(p)}
-                        aria-label={`Modifier ${p.name}`}
-                        className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(p.id)}
-                        aria-label={`Supprimer ${p.name}`}
-                        className="rounded-lg p-2 text-red-500 hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
+                    Chargement...
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : products.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
+                    Aucun produit pour l&apos;instant
+                  </td>
+                </tr>
+              ) : (
+                products.map((p) => (
+                  <tr key={p.id} className="border-b border-calma-border hover:bg-calma-sand/50">
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-3">
+                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-calma-sand">
+                          <Image
+                            src={p.image || "/placeholder-product.png"}
+                            alt={p.name}
+                            fill
+                            className="object-cover"
+                            sizes="40px"
+                          />
+                        </div>
+                        <span className="line-clamp-1 font-medium text-calma-ink">{p.name}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3 capitalize text-calma-taupe">{p.category}</td>
+                    <td className="px-4 py-3 font-medium text-calma-ink">
+                      {p.price.toFixed(2)} TND
+                    </td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={p.submissionStatus} />
+                      {p.submissionStatus === "rejected" && p.rejectionReason && (
+                        <p className="mt-1 max-w-[200px] text-xs text-red-600">
+                          {p.rejectionReason}
+                        </p>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEdit(p)}
+                          aria-label={`Modifier ${p.name}`}
+                          className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(p.id)}
+                          aria-label={`Supprimer ${p.name}`}
+                          className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {modalOpen && (

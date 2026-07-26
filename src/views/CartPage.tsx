@@ -86,11 +86,12 @@ export default function CartPage() {
                 key={`${item.productId}-${item.selectedSize ?? "no-size"}`}
                 className="flex items-center gap-4 bg-white p-4 rounded-2xl"
               >
-                <div className="relative w-20 h-20">
+                <div className="relative w-20 h-20 shrink-0">
                   <Image
                     src={item.product.image || "/placeholder-product.png"}
                     alt={item.product.name}
                     fill
+                    sizes="80px"
                     className="object-cover rounded-xl"
                   />
                 </div>
@@ -114,7 +115,7 @@ export default function CartPage() {
                       updateCartQuantity(item.productId, item.quantity - 1, item.selectedSize)
                     }
                     aria-label="Diminuer la quantité"
-                    className="w-8 h-8"
+                    className="flex h-11 w-11 items-center justify-center"
                   >
                     <Minus className="w-3 h-3" />
                   </button>
@@ -127,7 +128,7 @@ export default function CartPage() {
                     }
                     disabled={item.quantity >= item.product.stock}
                     aria-label="Augmenter la quantité"
-                    className="w-8 h-8"
+                    className="flex h-11 w-11 items-center justify-center"
                   >
                     <Plus className="w-3 h-3" />
                   </button>
@@ -140,6 +141,7 @@ export default function CartPage() {
                 <button
                   onClick={() => removeFromCart(item.productId, item.selectedSize)}
                   aria-label={`Retirer ${item.product.name} du panier`}
+                  className="flex h-11 w-11 items-center justify-center"
                 >
                   <Trash2 className="w-4 h-4 text-red-500" />
                 </button>

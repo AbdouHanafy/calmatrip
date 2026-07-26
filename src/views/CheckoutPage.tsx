@@ -114,6 +114,8 @@ export default function CheckoutPage() {
                     Téléphone
                   </label>
                   <input
+                    type="tel"
+                    inputMode="tel"
                     value={form.customerPhone}
                     onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
                     className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"

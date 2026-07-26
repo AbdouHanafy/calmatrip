@@ -78,38 +78,40 @@ export default function AdminNewsletter() {
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-calma-border bg-white">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-calma-sand text-xs uppercase tracking-wide text-calma-taupe">
-              <tr>
-                <th className="px-5 py-3 font-medium">Email</th>
-                <th className="px-5 py-3 font-medium">Inscrit le</th>
-                <th className="px-5 py-3 font-medium" />
-              </tr>
-            </thead>
-            <tbody>
-              {subscribers.map((s) => (
-                <tr key={s.id} className="border-t border-calma-border">
-                  <td className="px-5 py-3.5 text-calma-ink">{s.email}</td>
-                  <td className="px-5 py-3.5 text-calma-taupe">
-                    {new Date(s.createdAt).toLocaleDateString("fr-FR", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}
-                  </td>
-                  <td className="px-5 py-3.5 text-right">
-                    <button
-                      onClick={() => remove(s.id)}
-                      aria-label={`Supprimer ${s.email}`}
-                      className="rounded-lg p-1.5 text-red-600 transition-colors hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  </td>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm">
+              <thead className="bg-calma-sand text-xs uppercase tracking-wide text-calma-taupe">
+                <tr>
+                  <th className="px-5 py-3 font-medium">Email</th>
+                  <th className="px-5 py-3 font-medium">Inscrit le</th>
+                  <th className="px-5 py-3 font-medium" />
                 </tr>
-              ))}
-            </tbody>
-          </table>
+              </thead>
+              <tbody>
+                {subscribers.map((s) => (
+                  <tr key={s.id} className="border-t border-calma-border">
+                    <td className="px-5 py-3.5 text-calma-ink">{s.email}</td>
+                    <td className="px-5 py-3.5 text-calma-taupe">
+                      {new Date(s.createdAt).toLocaleDateString("fr-FR", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric",
+                      })}
+                    </td>
+                    <td className="px-5 py-3.5 text-right">
+                      <button
+                        onClick={() => remove(s.id)}
+                        aria-label={`Supprimer ${s.email}`}
+                        className="rounded-lg p-1.5 text-red-600 transition-colors hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       )}
     </div>

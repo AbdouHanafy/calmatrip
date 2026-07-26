@@ -136,6 +136,7 @@ export function BookingForm() {
           src="/images/explore/giftbooking.png"
           alt="gift booking"
           fill
+          sizes="(max-width: 767px) 100vw, 768px"
           className="object-cover"
         />
       </div>

@@ -1,16 +1,23 @@
-'use client';
-import React, { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { motion, useReducedMotion, useScroll, useTransform } from 'motion/react';
-import CalmaHeader from '@/components/calma/CalmaHeader';
-import CalmaPromoTicker from '@/components/home/calma/CalmaPromoTicker';
-import { useCalmaLang, type CalmaDict } from '@/lib/calma/i18n';
-import { IconTemple, IconArch, IconParasol, IconDuneSun, IconBowl, IconAdventure } from '@/components/calma/icons';
+"use client";
+import React, { useEffect, useRef, useState } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import CalmaHeader from "@/components/calma/CalmaHeader";
+import CalmaPromoTicker from "@/components/home/calma/CalmaPromoTicker";
+import { useCalmaLang, type CalmaDict } from "@/lib/calma/i18n";
+import {
+  IconTemple,
+  IconArch,
+  IconParasol,
+  IconDuneSun,
+  IconBowl,
+  IconAdventure,
+} from "@/components/calma/icons";
 
 // Focused down to the 6 strongest, most legible experiences for a cleaner wave.
 const CATEGORY_ICONS = [IconTemple, IconArch, IconParasol, IconDuneSun, IconBowl, IconAdventure];
-const CATEGORY_SLUGS = ['culture', 'medina', 'beach', 'desert', 'food', 'adventure'];
+const CATEGORY_SLUGS = ["culture", "medina", "beach", "desert", "food", "adventure"];
 const CATEGORY_LABELS: ((t: CalmaDict) => string)[] = [
   (t) => t.icCulture,
   (t) => t.icMedina,
@@ -47,7 +54,7 @@ export default function CalmaHero() {
   const bgRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const [particles, setParticles] = useState<Particle[] | null>(null);
-  const { scrollYProgress } = useScroll({ target: heroRef, offset: ['start start', 'end start'] });
+  const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const parallaxY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 110]);
   const parallaxOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.4]);
 
@@ -61,7 +68,7 @@ export default function CalmaHero() {
         duration: 9 + Math.random() * 7,
         delay: Math.random() * 8,
         accent: i % 3 === 0,
-      }))
+      })),
     );
   }, []);
 
@@ -71,7 +78,7 @@ export default function CalmaHero() {
     const row = rowRef.current;
     if (!el || !bg) return;
 
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       return;
     }
 
@@ -98,13 +105,13 @@ export default function CalmaHero() {
       raf = requestAnimationFrame(tick);
     };
 
-    el.addEventListener('mousemove', onMove);
-    el.addEventListener('mouseleave', onLeave);
+    el.addEventListener("mousemove", onMove);
+    el.addEventListener("mouseleave", onLeave);
     raf = requestAnimationFrame(tick);
 
     return () => {
-      el.removeEventListener('mousemove', onMove);
-      el.removeEventListener('mouseleave', onLeave);
+      el.removeEventListener("mousemove", onMove);
+      el.removeEventListener("mouseleave", onLeave);
       cancelAnimationFrame(raf);
     };
   }, []);
@@ -113,15 +120,17 @@ export default function CalmaHero() {
     <section
       ref={heroRef}
       className="relative h-[84vh] min-h-[640px] max-h-[840px] overflow-hidden"
-      style={{ background: 'linear-gradient(180deg,#4A667D 0%,#3A5164 48%,#5B7A90 100%)' }}
+      style={{ background: "linear-gradient(180deg,#4A667D 0%,#3A5164 48%,#5B7A90 100%)" }}
     >
       <motion.div className="absolute inset-0" style={{ y: parallaxY, opacity: parallaxOpacity }}>
         {/* Slow cinematic Ken Burns zoom — separate layer from the mouse-parallax translate below */}
-        <div className={`absolute inset-0 origin-center ${reduceMotion ? '' : 'calma-hero-kenburns'}`}>
+        <div
+          className={`absolute inset-0 origin-center ${reduceMotion ? "" : "calma-hero-kenburns"}`}
+        >
           <div
             ref={bgRef}
             className="absolute inset-0 origin-center will-change-transform"
-            style={{ transition: 'transform .12s ease-out' }}
+            style={{ transition: "transform .12s ease-out" }}
           >
             <Image
               src="/images/homehero.png"
@@ -139,25 +148,27 @@ export default function CalmaHero() {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: 'linear-gradient(180deg,rgba(36,51,63,.55) 0%,rgba(36,51,63,.35) 45%,rgba(36,51,63,.60) 100%)',
+          background:
+            "linear-gradient(180deg,rgba(36,51,63,.55) 0%,rgba(36,51,63,.35) 45%,rgba(36,51,63,.60) 100%)",
         }}
       />
       {/* Soft blue-grey radial scrim behind the text block — just enough for AA contrast, not a wall of black */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: 'radial-gradient(60% 44% at 50% 36%, rgba(28,40,50,.4) 0%, rgba(28,40,50,0) 72%)',
+          background:
+            "radial-gradient(60% 44% at 50% 36%, rgba(28,40,50,.4) 0%, rgba(28,40,50,0) 72%)",
         }}
       />
       {/* Atmospheric golden-hour glow, upper right — adds depth without darkening the frame */}
       <div
         className="pointer-events-none absolute -right-[10%] -top-[15%] h-[60%] w-[55%] rounded-full opacity-[.22] blur-[120px]"
-        style={{ background: 'radial-gradient(circle, #E8B978 0%, transparent 70%)' }}
+        style={{ background: "radial-gradient(circle, #E8B978 0%, transparent 70%)" }}
       />
       {/* Cool ambient falloff, lower left — balances the warm glow and deepens the frame */}
       <div
         className="pointer-events-none absolute -bottom-[20%] -left-[10%] h-[55%] w-[50%] rounded-full opacity-[.16] blur-[110px]"
-        style={{ background: 'radial-gradient(circle, #24333F 0%, transparent 70%)' }}
+        style={{ background: "radial-gradient(circle, #24333F 0%, transparent 70%)" }}
       />
 
       {particles && (
@@ -171,7 +182,7 @@ export default function CalmaHero() {
                 bottom: `${p.bottom}%`,
                 width: p.size,
                 height: p.size,
-                background: p.accent ? 'rgba(242,153,74,.5)' : 'rgba(255,255,255,.55)',
+                background: p.accent ? "rgba(242,153,74,.5)" : "rgba(255,255,255,.55)",
                 animation: `calma-dust ${p.duration}s linear ${p.delay}s infinite`,
               }}
             />
@@ -202,7 +213,7 @@ export default function CalmaHero() {
         >
           <motion.div
             className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.16em] text-calma-cream backdrop-blur-md"
-            style={{ textShadow: '0 1px 8px rgba(0,0,0,.4)' }}
+            style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
             initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
@@ -212,20 +223,24 @@ export default function CalmaHero() {
           </motion.div>
           <h1
             className="mb-8 text-balance font-space text-[clamp(48px,5.6vw,80px)] font-extrabold leading-[1.03] tracking-[-0.03em] text-calma-cream"
-            style={{ textShadow: '0 6px 44px rgba(0,0,0,.4)' }}
+            style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
           >
-            {t.heroTitle} <span className="not-italic text-calma-terracotta-soft">{t.heroTitleEm}</span>
+            {t.heroTitle}{" "}
+            <span className="not-italic text-calma-terracotta-soft">{t.heroTitleEm}</span>
           </h1>
           <p
             className="mx-auto max-w-[500px] text-pretty font-hanken text-[18px] font-normal leading-[1.75] text-white/80"
-            style={{ textShadow: '0 1px 14px rgba(0,0,0,.4)' }}
+            style={{ textShadow: "0 1px 14px rgba(0,0,0,.4)" }}
           >
             {t.heroSub}
           </p>
         </motion.div>
 
-        <div className="pointer-events-auto absolute inset-x-0 bottom-[152px] flex justify-center px-4">
-          <div ref={rowRef} className="flex items-end gap-4 will-change-transform sm:gap-6">
+        <div className="pointer-events-auto absolute inset-x-0 bottom-[152px] overflow-x-auto px-4 [scrollbar-width:none] sm:flex sm:justify-center sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+          <div
+            ref={rowRef}
+            className="flex w-max items-end gap-4 will-change-transform sm:w-auto sm:gap-6"
+          >
             {CATEGORY_ICONS.map((Icon, i) => {
               const w = WAVE[i];
               return (
@@ -235,13 +250,15 @@ export default function CalmaHero() {
                   style={reduceMotion ? undefined : { rotate: w.rotate }}
                   animate={reduceMotion ? undefined : { y: [w.y - 6, w.y + 6, w.y - 6] }}
                   transition={
-                    reduceMotion ? undefined : { duration: 4.2, repeat: Infinity, ease: 'easeInOut', delay: i * 0.15 }
+                    reduceMotion
+                      ? undefined
+                      : { duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }
                   }
                   whileHover={{
                     rotate: 0,
                     y: -14,
                     scale: 1.1,
-                    transition: { type: 'spring', stiffness: 320, damping: 20 },
+                    transition: { type: "spring", stiffness: 320, damping: 20 },
                   }}
                 >
                   <Link

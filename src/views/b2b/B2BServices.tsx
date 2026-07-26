@@ -138,66 +138,70 @@ export default function B2BServices() {
       </div>
 
       <div className="overflow-hidden rounded-2xl border border-calma-border bg-white shadow-sm">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-calma-border text-left text-calma-taupe">
-              <th className="px-4 py-3 font-medium">Service</th>
-              <th className="px-4 py-3 font-medium">Catégorie</th>
-              <th className="px-4 py-3 font-medium">Prix</th>
-              <th className="px-4 py-3 font-medium">Statut</th>
-              <th className="px-4 py-3 font-medium text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {loading ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                  Chargement...
-                </td>
+        <div className="overflow-x-auto">
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-calma-border text-left text-calma-taupe">
+                <th className="px-4 py-3 font-medium">Service</th>
+                <th className="px-4 py-3 font-medium">Catégorie</th>
+                <th className="px-4 py-3 font-medium">Prix</th>
+                <th className="px-4 py-3 font-medium">Statut</th>
+                <th className="px-4 py-3 font-medium text-right">Actions</th>
               </tr>
-            ) : services.length === 0 ? (
-              <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                  Aucun service pour l&apos;instant
-                </td>
-              </tr>
-            ) : (
-              services.map((s) => (
-                <tr key={s.id} className="border-b border-calma-border hover:bg-calma-sand/50">
-                  <td className="px-4 py-3">
-                    <span className="line-clamp-1 font-medium text-calma-ink">{s.title}</span>
-                  </td>
-                  <td className="px-4 py-3 capitalize text-calma-taupe">{s.category ?? "—"}</td>
-                  <td className="px-4 py-3 font-medium text-calma-ink">{s.price} TND</td>
-                  <td className="px-4 py-3">
-                    <StatusBadge status={s.submissionStatus} />
-                    {s.submissionStatus === "rejected" && s.rejectionReason && (
-                      <p className="mt-1 max-w-[200px] text-xs text-red-600">{s.rejectionReason}</p>
-                    )}
-                  </td>
-                  <td className="px-4 py-3 text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <button
-                        onClick={() => openEdit(s)}
-                        aria-label={`Modifier ${s.title}`}
-                        className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
-                      >
-                        <Pencil className="h-4 w-4" />
-                      </button>
-                      <button
-                        onClick={() => handleDelete(s.id)}
-                        aria-label={`Supprimer ${s.title}`}
-                        className="rounded-lg p-2 text-red-500 hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </div>
+            </thead>
+            <tbody>
+              {loading ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
+                    Chargement...
                   </td>
                 </tr>
-              ))
-            )}
-          </tbody>
-        </table>
+              ) : services.length === 0 ? (
+                <tr>
+                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
+                    Aucun service pour l&apos;instant
+                  </td>
+                </tr>
+              ) : (
+                services.map((s) => (
+                  <tr key={s.id} className="border-b border-calma-border hover:bg-calma-sand/50">
+                    <td className="px-4 py-3">
+                      <span className="line-clamp-1 font-medium text-calma-ink">{s.title}</span>
+                    </td>
+                    <td className="px-4 py-3 capitalize text-calma-taupe">{s.category ?? "—"}</td>
+                    <td className="px-4 py-3 font-medium text-calma-ink">{s.price} TND</td>
+                    <td className="px-4 py-3">
+                      <StatusBadge status={s.submissionStatus} />
+                      {s.submissionStatus === "rejected" && s.rejectionReason && (
+                        <p className="mt-1 max-w-[200px] text-xs text-red-600">
+                          {s.rejectionReason}
+                        </p>
+                      )}
+                    </td>
+                    <td className="px-4 py-3 text-right">
+                      <div className="flex items-center justify-end gap-2">
+                        <button
+                          onClick={() => openEdit(s)}
+                          aria-label={`Modifier ${s.title}`}
+                          className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
+                        >
+                          <Pencil className="h-4 w-4" />
+                        </button>
+                        <button
+                          onClick={() => handleDelete(s.id)}
+                          aria-label={`Supprimer ${s.title}`}
+                          className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))
+              )}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {modalOpen && (
