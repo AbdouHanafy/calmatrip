@@ -41,12 +41,16 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
-        <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
-          Retour à la marketplace
-        </Link>
-      </div>
+      <>
+        <Navbar />
+        <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
+          <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
+            Retour à la marketplace
+          </Link>
+        </div>
+        <Footer />
+      </>
     );
   }
 

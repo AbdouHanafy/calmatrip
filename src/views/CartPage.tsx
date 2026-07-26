@@ -13,17 +13,21 @@ export default function CartPage() {
 
   if (cart.length === 0) {
     return (
-      <div className="min-h-screen bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
-        <ShoppingBag className="w-14 h-14 text-gray-300 mb-4" />
-        <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
-        <p className="text-sm text-gray-500 mb-6">Découvre nos produits et ajoute-les ici</p>
-        <Link
-          href="/marketplace"
-          className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold"
-        >
-          Voir la marketplace
-        </Link>
-      </div>
+      <>
+        <Navbar />
+        <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
+          <ShoppingBag className="w-14 h-14 text-gray-300 mb-4" />
+          <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
+          <p className="text-sm text-gray-500 mb-6">Découvre nos produits et ajoute-les ici</p>
+          <Link
+            href="/marketplace"
+            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold"
+          >
+            Voir la marketplace
+          </Link>
+        </div>
+        <Footer />
+      </>
     );
   }
 

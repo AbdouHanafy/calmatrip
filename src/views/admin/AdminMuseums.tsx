@@ -292,14 +292,14 @@ export default function AdminMuseums() {
                 <button
                   onClick={() => setModalMuseum(museum)}
                   aria-label={`Modifier ${museum.name}`}
-                  className="rounded-xl bg-calma-sand p-2 text-calma-ink transition-colors hover:bg-calma-border"
+                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-calma-sand text-calma-ink transition-colors hover:bg-calma-border"
                 >
                   <Pencil className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => remove(museum.id)}
                   aria-label={`Supprimer ${museum.name}`}
-                  className="rounded-xl bg-red-50 p-2 text-red-600 transition-colors hover:bg-red-100"
+                  className="flex h-11 w-11 items-center justify-center rounded-xl bg-red-50 text-red-600 transition-colors hover:bg-red-100"
                 >
                   <Trash2 className="h-4 w-4" />
                 </button>

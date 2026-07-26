@@ -44,8 +44,8 @@ export default function InstallPWA() {
   if (!deferredPrompt || !visible) return null;
 
   return (
-    <div className="fixed bottom-5 left-1/2 -translate-x-1/2 z-50">
-      <div className="flex items-center gap-3 rounded-2xl bg-white shadow-xl border border-gray-200 px-4 py-3 w-[320px]">
+    <div className="fixed bottom-5 left-1/2 z-50 w-[calc(100vw-2.5rem)] max-w-[320px] -translate-x-1/2">
+      <div className="flex items-center gap-3 rounded-2xl bg-white shadow-xl border border-gray-200 px-4 py-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 text-white">
           <Download size={18} />
         </div>

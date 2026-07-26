@@ -151,7 +151,7 @@ export default function LeafletMap({ places, userLocation }: Props) {
     <div className="relative group">
       <div
         ref={mapRef}
-        className="h-[600px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white"
+        className="h-[380px] w-full rounded-[2.5rem] overflow-hidden shadow-2xl border-4 border-white sm:h-[480px] lg:h-[600px]"
       />
       <style jsx global>{`
         .custom-leaflet-popup .leaflet-popup-content-wrapper {

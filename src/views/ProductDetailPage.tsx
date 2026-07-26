@@ -40,25 +40,33 @@ export default function ProductDetailPage() {
 
   if (loading) {
     return (
-      <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
-        <div className="aspect-square bg-gray-100 animate-pulse rounded-2xl" />
-        <div className="space-y-4">
-          <div className="h-6 w-1/3 bg-gray-100 animate-pulse rounded-lg" />
-          <div className="h-10 w-2/3 bg-gray-100 animate-pulse rounded-lg" />
-          <div className="h-24 bg-gray-100 animate-pulse rounded-lg" />
+      <>
+        <Navbar />
+        <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
+          <div className="aspect-square bg-gray-100 animate-pulse rounded-2xl" />
+          <div className="space-y-4">
+            <div className="h-6 w-1/3 bg-gray-100 animate-pulse rounded-lg" />
+            <div className="h-10 w-2/3 bg-gray-100 animate-pulse rounded-lg" />
+            <div className="h-24 bg-gray-100 animate-pulse rounded-lg" />
+          </div>
         </div>
-      </div>
+        <Footer />
+      </>
     );
   }
 
   if (!product) {
     return (
-      <div className="flex flex-col items-center justify-center h-[60vh] gap-3">
-        <p className="text-gray-500">Produit introuvable</p>
-        <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
-          Retour à la marketplace
-        </Link>
-      </div>
+      <>
+        <Navbar />
+        <div className="flex flex-col items-center justify-center h-[60vh] gap-3">
+          <p className="text-gray-500">Produit introuvable</p>
+          <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
+            Retour à la marketplace
+          </Link>
+        </div>
+        <Footer />
+      </>
     );
   }
 
