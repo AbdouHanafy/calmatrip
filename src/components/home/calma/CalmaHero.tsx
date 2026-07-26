@@ -37,6 +37,14 @@ const WAVE = [
 ];
 const CARD_SIZE = 92;
 
+// Rotating hero background — cycles through these every 5s.
+const HERO_IMAGES = [
+  "/images/hero/sea.png",
+  "/images/hero/sahara.PNG",
+  "/images/hero/color.png",
+  "/images/hero/sea1.PNG",
+];
+
 interface Particle {
   id: number;
   left: number;
@@ -54,9 +62,17 @@ export default function CalmaHero() {
   const bgRef = useRef<HTMLDivElement>(null);
   const rowRef = useRef<HTMLDivElement>(null);
   const [particles, setParticles] = useState<Particle[] | null>(null);
+  const [activeImage, setActiveImage] = useState(0);
   const { scrollYProgress } = useScroll({ target: heroRef, offset: ["start start", "end start"] });
   const parallaxY = useTransform(scrollYProgress, [0, 1], [0, reduceMotion ? 0 : 110]);
   const parallaxOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0.4]);
+
+  useEffect(() => {
+    const id = setInterval(() => {
+      setActiveImage((i) => (i + 1) % HERO_IMAGES.length);
+    }, 5000);
+    return () => clearInterval(id);
+  }, []);
 
   useEffect(() => {
     setParticles(
@@ -119,7 +135,7 @@ export default function CalmaHero() {
   return (
     <section
       ref={heroRef}
-      className="relative h-auto min-h-[80vh] overflow-hidden md:h-[84vh] md:min-h-[640px] md:max-h-[840px]"
+      className="relative h-auto overflow-hidden md:h-[84vh] md:min-h-[640px] md:max-h-[840px]"
       style={{ background: "linear-gradient(180deg,#4A667D 0%,#3A5164 48%,#5B7A90 100%)" }}
     >
       <motion.div className="absolute inset-0" style={{ y: parallaxY, opacity: parallaxOpacity }}>
@@ -132,14 +148,19 @@ export default function CalmaHero() {
             className="absolute inset-0 origin-center will-change-transform"
             style={{ transition: "transform .12s ease-out" }}
           >
-            <Image
-              src="/images/homehero.png"
-              alt="Paysage tunisien"
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
+            {HERO_IMAGES.map((src, i) => (
+              <Image
+                key={src}
+                src={src}
+                alt="Paysage tunisien"
+                fill
+                priority={i === 0}
+                sizes="100vw"
+                className={`object-cover transition-opacity duration-1000 ease-in-out ${
+                  i === activeImage ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            ))}
           </div>
         </div>
       </motion.div>
@@ -296,9 +317,9 @@ export default function CalmaHero() {
       </div>
 
       {/* Mobile-only hero content — compact, single-viewport layout. Desktop/tablet block above (md:flex) is untouched. */}
-      <div className="relative z-10 flex flex-col items-center px-5 pb-8 pt-[104px] text-center md:hidden">
+      <div className="relative z-10 flex flex-col items-center px-5 pb-10 pt-[92px] text-center md:hidden">
         <motion.div
-          className="mb-4 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[.14em] text-calma-cream backdrop-blur-md"
+          className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[.14em] text-calma-cream backdrop-blur-md"
           style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
           initial={reduceMotion ? undefined : { opacity: 0, y: 10 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -309,7 +330,7 @@ export default function CalmaHero() {
         </motion.div>
 
         <motion.h1
-          className="mb-5 w-full text-balance font-space text-[clamp(30px,8.6vw,40px)] font-extrabold leading-[1.15] tracking-[-0.02em] text-calma-cream"
+          className="mb-4 w-full text-balance font-space text-[clamp(28px,8vw,38px)] font-extrabold leading-[1.12] tracking-[-0.02em] text-calma-cream"
           style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
           initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -320,7 +341,7 @@ export default function CalmaHero() {
         </motion.h1>
 
         <motion.p
-          className="mx-auto mb-7 w-full max-w-[320px] line-clamp-3 text-pretty font-hanken text-[16px] font-normal leading-[1.6] text-white/85"
+          className="mx-auto mb-5 w-full max-w-[300px] line-clamp-2 text-pretty font-hanken text-[15px] font-normal leading-[1.5] text-white/85"
           style={{ textShadow: "0 1px 14px rgba(0,0,0,.4)" }}
           initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -330,7 +351,7 @@ export default function CalmaHero() {
         </motion.p>
 
         <motion.div
-          className="flex w-full gap-3 overflow-x-auto px-1 pb-1 [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
+          className="flex w-full gap-2.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
           initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
@@ -339,12 +360,12 @@ export default function CalmaHero() {
             <Link
               key={CATEGORY_SLUGS[i]}
               href={`/explore?category=${CATEGORY_SLUGS[i]}`}
-              className="flex h-[90px] w-20 flex-none snap-start flex-col items-center justify-center gap-2 rounded-2xl border border-white/[.18] bg-white/[.12] no-underline backdrop-blur-md transition-transform active:scale-95"
+              className="flex h-[74px] w-[68px] flex-none snap-start flex-col items-center justify-center gap-1.5 rounded-xl border border-white/[.18] bg-white/[.12] no-underline backdrop-blur-md transition-transform active:scale-95"
             >
-              <span className="grid h-9 w-9 place-items-center rounded-full bg-white/[.16]">
-                <Icon size={17} stroke="#F8F5F0" />
+              <span className="grid h-7 w-7 place-items-center rounded-full bg-white/[.16]">
+                <Icon size={14} stroke="#F8F5F0" />
               </span>
-              <span className="px-1 text-center text-[10px] font-semibold leading-tight text-white">
+              <span className="px-1 text-center text-[9.5px] font-semibold leading-tight text-white">
                 {CATEGORY_LABELS[i](t)}
               </span>
             </Link>

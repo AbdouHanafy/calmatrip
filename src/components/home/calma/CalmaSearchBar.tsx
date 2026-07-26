@@ -35,72 +35,73 @@ export default function CalmaSearchBar() {
   return (
     <>
       {/* Mobile-only compact booking card — desktop/tablet block below (hidden md:block) is untouched */}
-      <div className="relative z-[15] mx-auto -mt-10 max-w-[420px] px-4 md:hidden">
+      <div className="relative z-[15] mx-auto -mt-8 max-w-[400px] px-4 md:hidden">
         <motion.form
           onSubmit={onSubmit}
-          className="flex flex-col gap-2.5 rounded-[28px] border border-white/60 bg-white/95 p-4 backdrop-blur-2xl"
-          style={{ boxShadow: "0 24px 56px -20px rgba(42,38,34,.45)" }}
+          className="flex flex-col gap-2 rounded-[28px] border border-white/50 bg-white/95 p-3.5 shadow-[0_20px_48px_-18px_rgba(42,38,34,.4)] backdrop-blur-2xl"
           initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <label className="flex min-h-[52px] items-center gap-3 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-4 py-2 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
-            <MapPin size={20} className="shrink-0 text-calma-terracotta" />
+          <label className="flex min-h-[50px] items-center gap-2.5 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3.5 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
+            <MapPin size={18} className="shrink-0 text-calma-terracotta" />
             <div className="min-w-0 flex-1 text-left">
-              <div className="text-[10px] font-bold uppercase tracking-[.06em] text-calma-taupe">
+              <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
                 {t.searchDestL}
               </div>
               <input
                 value={destination}
                 onChange={(e) => setDestination(e.target.value)}
                 placeholder={t.searchDest}
-                className="w-full truncate border-none bg-transparent p-0 font-hanken text-[16px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
+                className="w-full truncate border-none bg-transparent p-0 font-hanken text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
               />
             </div>
           </label>
 
-          <label className="flex min-h-[52px] items-center gap-3 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-4 py-2 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
-            <Calendar size={20} className="shrink-0 text-calma-terracotta" />
-            <div className="min-w-0 flex-1 text-left">
-              <div className="text-[10px] font-bold uppercase tracking-[.06em] text-calma-taupe">
-                {t.searchDateL}
+          <div className="grid grid-cols-2 gap-2">
+            <label className="flex min-h-[50px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
+              <Calendar size={16} className="shrink-0 text-calma-terracotta" />
+              <div className="min-w-0 flex-1 text-left">
+                <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
+                  {t.searchDateL}
+                </div>
+                <input
+                  value={date}
+                  onChange={(e) => setDate(e.target.value)}
+                  placeholder={t.searchDatePh}
+                  className="w-full truncate border-none bg-transparent p-0 font-hanken text-[13.5px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
+                />
               </div>
-              <input
-                value={date}
-                onChange={(e) => setDate(e.target.value)}
-                placeholder={t.searchDatePh}
-                className="w-full truncate border-none bg-transparent p-0 font-hanken text-[16px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
-              />
-            </div>
-          </label>
+            </label>
 
-          <label className="flex min-h-[52px] items-center gap-3 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-4 py-2 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
-            <Compass size={20} className="shrink-0 text-calma-terracotta" />
-            <div className="min-w-0 flex-1 text-left">
-              <div className="text-[10px] font-bold uppercase tracking-[.06em] text-calma-taupe">
-                {t.searchCatL}
+            <label className="flex min-h-[50px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
+              <Compass size={16} className="shrink-0 text-calma-terracotta" />
+              <div className="min-w-0 flex-1 text-left">
+                <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
+                  {t.searchCatL}
+                </div>
+                <select
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full cursor-pointer border-none bg-transparent p-0 font-hanken text-[13.5px] text-calma-ink outline-none"
+                >
+                  {categoryOptions.map((opt) => (
+                    <option key={opt.value} value={opt.value}>
+                      {opt.label}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <select
-                value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full cursor-pointer border-none bg-transparent p-0 font-hanken text-[16px] text-calma-ink outline-none"
-              >
-                {categoryOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </label>
+            </label>
+          </div>
 
           <button
             type="submit"
-            className="mt-1 flex h-14 w-full items-center justify-center gap-2 rounded-full font-hanken text-[16px] font-bold text-white shadow-[0_16px_32px_-10px_rgba(242,153,74,.65)] transition-transform active:scale-[.97]"
+            className="mt-0.5 flex h-[54px] w-full items-center justify-center gap-2 rounded-full font-hanken text-[15px] font-bold text-white shadow-[0_14px_28px_-8px_rgba(242,153,74,.65)] transition-transform active:scale-[.97]"
             style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
           >
             {t.browse}
-            <ArrowRight size={18} />
+            <ArrowRight size={17} />
           </button>
         </motion.form>
       </div>
