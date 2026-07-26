@@ -19,23 +19,40 @@ export const SITE = {
 
   keywords: [
     // Brand
-    "Calma Trip", "calmatrip", "calma trip tunisia",
+    "Calma Trip",
+    "calmatrip",
+    "calma trip tunisia",
     // Core services
-    "private transfer Tunisia", "airport transfer Tunisia",
-    "excursion Tunisia", "day trip Tunisia",
-    "camel trek Tunisia", "4x4 desert tour Tunisia",
-    "catamaran trip Tunisia", "cultural excursion Tunisia",
+    "private transfer Tunisia",
+    "airport transfer Tunisia",
+    "excursion Tunisia",
+    "day trip Tunisia",
+    "camel trek Tunisia",
+    "4x4 desert tour Tunisia",
+    "catamaran trip Tunisia",
+    "cultural excursion Tunisia",
     "scenic flight Tunisia",
     // Destinations
-    "Hammamet transfer", "Sousse transfer", "Djerba excursion",
-    "Tunis city tour", "Sahara tour Tunisia", "Sidi Bou Said visit",
-    "Carthage tour", "El Jem colosseum trip", "Matmata tour",
+    "Hammamet transfer",
+    "Sousse transfer",
+    "Djerba excursion",
+    "Tunis city tour",
+    "Sahara tour Tunisia",
+    "Sidi Bou Said visit",
+    "Carthage tour",
+    "El Jem colosseum trip",
+    "Matmata tour",
     // Intent
-    "book taxi Tunisia", "Tunisia tourism", "things to do Tunisia",
-    "Tunisia travel guide", "stress-free Tunisia travel",
-    "Tunisia tour operator", "local prices Tunisia tours",
+    "book taxi Tunisia",
+    "Tunisia tourism",
+    "things to do Tunisia",
+    "Tunisia travel guide",
+    "stress-free Tunisia travel",
+    "Tunisia tour operator",
+    "local prices Tunisia tours",
     // Long-tail
-    "airport transfer Tunis Carthage", "private driver Tunisia",
+    "airport transfer Tunis Carthage",
+    "private driver Tunisia",
     "best excursions Tunisia 2026",
   ],
 } as const;
@@ -43,12 +60,12 @@ export const SITE = {
 // ─── buildMetadata ─────────────────────────────────────────────────────────────
 
 interface PageSEO {
-  title: string;                  // Page-specific title (without site name)
+  title: string; // Page-specific title (without site name)
   description: string;
-  path: string;                   // e.g. "/services"
-  ogImage?: string;               // Override default OG image
-  keywords?: string[];            // Extra page-level keywords (merged with base)
-  noIndex?: boolean;              // For admin / private pages
+  path: string; // e.g. "/services"
+  ogImage?: string; // Override default OG image
+  keywords?: string[]; // Extra page-level keywords (merged with base)
+  noIndex?: boolean; // For admin / private pages
 }
 
 export function buildMetadata({
@@ -61,12 +78,16 @@ export function buildMetadata({
 }: PageSEO): Metadata {
   const url = `${SITE.url}${path}`;
   const image = ogImage ?? SITE.defaultOgImage;
+  const imageUrl = image.startsWith("http") ? image : `${SITE.url}${image}`;
   const fullTitle = `${title} | ${SITE.name}`;
   const allKeywords = [...SITE.keywords, ...keywords].join(", ");
 
   return {
     // ── Core ──
-    title: fullTitle,
+    // Plain title (no "| Calma Trip" suffix) — the root layout's
+    // `title.template` already appends it. Adding it here too produced
+    // "Page | Calma Trip | Calma Trip" on every single page.
+    title,
     description,
     keywords: allKeywords,
     authors: [{ name: "Calma Trip", url: SITE.url }],
@@ -109,7 +130,7 @@ export function buildMetadata({
       locale: SITE.locale,
       images: [
         {
-          url: `${SITE.url}${image}`,
+          url: imageUrl,
           width: 1200,
           height: 630,
           alt: `${SITE.name} — ${title}`,
@@ -124,15 +145,15 @@ export function buildMetadata({
       creator: SITE.twitterHandle,
       title: fullTitle,
       description,
-      images: [`${SITE.url}${image}`],
+      images: [imageUrl],
     },
 
-    // ── Verification (add your actual codes) ──
-    verification: {
-      google: "YOUR_GOOGLE_SEARCH_CONSOLE_VERIFICATION_CODE",
-      // yandex: "YOUR_YANDEX_CODE",
-      // bing: "YOUR_BING_WEBMASTER_CODE",
-    },
+    // ── Verification — read from env so every page shares the same real
+    // code once configured; omitted entirely until then instead of shipping
+    // a fake placeholder that would silently fail Search Console's check.
+    ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
+      ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
+      : {}),
   };
 }
 
@@ -199,9 +220,7 @@ export function organizationSchema() {
 }
 
 /** BreadcrumbList schema */
-export function breadcrumbSchema(
-  crumbs: { name: string; url: string }[]
-) {
+export function breadcrumbSchema(crumbs: { name: string; url: string }[]) {
   return {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",

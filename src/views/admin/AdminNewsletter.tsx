@@ -33,7 +33,10 @@ export default function AdminNewsletter() {
   };
 
   const exportCsv = () => {
-    const rows = ["email,inscrit le", ...subscribers.map((s) => `${s.email},${new Date(s.createdAt).toLocaleDateString("fr-FR")}`)];
+    const rows = [
+      "email,inscrit le",
+      ...subscribers.map((s) => `${s.email},${new Date(s.createdAt).toLocaleDateString("fr-FR")}`),
+    ];
     const blob = new Blob([rows.join("\n")], { type: "text/csv;charset=utf-8;" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
@@ -88,11 +91,16 @@ export default function AdminNewsletter() {
                 <tr key={s.id} className="border-t border-calma-border">
                   <td className="px-5 py-3.5 text-calma-ink">{s.email}</td>
                   <td className="px-5 py-3.5 text-calma-taupe">
-                    {new Date(s.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}
+                    {new Date(s.createdAt).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
                   </td>
                   <td className="px-5 py-3.5 text-right">
                     <button
                       onClick={() => remove(s.id)}
+                      aria-label={`Supprimer ${s.email}`}
                       className="rounded-lg p-1.5 text-red-600 transition-colors hover:bg-red-50"
                     >
                       <Trash2 className="h-4 w-4" />

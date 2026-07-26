@@ -1,8 +1,9 @@
 // app/contact/page.tsx
 
-import Contact from '@/views/Contact';
-import type { Metadata } from 'next';
+import Contact from "@/views/Contact";
+import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { getPublicFaqs } from "@/repositories/faqRepository";
 
 // ✅ Single export metadata — no duplicate, uses buildMetadata
 export const metadata: Metadata = buildMetadata({
@@ -18,6 +19,7 @@ export const metadata: Metadata = buildMetadata({
   ],
 });
 
-export default function ContactPage() {
-  return <Contact />;
+export default async function ContactPage() {
+  const faqs = await getPublicFaqs();
+  return <Contact faqs={faqs.map((f) => ({ q: f.question, a: f.answer }))} />;
 }

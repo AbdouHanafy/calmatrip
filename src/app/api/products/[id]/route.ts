@@ -1,12 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { auth } from "@/auth";
+import { productUpdateSchema } from "@/schemas/product";
 
 // GET /api/products/[id]
-export async function GET(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
     const product = await prisma.product.findUnique({
@@ -29,33 +28,33 @@ export async function GET(
 }
 
 // PUT /api/products/[id]  (admin: update, including stock)
-export async function PUT(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { id } = await params;
-    const body = await req.json();
-    const { name, price, category, image, description, stock, sizes } = body;
-
-    let sizesUpdate: { sizes?: string[] | typeof Prisma.JsonNull } = {};
-    if (sizes !== undefined) {
-      if (sizes !== null && (!Array.isArray(sizes) || !sizes.every((s) => typeof s === "string"))) {
-        return NextResponse.json({ error: "Invalid sizes format" }, { status: 400 });
-      }
-      const isEmpty = sizes === null || (Array.isArray(sizes) && sizes.length === 0);
-      sizesUpdate.sizes = isEmpty ? Prisma.JsonNull : sizes;
+    const rawBody = await req.json();
+    const parsed = productUpdateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
+    const { name, price, category, image, description, stock, sizes } = parsed.data;
+
+    const sizesUpdate: { sizes?: string[] | typeof Prisma.JsonNull } =
+      sizes !== undefined ? { sizes: sizes && sizes.length > 0 ? sizes : Prisma.JsonNull } : {};
 
     const product = await prisma.product.update({
       where: { id: parseInt(id) },
       data: {
         ...(name !== undefined && { name }),
-        ...(price !== undefined && { price: parseFloat(price) }),
+        ...(price !== undefined && { price }),
         ...(category !== undefined && { category }),
         ...(image !== undefined && { image }),
         ...(description !== undefined && { description }),
-        ...(stock !== undefined && { stock: parseInt(stock) }),
+        ...(stock !== undefined && { stock }),
         ...sizesUpdate,
       },
     });
@@ -68,10 +67,12 @@ export async function PUT(
 }
 
 // DELETE /api/products/[id]
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { id } = await params;
     await prisma.product.delete({ where: { id: parseInt(id) } });

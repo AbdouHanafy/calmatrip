@@ -1,9 +1,9 @@
-import '@/styles/index.css';
-import { AuthProvider } from '@/components/providers/AuthProvider';
+import "@/styles/index.css";
+import { AuthProvider } from "@/components/providers/AuthProvider";
 import { MarketplaceProvider } from "@/components/marketplace/Marketplacecontext";
 import InstallPWA from "@/components/ui/InstallPWA";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
-import FloatingWhatsApp from '@/components/ui/FloatingWhatsApp';
+import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { SITE, organizationSchema } from "@/lib/seo";
@@ -68,9 +68,9 @@ export const metadata: Metadata = {
     apple: "/apple-touch-icon.png",
     shortcut: "/favicon.ico",
   },
-  verification: {
-    google: process.env.NEXT_PUBLIC_GSC_VERIFICATION ?? "YOUR_GOOGLE_SEARCH_CONSOLE_CODE",
-  },
+  ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
+    ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
+    : {}),
   category: "travel",
   classification: "Travel & Tourism",
   referrer: "origin-when-cross-origin",

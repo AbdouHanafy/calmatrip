@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { reviewSchema } from "@/schemas/review";
+import { getApprovedReviews } from "@/repositories/reviewRepository";
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -12,11 +14,12 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const reviews = await prisma.review.findMany({
-    where: all ? {} : { approved: true },
-    orderBy: { createdAt: "desc" },
-  });
+  if (all) {
+    const reviews = await prisma.review.findMany({ orderBy: { createdAt: "desc" } });
+    return NextResponse.json(reviews);
+  }
 
+  const reviews = await getApprovedReviews();
   return NextResponse.json(reviews);
 }
 
@@ -27,16 +30,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
   }
 
-  const body = await req.json();
-  const { rating, comment, service } = body;
-
-  if (!rating || !comment) {
-    return NextResponse.json({ error: "Missing fields" }, { status: 400 });
+  const rawBody = await req.json();
+  const parsed = reviewSchema.safeParse(rawBody);
+  if (!parsed.success) {
+    return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
-
-  if (rating < 1 || rating > 5) {
-    return NextResponse.json({ error: "Invalid rating" }, { status: 400 });
-  }
+  const { rating, comment, service } = parsed.data;
 
   const review = await prisma.review.create({
     data: {

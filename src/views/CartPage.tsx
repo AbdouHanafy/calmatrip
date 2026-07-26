@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import Link from "next/link";
 import Image from "next/image";
@@ -8,23 +8,15 @@ import { Navbar } from "@/components/layouts/Navbar";
 import { Footer } from "@/components/layouts/Footre";
 
 export default function CartPage() {
-  const {
-    cart,
-    updateCartQuantity,
-    removeFromCart,
-    cartTotal,
-  } = useMarketplace();
+  const { cart, updateCartQuantity, removeFromCart, cartTotal, cartCount, wishlist } =
+    useMarketplace();
 
   if (cart.length === 0) {
     return (
       <div className="min-h-screen bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
         <ShoppingBag className="w-14 h-14 text-gray-300 mb-4" />
-        <h1 className="text-xl font-bold text-gray-900 mb-2">
-          Ton panier est vide
-        </h1>
-        <p className="text-sm text-gray-500 mb-6">
-          Découvre nos produits et ajoute-les ici
-        </p>
+        <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
+        <p className="text-sm text-gray-500 mb-6">Découvre nos produits et ajoute-les ici</p>
         <Link
           href="/marketplace"
           className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold"
@@ -34,17 +26,14 @@ export default function CartPage() {
       </div>
     );
   }
-const { cartCount, wishlist } = useMarketplace();
+
   return (
     <>
       <Navbar />
 
       <div className="min-h-screen bg-gray-50/50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-          <Link
-            href="/marketplace"
-            className="flex items-center gap-2 text-sm text-gray-500 mb-6"
-          >
+          <Link href="/marketplace" className="flex items-center gap-2 text-sm text-gray-500 mb-6">
             <ArrowLeft className="w-4 h-4" />
             Continuer mes achats
           </Link>
@@ -89,10 +78,7 @@ const { cartCount, wishlist } = useMarketplace();
             </div>
           </div>
 
-
-          <h1 className="text-2xl font-bold mb-6">
-            Mon panier ({cart.length})
-          </h1>
+          <h1 className="text-2xl font-bold mb-6">Mon panier ({cart.length})</h1>
 
           <div className="space-y-4">
             {cart.map((item) => (
@@ -110,52 +96,37 @@ const { cartCount, wishlist } = useMarketplace();
                 </div>
 
                 <div className="flex-1">
-                  <Link
-                    href={`/marketplace/${item.productId}`}
-                    className="font-medium text-sm"
-                  >
+                  <Link href={`/marketplace/${item.productId}`} className="font-medium text-sm">
                     {item.product.name}
                   </Link>
 
                   {item.selectedSize && (
-                    <p className="text-xs text-gray-500">
-                      Taille: {item.selectedSize}
-                    </p>
+                    <p className="text-xs text-gray-500">Taille: {item.selectedSize}</p>
                   )}
 
-                  <p className="text-sm text-gray-500">
-                    {item.product.price.toFixed(2)} TND
-                  </p>
+                  <p className="text-sm text-gray-500">{item.product.price.toFixed(2)} TND</p>
                 </div>
 
                 {/* qty */}
                 <div className="flex items-center border rounded-xl">
                   <button
                     onClick={() =>
-                      updateCartQuantity(
-                        item.productId,
-                        item.quantity - 1,
-                        item.selectedSize
-                      )
+                      updateCartQuantity(item.productId, item.quantity - 1, item.selectedSize)
                     }
+                    aria-label="Diminuer la quantité"
                     className="w-8 h-8"
                   >
                     <Minus className="w-3 h-3" />
                   </button>
 
-                  <span className="w-8 text-center">
-                    {item.quantity}
-                  </span>
+                  <span className="w-8 text-center">{item.quantity}</span>
 
                   <button
                     onClick={() =>
-                      updateCartQuantity(
-                        item.productId,
-                        item.quantity + 1,
-                        item.selectedSize
-                      )
+                      updateCartQuantity(item.productId, item.quantity + 1, item.selectedSize)
                     }
                     disabled={item.quantity >= item.product.stock}
+                    aria-label="Augmenter la quantité"
                     className="w-8 h-8"
                   >
                     <Plus className="w-3 h-3" />
@@ -167,12 +138,8 @@ const { cartCount, wishlist } = useMarketplace();
                 </p>
 
                 <button
-                  onClick={() =>
-                    removeFromCart(
-                      item.productId,
-                      item.selectedSize
-                    )
-                  }
+                  onClick={() => removeFromCart(item.productId, item.selectedSize)}
+                  aria-label={`Retirer ${item.product.name} du panier`}
                 >
                   <Trash2 className="w-4 h-4 text-red-500" />
                 </button>

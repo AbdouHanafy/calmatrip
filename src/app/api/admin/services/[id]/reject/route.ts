@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { createNotification } from "@/lib/notifications";
+import { sendWhatsAppMessage } from "@/lib/whatsapp";
 
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (session?.user?.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -32,6 +30,19 @@ export async function PATCH(
         : `Votre service « ${service.title} » n'a pas été approuvé.`,
       link: "/b2b/services",
     });
+
+    const owner = await prisma.user.findUnique({
+      where: { id: service.ownerId },
+      select: { phone: true },
+    });
+    if (owner?.phone) {
+      await sendWhatsAppMessage(
+        owner.phone,
+        reason
+          ? `Votre service « ${service.title} » n'a pas été approuvé : ${reason}`
+          : `Votre service « ${service.title} » n'a pas été approuvé.`,
+      );
+    }
   }
 
   return NextResponse.json(service);

@@ -1,7 +1,8 @@
-'use client';
-import React, { useState } from 'react';
+"use client";
+import React, { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 import { useSession, signOut } from "next-auth/react";
 import { Menu, X, User, LogOut, Search } from "lucide-react";
 
@@ -35,7 +36,6 @@ export const Navbar = () => {
     <nav className="sticky top-0 z-50 border-b border-[#e6ddcd] bg-[#faf6ef]/95 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
-
           {/* Logo serif, « Trip » en italique bleu mer */}
           <Link href="/" className="flex-shrink-0">
             <span className="font-serif text-2xl tracking-tight text-[#1c2430]">
@@ -86,7 +86,13 @@ export const Navbar = () => {
                   className="flex items-center gap-1.5 px-2 py-1 text-sm text-[#1c2430] transition-colors hover:text-[#1E6091]"
                 >
                   {session.user?.image ? (
-                    <img src={session.user.image} alt="" className="h-7 w-7 rounded-full border border-[#D4A373]/60" />
+                    <Image
+                      src={session.user.image}
+                      alt=""
+                      width={28}
+                      height={28}
+                      className="h-7 w-7 rounded-full border border-[#D4A373]/60 object-cover"
+                    />
                   ) : (
                     <div className="flex h-7 w-7 items-center justify-center rounded-full border border-[#D4A373]/60">
                       <User className="h-4 w-4 text-[#6b6353]" />
@@ -194,7 +200,10 @@ export const Navbar = () => {
                   </Link>
                 )}
                 <button
-                  onClick={() => { setMobileMenuOpen(false); signOut({ callbackUrl: "/" }); }}
+                  onClick={() => {
+                    setMobileMenuOpen(false);
+                    signOut({ callbackUrl: "/" });
+                  }}
                   className="mx-4 mt-2 rounded-lg border border-[#e6ddcd] px-4 py-2.5 text-left text-sm text-[#1c2430]"
                 >
                   Sign out

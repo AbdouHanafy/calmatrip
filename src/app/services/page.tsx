@@ -1,7 +1,8 @@
 // app/services/page.tsx
-import Services from '@/views/Services';
-import type { Metadata } from 'next';
+import Services from "@/views/Services";
+import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { getPublicServices } from "@/repositories/serviceRepository";
 
 // ✅ Single export metadata
 export const metadata: Metadata = buildMetadata({
@@ -11,12 +12,15 @@ export const metadata: Metadata = buildMetadata({
   path: "/services",
   ogImage: "/og/og-services.jpg",
   keywords: [
-    "Tunisia excursions list", "book camel trek online",
-    "airport transfer Tunis", "catamaran Tunisia price",
+    "Tunisia excursions list",
+    "book camel trek online",
+    "airport transfer Tunis",
+    "catamaran Tunisia price",
     "4x4 tour Sahara Tunisia",
   ],
 });
 
-export default function ServicesPage() {
-  return <Services />;
+export default async function ServicesPage() {
+  const services = await getPublicServices();
+  return <Services services={JSON.parse(JSON.stringify(services))} />;
 }

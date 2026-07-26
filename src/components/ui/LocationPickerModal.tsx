@@ -1,12 +1,12 @@
-'use client';
-import { GoogleMap, Marker, Autocomplete, useJsApiLoader } from '@react-google-maps/api';
-import { useState, useRef } from 'react';
-import { X, MapPin } from 'lucide-react';
+"use client";
+import { GoogleMap, Marker, Autocomplete, useJsApiLoader } from "@react-google-maps/api";
+import { useState, useRef } from "react";
+import { X, MapPin } from "lucide-react";
 
 const mapContainerStyle = {
-  width: '100%',
-  height: '400px',
-  borderRadius: '1rem',
+  width: "100%",
+  height: "400px",
+  borderRadius: "1rem",
 };
 
 const defaultCenter = { lat: 36.8065, lng: 10.1815 };
@@ -18,7 +18,7 @@ interface LocationPickerModalProps {
   title: string;
 }
 
-const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = ['places'];
+const libraries: ("places" | "drawing" | "geometry" | "visualization")[] = ["places"];
 
 export default function LocationPickerModal({
   isOpen,
@@ -28,20 +28,20 @@ export default function LocationPickerModal({
 }: LocationPickerModalProps) {
   const [selectedPosition, setSelectedPosition] = useState<google.maps.LatLngLiteral | null>(null);
   const [searchValue, setSearchValue] = useState("");
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState("");
   const autocompleteRef = useRef<google.maps.places.Autocomplete | null>(null);
 
   const apiKey = process.env.NEXT_PUBLIC_ID_GOOGLEM_APS;
 
-if (!apiKey) {
-  throw new Error("NEXT_PUBLIC_ID_GOOGLEM_APS is not defined");
-}
+  if (!apiKey) {
+    throw new Error("NEXT_PUBLIC_ID_GOOGLEM_APS is not defined");
+  }
 
-const { isLoaded, loadError } = useJsApiLoader({
-  id: "google-map-script",
-  googleMapsApiKey: apiKey,
-  libraries,
-});
+  const { isLoaded, loadError } = useJsApiLoader({
+    id: "google-map-script",
+    googleMapsApiKey: apiKey,
+    libraries,
+  });
 
   const onLoadAutocomplete = (autocomplete: google.maps.places.Autocomplete) => {
     autocompleteRef.current = autocomplete;
@@ -54,11 +54,10 @@ const { isLoaded, loadError } = useJsApiLoader({
         const lat = place.geometry.location.lat();
         const lng = place.geometry.location.lng();
         setSelectedPosition({ lat, lng });
-        setAddress(place.formatted_address || place.name || '');
+        setAddress(place.formatted_address || place.name || "");
       }
     }
   };
-
 
   const onMapClick = (e: google.maps.MapMouseEvent) => {
     if (e.latLng) {
@@ -67,7 +66,7 @@ const { isLoaded, loadError } = useJsApiLoader({
       setSelectedPosition({ lat, lng });
       const geocoder = new window.google.maps.Geocoder();
       geocoder.geocode({ location: { lat, lng } }, (results, status) => {
-        if (status === 'OK' && results && results[0]) {
+        if (status === "OK" && results && results[0]) {
           setAddress(results[0].formatted_address);
         } else {
           setAddress(`${lat.toFixed(6)}, ${lng.toFixed(6)}`);
@@ -83,18 +82,16 @@ const { isLoaded, loadError } = useJsApiLoader({
     }
   };
 
-  
-
   if (!isOpen) return null;
-
-
 
   if (loadError) {
     return (
       <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70">
         <div className="bg-white rounded-2xl p-6 text-center">
           <p className="text-red-500">Error loading Google Maps. Please check your API key.</p>
-          <button onClick={onClose} className="mt-4 px-4 py-2 bg-gray-200 rounded">Close</button>
+          <button onClick={onClose} className="mt-4 px-4 py-2 bg-gray-200 rounded">
+            Close
+          </button>
         </div>
       </div>
     );
@@ -115,23 +112,31 @@ const { isLoaded, loadError } = useJsApiLoader({
       <div className="bg-white rounded-2xl w-full max-w-2xl overflow-hidden shadow-2xl">
         <div className="flex items-center justify-between p-4 border-b border-gray-100">
           <h3 className="text-xl font-bold text-gray-900">{title}</h3>
-          <button onClick={onClose} className="p-1 hover:bg-gray-100 rounded-lg transition">
+          <button
+            onClick={onClose}
+            aria-label="Fermer"
+            className="p-1 hover:bg-gray-100 rounded-lg transition"
+          >
             <X className="w-5 h-5 text-gray-500" />
           </button>
         </div>
 
         <div className="p-4">
-          <Autocomplete onLoad={onLoadAutocomplete} onPlaceChanged={onPlaceChanged} options={{
-    fields: ["formatted_address", "geometry", "name"],
-    types: ["geocode"], // 👈 IMPORTANT: uniquement adresses
-  }}>
+          <Autocomplete
+            onLoad={onLoadAutocomplete}
+            onPlaceChanged={onPlaceChanged}
+            options={{
+              fields: ["formatted_address", "geometry", "name"],
+              types: ["geocode"], // 👈 IMPORTANT: uniquement adresses
+            }}
+          >
             <input
-  type="text"
-  value={searchValue}
-  onChange={(e) => setSearchValue(e.target.value)}
-  placeholder="Search for an address..."
-  className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A373] focus:border-transparent mb-4"
-/>
+              type="text"
+              value={searchValue}
+              onChange={(e) => setSearchValue(e.target.value)}
+              placeholder="Search for an address..."
+              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A373] focus:border-transparent mb-4"
+            />
           </Autocomplete>
           <GoogleMap
             mapContainerStyle={mapContainerStyle}
@@ -144,7 +149,7 @@ const { isLoaded, loadError } = useJsApiLoader({
           <div className="mt-4 p-3 bg-gray-50 rounded-xl">
             <p className="text-sm text-gray-600 flex items-start gap-2">
               <MapPin className="w-4 h-4 mt-0.5 text-[#D4A373]" />
-              <span>{address || 'Click on the map or search for an address'}</span>
+              <span>{address || "Click on the map or search for an address"}</span>
             </p>
           </div>
         </div>
@@ -157,7 +162,10 @@ const { isLoaded, loadError } = useJsApiLoader({
           >
             Confirm
           </button>
-          <button onClick={onClose} className="px-4 py-2 border border-gray-200 rounded-xl font-semibold hover:bg-gray-50 transition">
+          <button
+            onClick={onClose}
+            className="px-4 py-2 border border-gray-200 rounded-xl font-semibold hover:bg-gray-50 transition"
+          >
             Cancel
           </button>
         </div>

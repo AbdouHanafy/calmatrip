@@ -3,6 +3,7 @@ import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 function requireAgency(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "AGENCY";
@@ -37,7 +38,7 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
 
     if (json.title !== undefined) data.title = json.title;
     if (json.subtitle !== undefined) data.subtitle = json.subtitle;
-    if (json.description !== undefined) data.description = json.description;
+    if (json.description !== undefined) data.description = sanitizeHtml(json.description);
     if (json.price !== undefined) data.price = json.price.toString();
     if (json.category !== undefined) data.category = json.category;
     if (json.duration !== undefined) data.duration = json.duration;

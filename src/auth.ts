@@ -4,6 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import bcrypt from "bcryptjs";
 import prisma from "@/lib/prisma";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
 
 export function getAdminEmails(): string[] {
   return (process.env.ADMIN_EMAILS ?? "")
@@ -14,7 +15,7 @@ export function getAdminEmails(): string[] {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   trustHost: true,
-  
+
   adapter: PrismaAdapter(prisma),
 
   providers: [
@@ -28,10 +29,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         email: { label: "Email", type: "email" },
         password: { label: "Password", type: "password" },
       },
-      async authorize(credentials) {
+      async authorize(credentials, request) {
         const email = credentials?.email;
         const password = credentials?.password;
         if (typeof email !== "string" || typeof password !== "string" || !email || !password) {
+          return null;
+        }
+
+        const ip = getClientIp(request);
+        if (!checkRateLimit(`login:${ip}:${email.toLowerCase()}`, 8, 10 * 60 * 1000)) {
           return null;
         }
 

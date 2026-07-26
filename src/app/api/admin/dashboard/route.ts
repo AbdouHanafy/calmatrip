@@ -1,7 +1,13 @@
 import prisma from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { auth } from "@/auth";
 
 export async function GET() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const [
       totalBookings,
@@ -68,9 +74,7 @@ export async function GET() {
       serviceCountMap.set(b.service, (serviceCountMap.get(b.service) ?? 0) + 1);
     }
 
-    const sorted = [...serviceCountMap.entries()]
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 5);
+    const sorted = [...serviceCountMap.entries()].sort((a, b) => b[1] - a[1]).slice(0, 5);
 
     const maxCount = sorted[0]?.[1] ?? 1;
 
@@ -94,9 +98,6 @@ export async function GET() {
     });
   } catch (error) {
     console.error("[ADMIN_DASHBOARD_GET]", error);
-    return NextResponse.json(
-      { error: "Failed to load dashboard data" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to load dashboard data" }, { status: 500 });
   }
 }

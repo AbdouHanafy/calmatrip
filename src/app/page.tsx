@@ -1,7 +1,9 @@
 // app/page.tsx
-import HomeComponent from '@/views/Home';
-import type { Metadata } from 'next';
+import HomeComponent from "@/views/Home";
+import type { Metadata } from "next";
 import { buildMetadata, faqSchema, SITE } from "@/lib/seo";
+import { getPublicProducts } from "@/repositories/productRepository";
+import { getApprovedReviews } from "@/repositories/reviewRepository";
 
 // ✅ Single export metadata — uses buildMetadata + JSON-LD inline
 export const metadata: Metadata = {
@@ -12,8 +14,11 @@ export const metadata: Metadata = {
     path: "/",
     ogImage: "/og/og-home.jpg",
     keywords: [
-      "travel Tunisia", "book excursion Tunisia", "private transfer Hammamet",
-      "Tunisia travel hub", "stress-free Tunisia",
+      "travel Tunisia",
+      "book excursion Tunisia",
+      "private transfer Hammamet",
+      "Tunisia travel hub",
+      "stress-free Tunisia",
     ],
   }),
   // WebSite schema + FAQ injected via the `other` field
@@ -59,6 +64,16 @@ export const metadata: Metadata = {
   },
 };
 
-export default function HomePage() {
-  return <HomeComponent />;
+export default async function HomePage() {
+  const [{ products }, reviews] = await Promise.all([
+    getPublicProducts({ sort: "newest" }),
+    getApprovedReviews(),
+  ]);
+
+  return (
+    <HomeComponent
+      shopProducts={JSON.parse(JSON.stringify(products.slice(0, 3)))}
+      reviews={JSON.parse(JSON.stringify(reviews))}
+    />
+  );
 }

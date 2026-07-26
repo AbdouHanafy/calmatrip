@@ -34,7 +34,11 @@ function FAQModal({
     setSaving(true);
     setError(null);
     try {
-      await onSave({ question: question.trim(), answer: answer.trim(), icon: icon.trim() || "HelpCircle" });
+      await onSave({
+        question: question.trim(),
+        answer: answer.trim(),
+        icon: icon.trim() || "HelpCircle",
+      });
     } catch {
       setError("Une erreur est survenue.");
       setSaving(false);
@@ -45,8 +49,14 @@ function FAQModal({
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
       <div className="w-full max-w-lg rounded-2xl bg-white p-6 shadow-2xl">
         <div className="mb-4 flex items-center justify-between">
-          <h2 className="font-fraunces text-lg text-calma-ink">{faq ? "Modifier la question" : "Nouvelle question"}</h2>
-          <button onClick={onClose} className="rounded-lg p-1 text-calma-taupe hover:bg-calma-sand">
+          <h2 className="font-fraunces text-lg text-calma-ink">
+            {faq ? "Modifier la question" : "Nouvelle question"}
+          </h2>
+          <button
+            onClick={onClose}
+            aria-label="Fermer"
+            className="rounded-lg p-1 text-calma-taupe hover:bg-calma-sand"
+          >
             <X className="h-5 w-5" />
           </button>
         </div>
@@ -72,7 +82,9 @@ function FAQModal({
             />
           </div>
           <div>
-            <label className="mb-1 block text-xs font-medium text-calma-taupe">Icône (nom lucide-react, optionnel)</label>
+            <label className="mb-1 block text-xs font-medium text-calma-taupe">
+              Icône (nom lucide-react, optionnel)
+            </label>
             <input
               value={icon}
               onChange={(e) => setIcon(e.target.value)}
@@ -163,7 +175,8 @@ export default function AdminFAQ() {
         <div>
           <h1 className="font-fraunces text-2xl font-normal text-calma-ink">FAQ</h1>
           <p className="mt-1 text-sm text-calma-taupe">
-            {faqs.length} question{faqs.length !== 1 ? "s" : ""} publiée{faqs.length !== 1 ? "s" : ""} sur le site
+            {faqs.length} question{faqs.length !== 1 ? "s" : ""} publiée
+            {faqs.length !== 1 ? "s" : ""} sur le site
           </p>
         </div>
         <button
@@ -189,11 +202,15 @@ export default function AdminFAQ() {
       ) : (
         <div className="space-y-3">
           {faqs.map((faq, index) => (
-            <div key={faq.id} className="flex items-start gap-4 rounded-2xl border border-calma-border bg-white p-5">
+            <div
+              key={faq.id}
+              className="flex items-start gap-4 rounded-2xl border border-calma-border bg-white p-5"
+            >
               <div className="flex flex-col gap-1 pt-1">
                 <button
                   onClick={() => move(index, -1)}
                   disabled={index === 0}
+                  aria-label="Monter"
                   className="rounded-lg p-1 text-calma-taupe hover:bg-calma-sand disabled:opacity-30"
                 >
                   <ArrowUp className="h-4 w-4" />
@@ -201,6 +218,7 @@ export default function AdminFAQ() {
                 <button
                   onClick={() => move(index, 1)}
                   disabled={index === faqs.length - 1}
+                  aria-label="Descendre"
                   className="rounded-lg p-1 text-calma-taupe hover:bg-calma-sand disabled:opacity-30"
                 >
                   <ArrowDown className="h-4 w-4" />
@@ -215,12 +233,14 @@ export default function AdminFAQ() {
               <div className="flex flex-shrink-0 gap-2">
                 <button
                   onClick={() => setModalFaq(faq)}
+                  aria-label={`Modifier « ${faq.question} »`}
                   className="rounded-xl bg-calma-sand p-2 text-calma-ink transition-colors hover:bg-calma-border"
                 >
                   <Pencil className="h-4 w-4" />
                 </button>
                 <button
                   onClick={() => remove(faq.id)}
+                  aria-label={`Supprimer « ${faq.question} »`}
                   className="rounded-xl bg-red-50 p-2 text-red-600 transition-colors hover:bg-red-100"
                 >
                   <Trash2 className="h-4 w-4" />

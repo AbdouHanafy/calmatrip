@@ -1,8 +1,8 @@
-'use client';
-import React, { useEffect, useState } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useCalmaLang } from '@/lib/calma/i18n';
+"use client";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { useCalmaLang } from "@/lib/calma/i18n";
 
 interface Product {
   id: number;
@@ -12,16 +12,8 @@ interface Product {
   image: string | null;
 }
 
-export default function CalmaShopPreview() {
+export default function CalmaShopPreview({ products }: { products: Product[] }) {
   const { t } = useCalmaLang();
-  const [products, setProducts] = useState<Product[]>([]);
-
-  useEffect(() => {
-    fetch('/api/products?sort=newest')
-      .then((res) => res.json())
-      .then((data) => setProducts(Array.isArray(data.products) ? data.products.slice(0, 3) : []))
-      .catch(() => setProducts([]));
-  }, []);
 
   if (products.length === 0) return null;
 
@@ -36,7 +28,10 @@ export default function CalmaShopPreview() {
             {t.shopHeading}
           </h2>
         </div>
-        <Link href="/marketplace" className="text-[14.5px] font-semibold text-calma-terracotta no-underline transition-colors hover:text-calma-olive">
+        <Link
+          href="/marketplace"
+          className="text-[14.5px] font-semibold text-calma-terracotta no-underline transition-colors hover:text-calma-olive"
+        >
           {t.shopViewAll} →
         </Link>
       </div>
@@ -68,7 +63,9 @@ export default function CalmaShopPreview() {
                 {product.name}
               </h3>
               <div className="flex items-baseline justify-between border-t border-calma-olive/[.12] pt-4">
-                <span className="font-fraunces text-[24px] font-semibold text-calma-olive">{product.price} TND</span>
+                <span className="font-fraunces text-[24px] font-semibold text-calma-olive">
+                  {product.price} TND
+                </span>
                 <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-white">
                   →
                 </span>

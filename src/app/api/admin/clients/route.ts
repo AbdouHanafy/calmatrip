@@ -1,7 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function GET(req: NextRequest) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const search = req.nextUrl.searchParams.get("search") || "";
     const status = req.nextUrl.searchParams.get("status") || "all";
@@ -38,39 +44,24 @@ export async function GET(req: NextRequest) {
           },
         });
 
-        const totalSpent = bookings.reduce(
-          (sum, booking) =>
-            sum + Number(booking.price || 0),
-          0
-        );
+        const totalSpent = bookings.reduce((sum, booking) => sum + Number(booking.price || 0), 0);
 
         return {
           id: user.id,
           name: user.name,
           email: user.email,
-          phone:
-            bookings[0]?.customerPhone || "",
+          phone: bookings[0]?.customerPhone || "",
           registeredDate: user.createdAt,
           totalBookings: bookings.length,
-          status:
-            user.role === "BLOCKED"
-              ? "blocked"
-              : "active",
-          lastBooking:
-            bookings[0]?.createdAt || null,
+          status: user.role === "BLOCKED" ? "blocked" : "active",
+          lastBooking: bookings[0]?.createdAt || null,
           totalSpent,
-          favoriteService:
-            bookings[0]?.service || null,
+          favoriteService: bookings[0]?.service || null,
         };
-      })
+      }),
     );
 
-    const filtered =
-      status === "all"
-        ? clients
-        : clients.filter(
-            (c) => c.status === status
-          );
+    const filtered = status === "all" ? clients : clients.filter((c) => c.status === status);
 
     return NextResponse.json({
       success: true,
@@ -86,7 +77,7 @@ export async function GET(req: NextRequest) {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

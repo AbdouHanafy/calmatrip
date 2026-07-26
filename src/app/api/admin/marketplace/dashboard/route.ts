@@ -1,8 +1,14 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 // GET /api/admin/marketplace/dashboard
 export async function GET() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const [totalProducts, lowStockProducts, totalOrders, orders, products] = await Promise.all([
       prisma.product.count(),

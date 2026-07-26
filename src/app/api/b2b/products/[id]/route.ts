@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
+import { productUpdateSchema } from "@/schemas/product";
 
 function requireArtisan(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "ARTISAN";
@@ -16,10 +17,7 @@ async function loadOwnedProduct(id: string, ownerId: string) {
 }
 
 // PATCH /api/b2b/products/[id] — edit own product; re-queues for review
-export async function PATCH(
-  req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!requireArtisan(session)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -32,27 +30,25 @@ export async function PATCH(
   }
 
   try {
-    const body = await req.json();
-    const { name, price, category, image, description, stock, sizes } = body;
-
-    let sizesUpdate: { sizes?: string[] | typeof Prisma.JsonNull } = {};
-    if (sizes !== undefined) {
-      if (sizes !== null && (!Array.isArray(sizes) || !sizes.every((s) => typeof s === "string"))) {
-        return NextResponse.json({ error: "Invalid sizes format" }, { status: 400 });
-      }
-      const isEmpty = sizes === null || (Array.isArray(sizes) && sizes.length === 0);
-      sizesUpdate.sizes = isEmpty ? Prisma.JsonNull : sizes;
+    const rawBody = await req.json();
+    const parsed = productUpdateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
+    const { name, price, category, image, description, stock, sizes } = parsed.data;
+
+    const sizesUpdate: { sizes?: string[] | typeof Prisma.JsonNull } =
+      sizes !== undefined ? { sizes: sizes && sizes.length > 0 ? sizes : Prisma.JsonNull } : {};
 
     const product = await prisma.product.update({
       where: { id: parseInt(id) },
       data: {
         ...(name !== undefined && { name }),
-        ...(price !== undefined && { price: parseFloat(price) }),
+        ...(price !== undefined && { price }),
         ...(category !== undefined && { category }),
         ...(image !== undefined && { image }),
         ...(description !== undefined && { description }),
-        ...(stock !== undefined && { stock: parseInt(stock) }),
+        ...(stock !== undefined && { stock }),
         ...sizesUpdate,
         submissionStatus: "pending",
         rejectionReason: null,
@@ -75,10 +71,7 @@ export async function PATCH(
 }
 
 // DELETE /api/b2b/products/[id] — remove own product
-export async function DELETE(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (!requireArtisan(session)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

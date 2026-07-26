@@ -1,6 +1,7 @@
 // lib/notifications.ts
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { emitNotificationEvent } from "@/lib/notificationEvents";
 
 type CreateNotificationParams = {
   recipient: "admin" | "user";
@@ -13,7 +14,7 @@ type CreateNotificationParams = {
 };
 
 export async function createNotification(params: CreateNotificationParams) {
-  return prisma.notification.create({
+  const notification = await prisma.notification.create({
     data: {
       recipient: params.recipient,
       type: params.type,
@@ -24,4 +25,8 @@ export async function createNotification(params: CreateNotificationParams) {
       metadata: params.metadata as Prisma.InputJsonValue,
     },
   });
+
+  emitNotificationEvent(params.recipient, params.userId, notification);
+
+  return notification;
 }

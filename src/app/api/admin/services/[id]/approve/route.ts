@@ -2,11 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { createNotification } from "@/lib/notifications";
+import { sendWhatsAppMessage } from "@/lib/whatsapp";
 
-export async function PATCH(
-  _req: NextRequest,
-  { params }: { params: Promise<{ id: string }> }
-) {
+export async function PATCH(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (session?.user?.role !== "ADMIN") {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -31,6 +29,17 @@ export async function PATCH(
       body: `Votre service « ${service.title} » est maintenant visible sur Explorer.`,
       link: "/b2b/services",
     });
+
+    const owner = await prisma.user.findUnique({
+      where: { id: service.ownerId },
+      select: { phone: true },
+    });
+    if (owner?.phone) {
+      await sendWhatsAppMessage(
+        owner.phone,
+        `Bonne nouvelle ! Votre service « ${service.title} » vient d'être approuvé et est maintenant visible sur Calma Trip Explorer.`,
+      );
+    }
   }
 
   return NextResponse.json(service);

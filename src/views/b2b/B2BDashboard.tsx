@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
@@ -10,6 +10,8 @@ import {
   ChevronRight,
   Menu,
   X,
+  TrendingUp,
+  UserCog,
 } from "lucide-react";
 import { useState } from "react";
 import B2BOverview from "./B2BOverview";
@@ -29,8 +31,18 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
 
   const navItems = [
     { path: "/b2b", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
-    ...(b2bType === "ARTISAN" ? [{ path: "/b2b/products", label: "Mes produits", icon: Package }] : []),
-    ...(b2bType === "AGENCY" ? [{ path: "/b2b/services", label: "Mes services", icon: Compass }] : []),
+    ...(b2bType === "ARTISAN"
+      ? [{ path: "/b2b/products", label: "Mes produits", icon: Package }]
+      : []),
+    ...(b2bType === "AGENCY"
+      ? [{ path: "/b2b/services", label: "Mes services", icon: Compass }]
+      : []),
+    {
+      path: "/b2b/sales",
+      label: b2bType === "AGENCY" ? "Réservations" : "Ventes",
+      icon: TrendingUp,
+    },
+    { path: "/b2b/profile", label: "Mon profil", icon: UserCog },
   ];
 
   const isActive = (path: string, exact?: boolean) => {
@@ -88,9 +100,7 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
         {/* Navigation */}
         <nav className="flex-1 p-4">
           <div className="mb-6">
-            <p className="text-xs uppercase tracking-wider text-calma-cream/40 mb-3 px-4">
-              Menu
-            </p>
+            <p className="text-xs uppercase tracking-wider text-calma-cream/40 mb-3 px-4">Menu</p>
             <div className="space-y-1.5">
               {navItems.map((item) => (
                 <Link
@@ -156,7 +166,11 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
             <div className="flex items-center justify-between">
               <div className="hidden lg:block">
                 <h1 className="font-fraunces text-2xl font-normal text-calma-ink">
-                  {b2bType === "ARTISAN" ? "Espace artisan" : b2bType === "AGENCY" ? "Espace agence" : "Espace partenaire"}
+                  {b2bType === "ARTISAN"
+                    ? "Espace artisan"
+                    : b2bType === "AGENCY"
+                      ? "Espace agence"
+                      : "Espace partenaire"}
                 </h1>
                 <p className="text-sm text-calma-taupe">Gérez vos annonces sur Calma Trip</p>
               </div>
@@ -179,9 +193,7 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
         </div>
 
         {/* Page content — children from nested routes, or overview as fallback */}
-        <div className="p-4 sm:p-6 lg:p-8">
-          {children ?? <B2BOverview />}
-        </div>
+        <div className="p-4 sm:p-6 lg:p-8">{children ?? <B2BOverview />}</div>
       </main>
     </div>
   );

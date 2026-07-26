@@ -4,6 +4,7 @@ import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
+import { productCreateSchema } from "@/schemas/product";
 
 function requireArtisan(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "ARTISAN";
@@ -32,29 +33,24 @@ export async function POST(req: NextRequest) {
   }
 
   try {
-    const body = await req.json();
-    const { name, price, category, image, description, stock, sizes } = body;
-
-    if (!name || price === undefined || !category || !description) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const rawBody = await req.json();
+    const parsed = productCreateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
+    const { name, price, category, image, description, stock, sizes } = parsed.data;
 
-    let normalizedSizes: string[] | typeof Prisma.JsonNull = Prisma.JsonNull;
-    if (sizes !== undefined && sizes !== null) {
-      if (!Array.isArray(sizes) || !sizes.every((s) => typeof s === "string")) {
-        return NextResponse.json({ error: "Invalid sizes format" }, { status: 400 });
-      }
-      normalizedSizes = sizes.length > 0 ? sizes : Prisma.JsonNull;
-    }
+    const normalizedSizes: string[] | typeof Prisma.JsonNull =
+      sizes && sizes.length > 0 ? sizes : Prisma.JsonNull;
 
     const product = await prisma.product.create({
       data: {
         name,
-        price: parseFloat(price),
+        price,
         category,
         image: image || "/placeholder-product.png",
         description,
-        stock: stock !== undefined ? parseInt(stock) : 100,
+        stock: stock ?? 100,
         sizes: normalizedSizes,
         ownerId: session!.user.id,
         submissionStatus: "pending",

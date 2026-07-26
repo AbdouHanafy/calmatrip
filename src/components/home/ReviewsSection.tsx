@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
+import Image from "next/image";
 import { Star, ChevronLeft, ChevronRight, Quote } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 
@@ -21,9 +22,7 @@ function StarRating({ rating }: { rating: number }) {
         <Star
           key={s}
           size={14}
-          className={
-            s <= rating ? "fill-calma-gold text-calma-gold" : "text-calma-olive/15"
-          }
+          className={s <= rating ? "fill-calma-gold text-calma-gold" : "text-calma-olive/15"}
         />
       ))}
     </div>
@@ -33,45 +32,26 @@ function StarRating({ rating }: { rating: number }) {
 function Avatar({ name, avatar }: { name: string; avatar: string | null }) {
   if (avatar) {
     return (
-      <img
+      <Image
         src={avatar}
         alt={name}
+        width={48}
+        height={48}
         className="w-12 h-12 rounded-full object-cover ring-2 ring-white shadow"
       />
     );
   }
   return (
     <div className="w-12 h-12 rounded-full bg-calma-terracotta flex items-center justify-center ring-2 ring-white shadow">
-      <span className="text-white font-bold text-lg">
-        {name.charAt(0).toUpperCase()}
-      </span>
+      <span className="text-white font-bold text-lg">{name.charAt(0).toUpperCase()}</span>
     </div>
   );
 }
 
-export default function ReviewsSection() {
+export default function ReviewsSection({ reviews }: { reviews: Review[] }) {
   const { t } = useCalmaLang();
-  const [reviews, setReviews] = useState<Review[]>([]);
   const [current, setCurrent] = useState(0);
-  const [loading, setLoading] = useState(true);
   const autoRef = useRef<NodeJS.Timeout | null>(null);
-
- useEffect(() => {
-  fetch("/api/reviews")
-    .then((r) => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
-    })
-    .then((data) => {
-      setReviews(Array.isArray(data) ? data : []);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error("Reviews fetch error:", err);
-      setReviews([]);
-      setLoading(false);
-    });
-}, []);
 
   const resetAuto = () => {
     if (autoRef.current) clearInterval(autoRef.current);
@@ -81,28 +61,11 @@ export default function ReviewsSection() {
   };
 
   useEffect(() => {
-  fetch("/api/reviews")
-    .then((r) => {
-      if (!r.ok) throw new Error(`HTTP ${r.status}`);
-      return r.json();
-    })
-    .then((data) => {
-      setReviews(Array.isArray(data) ? data : []);
-      setLoading(false);
-    })
-    .catch((err) => {
-      console.error("Reviews fetch error:", err);
-      setReviews([]);
-      setLoading(false);
-    });
-}, []);
-
-  useEffect(() => {
     if (reviews.length > 1) resetAuto();
     return () => {
       if (autoRef.current) clearInterval(autoRef.current);
     };
-  }, [reviews]);
+  }, [reviews]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const go = (dir: number) => {
     setCurrent((c) => (c + dir + reviews.length) % reviews.length);
@@ -114,19 +77,6 @@ export default function ReviewsSection() {
     reviews.length > 0
       ? (reviews.reduce((a, r) => a + r.rating, 0) / reviews.length).toFixed(1)
       : null;
-
-  if (loading) {
-    return (
-      <section className="py-20 bg-calma-sand">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 bg-calma-olive/10 rounded w-64 mx-auto" />
-            <div className="h-48 bg-calma-olive/10 rounded-2xl max-w-2xl mx-auto" />
-          </div>
-        </div>
-      </section>
-    );
-  }
 
   if (reviews.length === 0) return null;
 
@@ -156,9 +106,7 @@ export default function ReviewsSection() {
                 ))}
               </div>
               <span className="text-2xl font-bold text-calma-ink">{avg}</span>
-              <span className="text-calma-taupe text-sm">
-                ({reviews.length} reviews)
-              </span>
+              <span className="text-calma-taupe text-sm">({reviews.length} reviews)</span>
             </div>
           )}
         </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Star, Check, Trash2, Clock } from "lucide-react";
 
 interface Review {
@@ -22,9 +23,7 @@ function StarRating({ rating }: { rating: number }) {
         <Star
           key={s}
           size={14}
-          className={
-            s <= rating ? "fill-amber-400 text-amber-400" : "text-calma-taupe"
-          }
+          className={s <= rating ? "fill-amber-400 text-amber-400" : "text-calma-taupe"}
         />
       ))}
     </div>
@@ -44,7 +43,9 @@ export default function ReviewsAdminPage() {
     setLoading(false);
   };
 
-  useEffect(() => { load(); }, []);
+  useEffect(() => {
+    load();
+  }, []);
 
   const approve = async (id: number) => {
     await fetch(`/api/reviews/${id}/approve`, { method: "PATCH" });
@@ -99,8 +100,8 @@ export default function ReviewsAdminPage() {
               {f === "all"
                 ? reviews.length
                 : f === "pending"
-                ? reviews.filter((r) => !r.approved).length
-                : reviews.filter((r) => r.approved).length}
+                  ? reviews.filter((r) => !r.approved).length
+                  : reviews.filter((r) => r.approved).length}
             </span>
           </button>
         ))}
@@ -123,24 +124,22 @@ export default function ReviewsAdminPage() {
             <div
               key={review.id}
               className={`bg-white rounded-2xl border p-6 flex gap-4 ${
-                !review.approved
-                  ? "border-amber-200 bg-amber-50/30"
-                  : "border-calma-border"
+                !review.approved ? "border-amber-200 bg-amber-50/30" : "border-calma-border"
               }`}
             >
               {/* Avatar */}
               <div className="flex-shrink-0">
                 {review.avatar ? (
-                  <img
+                  <Image
                     src={review.avatar}
                     alt={review.name}
+                    width={44}
+                    height={44}
                     className="w-11 h-11 rounded-full object-cover"
                   />
                 ) : (
                   <div className="w-11 h-11 rounded-full bg-gradient-to-br from-calma-olive to-calma-olive-deep flex items-center justify-center">
-                    <span className="text-white font-bold">
-                      {review.name.charAt(0)}
-                    </span>
+                    <span className="text-white font-bold">{review.name.charAt(0)}</span>
                   </div>
                 )}
               </div>
@@ -148,9 +147,7 @@ export default function ReviewsAdminPage() {
               {/* Content */}
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-3 mb-1 flex-wrap">
-                  <span className="font-semibold text-calma-ink">
-                    {review.name}
-                  </span>
+                  <span className="font-semibold text-calma-ink">{review.name}</span>
                   <span className="text-xs text-calma-taupe">{review.email}</span>
                   <StarRating rating={review.rating} />
                   {review.service && (
@@ -168,9 +165,7 @@ export default function ReviewsAdminPage() {
                     </span>
                   )}
                 </div>
-                <p className="text-calma-taupe text-sm line-clamp-3">
-                  {review.comment}
-                </p>
+                <p className="text-calma-taupe text-sm line-clamp-3">{review.comment}</p>
                 <p className="text-xs text-calma-taupe mt-2">
                   {new Date(review.createdAt).toLocaleDateString("fr-FR", {
                     day: "numeric",

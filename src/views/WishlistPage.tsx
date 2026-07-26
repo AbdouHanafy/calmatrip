@@ -1,14 +1,14 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Heart, ArrowLeft, ShoppingCart } from "lucide-react";
 import { useMarketplace, Product } from "@/components/marketplace/Marketplacecontext";
 import { ProductCard } from "@/components/marketplace/Productcard";
-import { Navbar } from '@/components/layouts/Navbar';
-import { Footer } from '@/components/layouts/Footre';
+import { Navbar } from "@/components/layouts/Navbar";
+import { Footer } from "@/components/layouts/Footre";
 
 export default function WishlistPage() {
-const { cartCount, wishlist } = useMarketplace();
+  const { cartCount, wishlist } = useMarketplace();
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
 
@@ -25,13 +25,16 @@ const { cartCount, wishlist } = useMarketplace();
   }, [wishlist]);
   return (
     <>
-    <Navbar />
-    <div className="min-h-screen bg-gray-50/50">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
-        <Link href="/marketplace" className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-6">
-          <ArrowLeft className="w-4 h-4" /> Continuer mes achats
-        </Link>
-         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
+      <Navbar />
+      <div className="min-h-screen bg-gray-50/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-8">
+          <Link
+            href="/marketplace"
+            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-6"
+          >
+            <ArrowLeft className="w-4 h-4" /> Continuer mes achats
+          </Link>
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
             {/* Actions (wishlist + cart + commandes) */}
             <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 order-2 sm:order-1">
               {/* Wishlist */}
@@ -72,30 +75,34 @@ const { cartCount, wishlist } = useMarketplace();
             </div>
           </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 mb-6">Mes favoris ({wishlist.length})</h1>
+          <h1 className="text-2xl font-bold text-gray-900 mb-6">Mes favoris ({wishlist.length})</h1>
 
-        {loading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {Array.from({ length: 4 }).map((_, i) => (
-              <div key={i} className="bg-gray-100 animate-pulse rounded-2xl aspect-[3/4]" />
-            ))}
-          </div>
-        ) : products.length === 0 ? (
-          <div className="flex flex-col items-center justify-center py-24 text-center">
-            <Heart className="w-12 h-12 text-gray-300 mb-4" />
-            <h3 className="text-lg font-semibold text-gray-900 mb-1">Aucun favori pour le moment</h3>
-            <p className="text-sm text-gray-500">Clique sur le cœur d'un produit pour l'ajouter ici</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
-            {products.map((product) => (
-              <ProductCard key={product.id} product={product} />
-            ))}
-          </div>
-        )}
+          {loading ? (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {Array.from({ length: 4 }).map((_, i) => (
+                <div key={i} className="bg-gray-100 animate-pulse rounded-2xl aspect-[3/4]" />
+              ))}
+            </div>
+          ) : products.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-24 text-center">
+              <Heart className="w-12 h-12 text-gray-300 mb-4" />
+              <h3 className="text-lg font-semibold text-gray-900 mb-1">
+                Aucun favori pour le moment
+              </h3>
+              <p className="text-sm text-gray-500">
+                Clique sur le cœur d&apos;un produit pour l&apos;ajouter ici
+              </p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 sm:gap-6">
+              {products.map((product) => (
+                <ProductCard key={product.id} product={product} />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </>
   );
 }

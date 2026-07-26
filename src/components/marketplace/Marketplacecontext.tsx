@@ -1,5 +1,6 @@
-'use client';
+"use client";
 import { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import { useFavorites } from "@/hooks/useFavorites";
 
 export interface Product {
   id: number;
@@ -37,20 +38,15 @@ interface MarketplaceContextValue {
 const MarketplaceContext = createContext<MarketplaceContextValue | null>(null);
 
 const CART_KEY = "marketplace_cart_v1";
-const WISHLIST_KEY = "marketplace_wishlist_v1";
 
 export function MarketplaceProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [wishlist, setWishlist] = useState<number[]>([]);
   const [hydrated, setHydrated] = useState(false);
+  const { isFavorited, toggleFavorite, favoritedIds } = useFavorites();
 
   useEffect(() => {
     const savedCart = localStorage.getItem(CART_KEY);
-    const savedWishlist = localStorage.getItem(WISHLIST_KEY);
-
     if (savedCart) setCart(JSON.parse(savedCart));
-    if (savedWishlist) setWishlist(JSON.parse(savedWishlist));
-
     setHydrated(true);
   }, []);
 
@@ -60,30 +56,21 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
     }
   }, [cart, hydrated]);
 
-  useEffect(() => {
-    if (hydrated) {
-      localStorage.setItem(WISHLIST_KEY, JSON.stringify(wishlist));
-    }
-  }, [wishlist, hydrated]);
-
   // 🔥 FIX IMPORTANT: productId + size unique
   const addToCart = (product: Product, quantity = 1, size?: string) => {
     setCart((prev) => {
       const existing = prev.find(
-        (item) =>
-          item.productId === product.id &&
-          item.selectedSize === size
+        (item) => item.productId === product.id && item.selectedSize === size,
       );
 
       if (existing) {
         return prev.map((item) =>
-          item.productId === product.id &&
-          item.selectedSize === size
+          item.productId === product.id && item.selectedSize === size
             ? {
                 ...item,
                 quantity: Math.min(item.quantity + quantity, product.stock),
               }
-            : item
+            : item,
         );
       }
 
@@ -101,18 +88,11 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
   const removeFromCart = (productId: number, size?: string) => {
     setCart((prev) =>
-      prev.filter(
-        (item) =>
-          !(item.productId === productId && item.selectedSize === size)
-      )
+      prev.filter((item) => !(item.productId === productId && item.selectedSize === size)),
     );
   };
 
-  const updateCartQuantity = (
-    productId: number,
-    quantity: number,
-    size?: string
-  ) => {
+  const updateCartQuantity = (productId: number, quantity: number, size?: string) => {
     if (quantity <= 0) {
       removeFromCart(productId, size);
       return;
@@ -120,39 +100,27 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
     setCart((prev) =>
       prev.map((item) =>
-        item.productId === productId &&
-        item.selectedSize === size
+        item.productId === productId && item.selectedSize === size
           ? {
               ...item,
               quantity: Math.min(quantity, item.product.stock),
             }
-          : item
-      )
+          : item,
+      ),
     );
   };
 
   const clearCart = () => setCart([]);
 
+  const wishlist = favoritedIds("product");
   const toggleWishlist = (productId: number) => {
-    setWishlist((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
-    );
+    toggleFavorite("product", productId);
   };
+  const isWishlisted = (productId: number) => isFavorited("product", productId);
 
-  const isWishlisted = (productId: number) =>
-    wishlist.includes(productId);
+  const cartTotal = cart.reduce((sum, item) => sum + item.product.price * item.quantity, 0);
 
-  const cartTotal = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
-    0
-  );
-
-  const cartCount = cart.reduce(
-    (sum, item) => sum + item.quantity,
-    0
-  );
+  const cartCount = cart.reduce((sum, item) => sum + item.quantity, 0);
 
   return (
     <MarketplaceContext.Provider
@@ -176,7 +144,6 @@ export function MarketplaceProvider({ children }: { children: ReactNode }) {
 
 export function useMarketplace() {
   const ctx = useContext(MarketplaceContext);
-  if (!ctx)
-    throw new Error("useMarketplace must be used within MarketplaceProvider");
+  if (!ctx) throw new Error("useMarketplace must be used within MarketplaceProvider");
   return ctx;
 }

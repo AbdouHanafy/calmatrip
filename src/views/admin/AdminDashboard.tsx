@@ -1,5 +1,6 @@
-'use client';
+"use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import {
@@ -16,6 +17,11 @@ import {
   ClipboardCheck,
   HelpCircle,
   Mail,
+  UserCog,
+  Percent,
+  CalendarDays,
+  Landmark,
+  BookOpen,
 } from "lucide-react";
 import { useState } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
@@ -42,8 +48,13 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
     { path: "/admin/contacts", label: "Manage Contacts", icon: Users },
     { path: "/admin/reviews", label: "Manage Reviews", icon: Package },
     { path: "/admin/b2b-submissions", label: "B2B Submissions", icon: ClipboardCheck },
+    { path: "/admin/b2b-partners", label: "Commissions", icon: Percent },
+    { path: "/admin/events", label: "Events", icon: CalendarDays },
+    { path: "/admin/museums", label: "Museums", icon: Landmark },
+    { path: "/admin/guides", label: "Practical Guides", icon: BookOpen },
     { path: "/admin/faq", label: "FAQ", icon: HelpCircle },
     { path: "/admin/newsletter", label: "Newsletter", icon: Mail },
+    { path: "/admin/access", label: "Admin Access", icon: UserCog },
   ];
 
   const isActive = (path: string, exact?: boolean) => {
@@ -91,9 +102,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-calma-gold rounded-full animate-pulse" />
             </div>
             <div>
-              <h2 className="font-fraunces text-xl font-normal text-calma-cream">
-                Admin
-              </h2>
+              <h2 className="font-fraunces text-xl font-normal text-calma-cream">Admin</h2>
               <p className="text-xs text-calma-cream/50">Calma Trip</p>
             </div>
           </div>
@@ -169,9 +178,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
           <div className="px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
               <div className="hidden lg:block">
-                <h1 className="font-fraunces text-2xl font-normal text-calma-ink">
-                  Dashboard
-                </h1>
+                <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Dashboard</h1>
                 <p className="text-sm text-calma-taupe">Welcome to your admin space</p>
               </div>
 
@@ -192,9 +199,11 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
                 {/* Profile */}
                 <div className="flex items-center gap-3">
                   {session?.user?.image ? (
-                    <img
+                    <Image
                       src={session.user.image}
                       alt=""
+                      width={32}
+                      height={32}
                       className="w-8 h-8 rounded-xl object-cover"
                     />
                   ) : (
@@ -215,9 +224,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         </div>
 
         {/* Page content — children from nested routes, or overview as fallback */}
-        <div className="p-4 sm:p-6 lg:p-8">
-          {children ?? <AdminOverview />}
-        </div>
+        <div className="p-4 sm:p-6 lg:p-8">{children ?? <AdminOverview />}</div>
       </main>
     </div>
   );

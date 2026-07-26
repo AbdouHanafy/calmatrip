@@ -1,27 +1,43 @@
-'use client';
+"use client";
 import { useRef, useEffect, useCallback, useState } from "react";
 import {
-  Bold, Italic, Underline, Strikethrough,
-  AlignLeft, AlignCenter, AlignRight, AlignJustify,
-  List, ListOrdered, Link, Link2Off,
-  Heading1, Heading2, Heading3,
-  Undo, Redo, RemoveFormatting,
+  Bold,
+  Italic,
+  Underline,
+  Strikethrough,
+  AlignLeft,
+  AlignCenter,
+  AlignRight,
+  AlignJustify,
+  List,
+  ListOrdered,
+  Link,
+  Link2Off,
+  Heading1,
+  Heading2,
+  Heading3,
+  Undo,
+  Redo,
+  RemoveFormatting,
   Quote,
 } from "lucide-react";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
 interface RichTextEditorProps {
-  value: string;           // HTML string
+  value: string; // HTML string
   onChange: (html: string) => void;
   placeholder?: string;
-  minHeight?: number;      // px, default 160
+  minHeight?: number; // px, default 160
 }
 
 // ─── Toolbar button ───────────────────────────────────────────────────────────
 
 function ToolBtn({
-  onClick, title, active, children,
+  onClick,
+  title,
+  active,
+  children,
 }: {
   onClick: () => void;
   title: string;
@@ -32,7 +48,10 @@ function ToolBtn({
     <button
       type="button"
       title={title}
-      onMouseDown={(e) => { e.preventDefault(); onClick(); }}
+      onMouseDown={(e) => {
+        e.preventDefault();
+        onClick();
+      }}
       className={`p-1.5 rounded-lg transition-all duration-150 ${
         active
           ? "bg-[#87CEEB]/20 text-[#87CEEB]"
@@ -67,15 +86,29 @@ export function RichTextEditor({
   useEffect(() => {
     const el = editorRef.current;
     if (!el) return;
-    if (isInternalUpdate.current) { isInternalUpdate.current = false; return; }
+    if (isInternalUpdate.current) {
+      isInternalUpdate.current = false;
+      return;
+    }
     if (el.innerHTML !== value) el.innerHTML = value;
   }, [value]);
 
   // Track active formats on selection change
   const updateActiveFormats = useCallback(() => {
     const formats = new Set<string>();
-    const tags = ["bold", "italic", "underline", "strikeThrough", "insertOrderedList", "insertUnorderedList"];
-    tags.forEach((cmd) => { try { if (document.queryCommandState(cmd)) formats.add(cmd); } catch {} });
+    const tags = [
+      "bold",
+      "italic",
+      "underline",
+      "strikeThrough",
+      "insertOrderedList",
+      "insertUnorderedList",
+    ];
+    tags.forEach((cmd) => {
+      try {
+        if (document.queryCommandState(cmd)) formats.add(cmd);
+      } catch {}
+    });
     const block = document.queryCommandValue("formatBlock").toLowerCase();
     if (block) formats.add(block);
     setActiveFormats(formats);
@@ -86,18 +119,24 @@ export function RichTextEditor({
     return () => document.removeEventListener("selectionchange", updateActiveFormats);
   }, [updateActiveFormats]);
 
-  const exec = useCallback((cmd: string, value?: string) => {
-    editorRef.current?.focus();
-    document.execCommand(cmd, false, value);
-    isInternalUpdate.current = true;
-    onChange(editorRef.current?.innerHTML ?? "");
-    updateActiveFormats();
-  }, [onChange, updateActiveFormats]);
+  const exec = useCallback(
+    (cmd: string, value?: string) => {
+      editorRef.current?.focus();
+      document.execCommand(cmd, false, value);
+      isInternalUpdate.current = true;
+      onChange(editorRef.current?.innerHTML ?? "");
+      updateActiveFormats();
+    },
+    [onChange, updateActiveFormats],
+  );
 
-  const formatBlock = useCallback((tag: string) => {
-    const current = document.queryCommandValue("formatBlock").toLowerCase();
-    exec("formatBlock", current === tag ? "p" : tag);
-  }, [exec]);
+  const formatBlock = useCallback(
+    (tag: string) => {
+      const current = document.queryCommandValue("formatBlock").toLowerCase();
+      exec("formatBlock", current === tag ? "p" : tag);
+    },
+    [exec],
+  );
 
   // Save selection before opening link input
   const saveSelection = () => {
@@ -134,9 +173,9 @@ export function RichTextEditor({
       { cmd: "redo", icon: <Redo className="w-4 h-4" />, title: "Redo" },
     ],
     [
-      { cmd: "bold",          icon: <Bold className="w-4 h-4" />,          title: "Bold (Ctrl+B)" },
-      { cmd: "italic",        icon: <Italic className="w-4 h-4" />,        title: "Italic (Ctrl+I)" },
-      { cmd: "underline",     icon: <Underline className="w-4 h-4" />,     title: "Underline (Ctrl+U)" },
+      { cmd: "bold", icon: <Bold className="w-4 h-4" />, title: "Bold (Ctrl+B)" },
+      { cmd: "italic", icon: <Italic className="w-4 h-4" />, title: "Italic (Ctrl+I)" },
+      { cmd: "underline", icon: <Underline className="w-4 h-4" />, title: "Underline (Ctrl+U)" },
       { cmd: "strikeThrough", icon: <Strikethrough className="w-4 h-4" />, title: "Strikethrough" },
     ],
     [
@@ -146,14 +185,18 @@ export function RichTextEditor({
       { cmd: "blockquote", icon: <Quote className="w-4 h-4" />, title: "Quote", isBlock: true },
     ],
     [
-      { cmd: "justifyLeft",    icon: <AlignLeft className="w-4 h-4" />,    title: "Align left" },
-      { cmd: "justifyCenter",  icon: <AlignCenter className="w-4 h-4" />,  title: "Center" },
-      { cmd: "justifyRight",   icon: <AlignRight className="w-4 h-4" />,   title: "Align right" },
-      { cmd: "justifyFull",    icon: <AlignJustify className="w-4 h-4" />, title: "Justify" },
+      { cmd: "justifyLeft", icon: <AlignLeft className="w-4 h-4" />, title: "Align left" },
+      { cmd: "justifyCenter", icon: <AlignCenter className="w-4 h-4" />, title: "Center" },
+      { cmd: "justifyRight", icon: <AlignRight className="w-4 h-4" />, title: "Align right" },
+      { cmd: "justifyFull", icon: <AlignJustify className="w-4 h-4" />, title: "Justify" },
     ],
     [
-      { cmd: "insertUnorderedList", icon: <List className="w-4 h-4" />,        title: "Bullet list" },
-      { cmd: "insertOrderedList",   icon: <ListOrdered className="w-4 h-4" />, title: "Numbered list" },
+      { cmd: "insertUnorderedList", icon: <List className="w-4 h-4" />, title: "Bullet list" },
+      {
+        cmd: "insertOrderedList",
+        icon: <ListOrdered className="w-4 h-4" />,
+        title: "Numbered list",
+      },
     ],
   ];
 
@@ -165,8 +208,8 @@ export function RichTextEditor({
           <div key={gi} className="flex items-center gap-0.5">
             {gi > 0 && <Divider />}
             {group.map((item) => {
-              const { cmd, icon, title } = item as any;
-              const isBlock = 'isBlock' in item ? (item as any).isBlock : false;
+              const { cmd, icon, title } = item;
+              const isBlock = "isBlock" in item ? item.isBlock : false;
               return (
                 <ToolBtn
                   key={cmd}
@@ -188,7 +231,10 @@ export function RichTextEditor({
           title="Insert link"
           active={showLinkInput}
           onClick={() => {
-            if (showLinkInput) { setShowLinkInput(false); return; }
+            if (showLinkInput) {
+              setShowLinkInput(false);
+              return;
+            }
             saveSelection();
             setShowLinkInput(true);
           }}
@@ -215,7 +261,13 @@ export function RichTextEditor({
             type="text"
             value={linkUrl}
             onChange={(e) => setLinkUrl(e.target.value)}
-            onKeyDown={(e) => { if (e.key === "Enter") { e.preventDefault(); insertLink(); } if (e.key === "Escape") setShowLinkInput(false); }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                insertLink();
+              }
+              if (e.key === "Escape") setShowLinkInput(false);
+            }}
             placeholder="https://example.com"
             className="flex-1 text-sm px-3 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
           />
@@ -245,7 +297,10 @@ export function RichTextEditor({
           onInput={handleInput}
           onKeyDown={(e) => {
             // Tab → indent list
-            if (e.key === "Tab") { e.preventDefault(); exec(e.shiftKey ? "outdent" : "indent"); }
+            if (e.key === "Tab") {
+              e.preventDefault();
+              exec(e.shiftKey ? "outdent" : "indent");
+            }
           }}
           style={{ minHeight }}
           className="px-4 py-3 text-gray-800 text-sm leading-relaxed focus:outline-none
@@ -271,7 +326,13 @@ export function RichTextEditor({
       {/* ── Word count ── */}
       <div className="px-3 py-1.5 bg-gray-50 border-t border-gray-100 flex justify-end">
         <span className="text-xs text-gray-400">
-          {(editorRef.current?.innerText ?? value.replace(/<[^>]+>/g, "")).trim().split(/\s+/).filter(Boolean).length} words
+          {
+            (editorRef.current?.innerText ?? value.replace(/<[^>]+>/g, ""))
+              .trim()
+              .split(/\s+/)
+              .filter(Boolean).length
+          }{" "}
+          words
         </span>
       </div>
     </div>

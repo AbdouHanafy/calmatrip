@@ -13,11 +13,13 @@ model User {
   email         String?   @unique
   emailVerified DateTime?
   image         String?
+  phone         String?
   password      String?
   role          String    @default("USER")
   status        String    @default("active")
   b2bType       String?
   b2bStatus     String?   @default("pending")
+  commissionRate Float    @default(10)
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   accounts      Account[]
@@ -27,6 +29,7 @@ model User {
   pushSubscriptions PushSubscription[]
   products          Product[]
   services          Service[]
+  favorites         Favorite[]
 
   @@map("users")
 }
@@ -124,6 +127,14 @@ model Booking {
   returnDate  DateTime?
   returnTime  String?
 
+  // Snapshotted at booking time when the service belongs to a B2B partner —
+  // lets us track what the platform earned without recomputing from
+  // service/user records that may change later.
+  serviceId      Int?
+  ownerId        String?
+  commissionRate Float?
+  commissionAmount Float?
+
   review Review?
 
   @@index([timeSlotId])
@@ -197,6 +208,77 @@ model FAQ {
   @@map("faqs")
 }
 
+model Event {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String   @db.Text
+  image       String?  @db.Text
+  city        String
+  address     String?
+  startDate   DateTime
+  endDate     DateTime?
+  price       String?
+  category    String?
+  lat         Float?
+  lng         Float?
+  active      Boolean  @default(true)
+  order       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("events")
+}
+
+model Museum {
+  id            Int      @id @default(autoincrement())
+  name          String
+  description   String   @db.Text
+  image         String?  @db.Text
+  city          String
+  address       String?
+  openingHours  String?
+  price         String?
+  lat           Float?
+  lng           Float?
+  active        Boolean  @default(true)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("museums")
+}
+
+model PracticalGuide {
+  id        Int      @id @default(autoincrement())
+  title     String
+  slug      String   @unique
+  summary   String   @db.Text
+  content   String   @db.Text
+  category  String?
+  icon      String?
+  image     String?  @db.Text
+  active    Boolean  @default(true)
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("practical_guides")
+}
+
+model Favorite {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  itemType  String   // "product" | "place" | "event" | "museum" | "service"
+  itemId    Int
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, itemType, itemId])
+  @@index([userId])
+  @@map("favorites")
+}
+
 model NewsletterSubscriber {
   id        Int      @id @default(autoincrement())
   email     String   @unique
@@ -233,6 +315,11 @@ model OrderItem {
   quantity    Int
   order       Order   @relation(fields: [orderId], references: [id], onDelete: Cascade)
   product     Product @relation(fields: [productId], references: [id])
+
+  // Snapshotted at order time when the product belongs to a B2B partner.
+  ownerId          String?
+  commissionRate   Float?
+  commissionAmount Float?
 
   @@index([orderId], map: "order_items_orderId_idx")
   @@index([productId], map: "order_items_productId_idx")

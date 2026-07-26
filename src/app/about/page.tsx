@@ -1,7 +1,9 @@
 // app/about/page.tsx
-import About from '@/views/About';
-import type { Metadata } from 'next';
+import About from "@/views/About";
+import type { Metadata } from "next";
 import { buildMetadata } from "@/lib/seo";
+import { getTeamMembers } from "@/repositories/teamRepository";
+import { getApprovedReviews } from "@/repositories/reviewRepository";
 
 // ✅ Single export metadata
 export const metadata: Metadata = buildMetadata({
@@ -11,11 +13,17 @@ export const metadata: Metadata = buildMetadata({
   path: "/about",
   ogImage: "/og/og-about.jpg",
   keywords: [
-    "Calma Trip story", "Tunisia travel agency Hammamet",
-    "who is Calma Trip", "Tunisia travel company",
+    "Calma Trip story",
+    "Tunisia travel agency Hammamet",
+    "who is Calma Trip",
+    "Tunisia travel company",
   ],
 });
 
-export default function AboutPage() {
-  return <About />;
+export default async function AboutPage() {
+  const [team, reviews] = await Promise.all([getTeamMembers(), getApprovedReviews()]);
+
+  return (
+    <About team={JSON.parse(JSON.stringify(team))} reviews={JSON.parse(JSON.stringify(reviews))} />
+  );
 }

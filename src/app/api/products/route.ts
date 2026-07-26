@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
+import { auth } from "@/auth";
+import { productCreateSchema } from "@/schemas/product";
+import { getPublicProducts } from "@/repositories/productRepository";
 
 // GET /api/products?search=&category=&sort=
 export async function GET(req: NextRequest) {
@@ -10,37 +13,9 @@ export async function GET(req: NextRequest) {
     const category = searchParams.get("category") || "";
     const sort = searchParams.get("sort") || "newest";
 
-    const where: any = { submissionStatus: "approved" };
-    if (search) {
-      where.OR = [
-        { name: { contains: search } },
-        { description: { contains: search } },
-      ];
-    }
-    if (category && category !== "all") {
-      where.category = category;
-    }
+    const result = await getPublicProducts({ search, category, sort });
 
-    const orderBy =
-      sort === "price_asc"
-        ? { price: "asc" as const }
-        : sort === "price_desc"
-        ? { price: "desc" as const }
-        : sort === "name"
-        ? { name: "asc" as const }
-        : { createdAt: "desc" as const };
-
-    const products = await prisma.product.findMany({ where, orderBy });
-    const categories = await prisma.product.findMany({
-      where: { submissionStatus: "approved" },
-      select: { category: true },
-      distinct: ["category"],
-    });
-
-    return NextResponse.json({
-      products,
-      categories: categories.map((c) => c.category),
-    });
+    return NextResponse.json(result);
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
@@ -49,30 +24,30 @@ export async function GET(req: NextRequest) {
 
 // POST /api/products  (admin: create product)
 export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const body = await req.json();
-    const { name, price, category, image, description, stock, sizes } = body;
-
-    if (!name || price === undefined || !category || !description) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+    const rawBody = await req.json();
+    const parsed = productCreateSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
     }
+    const { name, price, category, image, description, stock, sizes } = parsed.data;
 
-    let normalizedSizes: string[] | typeof Prisma.JsonNull = Prisma.JsonNull;
-    if (sizes !== undefined && sizes !== null) {
-      if (!Array.isArray(sizes) || !sizes.every((s) => typeof s === "string")) {
-        return NextResponse.json({ error: "Invalid sizes format" }, { status: 400 });
-      }
-      normalizedSizes = sizes.length > 0 ? sizes : Prisma.JsonNull;
-    }
+    const normalizedSizes: string[] | typeof Prisma.JsonNull =
+      sizes && sizes.length > 0 ? sizes : Prisma.JsonNull;
 
     const product = await prisma.product.create({
       data: {
         name,
-        price: parseFloat(price),
+        price,
         category,
         image: image || "/placeholder-product.png",
         description,
-        stock: stock !== undefined ? parseInt(stock) : 100,
+        stock: stock ?? 100,
         sizes: normalizedSizes,
       },
     });

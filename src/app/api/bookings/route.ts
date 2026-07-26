@@ -1,37 +1,29 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
 import { sendPushToRole, sendPushToUser } from "@/lib/push";
 import { sendBookingConfirmationEmail } from "@/lib/mail";
+import { auth } from "@/auth";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
+import { bookingSchema } from "@/schemas/booking";
 
 export const dynamic = "force-dynamic";
 
-interface BookingPayload {
-  serviceId: number;
-
-  tripType: "one-way" | "round-trip";
-
-  date: string;
-  time: string;
-
-  returnDate?: string;
-  returnTime?: string;
-
-  fromLocation: string;
-  toLocation: string;
-
-  passengers?: number;
-  hasLuggage?: boolean;
-  specialRequests?: string;
-
-  customerName: string;
-  customerEmail: string;
-  customerPhone?: string;
-}
-
 export async function POST(req: NextRequest) {
   try {
-    const body: BookingPayload = await req.json();
+    if (!checkRateLimit(`booking:${getClientIp(req)}`, 10, 10 * 60 * 1000)) {
+      return NextResponse.json(
+        { error: "Trop de tentatives. Réessayez plus tard." },
+        { status: 429 },
+      );
+    }
+
+    const rawBody = await req.json();
+    const parsed = bookingSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    }
 
     const {
       serviceId,
@@ -48,37 +40,7 @@ export async function POST(req: NextRequest) {
       customerName,
       customerEmail,
       customerPhone,
-    } = body;
-
-    if (
-      !serviceId ||
-      !tripType ||
-      !date ||
-      !time ||
-      !fromLocation ||
-      !toLocation ||
-      !customerName ||
-      !customerEmail
-    ) {
-      return NextResponse.json(
-        { error: "Missing required fields" },
-        { status: 400 }
-      );
-    }
-
-    if (
-      tripType === "round-trip" &&
-      (!returnDate || !returnTime)
-    ) {
-      return NextResponse.json(
-        {
-          error: "Return date and return time are required.",
-        },
-        {
-          status: 400,
-        }
-      );
-    }
+    } = parsed.data;
 
     const departureDate = new Date(`${date}T00:00:00.000Z`);
 
@@ -89,7 +51,7 @@ export async function POST(req: NextRequest) {
         },
         {
           status: 400,
-        }
+        },
       );
     }
 
@@ -103,7 +65,7 @@ export async function POST(req: NextRequest) {
         },
         {
           status: 400,
-        }
+        },
       );
     }
 
@@ -119,7 +81,7 @@ export async function POST(req: NextRequest) {
           },
           {
             status: 400,
-          }
+          },
         );
       }
 
@@ -130,7 +92,7 @@ export async function POST(req: NextRequest) {
           },
           {
             status: 400,
-          }
+          },
         );
       }
     }
@@ -147,11 +109,23 @@ export async function POST(req: NextRequest) {
         where: {
           id: serviceId,
         },
+        include: {
+          owner: { select: { commissionRate: true } },
+        },
       });
 
       if (!service || !service.active) {
         throw new Error("Service not found or inactive");
       }
+
+      // Commission only applies to services owned by a B2B partner — house
+      // services (ownerId null) never carry a commission.
+      const commissionRate = service.ownerId ? (service.owner?.commissionRate ?? 10) : null;
+      const priceNumeric = parseFloat(service.price.replace(/[^\d.]/g, "") || "0");
+      const commissionAmount =
+        commissionRate !== null && !isNaN(priceNumeric)
+          ? Math.round(priceNumeric * (commissionRate / 100) * 100) / 100
+          : null;
 
       return tx.booking.create({
         data: {
@@ -163,10 +137,7 @@ export async function POST(req: NextRequest) {
           time,
 
           returnDate: returnDateObject,
-          returnTime:
-            tripType === "round-trip"
-              ? returnTime
-              : null,
+          returnTime: tripType === "round-trip" ? returnTime : null,
 
           fromLocation,
           toLocation,
@@ -182,12 +153,17 @@ export async function POST(req: NextRequest) {
 
           price: service.price,
 
+          serviceId: service.id,
+          ownerId: service.ownerId,
+          commissionRate,
+          commissionAmount,
+
           status: "pending",
         },
       });
     });
 
-    const notifications: Promise<any>[] = [
+    const notifications: Promise<unknown>[] = [
       createNotification({
         recipient: "admin",
         type: "booking_created",
@@ -225,7 +201,7 @@ export async function POST(req: NextRequest) {
           metadata: {
             bookingId: booking.id,
           },
-        })
+        }),
       );
 
       notifications.push(
@@ -233,7 +209,7 @@ export async function POST(req: NextRequest) {
           title: "Booking created",
           body: `Your booking for ${booking.service} has been received.`,
           link: "/dashboard/bookings",
-        })
+        }),
       );
     }
 
@@ -263,28 +239,41 @@ export async function POST(req: NextRequest) {
     return NextResponse.json(booking, {
       status: 201,
     });
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
 
     return NextResponse.json(
       {
-        error: err.message || "Booking failed",
+        error: err instanceof Error ? err.message : "Booking failed",
       },
       {
         status: 400,
-      }
+      },
     );
   }
 }
 
 export async function GET(req: NextRequest) {
   try {
+    const session = await auth();
     const { searchParams } = new URL(req.url);
 
     const email = searchParams.get("email");
     const status = searchParams.get("status");
+    const isAdmin = session?.user?.role === "ADMIN";
 
-    const where: any = {};
+    if (email) {
+      if (
+        !session?.user?.email ||
+        (session.user.email.toLowerCase() !== email.toLowerCase() && !isAdmin)
+      ) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+    } else if (!isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const where: Prisma.BookingWhereInput = {};
 
     if (email) {
       where.customerEmail = email;
@@ -314,7 +303,7 @@ export async function GET(req: NextRequest) {
       },
       {
         status: 500,
-      }
+      },
     );
   }
 }

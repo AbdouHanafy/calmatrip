@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, X, Clock, Check } from "lucide-react";
@@ -139,7 +139,9 @@ export default function B2BProducts() {
       <div className="mb-6 flex items-center justify-between">
         <div>
           <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Mes produits</h1>
-          <p className="text-sm text-calma-taupe">Chaque ajout ou modification est soumis à validation.</p>
+          <p className="text-sm text-calma-taupe">
+            Chaque ajout ou modification est soumis à validation.
+          </p>
         </div>
         <button
           onClick={openCreate}
@@ -163,11 +165,15 @@ export default function B2BProducts() {
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">Chargement...</td>
+                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
+                  Chargement...
+                </td>
               </tr>
             ) : products.length === 0 ? (
               <tr>
-                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">Aucun produit pour l&apos;instant</td>
+                <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
+                  Aucun produit pour l&apos;instant
+                </td>
               </tr>
             ) : (
               products.map((p) => (
@@ -175,7 +181,13 @@ export default function B2BProducts() {
                   <td className="px-4 py-3">
                     <div className="flex items-center gap-3">
                       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-calma-sand">
-                        <Image src={p.image || "/placeholder-product.png"} alt={p.name} fill className="object-cover" sizes="40px" />
+                        <Image
+                          src={p.image || "/placeholder-product.png"}
+                          alt={p.name}
+                          fill
+                          className="object-cover"
+                          sizes="40px"
+                        />
                       </div>
                       <span className="line-clamp-1 font-medium text-calma-ink">{p.name}</span>
                     </div>
@@ -190,10 +202,18 @@ export default function B2BProducts() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-2">
-                      <button onClick={() => openEdit(p)} className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand">
+                      <button
+                        onClick={() => openEdit(p)}
+                        aria-label={`Modifier ${p.name}`}
+                        className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
+                      >
                         <Pencil className="h-4 w-4" />
                       </button>
-                      <button onClick={() => handleDelete(p.id)} className="rounded-lg p-2 text-red-500 hover:bg-red-50">
+                      <button
+                        onClick={() => handleDelete(p.id)}
+                        aria-label={`Supprimer ${p.name}`}
+                        className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                      >
                         <Trash2 className="h-4 w-4" />
                       </button>
                     </div>
@@ -209,13 +229,23 @@ export default function B2BProducts() {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
           <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6">
             <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-calma-ink">{editing ? "Modifier le produit" : "Nouveau produit"}</h2>
-              <button onClick={() => setModalOpen(false)} className="text-calma-taupe hover:text-calma-ink">
+              <h2 className="text-lg font-bold text-calma-ink">
+                {editing ? "Modifier le produit" : "Nouveau produit"}
+              </h2>
+              <button
+                onClick={() => setModalOpen(false)}
+                aria-label="Fermer"
+                className="text-calma-taupe hover:text-calma-ink"
+              >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {error && <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</div>}
+            {error && (
+              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                {error}
+              </div>
+            )}
 
             <form onSubmit={handleSave} className="space-y-4">
               <div>
@@ -229,7 +259,9 @@ export default function B2BProducts() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">Prix (TND)</label>
+                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                    Prix (TND)
+                  </label>
                   <input
                     required
                     type="number"
@@ -292,7 +324,9 @@ export default function B2BProducts() {
                 />
               </div>
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">Description</label>
+                <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                  Description
+                </label>
                 <textarea
                   required
                   rows={3}
@@ -307,7 +341,11 @@ export default function B2BProducts() {
                 disabled={saving}
                 className="w-full rounded-xl bg-calma-gold py-3 font-semibold text-[#241A12] transition-shadow hover:shadow-lg disabled:opacity-60"
               >
-                {saving ? "Enregistrement..." : editing ? "Enregistrer" : "Soumettre pour validation"}
+                {saving
+                  ? "Enregistrement..."
+                  : editing
+                    ? "Enregistrer"
+                    : "Soumettre pour validation"}
               </button>
             </form>
           </div>

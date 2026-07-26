@@ -3,18 +3,8 @@ import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  Heart,
-  ShoppingCart,
-  ArrowLeft,
-  Minus,
-  Plus,
-  Check,
-} from "lucide-react";
-import {
-  useMarketplace,
-  Product,
-} from "@/components/marketplace/Marketplacecontext";
+import { Heart, ShoppingCart, ArrowLeft, Minus, Plus, Check } from "lucide-react";
+import { useMarketplace, Product } from "@/components/marketplace/Marketplacecontext";
 import { ProductCard } from "@/components/marketplace/Productcard";
 import { Navbar } from "@/components/layouts/Navbar";
 import { Footer } from "@/components/layouts/Footre";
@@ -68,7 +58,6 @@ export default function ProductDetailPage() {
         <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
           Retour à la marketplace
         </Link>
-        
       </div>
     );
   }
@@ -101,10 +90,31 @@ export default function ProductDetailPage() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
           <button
             onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-6 transition-colors"
+            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-3 transition-colors"
           >
             <ArrowLeft className="w-4 h-4" /> Retour
           </button>
+          <nav
+            aria-label="Fil d'Ariane"
+            className="mb-6 flex items-center gap-1.5 text-xs text-gray-400"
+          >
+            <Link href="/" className="hover:text-gray-700">
+              Accueil
+            </Link>
+            <span>/</span>
+            <Link href="/marketplace" className="hover:text-gray-700">
+              Marketplace
+            </Link>
+            <span>/</span>
+            <Link
+              href={`/marketplace?category=${encodeURIComponent(product.category)}`}
+              className="hover:text-gray-700"
+            >
+              {product.category}
+            </Link>
+            <span>/</span>
+            <span className="text-gray-600">{product.name}</span>
+          </nav>
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
             {/* Actions (wishlist + cart + commandes) */}
             <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 order-2 sm:order-1">
@@ -191,16 +201,12 @@ export default function ProductDetailPage() {
               <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">
                 {product.category}
               </p>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">
-                {product.name}
-              </h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{product.name}</h1>
               <p className="text-2xl font-bold text-[#4CAF50] mb-4">
                 {product.price.toFixed(2)} TND
               </p>
 
-              <p className="text-sm text-gray-600 leading-relaxed mb-6">
-                {product.description}
-              </p>
+              <p className="text-sm text-gray-600 leading-relaxed mb-6">{product.description}</p>
 
               {hasSizes && (
                 <div className="mb-6">
@@ -217,9 +223,7 @@ export default function ProductDetailPage() {
                       <button
                         key={size}
                         type="button"
-                        onClick={() =>
-                          setSelectedSize(selectedSize === size ? null : size)
-                        }
+                        onClick={() => setSelectedSize(selectedSize === size ? null : size)}
                         className={`px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all ${
                           selectedSize === size
                             ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50]"
@@ -235,17 +239,13 @@ export default function ProductDetailPage() {
 
               <div className="mb-6">
                 {outOfStock ? (
-                  <span className="text-sm font-medium text-red-500">
-                    Rupture de stock
-                  </span>
+                  <span className="text-sm font-medium text-red-500">Rupture de stock</span>
                 ) : product.stock <= 5 ? (
                   <span className="text-sm font-medium text-[#856B00]">
                     Plus que {product.stock} en stock
                   </span>
                 ) : (
-                  <span className="text-sm font-medium text-[#4CAF50]">
-                    En stock
-                  </span>
+                  <span className="text-sm font-medium text-[#4CAF50]">En stock</span>
                 )}
               </div>
 
@@ -260,9 +260,7 @@ export default function ProductDetailPage() {
                     </button>
                     <span className="w-10 text-center font-medium">{qty}</span>
                     <button
-                      onClick={() =>
-                        setQty((q) => Math.min(product.stock, q + 1))
-                      }
+                      onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
                       className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-r-xl"
                     >
                       <Plus className="w-4 h-4" />
@@ -277,11 +275,7 @@ export default function ProductDetailPage() {
                   disabled={outOfStock}
                   className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold py-3 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg transition-shadow"
                 >
-                  {added ? (
-                    <Check className="w-5 h-5" />
-                  ) : (
-                    <ShoppingCart className="w-5 h-5" />
-                  )}
+                  {added ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
                   {added ? "Ajouté !" : "Ajouter au panier"}
                 </button>
                 <button
@@ -299,9 +293,7 @@ export default function ProductDetailPage() {
 
           {related.length > 0 && (
             <div className="mt-16">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">
-                Produits similaires
-              </h2>
+              <h2 className="text-lg font-bold text-gray-900 mb-4">Produits similaires</h2>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
                 {related.map((p) => (
                   <ProductCard key={p.id} product={p} />

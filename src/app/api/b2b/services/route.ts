@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
+import { sanitizeHtml } from "@/lib/sanitize";
 
 function requireAgency(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "AGENCY";
@@ -42,7 +43,7 @@ export async function POST(req: NextRequest) {
       data: {
         title: json.title,
         subtitle: json.subtitle ?? null,
-        description: json.description,
+        description: sanitizeHtml(json.description),
         price: json.price.toString(),
         category: json.category,
         duration: json.duration ?? null,

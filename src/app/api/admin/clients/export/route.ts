@@ -1,7 +1,13 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
 
 export async function GET() {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const users = await prisma.user.findMany({
       orderBy: {
@@ -12,41 +18,27 @@ export async function GET() {
       },
     });
 
-    const headers = [
-      "Name",
-      "Email",
-      "Phone",
-      "Status",
-      "Registered Date",
-      "Total Bookings",
-    ];
+    const headers = ["Name", "Email", "Phone", "Status", "Registered Date", "Total Bookings"];
 
     const rows = users.map((user) => [
       user.name ?? "",
       user.email ?? "",
-      
+
       user.status ?? "active",
       user.createdAt.toISOString(),
-      
-      
     ]);
 
     const csv = [
       headers.join(","),
-      ...rows.map((row) =>
-        row
-          .map((field) => `"${String(field).replace(/"/g, '""')}"`)
-          .join(",")
-      ),
+      ...rows.map((row) => row.map((field) => `"${String(field).replace(/"/g, '""')}"`).join(",")),
     ].join("\n");
 
     return new Response(csv, {
       headers: {
         "Content-Type": "text/csv",
-        "Content-Disposition":
-          `attachment; filename="clients-${new Date()
-            .toISOString()
-            .split("T")[0]}.csv`,
+        "Content-Disposition": `attachment; filename="clients-${
+          new Date().toISOString().split("T")[0]
+        }.csv`,
       },
     });
   } catch (error) {
@@ -57,7 +49,7 @@ export async function GET() {
         success: false,
         message: "Export failed",
       },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

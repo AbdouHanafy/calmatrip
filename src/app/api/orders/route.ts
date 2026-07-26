@@ -1,17 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { createNotification } from "@/lib/notifications";
 import { sendPushToRole, sendPushToUser } from "@/lib/push";
-
-interface CheckoutItem {
-  productId: number;
-  quantity: number;
-}
+import { auth } from "@/auth";
+import { checkoutSchema } from "@/schemas/order";
 
 // POST /api/orders (checkout)
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
+    const rawBody = await req.json();
+    const parsed = checkoutSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    }
 
     const {
       customerName,
@@ -22,23 +24,7 @@ export async function POST(req: NextRequest) {
       paymentMethod,
       notes,
       items,
-    }: {
-      customerName: string;
-      customerEmail: string;
-      customerPhone?: string;
-      address: string;
-      city?: string;
-      paymentMethod?: string;
-      notes?: string;
-      items: CheckoutItem[];
-    } = body;
-
-    if (!customerName || !customerEmail || !address || !items?.length) {
-      return NextResponse.json(
-        { error: "Champs requis manquants" },
-        { status: 400 }
-      );
-    }
+    } = parsed.data;
 
     // 1. CREATE ORDER (transaction safe)
     const order = await prisma.$transaction(async (tx) => {
@@ -49,11 +35,15 @@ export async function POST(req: NextRequest) {
         productName: string;
         price: number;
         quantity: number;
+        ownerId: string | null;
+        commissionRate: number | null;
+        commissionAmount: number | null;
       }[] = [];
 
       for (const item of items) {
         const product = await tx.product.findUnique({
           where: { id: item.productId },
+          include: { owner: { select: { commissionRate: true } } },
         });
 
         if (!product) {
@@ -62,7 +52,7 @@ export async function POST(req: NextRequest) {
 
         if (product.stock < item.quantity) {
           throw new Error(
-            `Stock insuffisant pour "${product.name}" (disponible: ${product.stock})`
+            `Stock insuffisant pour "${product.name}" (disponible: ${product.stock})`,
           );
         }
 
@@ -74,11 +64,22 @@ export async function POST(req: NextRequest) {
 
         total += product.price * item.quantity + 7;
 
+        // Commission only applies to products owned by a B2B partner — house
+        // products (ownerId null) never carry a commission.
+        const commissionRate = product.ownerId ? (product.owner?.commissionRate ?? 10) : null;
+        const commissionAmount =
+          commissionRate !== null
+            ? Math.round(product.price * item.quantity * (commissionRate / 100) * 100) / 100
+            : null;
+
         orderItemsData.push({
           productId: product.id,
           productName: product.name,
           price: product.price,
           quantity: item.quantity,
+          ownerId: product.ownerId,
+          commissionRate,
+          commissionAmount,
         });
       }
 
@@ -101,7 +102,7 @@ export async function POST(req: NextRequest) {
     });
 
     // 2. NOTIFICATIONS SYSTEM
-    const notifications: Promise<any>[] = [];
+    const notifications: Promise<unknown>[] = [];
 
     // 🔴 ADMIN notification (DB)
     notifications.push(
@@ -115,7 +116,7 @@ export async function POST(req: NextRequest) {
           orderId: order.id,
           email: order.customerEmail,
         },
-      })
+      }),
     );
 
     // 🔴 PUSH ADMIN
@@ -124,7 +125,7 @@ export async function POST(req: NextRequest) {
         title: "new Command🛒",
         body: `${order.customerName} - ${order.total.toFixed(2)} TND`,
         link: `/admin/orders/${order.id}`,
-      })
+      }),
     );
 
     // 🟢 USER notification (si user existe dans DB)
@@ -144,7 +145,7 @@ export async function POST(req: NextRequest) {
           metadata: {
             orderId: order.id,
           },
-        })
+        }),
       );
 
       notifications.push(
@@ -152,19 +153,19 @@ export async function POST(req: NextRequest) {
           title: " Commande created",
           body: `Commande #${order.id} recieved!`,
           link: "/marketplace/orders",
-        })
+        }),
       );
     }
 
     await Promise.all(notifications);
 
     return NextResponse.json(order, { status: 201 });
-  } catch (err: any) {
+  } catch (err) {
     console.error(err);
 
     return NextResponse.json(
-      { error: err.message || "Échec de la commande" },
-      { status: 400 }
+      { error: err instanceof Error ? err.message : "Échec de la commande" },
+      { status: 400 },
     );
   }
 }
@@ -172,12 +173,25 @@ export async function POST(req: NextRequest) {
 // GET /api/orders
 export async function GET(req: NextRequest) {
   try {
+    const session = await auth();
     const { searchParams } = new URL(req.url);
 
     const email = searchParams.get("email");
     const status = searchParams.get("status");
+    const isAdmin = session?.user?.role === "ADMIN";
 
-    const where: any = {};
+    if (email) {
+      if (
+        !session?.user?.email ||
+        (session.user.email.toLowerCase() !== email.toLowerCase() && !isAdmin)
+      ) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+      }
+    } else if (!isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const where: Prisma.OrderWhereInput = {};
 
     if (email) where.customerEmail = email;
     if (status && status !== "all") where.status = status;
@@ -192,9 +206,6 @@ export async function GET(req: NextRequest) {
   } catch (err) {
     console.error(err);
 
-    return NextResponse.json(
-      { error: "Failed to fetch orders" },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "Failed to fetch orders" }, { status: 500 });
   }
 }

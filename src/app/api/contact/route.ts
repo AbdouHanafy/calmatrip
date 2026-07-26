@@ -1,30 +1,33 @@
 import { NextRequest, NextResponse } from "next/server";
+import type { Prisma } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
+import { auth } from "@/auth";
+import { checkRateLimit, getClientIp } from "@/lib/rateLimit";
+import { contactSchema } from "@/schemas/contact";
 
-export const dynamic = 'force-dynamic';
-
-interface ContactPayload {
-  name: string;
-  email: string;
-  phone?: string;
-  subject: string;
-  message: string;
-}
-
-const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+export const dynamic = "force-dynamic";
 
 // POST /api/contact  (visiteur: envoyer un message)
 export async function POST(req: NextRequest) {
   try {
-    const body: ContactPayload = await req.json();
-    const { name, email, phone, subject, message } = body;
-
-    if (!name?.trim() || !email?.trim() || !subject?.trim() || !message?.trim()) {
-      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+    if (!checkRateLimit(`contact:${getClientIp(req)}`, 5, 10 * 60 * 1000)) {
+      return NextResponse.json(
+        { error: "Trop de tentatives. Réessayez plus tard." },
+        { status: 429 },
+      );
     }
 
-    if (!EMAIL_REGEX.test(email.trim())) {
-      return NextResponse.json({ error: "Email invalide" }, { status: 400 });
+    const rawBody = await req.json();
+    const parsed = contactSchema.safeParse(rawBody);
+    if (!parsed.success) {
+      return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
+    }
+
+    const { name, email, phone, subject, message, website } = parsed.data;
+
+    // Honeypot: bots fill every field, real visitors never see this one.
+    if (website && website.trim()) {
+      return NextResponse.json({ success: true }, { status: 201 });
     }
 
     const contact = await prisma.contact.create({
@@ -46,11 +49,16 @@ export async function POST(req: NextRequest) {
 
 // GET /api/contact?isRead=  (admin: liste des messages)
 export async function GET(req: NextRequest) {
+  const session = await auth();
+  if (session?.user?.role !== "ADMIN") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const { searchParams } = new URL(req.url);
     const isReadParam = searchParams.get("isRead");
 
-    const where: any = {};
+    const where: Prisma.ContactWhereInput = {};
     if (isReadParam === "true" || isReadParam === "false") {
       where.isRead = isReadParam === "true";
     }

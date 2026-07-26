@@ -1,13 +1,21 @@
-'use client';
-import { useEffect, useState } from "react";
-import { Heart, CheckCircle, Shield, ChevronRight, Quote, Smile, Award, Zap, MessageCircle } from "lucide-react";
+"use client";
+import {
+  CheckCircle,
+  Shield,
+  ChevronRight,
+  Quote,
+  Smile,
+  Award,
+  Zap,
+  MessageCircle,
+} from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
-import { CalmaLangProvider, useCalmaLang } from '@/lib/calma/i18n';
-import CalmaHeader from '@/components/calma/CalmaHeader';
-import CalmaFooter from '@/components/calma/CalmaFooter';
-import AnimatedStat from '@/components/calma/AnimatedStat';
-import ReviewsSection from '@/components/home/ReviewsSection';
+import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
+import CalmaHeader from "@/components/calma/CalmaHeader";
+import CalmaFooter from "@/components/calma/CalmaFooter";
+import AnimatedStat from "@/components/calma/AnimatedStat";
+import ReviewsSection from "@/components/home/ReviewsSection";
 
 interface TeamMember {
   id: number;
@@ -17,8 +25,26 @@ interface TeamMember {
   icon: string;
 }
 
+interface Review {
+  id: number;
+  name: string;
+  avatar: string | null;
+  rating: number;
+  comment: string;
+  service: string | null;
+  createdAt: string;
+}
+
 /* Motif zellige réutilisable */
-function ZelligePattern({ id, stroke = "#ffffff", opacity = 0.06 }: { id: string; stroke?: string; opacity?: number }) {
+function ZelligePattern({
+  id,
+  stroke = "#ffffff",
+  opacity = 0.06,
+}: {
+  id: string;
+  stroke?: string;
+  opacity?: number;
+}) {
   return (
     <svg className="absolute inset-0 h-full w-full" style={{ opacity }} aria-hidden="true">
       <defs>
@@ -39,16 +65,8 @@ function ZelligePattern({ id, stroke = "#ffffff", opacity = 0.06 }: { id: string
 
 const OFFER_ICONS = [Smile, Shield, Award, Zap];
 
-function AboutContent() {
+function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[] }) {
   const { t } = useCalmaLang();
-  const [team, setTeam] = useState<TeamMember[]>([]);
-
-  useEffect(() => {
-    fetch("/api/team")
-      .then((res) => (res.ok ? res.json() : []))
-      .then((data) => setTeam(Array.isArray(data) ? data : []))
-      .catch(() => setTeam([]));
-  }, []);
 
   const statValues = ["2026", "500+", "50+", "98%"];
   const stats = t.abt.statLabels.map((label, i) => ({ value: statValues[i], label }));
@@ -61,11 +79,10 @@ function AboutContent() {
     <>
       <CalmaHeader active="about" />
       <div className="min-h-screen bg-calma-sand font-hanken">
-
         {/* ── Hero — cinematic, photo-backed, sand texture ── */}
         <section className="relative flex min-h-[320px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
           <Image
-            src={encodeURI('/images/explore/El Jem Amphitheatre.jpg')}
+            src={encodeURI("/images/explore/El Jem Amphitheatre.jpg")}
             alt="El Jem, Tunisie"
             fill
             priority
@@ -76,13 +93,14 @@ function AboutContent() {
             className="absolute inset-0"
             style={{
               background:
-                'linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.55) 45%,rgba(42,38,34,.82) 100%)',
+                "linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.55) 45%,rgba(42,38,34,.82) 100%)",
             }}
           />
           <div
             className="pointer-events-none absolute inset-0 opacity-[.07]"
             style={{
-              backgroundImage: 'repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)',
+              backgroundImage:
+                "repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)",
             }}
           />
           <div className="relative z-[2] mx-auto max-w-[640px]">
@@ -110,7 +128,9 @@ function AboutContent() {
                 <div className="font-fraunces text-3xl text-calma-terracotta md:text-4xl">
                   <AnimatedStat value={stat.value} />
                 </div>
-                <div className="mt-1 text-xs uppercase tracking-[0.14em] text-calma-taupe">{stat.label}</div>
+                <div className="mt-1 text-xs uppercase tracking-[0.14em] text-calma-taupe">
+                  {stat.label}
+                </div>
               </div>
             ))}
           </div>
@@ -120,7 +140,6 @@ function AboutContent() {
         <section className="py-20 lg:py-28">
           <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 items-stretch gap-8 lg:grid-cols-2">
-
               {/* Story */}
               <div className="rounded-calma-card border border-calma-olive/10 bg-white p-8 lg:p-10">
                 <span className="text-[0.7rem] uppercase tracking-[0.22em] text-calma-terracotta">
@@ -129,12 +148,8 @@ function AboutContent() {
                 <h2 className="mb-4 mt-3 font-fraunces text-3xl font-normal text-calma-ink">
                   {t.abt.storyTitle}
                 </h2>
-                <p className="mb-4 leading-relaxed text-calma-taupe">
-                  {t.abt.storyP1}
-                </p>
-                <p className="mb-6 leading-relaxed text-calma-taupe">
-                  {t.abt.storyP2}
-                </p>
+                <p className="mb-4 leading-relaxed text-calma-taupe">{t.abt.storyP1}</p>
+                <p className="mb-6 leading-relaxed text-calma-taupe">{t.abt.storyP2}</p>
                 <div className="space-y-3 border-t border-calma-olive/10 pt-6">
                   {t.abt.storyItems.map((item, idx) => (
                     <div key={idx} className="flex items-center gap-3">
@@ -153,14 +168,11 @@ function AboutContent() {
                     {t.abt.promiseKicker}
                   </span>
                   <h3 className="mb-4 mt-3 font-fraunces text-3xl font-normal">
-                    {t.abt.promiseTitle1} <em className="italic text-calma-terracotta-soft">{t.abt.promiseTitleEm}</em>
+                    {t.abt.promiseTitle1}{" "}
+                    <em className="italic text-calma-terracotta-soft">{t.abt.promiseTitleEm}</em>
                   </h3>
-                  <p className="mb-6 leading-relaxed text-calma-cream/75">
-                    {t.abt.promiseP1}
-                  </p>
-                  <p className="leading-relaxed text-calma-cream/75">
-                    {t.abt.promiseP2}
-                  </p>
+                  <p className="mb-6 leading-relaxed text-calma-cream/75">{t.abt.promiseP1}</p>
+                  <p className="leading-relaxed text-calma-cream/75">{t.abt.promiseP2}</p>
                 </div>
                 <div className="relative mt-8 border-t border-white/10 pt-6">
                   <div className="flex items-center gap-2 text-calma-terracotta-soft">
@@ -187,7 +199,10 @@ function AboutContent() {
 
             <div className="divide-y divide-calma-olive/10 border-y border-calma-olive/10">
               {offerings.map((item) => (
-                <div key={item.num} className="group grid grid-cols-[3rem_1fr] gap-4 py-7 md:grid-cols-[5rem_16rem_1fr] md:gap-8">
+                <div
+                  key={item.num}
+                  className="group grid grid-cols-[3rem_1fr] gap-4 py-7 md:grid-cols-[5rem_16rem_1fr] md:gap-8"
+                >
                   <span className="font-fraunces text-lg text-calma-terracotta">{item.num}</span>
                   <h3 className="font-fraunces text-xl font-normal text-calma-ink transition-colors group-hover:text-calma-terracotta md:text-2xl">
                     {item.title}
@@ -222,8 +237,12 @@ function AboutContent() {
                     <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-calma-terracotta/10 text-3xl transition-transform duration-300 group-hover:scale-110">
                       {member.icon}
                     </div>
-                    <h3 className="font-fraunces text-lg font-normal text-calma-ink">{member.name}</h3>
-                    <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-calma-terracotta">{member.role}</p>
+                    <h3 className="font-fraunces text-lg font-normal text-calma-ink">
+                      {member.name}
+                    </h3>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-wide text-calma-terracotta">
+                      {member.role}
+                    </p>
                     <p className="mt-1 text-xs text-calma-taupe">{member.experience}</p>
                   </div>
                 ))}
@@ -242,9 +261,7 @@ function AboutContent() {
               <h2 className="mb-4 mt-3 font-fraunces text-3xl font-normal text-calma-ink md:text-4xl">
                 {t.abt.specialistsTitle}
               </h2>
-              <p className="mx-auto max-w-2xl text-calma-taupe">
-                {t.abt.specialistsSub}
-              </p>
+              <p className="mx-auto max-w-2xl text-calma-taupe">{t.abt.specialistsSub}</p>
             </div>
 
             <div className="mb-12 flex flex-col justify-center gap-4 sm:flex-row">
@@ -274,7 +291,7 @@ function AboutContent() {
         </section>
 
         {/* Testimonials — real reviews from the DB */}
-        <ReviewsSection />
+        <ReviewsSection reviews={reviews} />
 
         {/* CTA — tuile bleu profond zellige */}
         <section className="pb-20">
@@ -283,19 +300,20 @@ function AboutContent() {
               <ZelligePattern id="about-cta-zellige" opacity={0.08} />
               <div
                 className="pointer-events-none absolute -right-1/4 -top-1/3 h-[480px] w-[480px] rounded-full opacity-20 blur-[90px]"
-                style={{ background: 'radial-gradient(circle, #F2994A 0%, transparent 70%)' }}
+                style={{ background: "radial-gradient(circle, #F2994A 0%, transparent 70%)" }}
               />
               <div className="relative">
                 <h2 className="mb-4 font-fraunces text-3xl font-normal md:text-4xl">
-                  {t.abt.ctaTitle1} <em className="italic text-calma-terracotta-soft">{t.abt.ctaTitleEm}</em> ?
+                  {t.abt.ctaTitle1}{" "}
+                  <em className="italic text-calma-terracotta-soft">{t.abt.ctaTitleEm}</em> ?
                 </h2>
-                <p className="mx-auto mb-8 max-w-2xl text-lg text-calma-cream/75">
-                  {t.abt.ctaSub}
-                </p>
+                <p className="mx-auto mb-8 max-w-2xl text-lg text-calma-cream/75">{t.abt.ctaSub}</p>
                 <Link
                   href="/services"
                   className="group inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
-                  style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+                  style={{
+                    background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)",
+                  }}
                 >
                   <span>{t.abt.ctaBtn}</span>
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -310,10 +328,10 @@ function AboutContent() {
   );
 }
 
-export default function About() {
+export default function About({ team, reviews }: { team: TeamMember[]; reviews: Review[] }) {
   return (
     <CalmaLangProvider>
-      <AboutContent />
+      <AboutContent team={team} reviews={reviews} />
     </CalmaLangProvider>
   );
 }

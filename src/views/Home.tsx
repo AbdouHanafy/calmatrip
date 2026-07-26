@@ -1,21 +1,44 @@
-'use client';
-import React from 'react';
-import Image from 'next/image';
-import { CalmaLangProvider } from '@/lib/calma/i18n';
-import CalmaHero from '@/components/home/calma/CalmaHero';
-import CalmaSearchBar from '@/components/home/calma/CalmaSearchBar';
-import CalmaCategories from '@/components/home/calma/CalmaCategories';
-import CalmaMarketplacePreview from '@/components/home/calma/CalmaMarketplacePreview';
-import CalmaShopPreview from '@/components/home/calma/CalmaShopPreview';
-import CalmaWhyBanner from '@/components/home/calma/CalmaWhyBanner';
-import CalmaCustomTrip from '@/components/home/calma/CalmaCustomTrip';
-import CalmaTestimonials from '@/components/home/calma/CalmaTestimonials';
-import CalmaFinalCTA from '@/components/home/calma/CalmaFinalCTA';
-import ReviewsSection from '@/components/home/ReviewsSection';
-import ReviewForm from '@/components/review/ReviewForm';
-import CalmaFooter from '@/components/calma/CalmaFooter';
+"use client";
+import React from "react";
+import Image from "next/image";
+import { CalmaLangProvider } from "@/lib/calma/i18n";
+import CalmaHero from "@/components/home/calma/CalmaHero";
+import CalmaSearchBar from "@/components/home/calma/CalmaSearchBar";
+import CalmaCategories from "@/components/home/calma/CalmaCategories";
+import CalmaMarketplacePreview from "@/components/home/calma/CalmaMarketplacePreview";
+import CalmaShopPreview from "@/components/home/calma/CalmaShopPreview";
+import CalmaWhyBanner from "@/components/home/calma/CalmaWhyBanner";
+import CalmaCustomTrip from "@/components/home/calma/CalmaCustomTrip";
+import CalmaTestimonials from "@/components/home/calma/CalmaTestimonials";
+import CalmaFinalCTA from "@/components/home/calma/CalmaFinalCTA";
+import ReviewsSection from "@/components/home/ReviewsSection";
+import ReviewForm from "@/components/review/ReviewForm";
+import CalmaFooter from "@/components/calma/CalmaFooter";
 
-export default function Home() {
+interface Product {
+  id: number;
+  name: string;
+  price: number;
+  category: string;
+  image: string | null;
+}
+
+interface Review {
+  id: number;
+  name: string;
+  avatar: string | null;
+  rating: number;
+  comment: string;
+  service: string | null;
+  createdAt: string;
+}
+
+interface HomeProps {
+  shopProducts: Product[];
+  reviews: Review[];
+}
+
+export default function Home({ shopProducts, reviews }: HomeProps) {
   return (
     <CalmaLangProvider>
       {/* Alternating section rhythm — white / ivory / sand / olive — so the page never sits on one flat beige field */}
@@ -32,7 +55,7 @@ export default function Home() {
         </div>
 
         <div className="bg-calma-sand">
-          <CalmaShopPreview />
+          <CalmaShopPreview products={shopProducts} />
         </div>
 
         <div className="bg-calma-cream">
@@ -48,7 +71,7 @@ export default function Home() {
         </div>
 
         {/* Real traveler reviews (only renders once someone has submitted one) — carries its own sand background */}
-        <ReviewsSection />
+        <ReviewsSection reviews={reviews} />
 
         <section className="bg-calma-sand py-28">
           <div className="mx-auto max-w-[1100px] px-6 sm:px-10">

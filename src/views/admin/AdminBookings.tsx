@@ -1,187 +1,41 @@
-'use client';
-import { useState, useEffect, useCallback } from "react";
-import {
-  Calendar, Car, MapPin, Clock, Search, Filter, Download,
-  ChevronLeft, ChevronRight, Eye, CheckCircle, XCircle,
-  AlertCircle, Trash2, Users, DollarSign, Star, MessageCircle,
-  X, Printer, Mail, Phone, User,
-} from "lucide-react";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type BookingStatus = "confirmed" | "pending" | "cancelled" | "completed";
-
-interface Booking {
-  id: number;
-  customerName: string | null;
-  customerEmail: string | null;
-  customerPhone: string | null;
-  service: string;
-  date: string;
-  time: string;
-
-  tripType?: "one-way" | "round-trip";
-  returnDate?: string | null;
-  returnTime?: string | null;
-
-  fromLocation: string;
-  toLocation: string;
-  status: BookingStatus;
-  price: string | null;
-  passengers: number;
-  specialRequests: string | null;
-  driver: string | null;
-  vehicle: string | null;
-  createdAt: string;
-}
-
-interface Pagination {
-  total: number;
-  page: number;
-  limit: number;
-  totalPages: number;
-}
-
-interface Stats {
-  total: number;
-  confirmed: number;
-  pending: number;
-  revenue: number;
-}
-
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
-const STATUS_CONFIG: Record<BookingStatus, { bg: string; text: string; border: string; icon: typeof CheckCircle; label: string }> = {
-  confirmed: { bg: "bg-[#5E8B63]/10", text: "text-[#5E8B63]", border: "border-[#5E8B63]/20", icon: CheckCircle, label: "Confirmed" },
-  pending:   { bg: "bg-[#D9A441]/10", text: "text-[#8A6B2E]", border: "border-[#D9A441]/20", icon: AlertCircle, label: "Pending" },
-  cancelled: { bg: "bg-red-500/10",   text: "text-red-500",   border: "border-red-500/20",   icon: XCircle,     label: "Cancelled" },
-  completed: { bg: "bg-[#F2994A]/10", text: "text-[#C97A34]", border: "border-[#F2994A]/20", icon: CheckCircle, label: "Completed" },
-};
-
-function StatusBadge({ status }: { status: BookingStatus }) {
-  const cfg = STATUS_CONFIG[status] ?? STATUS_CONFIG.pending;
-  const Icon = cfg.icon;
-  return (
-    <span className={`inline-flex items-center px-2.5 py-1.5 rounded-lg text-xs font-medium border ${cfg.bg} ${cfg.text} ${cfg.border}`}>
-      <Icon className="w-3 h-3 mr-1" />
-      {cfg.label}
-    </span>
-  );
-}
-
-function SkeletonRow() {
-  return (
-    <tr>
-      {Array.from({ length: 8 }).map((_, i) => (
-        <td key={i} className="px-6 py-4">
-          <div className="h-4 bg-calma-border animate-pulse rounded-lg" />
-        </td>
-      ))}
-    </tr>
-  );
-}
-
-// ─── Main Component ───────────────────────────────────────────────────────────
+"use client";
+import { useState } from "react";
+import { useAdminBookings } from "@/hooks/admin/useAdminBookings";
+import { BookingStatsCards } from "@/components/admin/bookings/BookingStatsCards";
+import { BookingFilters } from "@/components/admin/bookings/BookingFilters";
+import { BookingsTable } from "@/components/admin/bookings/BookingsTable";
+import { BookingDetailsModal } from "@/components/admin/bookings/BookingDetailsModal";
+import { DeleteBookingModal } from "@/components/admin/bookings/DeleteBookingModal";
+import type { Booking } from "@/components/admin/bookings/types";
 
 export default function AdminBookings() {
-  const [bookings, setBookings] = useState<Booking[]>([]);
-  const [stats, setStats] = useState<Stats>({ total: 0, confirmed: 0, pending: 0, revenue: 0 });
-  const [pagination, setPagination] = useState<Pagination>({ total: 0, page: 1, limit: 10, totalPages: 1 });
-  const [loading, setLoading] = useState(true);
-  const [actionLoading, setActionLoading] = useState<number | null>(null);
-
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedStatus, setSelectedStatus] = useState("all");
-  const [page, setPage] = useState(1);
+  const {
+    bookings,
+    stats,
+    pagination,
+    loading,
+    actionLoading,
+    searchTerm,
+    setSearchTerm,
+    selectedStatus,
+    setSelectedStatus,
+    page,
+    setPage,
+    updateStatus,
+    deleteBooking,
+  } = useAdminBookings();
 
   const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
   const [showDetailsModal, setShowDetailsModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
 
-  // ── Fetch ──────────────────────────────────────────────────────────────────
-
-  const fetchBookings = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({
-        status: selectedStatus,
-        search: searchTerm,
-        page: String(page),
-      });
-      const res = await fetch(`/api/admin/bookings?${params}`);
-      if (!res.ok) throw new Error();
-      const data = await res.json();
-      setBookings(data.bookings);
-      setPagination(data.pagination);
-      setStats(data.stats);
-    } catch {
-      // keep previous data on error
-    } finally {
-      setLoading(false);
-    }
-  }, [selectedStatus, searchTerm, page]);
-
-  // Debounce search
-  useEffect(() => {
-    setPage(1);
-  }, [searchTerm, selectedStatus]);
-
-  useEffect(() => {
-    const t = setTimeout(fetchBookings, searchTerm ? 400 : 0);
-    return () => clearTimeout(t);
-  }, [fetchBookings]);
-
-  // ── Actions ────────────────────────────────────────────────────────────────
-
-  const updateStatus = async (id: number, status: string) => {
-    setActionLoading(id);
-    try {
-      const res = await fetch("/api/admin/bookings", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id, status }),
-      });
-      if (!res.ok) throw new Error();
-      setBookings((prev) =>
-        prev.map((b) => (b.id === id ? { ...b, status: status as BookingStatus } : b))
-      );
+  const handleStatusChange = (id: number, status: string) => {
+    updateStatus(id, status, (newStatus) => {
       if (selectedBooking?.id === id) {
-        setSelectedBooking((prev) => prev ? { ...prev, status: status as BookingStatus } : prev);
+        setSelectedBooking((prev) => (prev ? { ...prev, status: newStatus } : prev));
       }
-      // Refresh stats
-      fetchBookings();
-    } catch {
-      alert("Failed to update status. Please try again.");
-    } finally {
-      setActionLoading(null);
-    }
+    });
   };
-
-  const deleteBooking = async (id: number) => {
-    setActionLoading(id);
-    try {
-      const res = await fetch(`/api/admin/bookings?id=${id}`, { method: "DELETE" });
-      if (!res.ok) throw new Error();
-      setBookings((prev) => prev.filter((b) => b.id !== id));
-      setShowDeleteConfirm(null);
-      fetchBookings();
-    } catch {
-      alert("Failed to delete booking. Please try again.");
-    } finally {
-      setActionLoading(null);
-    }
-  };
-
-  // ── Stat cards ─────────────────────────────────────────────────────────────
-
-  const statCards = [
-    { label: "Total Bookings", value: stats.total, icon: Calendar, gradient: "from-[#F2994A] to-[#5E8B63]", sub: "all time" },
-    { label: "Confirmed", value: stats.confirmed, icon: CheckCircle, gradient: "from-[#5E8B63] to-[#4C7350]", sub: "in progress" },
-    { label: "Pending", value: stats.pending, icon: AlertCircle, gradient: "from-[#D9A441] to-[#D9A441]", sub: "to process" },
-    { label: "Revenue", value: `${stats.revenue.toLocaleString()} TND`, icon: DollarSign, gradient: "from-[#F2994A] to-[#D9A441]", sub: "confirmed only" },
-  ];
-
-  // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
     <div className="space-y-6">
@@ -193,428 +47,48 @@ export default function AdminBookings() {
           </h1>
           <p className="text-calma-taupe mt-1">View and manage all bookings</p>
         </div>
-        
       </div>
 
-      {/* Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        {statCards.map((stat, i) => (
-          <div key={i} className="group bg-white rounded-2xl p-5 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-calma-border">
-            <div className="flex items-start justify-between mb-3">
-              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center`}>
-                <stat.icon className="w-5 h-5 text-white" />
-              </div>
-              <span className="text-xs text-calma-taupe bg-calma-sand px-2 py-1 rounded-full">{stat.sub}</span>
-            </div>
-            <h3 className="text-2xl font-bold text-calma-ink mb-1">{stat.value}</h3>
-            <p className="text-sm text-calma-taupe">{stat.label}</p>
-          </div>
-        ))}
-      </div>
+      <BookingStatsCards stats={stats} />
 
-      {/* Search & Filter */}
-      <div className="bg-white rounded-2xl shadow-lg p-4 border border-calma-border">
-        <div className="flex flex-col sm:flex-row gap-4">
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-calma-taupe" />
-            <input
-              type="text"
-              placeholder="Search by client name, email or service..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2.5 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent transition-all"
-            />
-          </div>
-          <select
-            value={selectedStatus}
-            onChange={(e) => setSelectedStatus(e.target.value)}
-            className="px-4 py-2.5 border border-calma-border rounded-xl focus:ring-2 focus:ring-[#F2994A] focus:border-transparent bg-white"
-          >
-            <option value="all">All statuses</option>
-            <option value="pending">Pending</option>
-            <option value="confirmed">Confirmed</option>
-            <option value="completed">Completed</option>
-            <option value="cancelled">Cancelled</option>
-          </select>
-        </div>
-      </div>
+      <BookingFilters
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        selectedStatus={selectedStatus}
+        onStatusChange={setSelectedStatus}
+      />
 
-      {/* Table */}
-      <div className="bg-white rounded-2xl shadow-lg overflow-hidden border border-calma-border">
-        <div className="overflow-x-auto">
-          <table className="w-full">
-            <thead className="bg-gradient-to-r from-calma-sand to-white border-b border-calma-border">
-              <tr>
-                {["ID", "Client", "Service", "Date & Time", "Route", "Price", "Status", "Actions"].map((h) => (
-                  <th key={h} className="px-6 py-4 text-left text-xs font-semibold text-calma-taupe uppercase tracking-wider">
-                    {h}
-                  </th>
-                ))}
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {loading
-                ? Array.from({ length: 5 }).map((_, i) => <SkeletonRow key={i} />)
-                : bookings.map((booking) => (
-                    <tr key={booking.id} className="hover:bg-calma-sand transition-colors">
-                      <td className="px-6 py-4">
-                        <span className="text-sm font-mono text-calma-taupe">#{booking.id}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="font-semibold text-calma-ink">{booking.customerName ?? "—"}</div>
-                        <div className="flex items-center gap-1 text-xs text-calma-taupe mt-0.5">
-                          <Users className="w-3 h-3" />
-                          {booking.passengers} pax
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-2">
-                          <Car className="w-4 h-4 text-[#F2994A]" />
-                          <span className="text-sm text-calma-ink">{booking.service}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4 text-sm">
-  <div className="flex items-center gap-1.5 text-calma-taupe">
-    <Calendar className="w-3.5 h-3.5 text-calma-taupe" />
-    {new Date(booking.date).toLocaleDateString("en-GB")}
-  </div>
+      <BookingsTable
+        bookings={bookings}
+        loading={loading}
+        actionLoading={actionLoading}
+        pagination={pagination}
+        page={page}
+        onPageChange={setPage}
+        onViewDetails={(booking) => {
+          setSelectedBooking(booking);
+          setShowDetailsModal(true);
+        }}
+        onConfirm={(id) => handleStatusChange(id, "confirmed")}
+        onDeleteRequest={setShowDeleteConfirm}
+      />
 
-  <div className="flex items-center gap-1.5 text-calma-taupe mt-1">
-    <Clock className="w-3.5 h-3.5 text-calma-taupe" />
-    {booking.time}
-  </div>
-
-  {/* ✅ RETURN TRIP */}
-  {booking.tripType === "round-trip" && booking.returnDate && (
-    <div className="mt-2 pt-2 border-t border-calma-border">
-      <div className="flex items-center gap-1.5 text-[#5E8B63]">
-        <Calendar className="w-3.5 h-3.5" />
-        {new Date(booking.returnDate).toLocaleDateString("en-GB")}
-      </div>
-
-      {booking.returnTime && (
-        <div className="flex items-center gap-1.5 text-[#5E8B63] mt-1">
-          <Clock className="w-3.5 h-3.5" />
-          {booking.returnTime}
-        </div>
-      )}
-    </div>
-  )}
-</td>
-                      <td className="px-6 py-4 text-sm max-w-[180px]">
-                        <div className="flex items-center gap-1.5 text-calma-taupe">
-                          <MapPin className="w-3.5 h-3.5 text-calma-taupe flex-shrink-0" />
-                          <span className="truncate">{booking.fromLocation}</span>
-                        </div>
-                        <div className="flex items-center gap-1.5 text-calma-taupe mt-1 ml-4">
-                          <span className="text-calma-taupe">→</span>
-                          <span className="truncate">{booking.toLocation}</span>
-                        </div>
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="font-semibold text-[#F2994A]">{booking.price ?? "—"}</span>
-                      </td>
-                      <td className="px-6 py-4">
-                        <StatusBadge status={booking.status} />
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex items-center gap-1">
-                          <button
-                            onClick={() => { setSelectedBooking(booking); setShowDetailsModal(true); }}
-                            className="p-2 text-calma-taupe hover:text-[#F2994A] hover:bg-[#F2994A]/10 rounded-lg transition-all"
-                            title="View details"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => updateStatus(booking.id, "confirmed")}
-                            disabled={booking.status === "confirmed" || actionLoading === booking.id}
-                            className="p-2 text-calma-taupe hover:text-[#5E8B63] hover:bg-[#5E8B63]/10 rounded-lg transition-all disabled:opacity-30 disabled:cursor-not-allowed"
-                            title="Confirm"
-                          >
-                            <CheckCircle className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => setShowDeleteConfirm(booking.id)}
-                            disabled={actionLoading === booking.id}
-                            className="p-2 text-calma-taupe hover:text-red-500 hover:bg-red-50 rounded-lg transition-all disabled:opacity-30"
-                            title="Delete"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                          <a
-  href={`https://wa.me/${(booking.customerPhone ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(
-    `Bonjour ${booking.customerName}, concernant votre réservation...`
-  )}`}
-  target="_blank"
-  rel="noopener noreferrer"
->
-  <MessageCircle className="w-4 h-4" />
-</a>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-            </tbody>
-          </table>
-        </div>
-
-        {/* Empty state */}
-        {!loading && bookings.length === 0 && (
-          <div className="text-center py-12">
-            <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-calma-sand flex items-center justify-center">
-              <Calendar className="w-10 h-10 text-calma-taupe" />
-            </div>
-            <p className="text-calma-taupe">No bookings found</p>
-            <p className="text-sm text-calma-taupe mt-1">Try changing your search or filters</p>
-          </div>
-        )}
-
-        {/* Pagination */}
-        {!loading && pagination.totalPages > 1 && (
-          <div className="px-6 py-4 border-t border-calma-border flex items-center justify-between">
-            <p className="text-sm text-calma-taupe">
-              Showing <span className="font-medium">{bookings.length}</span> of{" "}
-              <span className="font-medium">{pagination.total}</span> bookings
-            </p>
-            <div className="flex gap-2">
-              <button
-                onClick={() => setPage((p) => Math.max(1, p - 1))}
-                disabled={page === 1}
-                className="p-2 border border-calma-border rounded-lg hover:bg-calma-sand transition-colors disabled:opacity-40"
-              >
-                <ChevronLeft className="w-4 h-4" />
-              </button>
-              {Array.from({ length: pagination.totalPages }, (_, i) => i + 1).map((p) => (
-                <button
-                  key={p}
-                  onClick={() => setPage(p)}
-                  className={`px-3 py-2 rounded-lg font-medium text-sm transition-colors ${
-                    p === page
-                      ? "bg-[#F2994A]/10 text-[#F2994A]"
-                      : "border border-calma-border hover:bg-calma-sand"
-                  }`}
-                >
-                  {p}
-                </button>
-              ))}
-              <button
-                onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
-                disabled={page === pagination.totalPages}
-                className="p-2 border border-calma-border rounded-lg hover:bg-calma-sand transition-colors disabled:opacity-40"
-              >
-                <ChevronRight className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Details Modal */}
       {showDetailsModal && selectedBooking && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
-          onClick={() => setShowDetailsModal(false)}
-        >
-          <div
-            className="bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto animate-scale-up"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="sticky top-0 bg-white border-b border-calma-border px-6 py-4 flex items-center justify-between">
-              <div>
-                <h3 className="text-xl font-bold text-calma-ink">Booking Details</h3>
-                <p className="text-sm text-calma-taupe">ID: #{selectedBooking.id}</p>
-              </div>
-              <button onClick={() => setShowDetailsModal(false)} className="p-2 hover:bg-calma-sand rounded-lg transition-colors">
-                <X className="w-5 h-5 text-calma-taupe" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-6">
-              {/* Status banner */}
-              <div className={`p-4 rounded-xl ${STATUS_CONFIG[selectedBooking.status].bg} border ${STATUS_CONFIG[selectedBooking.status].border}`}>
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    {(() => { const Icon = STATUS_CONFIG[selectedBooking.status].icon; return <Icon className={`w-6 h-6 ${STATUS_CONFIG[selectedBooking.status].text}`} />; })()}
-                    <div>
-                      <p className="font-semibold text-calma-ink">Status: {STATUS_CONFIG[selectedBooking.status].label}</p>
-                      <p className="text-sm text-calma-taupe">Booked on {new Date(selectedBooking.createdAt).toLocaleDateString("en-GB")}</p>
-                    </div>
-                  </div>
-                  <select
-                    defaultValue={selectedBooking.status}
-                    onChange={(e) => updateStatus(selectedBooking.id, e.target.value)}
-                    disabled={actionLoading === selectedBooking.id}
-                    className="px-3 py-1.5 border border-calma-border rounded-lg text-sm bg-white disabled:opacity-50"
-                  >
-                    <option value="pending">Pending</option>
-                    <option value="confirmed">Confirmed</option>
-                    <option value="completed">Completed</option>
-                    <option value="cancelled">Cancelled</option>
-                  </select>
-                </div>
-              </div>
-
-              {/* Client */}
-              <div>
-                <h4 className="text-sm font-semibold text-calma-ink mb-3 flex items-center gap-2">
-                  <User className="w-4 h-4 text-[#F2994A]" /> Client Information
-                </h4>
-                <div className="bg-calma-sand rounded-xl p-4 space-y-2">
-                  {[
-                    { icon: User, value: selectedBooking.customerName },
-                    { icon: Mail, value: selectedBooking.customerEmail },
-                    { icon: Phone, value: selectedBooking.customerPhone },
-                  ].map(({ icon: Icon, value }, i) => value ? (
-                    <div key={i} className="flex items-center gap-3 text-sm">
-                      <Icon className="w-4 h-4 text-calma-taupe" />
-                      <span className="text-calma-ink">{value}</span>
-                    </div>
-                  ) : null)}
-                </div>
-              </div>
-
-              {/* Service details */}
-              <div>
-                <h4 className="text-sm font-semibold text-calma-ink mb-3 flex items-center gap-2">
-                  <Car className="w-4 h-4 text-[#F2994A]" /> Service Details
-                </h4>
-                <div className="bg-calma-sand rounded-xl p-4 space-y-3">
-                  {[
-                    ["Service", selectedBooking.service],
-                    ["Date", new Date(selectedBooking.date).toLocaleDateString("en-GB")],
-                    ["Time", selectedBooking.time],
-                    ["Passengers", `${selectedBooking.passengers} people`],
-                    ["Price", selectedBooking.price ?? "—"],
-                  ].map(([label, value]) => (
-                    <div key={label} className="flex justify-between items-center">
-                      <span className="text-sm text-calma-taupe">{label}</span>
-                      <span className={`text-sm font-semibold ${label === "Price" ? "text-[#F2994A] text-lg" : "text-calma-ink"}`}>{value}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              {selectedBooking.tripType === "round-trip" && (
-  <>
-    <div className="flex justify-between items-center">
-      <span className="text-sm text-calma-taupe">Return Date</span>
-      <span className="text-sm font-semibold text-calma-ink">
-        {selectedBooking.returnDate
-          ? new Date(selectedBooking.returnDate).toLocaleDateString("en-GB")
-          : "—"}
-      </span>
-    </div>
-
-    <div className="flex justify-between items-center">
-      <span className="text-sm text-calma-taupe">Return Time</span>
-      <span className="text-sm font-semibold text-calma-ink">
-        {selectedBooking.returnTime ?? "—"}
-      </span>
-    </div>
-  </>
-)}
-
-              {/* Route */}
-              <div>
-                <h4 className="text-sm font-semibold text-calma-ink mb-3 flex items-center gap-2">
-                  <MapPin className="w-4 h-4 text-[#F2994A]" /> Route
-                </h4>
-                <div className="bg-calma-sand rounded-xl p-4 space-y-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 rounded-full bg-[#5E8B63] mt-2 flex-shrink-0" />
-                    <div><p className="text-xs text-calma-taupe">Departure</p><p className="text-sm text-calma-ink">{selectedBooking.fromLocation}</p></div>
-                  </div>
-                  <div className="flex items-start gap-3">
-                    <div className="w-2 h-2 rounded-full bg-[#F2994A] mt-2 flex-shrink-0" />
-                    <div><p className="text-xs text-calma-taupe">Destination</p><p className="text-sm text-calma-ink">{selectedBooking.toLocation}</p></div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Driver & Vehicle */}
-              {(selectedBooking.driver || selectedBooking.vehicle) && (
-                <div>
-                  <h4 className="text-sm font-semibold text-calma-ink mb-3 flex items-center gap-2">
-                    <Star className="w-4 h-4 text-[#D9A441]" /> Driver & Vehicle
-                  </h4>
-                  <div className="bg-calma-sand rounded-xl p-4 space-y-2">
-                    {selectedBooking.driver && (
-                      <div className="flex justify-between"><span className="text-sm text-calma-taupe">Driver</span><span className="text-sm text-calma-ink">{selectedBooking.driver}</span></div>
-                    )}
-                    {selectedBooking.vehicle && (
-                      <div className="flex justify-between"><span className="text-sm text-calma-taupe">Vehicle</span><span className="text-sm text-calma-ink">{selectedBooking.vehicle}</span></div>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Special requests */}
-              {selectedBooking.specialRequests && (
-                <div>
-                  <h4 className="text-sm font-semibold text-calma-ink mb-3">Special Requests</h4>
-                  <div className="bg-[#D9A441]/5 rounded-xl p-4 border border-[#D9A441]/20">
-                    <p className="text-sm text-calma-ink">{selectedBooking.specialRequests}</p>
-                  </div>
-                </div>
-              )}
-
-              {/* Actions */}
-              <div className="flex gap-3 pt-2">
-                <a
-                  href={`https://wa.me/${(selectedBooking.customerPhone ?? "").replace(/\D/g, "")}?text=${encodeURIComponent(
-                    `Bonjour ${selectedBooking.customerName}, concernant votre réservation...`
-                  )}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex-1 px-4 py-2.5 bg-gradient-to-r from-[#F2994A] to-[#5E8B63] text-white rounded-xl font-semibold hover:shadow-lg transition-all flex items-center justify-center gap-2"
-                >
-                  <MessageCircle className="w-4 h-4" /> whatsapp
-                </a>
-                <button
-                  onClick={() => window.print()}
-                  className="flex-1 px-4 py-2.5 border-2 border-calma-border text-calma-ink rounded-xl font-semibold hover:bg-calma-sand transition-all flex items-center justify-center gap-2"
-                >
-                  <Printer className="w-4 h-4" /> Print
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <BookingDetailsModal
+          booking={selectedBooking}
+          actionLoading={actionLoading}
+          onClose={() => setShowDetailsModal(false)}
+          onStatusChange={handleStatusChange}
+        />
       )}
 
-      {/* Delete Confirm Modal */}
       {showDeleteConfirm !== null && (
-        <div
-          className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fade-in"
-          onClick={() => setShowDeleteConfirm(null)}
-        >
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full animate-scale-up" onClick={(e) => e.stopPropagation()}>
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
-                <Trash2 className="w-8 h-8 text-red-500" />
-              </div>
-              <h3 className="text-xl font-bold text-calma-ink mb-2">Confirm deletion</h3>
-              <p className="text-calma-taupe mb-6">Are you sure you want to delete booking <span className="font-mono font-bold">#{showDeleteConfirm}</span>? This action is irreversible.</p>
-              <div className="flex gap-3">
-                <button
-                  onClick={() => setShowDeleteConfirm(null)}
-                  className="flex-1 px-4 py-2.5 border border-calma-border text-calma-ink rounded-xl font-medium hover:bg-calma-sand transition-colors"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={() => deleteBooking(showDeleteConfirm)}
-                  disabled={actionLoading === showDeleteConfirm}
-                  className="flex-1 px-4 py-2.5 bg-red-500 text-white rounded-xl font-medium hover:bg-red-600 transition-colors disabled:opacity-50"
-                >
-                  {actionLoading === showDeleteConfirm ? "Deleting..." : "Delete"}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DeleteBookingModal
+          bookingId={showDeleteConfirm}
+          isDeleting={actionLoading === showDeleteConfirm}
+          onCancel={() => setShowDeleteConfirm(null)}
+          onConfirm={() => deleteBooking(showDeleteConfirm, () => setShowDeleteConfirm(null))}
+        />
       )}
 
       <style>{`
