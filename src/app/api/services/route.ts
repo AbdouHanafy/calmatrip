@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
 import { auth } from "@/auth";
 import { sanitizeHtml } from "@/lib/sanitize";
-import { getPublicServices } from "@/repositories/serviceRepository";
+import { createService, getPublicServices } from "@/repositories/serviceRepository";
 
 export async function GET() {
   try {
@@ -22,23 +21,19 @@ export async function POST(req: Request) {
 
   try {
     const json = await req.json();
-    const maxOrder = await prisma.service.aggregate({ _max: { order: true } });
 
-    const service = await prisma.service.create({
-      data: {
-        title: json.title,
-        subtitle: json.subtitle ?? null,
-        description: sanitizeHtml(json.description),
-        price: json.price.toString(),
-        category: json.category,
-        duration: json.duration ?? null,
-        icon: json.icon ?? "Car",
-        color: json.color ?? null,
-        image: json.image ?? null,
-        active: json.active ?? true,
-        popular: json.popular ?? false,
-        order: (maxOrder._max.order ?? 0) + 1,
-      },
+    const service = await createService({
+      title: json.title,
+      subtitle: json.subtitle,
+      description: sanitizeHtml(json.description),
+      price: json.price.toString(),
+      category: json.category,
+      duration: json.duration,
+      icon: json.icon,
+      color: json.color,
+      image: json.image,
+      active: json.active,
+      popular: json.popular,
     });
     return NextResponse.json(service, { status: 201 });
   } catch (error) {

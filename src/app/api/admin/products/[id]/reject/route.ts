@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { createNotification } from "@/lib/notifications";
 import { sendWhatsAppMessage } from "@/lib/whatsapp";
+import { rejectProduct } from "@/repositories/productRepository";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -14,10 +15,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const body = await req.json().catch(() => ({}));
   const reason = typeof body.reason === "string" ? body.reason.trim() : "";
 
-  const product = await prisma.product.update({
-    where: { id: parseInt(id) },
-    data: { submissionStatus: "rejected", rejectionReason: reason || null },
-  });
+  const product = await rejectProduct(parseInt(id), reason || null);
 
   if (product.ownerId) {
     await createNotification({

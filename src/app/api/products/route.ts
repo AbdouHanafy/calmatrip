@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { productCreateSchema } from "@/schemas/product";
-import { getPublicProducts } from "@/repositories/productRepository";
+import { createProduct, getPublicProducts } from "@/repositories/productRepository";
 
 // GET /api/products?search=&category=&sort=
 export async function GET(req: NextRequest) {
@@ -40,16 +39,14 @@ export async function POST(req: NextRequest) {
     const normalizedSizes: string[] | typeof Prisma.JsonNull =
       sizes && sizes.length > 0 ? sizes : Prisma.JsonNull;
 
-    const product = await prisma.product.create({
-      data: {
-        name,
-        price,
-        category,
-        image: image || "/placeholder-product.png",
-        description,
-        stock: stock ?? 100,
-        sizes: normalizedSizes,
-      },
+    const product = await createProduct({
+      name,
+      price,
+      category,
+      image,
+      description,
+      stock,
+      sizes: normalizedSizes,
     });
 
     return NextResponse.json(product, { status: 201 });

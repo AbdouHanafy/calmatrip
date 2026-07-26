@@ -1,26 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { productUpdateSchema } from "@/schemas/product";
+import { getProductById, updateProduct, deleteProduct } from "@/repositories/productRepository";
 
 // GET /api/products/[id]
 export async function GET(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
-    const product = await prisma.product.findUnique({
-      where: { id: parseInt(id) },
-    });
-    if (!product) {
+    const result = await getProductById(parseInt(id));
+    if (!result) {
       return NextResponse.json({ error: "Product not found" }, { status: 404 });
     }
 
-    const related = await prisma.product.findMany({
-      where: { category: product.category, id: { not: product.id } },
-      take: 4,
-    });
-
-    return NextResponse.json({ product, related });
+    return NextResponse.json(result);
   } catch (err) {
     console.error(err);
     return NextResponse.json({ error: "Failed to fetch product" }, { status: 500 });
@@ -46,17 +39,14 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
     const sizesUpdate: { sizes?: string[] | typeof Prisma.JsonNull } =
       sizes !== undefined ? { sizes: sizes && sizes.length > 0 ? sizes : Prisma.JsonNull } : {};
 
-    const product = await prisma.product.update({
-      where: { id: parseInt(id) },
-      data: {
-        ...(name !== undefined && { name }),
-        ...(price !== undefined && { price }),
-        ...(category !== undefined && { category }),
-        ...(image !== undefined && { image }),
-        ...(description !== undefined && { description }),
-        ...(stock !== undefined && { stock }),
-        ...sizesUpdate,
-      },
+    const product = await updateProduct(parseInt(id), {
+      ...(name !== undefined && { name }),
+      ...(price !== undefined && { price }),
+      ...(category !== undefined && { category }),
+      ...(image !== undefined && { image }),
+      ...(description !== undefined && { description }),
+      ...(stock !== undefined && { stock }),
+      ...sizesUpdate,
     });
 
     return NextResponse.json(product);
@@ -75,7 +65,7 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
 
   try {
     const { id } = await params;
-    await prisma.product.delete({ where: { id: parseInt(id) } });
+    await deleteProduct(parseInt(id));
     return NextResponse.json({ success: true });
   } catch (err) {
     console.error(err);

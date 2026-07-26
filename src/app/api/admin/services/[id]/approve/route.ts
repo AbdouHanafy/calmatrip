@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { createNotification } from "@/lib/notifications";
 import { sendWhatsAppMessage } from "@/lib/whatsapp";
+import { approveService } from "@/repositories/serviceRepository";
 
 export async function PATCH(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -11,10 +12,7 @@ export async function PATCH(_req: NextRequest, { params }: { params: Promise<{ i
   }
 
   const { id } = await params;
-  const service = await prisma.service.update({
-    where: { id: parseInt(id) },
-    data: { submissionStatus: "approved", rejectionReason: null },
-  });
+  const service = await approveService(parseInt(id));
 
   if (service.ownerId) {
     await prisma.user.updateMany({

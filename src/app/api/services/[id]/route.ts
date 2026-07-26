@@ -1,7 +1,8 @@
 import { NextResponse } from "next/server";
-import prisma from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { deleteService, updateService } from "@/repositories/serviceRepository";
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -16,7 +17,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     }
 
     const json = await req.json();
-    const data: Record<string, unknown> = {};
+    const data: Prisma.ServiceUpdateInput = {};
 
     if (json.title !== undefined) data.title = json.title;
     if (json.subtitle !== undefined) data.subtitle = json.subtitle;
@@ -32,10 +33,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     if (json.popular !== undefined) data.popular = json.popular;
     if (json.order !== undefined) data.order = json.order;
 
-    const service = await prisma.service.update({
-      where: { id },
-      data,
-    });
+    const service = await updateService(id, data);
     return NextResponse.json(service);
   } catch (error) {
     console.error("Failed to update service:", error);
@@ -55,7 +53,7 @@ export async function DELETE(_req: Request, { params }: { params: Promise<{ id: 
       return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
     }
 
-    await prisma.service.delete({ where: { id } });
+    await deleteService(id);
     return new NextResponse(null, { status: 204 });
   } catch (error) {
     console.error("Failed to delete service:", error);
