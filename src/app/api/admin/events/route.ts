@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { createEvent, getAllEvents } from "@/repositories/eventRepository";
 
 export async function GET() {
   const session = await auth();
@@ -8,7 +8,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const events = await prisma.event.findMany({ orderBy: [{ order: "asc" }, { startDate: "asc" }] });
+  const events = await getAllEvents();
   return NextResponse.json(events);
 }
 
@@ -31,21 +31,19 @@ export async function POST(req: NextRequest) {
     );
   }
 
-  const event = await prisma.event.create({
-    data: {
-      title,
-      description,
-      city,
-      startDate,
-      endDate: body.endDate ? new Date(body.endDate) : null,
-      address: body.address || null,
-      price: body.price || null,
-      category: body.category || null,
-      image: body.image || null,
-      lat: typeof body.lat === "number" ? body.lat : null,
-      lng: typeof body.lng === "number" ? body.lng : null,
-      active: body.active ?? true,
-    },
+  const event = await createEvent({
+    title,
+    description,
+    city,
+    startDate,
+    endDate: body.endDate ? new Date(body.endDate) : null,
+    address: body.address || null,
+    price: body.price || null,
+    category: body.category || null,
+    image: body.image || null,
+    lat: typeof body.lat === "number" ? body.lat : null,
+    lng: typeof body.lng === "number" ? body.lng : null,
+    active: body.active ?? true,
   });
 
   return NextResponse.json(event, { status: 201 });

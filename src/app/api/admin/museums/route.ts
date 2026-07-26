@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { createMuseum, getAllMuseums } from "@/repositories/museumRepository";
 
 export async function GET() {
   const session = await auth();
@@ -8,7 +8,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const museums = await prisma.museum.findMany({ orderBy: [{ order: "asc" }, { name: "asc" }] });
+  const museums = await getAllMuseums();
   return NextResponse.json(museums);
 }
 
@@ -27,19 +27,17 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Nom, description et ville requis" }, { status: 400 });
   }
 
-  const museum = await prisma.museum.create({
-    data: {
-      name,
-      description,
-      city,
-      address: body.address || null,
-      openingHours: body.openingHours || null,
-      price: body.price || null,
-      image: body.image || null,
-      lat: typeof body.lat === "number" ? body.lat : null,
-      lng: typeof body.lng === "number" ? body.lng : null,
-      active: body.active ?? true,
-    },
+  const museum = await createMuseum({
+    name,
+    description,
+    city,
+    address: body.address || null,
+    openingHours: body.openingHours || null,
+    price: body.price || null,
+    image: body.image || null,
+    lat: typeof body.lat === "number" ? body.lat : null,
+    lng: typeof body.lng === "number" ? body.lng : null,
+    active: body.active ?? true,
   });
 
   return NextResponse.json(museum, { status: 201 });

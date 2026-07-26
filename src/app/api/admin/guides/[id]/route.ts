@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { deleteGuide, updateGuide } from "@/repositories/guideRepository";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -16,7 +17,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const body = await req.json().catch(() => ({}));
-  const data: Record<string, unknown> = {};
+  const data: Prisma.PracticalGuideUpdateInput = {};
   if (typeof body.title === "string") data.title = body.title.trim();
   if (typeof body.summary === "string") data.summary = body.summary.trim();
   if (typeof body.content === "string") data.content = sanitizeHtml(body.content.trim());
@@ -26,7 +27,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (typeof body.active === "boolean") data.active = body.active;
   if (typeof body.order === "number") data.order = body.order;
 
-  const guide = await prisma.practicalGuide.update({ where: { id: guideId }, data });
+  const guide = await updateGuide(guideId, data);
   return NextResponse.json(guide);
 }
 
@@ -42,6 +43,6 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: "Guide invalide" }, { status: 400 });
   }
 
-  await prisma.practicalGuide.delete({ where: { id: guideId } });
+  await deleteGuide(guideId);
   return new NextResponse(null, { status: 204 });
 }

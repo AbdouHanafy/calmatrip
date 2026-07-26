@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
+import { deleteEvent, updateEvent } from "@/repositories/eventRepository";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -15,7 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const body = await req.json().catch(() => ({}));
-  const data: Record<string, unknown> = {};
+  const data: Prisma.EventUpdateInput = {};
   if (typeof body.title === "string") data.title = body.title.trim();
   if (typeof body.description === "string") data.description = body.description.trim();
   if (typeof body.city === "string") data.city = body.city.trim();
@@ -30,7 +31,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (typeof body.active === "boolean") data.active = body.active;
   if (typeof body.order === "number") data.order = body.order;
 
-  const event = await prisma.event.update({ where: { id: eventId }, data });
+  const event = await updateEvent(eventId, data);
   return NextResponse.json(event);
 }
 
@@ -46,6 +47,6 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: "Événement invalide" }, { status: 400 });
   }
 
-  await prisma.event.delete({ where: { id: eventId } });
+  await deleteEvent(eventId);
   return new NextResponse(null, { status: 204 });
 }

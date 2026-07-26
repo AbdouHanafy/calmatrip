@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { sanitizeHtml } from "@/lib/sanitize";
+import { createGuide, getAllGuides, guideSlugExists } from "@/repositories/guideRepository";
 
 function slugify(title: string): string {
   return title
@@ -18,9 +18,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const guides = await prisma.practicalGuide.findMany({
-    orderBy: [{ order: "asc" }, { title: "asc" }],
-  });
+  const guides = await getAllGuides();
   return NextResponse.json(guides);
 }
 
@@ -42,22 +40,20 @@ export async function POST(req: NextRequest) {
   const baseSlug = slugify(title) || "guide";
   let slug = baseSlug;
   let suffix = 1;
-  while (await prisma.practicalGuide.findUnique({ where: { slug } })) {
+  while (await guideSlugExists(slug)) {
     suffix += 1;
     slug = `${baseSlug}-${suffix}`;
   }
 
-  const guide = await prisma.practicalGuide.create({
-    data: {
-      title,
-      slug,
-      summary,
-      content: sanitizeHtml(content),
-      category: body.category || null,
-      icon: body.icon || null,
-      image: body.image || null,
-      active: body.active ?? true,
-    },
+  const guide = await createGuide({
+    title,
+    slug,
+    summary,
+    content: sanitizeHtml(content),
+    category: body.category || null,
+    icon: body.icon || null,
+    image: body.image || null,
+    active: body.active ?? true,
   });
 
   return NextResponse.json(guide, { status: 201 });

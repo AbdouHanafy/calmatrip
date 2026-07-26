@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import type { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
+import { deleteMuseum, updateMuseum } from "@/repositories/museumRepository";
 
 export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -15,7 +16,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   }
 
   const body = await req.json().catch(() => ({}));
-  const data: Record<string, unknown> = {};
+  const data: Prisma.MuseumUpdateInput = {};
   if (typeof body.name === "string") data.name = body.name.trim();
   if (typeof body.description === "string") data.description = body.description.trim();
   if (typeof body.city === "string") data.city = body.city.trim();
@@ -28,7 +29,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
   if (typeof body.active === "boolean") data.active = body.active;
   if (typeof body.order === "number") data.order = body.order;
 
-  const museum = await prisma.museum.update({ where: { id: museumId }, data });
+  const museum = await updateMuseum(museumId, data);
   return NextResponse.json(museum);
 }
 
@@ -44,6 +45,6 @@ export async function DELETE(_req: NextRequest, { params }: { params: Promise<{ 
     return NextResponse.json({ error: "Musée invalide" }, { status: 400 });
   }
 
-  await prisma.museum.delete({ where: { id: museumId } });
+  await deleteMuseum(museumId);
   return new NextResponse(null, { status: 204 });
 }

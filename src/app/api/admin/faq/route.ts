@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { createFaq, getAllFaqs } from "@/repositories/faqRepository";
 
 export async function GET() {
   const session = await auth();
@@ -8,7 +8,7 @@ export async function GET() {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const faqs = await prisma.fAQ.findMany({ orderBy: { order: "asc" } });
+  const faqs = await getAllFaqs();
   return NextResponse.json(faqs);
 }
 
@@ -27,16 +27,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Question et réponse requises" }, { status: 400 });
   }
 
-  const maxOrder = await prisma.fAQ.aggregate({ _max: { order: true } });
-
-  const faq = await prisma.fAQ.create({
-    data: {
-      question,
-      answer,
-      icon,
-      order: (maxOrder._max.order ?? 0) + 1,
-    },
-  });
+  const faq = await createFaq({ question, answer, icon });
 
   return NextResponse.json(faq, { status: 201 });
 }
