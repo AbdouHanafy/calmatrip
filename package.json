@@ -19,6 +19,7 @@
     "prepare": "husky",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "pretest": "node scripts/db-start.cjs",
     "test": "vitest run",
     "test:watch": "vitest"
   },
