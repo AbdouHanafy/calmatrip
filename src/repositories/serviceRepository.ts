@@ -17,6 +17,7 @@ interface CreateServiceInput {
   duration?: string | null;
   icon?: string;
   color?: string | null;
+  features?: string[];
   image?: string | null;
   active?: boolean;
   popular?: boolean;
@@ -37,6 +38,7 @@ export async function createService(input: CreateServiceInput) {
       duration: input.duration ?? null,
       icon: input.icon ?? "Car",
       color: input.color ?? null,
+      features: input.features ?? undefined,
       image: input.image ?? null,
       active: input.active ?? true,
       popular: input.popular ?? false,

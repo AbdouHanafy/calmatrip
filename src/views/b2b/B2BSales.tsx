@@ -3,6 +3,11 @@
 import { useEffect, useState } from "react";
 import { Calendar, Package } from "lucide-react";
 
+// Older bookings snapshot a price without a currency suffix — add it only if missing.
+function withTnd(price: string) {
+  return /tnd/i.test(price) ? price : `${price} TND`;
+}
+
 interface BookingRow {
   id: number;
   service: string;
@@ -122,7 +127,9 @@ export default function B2BSales() {
                         <td className="px-5 py-3.5">
                           <StatusBadge status={b.status} />
                         </td>
-                        <td className="px-5 py-3.5 text-calma-ink">{b.price ?? "—"}</td>
+                        <td className="px-5 py-3.5 text-calma-ink">
+                          {b.price ? withTnd(b.price) : "—"}
+                        </td>
                         <td className="px-5 py-3.5 text-calma-terracotta">
                           {b.commissionAmount !== null
                             ? `${b.commissionAmount.toFixed(2)} TND (${b.commissionRate}%)`

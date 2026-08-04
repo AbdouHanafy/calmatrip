@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { createNotification } from "@/lib/notifications";
 import { sendWhatsAppMessage } from "@/lib/whatsapp";
-import { approveService } from "@/repositories/serviceRepository";
+import { approveExploreListing } from "@/repositories/exploreListingRepository";
 
 export async function PATCH(_req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -12,33 +12,33 @@ export async function PATCH(_req: NextRequest, { params }: { params: Promise<{ i
   }
 
   const { id } = await params;
-  const service = await approveService(parseInt(id));
+  const listing = await approveExploreListing(parseInt(id));
 
-  if (service.ownerId) {
+  if (listing.ownerId) {
     await prisma.user.updateMany({
-      where: { id: service.ownerId, b2bStatus: "pending" },
+      where: { id: listing.ownerId, b2bStatus: "pending" },
       data: { b2bStatus: "approved" },
     });
     await createNotification({
       recipient: "user",
-      userId: service.ownerId,
+      userId: listing.ownerId,
       type: "b2b_decision",
-      title: "Service approuvé",
-      body: `Votre service « ${service.title} » est maintenant visible sur Explorer.`,
-      link: "/b2b",
+      title: "Annonce Explore approuvée",
+      body: `Votre annonce « ${listing.title} » est maintenant visible sur Explore.`,
+      link: "/b2b/explore",
     });
 
     const owner = await prisma.user.findUnique({
-      where: { id: service.ownerId },
+      where: { id: listing.ownerId },
       select: { phone: true },
     });
     if (owner?.phone) {
       await sendWhatsAppMessage(
         owner.phone,
-        `Bonne nouvelle ! Votre service « ${service.title} » vient d'être approuvé et est maintenant visible sur Calma Trip Explorer.`,
+        `Bonne nouvelle ! Votre annonce « ${listing.title} » vient d'être approuvée et est maintenant visible sur Calma Trip Explore.`,
       );
     }
   }
 
-  return NextResponse.json(service);
+  return NextResponse.json(listing);
 }

@@ -5,7 +5,7 @@ import { useSession, signOut } from "next-auth/react";
 import {
   LayoutDashboard,
   Package,
-  Compass,
+  MapPin,
   LogOut,
   ChevronRight,
   Menu,
@@ -34,14 +34,8 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
     ...(b2bType === "ARTISAN"
       ? [{ path: "/b2b/products", label: "Mes produits", icon: Package }]
       : []),
-    ...(b2bType === "AGENCY"
-      ? [{ path: "/b2b/services", label: "Mes services", icon: Compass }]
-      : []),
-    {
-      path: "/b2b/sales",
-      label: b2bType === "AGENCY" ? "Réservations" : "Ventes",
-      icon: TrendingUp,
-    },
+    ...(b2bType === "AGENCY" ? [{ path: "/b2b/explore", label: "Explore", icon: MapPin }] : []),
+    ...(b2bType === "ARTISAN" ? [{ path: "/b2b/sales", label: "Ventes", icon: TrendingUp }] : []),
     { path: "/b2b/profile", label: "Mon profil", icon: UserCog },
   ];
 

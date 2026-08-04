@@ -3,13 +3,19 @@ import {
   allPlaces,
   mapEventToPlace,
   mapMuseumToPlace,
+  mapExploreListingToPlace,
   STATIC_CITIES,
   type EventItem,
   type MuseumItem,
+  type ExploreListingItem,
   type Place,
 } from "@/lib/explore/places";
 
-export function useExploreFilters(events: EventItem[], museums: MuseumItem[]) {
+export function useExploreFilters(
+  events: EventItem[],
+  museums: MuseumItem[],
+  listings: ExploreListingItem[] = [],
+) {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCity, setSelectedCity] = useState("All Cities");
   const [budgetLimit, setBudgetLimit] = useState(3);
@@ -19,17 +25,26 @@ export function useExploreFilters(events: EventItem[], museums: MuseumItem[]) {
   const [sortBy, setSortBy] = useState("Popularity");
 
   const places = useMemo<Place[]>(
-    () => [...allPlaces, ...events.map(mapEventToPlace), ...museums.map(mapMuseumToPlace)],
-    [events, museums],
+    () => [
+      ...allPlaces,
+      ...events.map(mapEventToPlace),
+      ...museums.map(mapMuseumToPlace),
+      ...listings.map(mapExploreListingToPlace),
+    ],
+    [events, museums, listings],
   );
 
   const cities = useMemo(() => {
-    const extra = [...events.map((e) => e.city), ...museums.map((m) => m.city)];
+    const extra = [
+      ...events.map((e) => e.city),
+      ...museums.map((m) => m.city),
+      ...listings.map((l) => l.city),
+    ];
     return [
       ...STATIC_CITIES,
       ...Array.from(new Set(extra)).filter((c) => !STATIC_CITIES.includes(c)),
     ];
-  }, [events, museums]);
+  }, [events, museums, listings]);
 
   const handleGeolocation = () => {
     if (navigator.geolocation) {

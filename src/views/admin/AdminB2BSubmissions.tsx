@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Check, X, Clock, Package, Compass } from "lucide-react";
+import { Check, X, Clock, Package, Compass, MapPin } from "lucide-react";
 
 interface OwnedItem {
   id: number;
@@ -21,6 +21,12 @@ interface ServiceItem extends OwnedItem {
   title: string;
   category: string | null;
   price: string;
+}
+
+interface ExploreListingItem extends OwnedItem {
+  title: string;
+  category: string;
+  price: string | null;
 }
 
 function StatusBadge({ status }: { status: string }) {
@@ -45,10 +51,19 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+type Tab = "products" | "services" | "explore";
+
+const API_SEGMENT: Record<Tab, string> = {
+  products: "products",
+  services: "services",
+  explore: "explore-listings",
+};
+
 export default function AdminB2BSubmissions() {
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [services, setServices] = useState<ServiceItem[]>([]);
-  const [tab, setTab] = useState<"products" | "services">("products");
+  const [exploreListings, setExploreListings] = useState<ExploreListingItem[]>([]);
+  const [tab, setTab] = useState<Tab>("products");
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("pending");
   const [loading, setLoading] = useState(true);
 
@@ -58,6 +73,7 @@ export default function AdminB2BSubmissions() {
     const data = await res.json();
     setProducts(data.products ?? []);
     setServices(data.services ?? []);
+    setExploreListings(data.exploreListings ?? []);
     setLoading(false);
   };
 
@@ -65,14 +81,14 @@ export default function AdminB2BSubmissions() {
     load();
   }, []);
 
-  const approve = async (kind: "products" | "services", id: number) => {
-    await fetch(`/api/admin/${kind}/${id}/approve`, { method: "PATCH" });
+  const approve = async (kind: Tab, id: number) => {
+    await fetch(`/api/admin/${API_SEGMENT[kind]}/${id}/approve`, { method: "PATCH" });
     load();
   };
 
-  const reject = async (kind: "products" | "services", id: number) => {
+  const reject = async (kind: Tab, id: number) => {
     const reason = window.prompt("Raison du refus (optionnel) :") ?? "";
-    await fetch(`/api/admin/${kind}/${id}/reject`, {
+    await fetch(`/api/admin/${API_SEGMENT[kind]}/${id}/reject`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reason }),
@@ -80,7 +96,7 @@ export default function AdminB2BSubmissions() {
     load();
   };
 
-  const items = tab === "products" ? products : services;
+  const items = tab === "products" ? products : tab === "services" ? services : exploreListings;
   const filtered = items.filter((i) => filter === "all" || i.submissionStatus === filter);
   const pendingCount = items.filter((i) => i.submissionStatus === "pending").length;
 
@@ -90,7 +106,9 @@ export default function AdminB2BSubmissions() {
         <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Soumissions B2B</h1>
         <p className="mt-1 text-sm text-calma-taupe">
           {pendingCount > 0 ? (
-            <span className="font-medium text-[#8A6B2E]">{pendingCount} en attente de validation</span>
+            <span className="font-medium text-[#8A6B2E]">
+              {pendingCount} en attente de validation
+            </span>
           ) : (
             "Rien à valider pour le moment"
           )}
@@ -102,7 +120,9 @@ export default function AdminB2BSubmissions() {
           <button
             onClick={() => setTab("products")}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-              tab === "products" ? "bg-calma-olive text-white" : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
+              tab === "products"
+                ? "bg-calma-olive text-white"
+                : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
             }`}
           >
             <Package size={14} /> Produits
@@ -111,11 +131,24 @@ export default function AdminB2BSubmissions() {
           <button
             onClick={() => setTab("services")}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
-              tab === "services" ? "bg-calma-olive text-white" : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
+              tab === "services"
+                ? "bg-calma-olive text-white"
+                : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
             }`}
           >
             <Compass size={14} /> Services
             <span className="ml-1 text-xs opacity-70">{services.length}</span>
+          </button>
+          <button
+            onClick={() => setTab("explore")}
+            className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
+              tab === "explore"
+                ? "bg-calma-olive text-white"
+                : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
+            }`}
+          >
+            <MapPin size={14} /> Explore
+            <span className="ml-1 text-xs opacity-70">{exploreListings.length}</span>
           </button>
         </div>
 
@@ -125,10 +158,18 @@ export default function AdminB2BSubmissions() {
               key={f}
               onClick={() => setFilter(f)}
               className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
-                filter === f ? "bg-calma-terracotta text-white" : "bg-white text-calma-taupe border border-calma-border hover:border-calma-terracotta/40"
+                filter === f
+                  ? "bg-calma-terracotta text-white"
+                  : "bg-white text-calma-taupe border border-calma-border hover:border-calma-terracotta/40"
               }`}
             >
-              {f === "all" ? "Tous" : f === "pending" ? "En attente" : f === "approved" ? "Approuvés" : "Refusés"}
+              {f === "all"
+                ? "Tous"
+                : f === "pending"
+                  ? "En attente"
+                  : f === "approved"
+                    ? "Approuvés"
+                    : "Refusés"}
             </button>
           ))}
         </div>
@@ -142,7 +183,13 @@ export default function AdminB2BSubmissions() {
         </div>
       ) : filtered.length === 0 ? (
         <div className="py-16 text-center text-calma-taupe">
-          {tab === "products" ? <Package size={40} className="mx-auto mb-3 opacity-30" /> : <Compass size={40} className="mx-auto mb-3 opacity-30" />}
+          {tab === "products" ? (
+            <Package size={40} className="mx-auto mb-3 opacity-30" />
+          ) : tab === "services" ? (
+            <Compass size={40} className="mx-auto mb-3 opacity-30" />
+          ) : (
+            <MapPin size={40} className="mx-auto mb-3 opacity-30" />
+          )}
           <p>Rien dans cette catégorie</p>
         </div>
       ) : (
@@ -151,7 +198,9 @@ export default function AdminB2BSubmissions() {
             <div
               key={item.id}
               className={`flex flex-col gap-4 rounded-2xl border bg-white p-5 sm:flex-row sm:items-center sm:justify-between ${
-                item.submissionStatus === "pending" ? "border-calma-gold/30 bg-calma-gold/[.03]" : "border-calma-border"
+                item.submissionStatus === "pending"
+                  ? "border-calma-gold/30 bg-calma-gold/[.03]"
+                  : "border-calma-border"
               }`}
             >
               <div className="min-w-0 flex-1">

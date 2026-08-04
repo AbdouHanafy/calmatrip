@@ -38,12 +38,12 @@ export default function CalmaSearchBar() {
       <div className="relative z-[15] mx-auto -mt-8 max-w-[400px] px-4 md:hidden">
         <motion.form
           onSubmit={onSubmit}
-          className="flex flex-col gap-2 rounded-[28px] border border-white/50 bg-white/95 p-3.5 shadow-[0_20px_48px_-18px_rgba(42,38,34,.4)] backdrop-blur-2xl"
+          className="flex flex-col gap-1.5 rounded-[26px] border border-white/50 bg-white/95 p-3 shadow-[0_20px_48px_-18px_rgba(42,38,34,.4)] backdrop-blur-2xl"
           initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
         >
-          <label className="flex min-h-[50px] items-center gap-2.5 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3.5 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
+          <label className="flex min-h-[46px] items-center gap-2.5 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3.5 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
             <MapPin size={18} className="shrink-0 text-calma-terracotta" />
             <div className="min-w-0 flex-1 text-left">
               <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
@@ -59,7 +59,7 @@ export default function CalmaSearchBar() {
           </label>
 
           <div className="grid grid-cols-2 gap-2">
-            <label className="flex min-h-[50px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
+            <label className="flex min-h-[46px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
               <Calendar size={16} className="shrink-0 text-calma-terracotta" />
               <div className="min-w-0 flex-1 text-left">
                 <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
@@ -74,7 +74,7 @@ export default function CalmaSearchBar() {
               </div>
             </label>
 
-            <label className="flex min-h-[50px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
+            <label className="flex min-h-[46px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
               <Compass size={16} className="shrink-0 text-calma-terracotta" />
               <div className="min-w-0 flex-1 text-left">
                 <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
@@ -97,7 +97,7 @@ export default function CalmaSearchBar() {
 
           <button
             type="submit"
-            className="mt-0.5 flex h-[54px] w-full items-center justify-center gap-2 rounded-full font-hanken text-[15px] font-bold text-white shadow-[0_14px_28px_-8px_rgba(242,153,74,.65)] transition-transform active:scale-[.97]"
+            className="mt-0.5 flex h-[48px] w-full items-center justify-center gap-2 rounded-full font-hanken text-[15px] font-bold text-white shadow-[0_14px_28px_-8px_rgba(242,153,74,.65)] transition-transform active:scale-[.97]"
             style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
           >
             {t.browse}

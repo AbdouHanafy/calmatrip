@@ -29,6 +29,7 @@ model User {
   pushSubscriptions PushSubscription[]
   products          Product[]
   services          Service[]
+  exploreListings   ExploreListing[]
   favorites         Favorite[]
 
   @@map("users")
@@ -99,6 +100,32 @@ model Service {
 
   @@index([ownerId])
   @@map("services")
+}
+
+model ExploreListing {
+  id               Int      @id @default(autoincrement())
+  title            String
+  description      String   @db.Text
+  category         String
+  image            String?  @db.Text
+  city             String
+  address          String?
+  price            String?
+  budget           Int      @default(2)
+  duration         String?
+  openingHours     String?
+  lat              Float?
+  lng              Float?
+  active           Boolean  @default(true)
+  ownerId          String?
+  owner            User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  submissionStatus String   @default("pending")
+  rejectionReason  String?  @db.Text
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@index([ownerId])
+  @@map("explore_listings")
 }
 
 model Booking {

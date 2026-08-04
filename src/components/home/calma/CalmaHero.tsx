@@ -351,7 +351,7 @@ export default function CalmaHero() {
         </motion.p>
 
         <motion.div
-          className="flex w-full gap-2.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] snap-x snap-mandatory [&::-webkit-scrollbar]:hidden"
+          className="flex w-full justify-start gap-2.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] snap-x snap-mandatory sm:justify-center [&::-webkit-scrollbar]:hidden"
           initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.7, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}

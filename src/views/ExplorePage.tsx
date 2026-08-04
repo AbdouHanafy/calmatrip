@@ -10,7 +10,7 @@ import { useExploreFilters } from "@/hooks/explore/useExploreFilters";
 import { ExploreSearchBar } from "@/components/explore/ExploreSearchBar";
 import { ExploreFilters } from "@/components/explore/ExploreFilters";
 import { PlacesGrid } from "@/components/explore/PlacesGrid";
-import type { EventItem, MuseumItem } from "@/lib/explore/places";
+import type { EventItem, MuseumItem, ExploreListingItem } from "@/lib/explore/places";
 
 const MapExplorer = dynamic(() => import("@/components/explore/MapExplorer"), {
   ssr: false,
@@ -24,12 +24,13 @@ const MapExplorer = dynamic(() => import("@/components/explore/MapExplorer"), {
 interface ExplorePageContentProps {
   events: EventItem[];
   museums: MuseumItem[];
+  listings: ExploreListingItem[];
 }
 
-function ExplorePageContent({ events, museums }: ExplorePageContentProps) {
+function ExplorePageContent({ events, museums, listings }: ExplorePageContentProps) {
   const { t } = useCalmaLang();
   const { isFavorited, toggleFavorite } = useFavorites();
-  const filters = useExploreFilters(events, museums);
+  const filters = useExploreFilters(events, museums, listings);
 
   return (
     <>
@@ -136,10 +137,10 @@ function ExplorePageContent({ events, museums }: ExplorePageContentProps) {
   );
 }
 
-export default function ExplorePage({ events, museums }: ExplorePageContentProps) {
+export default function ExplorePage({ events, museums, listings }: ExplorePageContentProps) {
   return (
     <CalmaLangProvider>
-      <ExplorePageContent events={events} museums={museums} />
+      <ExplorePageContent events={events} museums={museums} listings={listings} />
     </CalmaLangProvider>
   );
 }

@@ -3,25 +3,28 @@ import { auth } from "@/auth";
 import type { Session } from "next-auth";
 import { createNotification } from "@/lib/notifications";
 import { sanitizeHtml } from "@/lib/sanitize";
-import { createService, getOwnedServices } from "@/repositories/serviceRepository";
+import {
+  createExploreListing,
+  getOwnedExploreListings,
+} from "@/repositories/exploreListingRepository";
 
 function requireAgency(session: Session | null) {
   return session?.user?.role === "B2B" && session.user.b2bType === "AGENCY";
 }
 
-// GET /api/b2b/services — the agency's own services, any submission status
+// GET /api/b2b/explore — the agency's own Explore listings, any submission status
 export async function GET() {
   const session = await auth();
   if (!requireAgency(session)) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const services = await getOwnedServices(session!.user.id);
+  const listings = await getOwnedExploreListings(session!.user.id);
 
-  return NextResponse.json({ services });
+  return NextResponse.json({ listings });
 }
 
-// POST /api/b2b/services — create a new service, always starts pending review
+// POST /api/b2b/explore — create a new Explore listing, always starts pending review
 export async function POST(req: NextRequest) {
   const session = await auth();
   if (!requireAgency(session)) {
@@ -30,22 +33,21 @@ export async function POST(req: NextRequest) {
 
   try {
     const json = await req.json();
-    if (!json.title || json.price === undefined || !json.category || !json.description) {
+    if (!json.title || !json.category || !json.city || !json.description) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    const service = await createService({
+    const listing = await createExploreListing({
       title: json.title,
-      subtitle: json.subtitle,
       description: sanitizeHtml(json.description),
-      price: json.price.toString(),
       category: json.category,
+      city: json.city,
+      address: json.address,
+      price: json.price,
+      budget: json.budget !== undefined ? Number(json.budget) : undefined,
       duration: json.duration,
-      icon: json.icon,
-      color: json.color,
+      openingHours: json.openingHours,
       image: json.image,
-      active: true,
-      popular: false,
       ownerId: session!.user.id,
       submissionStatus: "pending",
     });
@@ -53,14 +55,14 @@ export async function POST(req: NextRequest) {
     await createNotification({
       recipient: "admin",
       type: "b2b_submission",
-      title: "Nouveau service à valider",
-      body: `${session!.user.name ?? "Une agence"} a soumis le service « ${json.title} ».`,
+      title: "Nouvelle annonce Explore à valider",
+      body: `${session!.user.name ?? "Une agence"} a soumis « ${json.title} » sur Explore.`,
       link: "/admin/b2b-submissions",
     });
 
-    return NextResponse.json(service, { status: 201 });
+    return NextResponse.json(listing, { status: 201 });
   } catch (err) {
     console.error(err);
-    return NextResponse.json({ error: "Failed to create service" }, { status: 500 });
+    return NextResponse.json({ error: "Failed to create listing" }, { status: 500 });
   }
 }

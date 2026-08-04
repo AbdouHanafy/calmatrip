@@ -5,7 +5,9 @@ import { CalmaLangProvider } from "@/lib/calma/i18n";
 import CalmaHero from "@/components/home/calma/CalmaHero";
 import CalmaSearchBar from "@/components/home/calma/CalmaSearchBar";
 import CalmaCategories from "@/components/home/calma/CalmaCategories";
-import CalmaMarketplacePreview from "@/components/home/calma/CalmaMarketplacePreview";
+import CalmaMarketplacePreview, {
+  type FeaturedExperience,
+} from "@/components/home/calma/CalmaMarketplacePreview";
 import CalmaShopPreview from "@/components/home/calma/CalmaShopPreview";
 import CalmaWhyBanner from "@/components/home/calma/CalmaWhyBanner";
 import CalmaCustomTrip from "@/components/home/calma/CalmaCustomTrip";
@@ -36,9 +38,10 @@ interface Review {
 interface HomeProps {
   shopProducts: Product[];
   reviews: Review[];
+  experiences: FeaturedExperience[];
 }
 
-export default function Home({ shopProducts, reviews }: HomeProps) {
+export default function Home({ shopProducts, reviews, experiences }: HomeProps) {
   return (
     <CalmaLangProvider>
       {/* Alternating section rhythm — white / ivory / sand / olive — so the page never sits on one flat beige field */}
@@ -51,7 +54,7 @@ export default function Home({ shopProducts, reviews }: HomeProps) {
         </div>
 
         <div className="bg-calma-cream">
-          <CalmaMarketplacePreview />
+          <CalmaMarketplacePreview experiences={experiences} />
         </div>
 
         <div className="bg-calma-sand">

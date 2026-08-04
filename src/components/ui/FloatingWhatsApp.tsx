@@ -24,14 +24,13 @@ export default function FloatingWhatsApp() {
 
     document.addEventListener("mousedown", handleClickOutside);
 
-    return () =>
-      document.removeEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
   return (
     <div
       ref={ref}
-      className="fixed bottom-6 left-6 z-50 flex flex-col items-start gap-3 font-hanken"
+      className="fixed bottom-24 left-4 z-50 flex flex-col items-start gap-3 font-hanken sm:bottom-6 sm:left-6"
     >
       {open && (
         <div

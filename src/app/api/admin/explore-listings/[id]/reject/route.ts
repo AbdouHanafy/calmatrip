@@ -3,7 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
 import { createNotification } from "@/lib/notifications";
 import { sendWhatsAppMessage } from "@/lib/whatsapp";
-import { rejectService } from "@/repositories/serviceRepository";
+import { rejectExploreListing } from "@/repositories/exploreListingRepository";
 
 export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
@@ -15,33 +15,33 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const body = await req.json().catch(() => ({}));
   const reason = typeof body.reason === "string" ? body.reason.trim() : "";
 
-  const service = await rejectService(parseInt(id), reason || null);
+  const listing = await rejectExploreListing(parseInt(id), reason || null);
 
-  if (service.ownerId) {
+  if (listing.ownerId) {
     await createNotification({
       recipient: "user",
-      userId: service.ownerId,
+      userId: listing.ownerId,
       type: "b2b_decision",
-      title: "Service refusé",
+      title: "Annonce Explore refusée",
       body: reason
-        ? `Votre service « ${service.title} » n'a pas été approuvé : ${reason}`
-        : `Votre service « ${service.title} » n'a pas été approuvé.`,
-      link: "/b2b",
+        ? `Votre annonce « ${listing.title} » n'a pas été approuvée : ${reason}`
+        : `Votre annonce « ${listing.title} » n'a pas été approuvée.`,
+      link: "/b2b/explore",
     });
 
     const owner = await prisma.user.findUnique({
-      where: { id: service.ownerId },
+      where: { id: listing.ownerId },
       select: { phone: true },
     });
     if (owner?.phone) {
       await sendWhatsAppMessage(
         owner.phone,
         reason
-          ? `Votre service « ${service.title} » n'a pas été approuvé : ${reason}`
-          : `Votre service « ${service.title} » n'a pas été approuvé.`,
+          ? `Votre annonce « ${listing.title} » n'a pas été approuvée : ${reason}`
+          : `Votre annonce « ${listing.title} » n'a pas été approuvée.`,
       );
     }
   }
 
-  return NextResponse.json(service);
+  return NextResponse.json(listing);
 }

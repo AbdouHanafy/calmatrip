@@ -6,6 +6,7 @@ import {
   MapPinned,
   CalendarDays,
   Building2,
+  BedDouble,
   type LucideIcon,
 } from "lucide-react";
 import type { FavoriteType } from "@/hooks/useFavorites";
@@ -58,6 +59,22 @@ export interface MuseumItem {
   lng: number | null;
 }
 
+export interface ExploreListingItem {
+  id: number;
+  title: string;
+  description: string;
+  category: string;
+  image: string | null;
+  city: string;
+  address: string | null;
+  price: string | null;
+  budget: number;
+  duration: string | null;
+  openingHours: string | null;
+  lat: number | null;
+  lng: number | null;
+}
+
 const FALLBACK_IMAGE = "/images/explore/carthage_ports.png";
 
 function isFree(price: string | null): boolean {
@@ -96,13 +113,39 @@ export function mapMuseumToPlace(m: MuseumItem): Place {
   };
 }
 
+export function mapExploreListingToPlace(l: ExploreListingItem): Place {
+  return {
+    id: 300000 + l.id,
+    title: l.title,
+    category: l.category,
+    image: l.image || FALLBACK_IMAGE,
+    description: l.description,
+    duration: l.duration ?? undefined,
+    openingHours: l.openingHours ?? undefined,
+    location: l.address ?? undefined,
+    city: l.city,
+    budget: l.budget,
+    coordinates: { lat: l.lat ?? 0, lng: l.lng ?? 0 },
+  };
+}
+
 // Derives the (favoriteType, favoriteId) pair for a Place, undoing the id
-// offset used to keep event/museum ids collision-free with the static mock places.
+// offset used to keep event/museum/listing ids collision-free with the static mock places.
 export function getFavoriteKey(place: Place): { type: FavoriteType; id: number } {
   if (place.category === "Event") return { type: "event", id: place.id - 100000 };
   if (place.category === "Museum") return { type: "museum", id: place.id - 200000 };
+  if (place.id >= 300000) return { type: "place", id: place.id - 300000 };
   return { type: "place", id: place.id };
 }
+
+// Categories a B2B agency can submit an Explore listing under.
+export const AGENCY_EXPLORE_CATEGORIES = [
+  "Food & Drink",
+  "Sight",
+  "Activity",
+  "Hidden Gem",
+  "Hotel",
+];
 
 export const CATEGORY_IDS = [
   "all",
@@ -110,6 +153,7 @@ export const CATEGORY_IDS = [
   "Sight",
   "Activity",
   "Hidden Gem",
+  "Hotel",
   "Event",
   "Museum",
 ];
@@ -119,6 +163,7 @@ export const CATEGORY_ICONS: LucideIcon[] = [
   Landmark,
   Mountain,
   MapPinned,
+  BedDouble,
   CalendarDays,
   Building2,
 ];

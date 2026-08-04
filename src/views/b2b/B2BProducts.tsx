@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { Plus, Pencil, Trash2, X, Clock, Check } from "lucide-react";
+import { ConfirmDialog } from "@/components/b2b/ConfirmDialog";
 
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL"] as const;
 
@@ -58,6 +59,8 @@ export default function B2BProducts() {
   const [form, setForm] = useState(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
+  const [editConfirmTarget, setEditConfirmTarget] = useState<Product | null>(null);
 
   const load = () => {
     setLoading(true);
@@ -89,6 +92,14 @@ export default function B2BProducts() {
       sizes: Array.isArray(p.sizes) ? p.sizes : [],
     });
     setModalOpen(true);
+  };
+
+  const requestEdit = (p: Product) => {
+    if (p.submissionStatus === "approved") {
+      setEditConfirmTarget(p);
+    } else {
+      openEdit(p);
+    }
   };
 
   const toggleSize = (size: string) => {
@@ -128,9 +139,10 @@ export default function B2BProducts() {
     }
   };
 
-  const handleDelete = async (id: number) => {
-    if (!confirm("Supprimer ce produit ?")) return;
-    await fetch(`/api/b2b/products/${id}`, { method: "DELETE" });
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    await fetch(`/api/b2b/products/${deleteTarget.id}`, { method: "DELETE" });
+    setDeleteTarget(null);
     load();
   };
 
@@ -208,14 +220,14 @@ export default function B2BProducts() {
                     <td className="px-4 py-3 text-right">
                       <div className="flex items-center justify-end gap-2">
                         <button
-                          onClick={() => openEdit(p)}
+                          onClick={() => requestEdit(p)}
                           aria-label={`Modifier ${p.name}`}
                           className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
                         >
                           <Pencil className="h-4 w-4" />
                         </button>
                         <button
-                          onClick={() => handleDelete(p.id)}
+                          onClick={() => setDeleteTarget(p)}
                           aria-label={`Supprimer ${p.name}`}
                           className="rounded-lg p-2 text-red-500 hover:bg-red-50"
                         >
@@ -271,7 +283,9 @@ export default function B2BProducts() {
                   <input
                     required
                     type="number"
+                    min="0"
                     step="0.01"
+                    inputMode="decimal"
                     value={form.price}
                     onChange={(e) => setForm({ ...form, price: e.target.value })}
                     className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
@@ -356,6 +370,30 @@ export default function B2BProducts() {
             </form>
           </div>
         </div>
+      )}
+
+      {deleteTarget && (
+        <ConfirmDialog
+          title="Supprimer ce produit ?"
+          message={`« ${deleteTarget.name} » sera définitivement supprimé. Cette action est irréversible.`}
+          confirmLabel="Supprimer"
+          danger
+          onConfirm={handleDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+
+      {editConfirmTarget && (
+        <ConfirmDialog
+          title="Modifier ce produit ?"
+          message="Ce produit est déjà approuvé. Toute modification le repassera en attente de validation et le masquera du site le temps de la revalidation."
+          confirmLabel="Continuer"
+          onConfirm={() => {
+            openEdit(editConfirmTarget);
+            setEditConfirmTarget(null);
+          }}
+          onCancel={() => setEditConfirmTarget(null)}
+        />
       )}
     </div>
   );

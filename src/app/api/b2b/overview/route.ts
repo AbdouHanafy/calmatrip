@@ -18,30 +18,17 @@ export async function GET() {
   const commissionRate = me?.commissionRate ?? 10;
 
   if (b2bType === "AGENCY") {
-    const [serviceCount, bookings] = await Promise.all([
-      prisma.service.count({ where: { ownerId } }),
-      prisma.booking.findMany({
-        where: { ownerId },
-        select: { status: true, price: true, commissionAmount: true },
-      }),
+    const [listingsCount, approvedCount, pendingCount] = await Promise.all([
+      prisma.exploreListing.count({ where: { ownerId } }),
+      prisma.exploreListing.count({ where: { ownerId, submissionStatus: "approved" } }),
+      prisma.exploreListing.count({ where: { ownerId, submissionStatus: "pending" } }),
     ]);
-
-    const confirmed = bookings.filter((b) => b.status === "confirmed");
-    const revenue = confirmed.reduce((sum, b) => {
-      const n = parseFloat(b.price?.replace(/[^\d.]/g, "") ?? "0");
-      return sum + (isNaN(n) ? 0 : n);
-    }, 0);
-    const commission = confirmed.reduce((sum, b) => sum + (b.commissionAmount ?? 0), 0);
 
     return NextResponse.json({
       b2bType,
-      listingsCount: serviceCount,
-      bookingsCount: bookings.length,
-      confirmedCount: confirmed.length,
-      revenue: Math.round(revenue * 100) / 100,
-      commission: Math.round(commission * 100) / 100,
-      netEarnings: Math.round((revenue - commission) * 100) / 100,
-      commissionRate,
+      listingsCount,
+      approvedCount,
+      pendingCount,
     });
   }
 

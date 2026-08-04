@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import { buildMetadata, faqSchema, SITE } from "@/lib/seo";
 import { getPublicProducts } from "@/repositories/productRepository";
 import { getApprovedReviews } from "@/repositories/reviewRepository";
+import { getPublicExploreListings } from "@/repositories/exploreListingRepository";
 
 // ✅ Single export metadata — uses buildMetadata + JSON-LD inline
 export const metadata: Metadata = {
@@ -65,15 +66,17 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [{ products }, reviews] = await Promise.all([
+  const [{ products }, reviews, exploreListings] = await Promise.all([
     getPublicProducts({ sort: "newest" }),
     getApprovedReviews(),
+    getPublicExploreListings(),
   ]);
 
   return (
     <HomeComponent
       shopProducts={JSON.parse(JSON.stringify(products.slice(0, 3)))}
       reviews={JSON.parse(JSON.stringify(reviews))}
+      experiences={JSON.parse(JSON.stringify(exploreListings.slice(0, 3)))}
     />
   );
 }

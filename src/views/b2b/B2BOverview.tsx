@@ -6,22 +6,27 @@ import {
   CheckCircle2,
   XCircle,
   Package,
-  Compass,
+  MapPin,
   TrendingUp,
   Percent,
   Wallet,
+  Hourglass,
 } from "lucide-react";
 import Link from "next/link";
 
 interface OverviewStats {
   b2bType: "ARTISAN" | "AGENCY";
   listingsCount: number;
-  bookingsCount: number;
-  confirmedCount: number;
-  revenue: number;
-  commission: number;
-  netEarnings: number;
-  commissionRate: number;
+  // ARTISAN only
+  bookingsCount?: number;
+  confirmedCount?: number;
+  revenue?: number;
+  commission?: number;
+  netEarnings?: number;
+  commissionRate?: number;
+  // AGENCY only
+  approvedCount?: number;
+  pendingCount?: number;
 }
 
 export default function B2BOverview() {
@@ -66,9 +71,8 @@ export default function B2BOverview() {
   const status = statusConfig[b2bStatus] ?? statusConfig.pending;
   const StatusIcon = status.icon;
   const isAgency = b2bType === "AGENCY";
-  const listingsLabel = isAgency ? "Services publiés" : "Produits publiés";
-  const listingsHref = isAgency ? "/b2b/services" : "/b2b/products";
-  const salesLabel = isAgency ? "Réservations" : "Ventes";
+  const listingsLabel = isAgency ? "Annonces Explore" : "Produits publiés";
+  const listingsHref = isAgency ? "/b2b/explore" : "/b2b/products";
 
   return (
     <div className="max-w-4xl">
@@ -88,6 +92,33 @@ export default function B2BOverview() {
             <div key={i} className="h-28 animate-pulse rounded-calma-card bg-calma-sand" />
           ))}
         </div>
+      ) : stats && isAgency ? (
+        <div className="grid grid-cols-2 gap-4 lg:grid-cols-3">
+          <Link
+            href={listingsHref}
+            className="rounded-calma-card border border-calma-border bg-white p-5 no-underline transition-shadow hover:shadow-md"
+          >
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-calma-olive/10 text-calma-olive">
+              <MapPin className="h-5 w-5" />
+            </div>
+            <p className="font-fraunces text-2xl text-calma-ink">{stats.listingsCount}</p>
+            <p className="text-xs text-calma-taupe">{listingsLabel}</p>
+          </Link>
+          <div className="rounded-calma-card border border-calma-border bg-white p-5">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-calma-success/10 text-calma-success">
+              <CheckCircle2 className="h-5 w-5" />
+            </div>
+            <p className="font-fraunces text-2xl text-calma-ink">{stats.approvedCount ?? 0}</p>
+            <p className="text-xs text-calma-taupe">Approuvées, visibles sur Explore</p>
+          </div>
+          <div className="rounded-calma-card border border-calma-border bg-white p-5">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-calma-gold/10 text-[#8A6B2E]">
+              <Hourglass className="h-5 w-5" />
+            </div>
+            <p className="font-fraunces text-2xl text-calma-ink">{stats.pendingCount ?? 0}</p>
+            <p className="text-xs text-calma-taupe">En attente de validation</p>
+          </div>
+        </div>
       ) : stats ? (
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
@@ -96,7 +127,7 @@ export default function B2BOverview() {
               className="rounded-calma-card border border-calma-border bg-white p-5 no-underline transition-shadow hover:shadow-md"
             >
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-calma-olive/10 text-calma-olive">
-                {isAgency ? <Compass className="h-5 w-5" /> : <Package className="h-5 w-5" />}
+                <Package className="h-5 w-5" />
               </div>
               <p className="font-fraunces text-2xl text-calma-ink">{stats.listingsCount}</p>
               <p className="text-xs text-calma-taupe">{listingsLabel}</p>
@@ -105,15 +136,15 @@ export default function B2BOverview() {
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-calma-terracotta/10 text-calma-terracotta">
                 <TrendingUp className="h-5 w-5" />
               </div>
-              <p className="font-fraunces text-2xl text-calma-ink">{stats.confirmedCount}</p>
-              <p className="text-xs text-calma-taupe">{salesLabel} confirmées</p>
+              <p className="font-fraunces text-2xl text-calma-ink">{stats.confirmedCount ?? 0}</p>
+              <p className="text-xs text-calma-taupe">Ventes confirmées</p>
             </div>
             <div className="rounded-calma-card border border-calma-border bg-white p-5">
               <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-xl bg-calma-success/10 text-calma-success">
                 <Wallet className="h-5 w-5" />
               </div>
               <p className="font-fraunces text-2xl text-calma-ink">
-                {stats.netEarnings.toFixed(2)} TND
+                {(stats.netEarnings ?? 0).toFixed(2)} TND
               </p>
               <p className="text-xs text-calma-taupe">Net perçu (commission déduite)</p>
             </div>
@@ -130,7 +161,7 @@ export default function B2BOverview() {
             href="/b2b/sales"
             className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"
           >
-            Voir le détail {isAgency ? "des réservations" : "des ventes"} et commissions →
+            Voir le détail des ventes et commissions →
           </Link>
         </>
       ) : (
