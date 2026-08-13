@@ -8,6 +8,25 @@ export async function getPublicServices() {
   });
 }
 
+export async function getPublicServiceById(id: number) {
+  const service = await prisma.service.findUnique({ where: { id } });
+  if (!service || service.submissionStatus !== "approved" || !service.active) return null;
+  return service;
+}
+
+export async function getRelatedServices(category: string | null, excludeId: number) {
+  return prisma.service.findMany({
+    where: {
+      submissionStatus: "approved",
+      active: true,
+      id: { not: excludeId },
+      ...(category ? { category } : {}),
+    },
+    orderBy: { order: "asc" },
+    take: 3,
+  });
+}
+
 interface CreateServiceInput {
   title: string;
   subtitle?: string | null;

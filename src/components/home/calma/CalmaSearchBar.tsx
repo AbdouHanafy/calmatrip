@@ -4,23 +4,28 @@ import { useRouter } from "next/navigation";
 import { motion, useReducedMotion } from "motion/react";
 import { MapPin, Calendar, Compass, ArrowRight } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
+import { CalmaFieldSelect } from "./CalmaFieldSelect";
+
+const DESTINATION_OPTIONS = ["Hammamet"];
+const TODAY_ISO = () => new Date().toISOString().slice(0, 10);
 
 export default function CalmaSearchBar() {
   const { t } = useCalmaLang();
   const router = useRouter();
   const reduceMotion = useReducedMotion();
-  const [destination, setDestination] = useState("");
+  const [destination, setDestination] = useState(DESTINATION_OPTIONS[0]);
   const [date, setDate] = useState("");
   const [category, setCategory] = useState("");
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     const params = new URLSearchParams();
-    if (destination.trim()) params.set("search", destination.trim());
-    if (date.trim()) params.set("date", date.trim());
+    if (date) params.set("date", date);
     if (category) params.set("category", category);
     router.push(`/explore${params.toString() ? `?${params.toString()}` : ""}`);
   };
+
+  const destinationOptions = DESTINATION_OPTIONS.map((d) => ({ value: d, label: d }));
 
   const categoryOptions = [
     { value: "", label: t.searchCat },
@@ -49,11 +54,11 @@ export default function CalmaSearchBar() {
               <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
                 {t.searchDestL}
               </div>
-              <input
+              <CalmaFieldSelect
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder={t.searchDest}
-                className="w-full truncate border-none bg-transparent p-0 font-hanken text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
+                options={destinationOptions}
+                onChange={setDestination}
+                triggerClassName="text-[15px] text-calma-ink"
               />
             </div>
           </label>
@@ -66,10 +71,11 @@ export default function CalmaSearchBar() {
                   {t.searchDateL}
                 </div>
                 <input
+                  type="date"
+                  min={TODAY_ISO()}
                   value={date}
                   onChange={(e) => setDate(e.target.value)}
-                  placeholder={t.searchDatePh}
-                  className="w-full truncate border-none bg-transparent p-0 font-hanken text-[13.5px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
+                  className="w-full truncate border-none bg-transparent p-0 font-hanken text-[13.5px] text-calma-ink outline-none [color-scheme:light]"
                 />
               </div>
             </label>
@@ -80,17 +86,12 @@ export default function CalmaSearchBar() {
                 <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
                   {t.searchCatL}
                 </div>
-                <select
+                <CalmaFieldSelect
                   value={category}
-                  onChange={(e) => setCategory(e.target.value)}
-                  className="w-full cursor-pointer border-none bg-transparent p-0 font-hanken text-[13.5px] text-calma-ink outline-none"
-                >
-                  {categoryOptions.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
-                  ))}
-                </select>
+                  options={categoryOptions}
+                  onChange={setCategory}
+                  triggerClassName="text-[13.5px] text-calma-ink"
+                />
               </div>
             </label>
           </div>
@@ -122,11 +123,11 @@ export default function CalmaSearchBar() {
             </div>
             <div className="flex items-center gap-3">
               <MapPin size={20} className="shrink-0 text-calma-terracotta" />
-              <input
+              <CalmaFieldSelect
                 value={destination}
-                onChange={(e) => setDestination(e.target.value)}
-                placeholder={t.searchDest}
-                className="w-full border-none bg-transparent font-hanken text-[16px] text-calma-ink outline-none placeholder:text-calma-taupe/70"
+                options={destinationOptions}
+                onChange={setDestination}
+                triggerClassName="text-[16px] text-calma-ink"
               />
             </div>
           </label>
@@ -140,10 +141,11 @@ export default function CalmaSearchBar() {
             <div className="flex items-center gap-3">
               <Calendar size={20} className="shrink-0 text-calma-terracotta" />
               <input
+                type="date"
+                min={TODAY_ISO()}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                placeholder={t.searchDatePh}
-                className="w-full border-none bg-transparent font-hanken text-[16px] text-calma-ink outline-none placeholder:text-calma-taupe/70"
+                className="w-full border-none bg-transparent font-hanken text-[16px] text-calma-ink outline-none [color-scheme:light]"
               />
             </div>
           </label>
@@ -156,17 +158,12 @@ export default function CalmaSearchBar() {
             </div>
             <div className="flex items-center gap-3">
               <Compass size={20} className="shrink-0 text-calma-terracotta" />
-              <select
+              <CalmaFieldSelect
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
-                className="w-full cursor-pointer border-none bg-transparent font-hanken text-[16px] text-calma-ink outline-none"
-              >
-                {categoryOptions.map((opt) => (
-                  <option key={opt.value} value={opt.value}>
-                    {opt.label}
-                  </option>
-                ))}
-              </select>
+                options={categoryOptions}
+                onChange={setCategory}
+                triggerClassName="text-[16px] text-calma-ink"
+              />
             </div>
           </label>
 

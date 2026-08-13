@@ -1,4 +1,4 @@
-import { Car, Plane, MapPin, Users } from "lucide-react";
+import { Car, Plane, MapPin, Users, Compass } from "lucide-react";
 
 export interface DBService {
   id: number;
@@ -58,6 +58,9 @@ export function mapService(s: DBService): MappedService {
     color = "#F2994A";
   } else if (category === "group") {
     icon = Users;
+    color = "#F7B77E";
+  } else if (category === "activity") {
+    icon = Compass;
     color = "#F7B77E";
   }
 

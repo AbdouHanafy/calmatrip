@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { MapPin } from "lucide-react";
 import { motion } from "motion/react";
 import { useCalmaLang } from "@/lib/calma/i18n";
@@ -10,6 +9,7 @@ interface ServicesGridSectionProps {
   activeCategory: string;
   onCategoryChange: (cat: string) => void;
   q: string;
+  onClearQuery: () => void;
   filtered: MappedService[];
   onBook: (id: string) => void;
 }
@@ -19,6 +19,7 @@ export function ServicesGridSection({
   activeCategory,
   onCategoryChange,
   q,
+  onClearQuery,
   filtered,
   onBook,
 }: ServicesGridSectionProps) {
@@ -80,12 +81,13 @@ export function ServicesGridSection({
                 </>
               )}
             </p>
-            <Link
-              href="/services"
+            <button
+              type="button"
+              onClick={onClearQuery}
               className="ml-auto rounded-full border border-[#F1EBE1] px-4 py-1.5 text-xs uppercase tracking-[0.12em] text-[#726C64] transition-colors hover:border-[#F2994A] hover:text-[#2D2926]"
             >
               {t.svc.clearSearch}
-            </Link>
+            </button>
           </div>
         )}
 

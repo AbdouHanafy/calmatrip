@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { ChevronLeft, ChevronRight, Clock, Check, ArrowRight } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { htmlTextLength, DESCRIPTION_LIMIT, type MappedService } from "@/lib/services/mapService";
@@ -124,7 +125,12 @@ export function ServiceCard({
             <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
               {service.subtitle}
             </p>
-            <h3 className="text-lg font-extrabold text-gray-900 leading-tight">{service.title}</h3>
+            <Link
+              href={`/services/${service.id}`}
+              className="text-lg font-extrabold leading-tight text-gray-900 no-underline hover:text-gray-700"
+            >
+              <h3>{service.title}</h3>
+            </Link>
           </div>
           <div className="ml-auto flex items-center gap-1 text-xs text-gray-400 font-medium flex-shrink-0">
             <Clock className="w-3.5 h-3.5" />
@@ -176,10 +182,16 @@ export function ServiceCard({
         )}
 
         {/* CTA */}
-        <div className="mt-auto">
+        <div className="mt-auto flex items-center gap-2">
+          <Link
+            href={`/services/${service.id}`}
+            className="rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 no-underline transition-colors hover:border-gray-300 hover:text-gray-900"
+          >
+            {t.svc.viewDetails}
+          </Link>
           <button
             onClick={() => onBook(service.id)}
-            className="w-full py-3 px-5 rounded-2xl text-white font-bold text-sm flex items-center justify-center gap-2 transition-all duration-300 hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 group/btn"
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 group/btn"
             style={{ background: c }}
           >
             {t.svc.bookThis}

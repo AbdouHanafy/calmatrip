@@ -65,7 +65,7 @@ export default function CalmaMarketplacePreview({
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-2 calma-scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
           {items.map((exp) => {
             const numericPrice = parsePrice(exp.price);
             const duration = exp.duration ?? exp.openingHours;
@@ -73,7 +73,7 @@ export default function CalmaMarketplacePreview({
               <Link
                 key={exp.id}
                 href="/explore"
-                className="group block overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(42,38,34,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(42,38,34,.45)]"
+                className="group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(42,38,34,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(42,38,34,.45)] sm:w-auto sm:shrink sm:snap-none"
               >
                 <div className="relative h-[260px] overflow-hidden bg-calma-olive-deep">
                   <Image
@@ -149,12 +149,12 @@ export default function CalmaMarketplacePreview({
         </Link>
       </div>
 
-      <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-2 calma-scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
         {t.exps.map((exp, i) => (
           <Link
             key={exp.title}
             href="/explore"
-            className="group block overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(42,38,34,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(42,38,34,.45)]"
+            className="group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(42,38,34,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(42,38,34,.45)] sm:w-auto sm:shrink sm:snap-none"
           >
             <div className="relative h-[260px] overflow-hidden bg-calma-olive-deep">
               <Image

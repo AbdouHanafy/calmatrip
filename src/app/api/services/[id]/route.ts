@@ -2,7 +2,27 @@ import { NextResponse } from "next/server";
 import type { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import { sanitizeHtml } from "@/lib/sanitize";
-import { deleteService, updateService } from "@/repositories/serviceRepository";
+import {
+  deleteService,
+  getPublicServiceById,
+  getRelatedServices,
+  updateService,
+} from "@/repositories/serviceRepository";
+
+export async function GET(_req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const id = parseInt((await params).id);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: "Invalid service ID" }, { status: 400 });
+  }
+
+  const service = await getPublicServiceById(id);
+  if (!service) {
+    return NextResponse.json({ error: "Service not found" }, { status: 404 });
+  }
+
+  const related = await getRelatedServices(service.category, service.id);
+  return NextResponse.json({ service, related });
+}
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();

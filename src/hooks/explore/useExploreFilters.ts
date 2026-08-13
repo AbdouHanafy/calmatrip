@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import {
   allPlaces,
   mapEventToPlace,
@@ -16,10 +17,14 @@ export function useExploreFilters(
   museums: MuseumItem[],
   listings: ExploreListingItem[] = [],
 ) {
-  const [selectedCategory, setSelectedCategory] = useState("all");
-  const [selectedCity, setSelectedCity] = useState("All Cities");
+  const searchParams = useSearchParams();
+
+  const [selectedCategory, setSelectedCategory] = useState(
+    () => searchParams?.get("category") ?? "all",
+  );
+  const [selectedCity, setSelectedCity] = useState(() => searchParams?.get("city") ?? "All Cities");
   const [budgetLimit, setBudgetLimit] = useState(3);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(() => searchParams?.get("search") ?? "");
   const [viewMode, setViewMode] = useState<"list" | "map">("list");
   const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
   const [sortBy, setSortBy] = useState("Popularity");

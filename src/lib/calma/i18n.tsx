@@ -57,6 +57,7 @@ export interface CalmaServicesDict {
   offerKicker: string;
   offerTitle1: string;
   offerTitle2: string;
+  searchPh: string;
   clearSearch: string;
   resultWord: string;
   resultsWord: string;
@@ -70,6 +71,11 @@ export interface CalmaServicesDict {
   readMore: string;
   showLess: string;
   moreIncluded: string;
+  viewDetails: string;
+  detailFeaturesTitle: string;
+  relatedTitle: string;
+  notFoundTitle: string;
+  notFoundHint: string;
   whyKicker: string;
   whyTitle: string;
   why: [CalmaWhyItem, CalmaWhyItem, CalmaWhyItem, CalmaWhyItem];
@@ -229,6 +235,7 @@ export interface CalmaContactDict {
 export interface CalmaDict {
   navHome: string;
   navServices: string;
+  navServicesViewAll: string;
   navMarket: string;
   navExplore: string;
   navAbout: string;
@@ -276,6 +283,7 @@ export interface CalmaDict {
   guidesEmpty: string;
   guidesBack: string;
   guidesRead: string;
+  servicesBack: string;
 
   whyKicker: string;
   whyHeading: string;
@@ -321,6 +329,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
   fr: {
     navHome: "Accueil",
     navServices: "Services",
+    navServicesViewAll: "Voir tous les services",
     navMarket: "Marketplace",
     navExplore: "Explorer",
     navAbout: "À propos",
@@ -370,6 +379,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     guidesEmpty: "Aucun guide disponible pour le moment.",
     guidesBack: "Tous les guides",
     guidesRead: "Lire",
+    servicesBack: "Tous les services",
 
     whyKicker: "Pourquoi calma·trip",
     whyHeading: "Le voyage juste, pensé avec les Tunisiens",
@@ -490,6 +500,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       offerKicker: "Ce que nous proposons",
       offerTitle1: "Des services pensés",
       offerTitle2: "pour chaque voyageur",
+      searchPh: "Rechercher un service (transfert, excursion, activité…)",
       clearSearch: "Effacer la recherche",
       resultWord: "résultat",
       resultsWord: "résultats",
@@ -503,6 +514,11 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       readMore: "Lire plus ↓",
       showLess: "Réduire ↑",
       moreIncluded: "inclus en plus",
+      viewDetails: "Voir les détails",
+      detailFeaturesTitle: "Ce qui est inclus",
+      relatedTitle: "Autres services qui pourraient vous plaire",
+      notFoundTitle: "Service introuvable",
+      notFoundHint: "Ce service n'est plus disponible.",
       whyKicker: "Pourquoi Calma Trip",
       whyTitle: "Conçu pour votre tranquillité d’esprit",
       why: [
@@ -735,6 +751,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
   en: {
     navHome: "Home",
     navServices: "Services",
+    navServicesViewAll: "View all services",
     navMarket: "Marketplace",
     navExplore: "Explore",
     navAbout: "About Us",
@@ -784,6 +801,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     guidesEmpty: "No guides available yet.",
     guidesBack: "All guides",
     guidesRead: "Read",
+    servicesBack: "All services",
 
     whyKicker: "Why calma·trip",
     whyHeading: "Travel done right, built with Tunisians",
@@ -901,6 +919,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       offerKicker: "What we offer",
       offerTitle1: "Services tailored",
       offerTitle2: "to every traveller",
+      searchPh: "Search a service (transfer, excursion, activity…)",
       clearSearch: "Clear search",
       resultWord: "result",
       resultsWord: "results",
@@ -914,6 +933,11 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       readMore: "Read more ↓",
       showLess: "Show less ↑",
       moreIncluded: "more included",
+      viewDetails: "View details",
+      detailFeaturesTitle: "What's included",
+      relatedTitle: "Other services you might like",
+      notFoundTitle: "Service not found",
+      notFoundHint: "This service is no longer available.",
       whyKicker: "Why Calma Trip",
       whyTitle: "Built around your peace of mind",
       why: [
@@ -1143,6 +1167,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
   ar: {
     navHome: "الرئيسية",
     navServices: "الخدمات",
+    navServicesViewAll: "عرض كل الخدمات",
     navMarket: "السوق",
     navExplore: "استكشف",
     navAbout: "من نحن",
@@ -1190,6 +1215,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     guidesEmpty: "لا توجد أدلة متاحة حاليًا.",
     guidesBack: "كل الأدلة",
     guidesRead: "قراءة",
+    servicesBack: "كل الخدمات",
 
     whyKicker: "لماذا كالما تريب",
     whyHeading: "سفر عادل، بُني مع التونسيين",
@@ -1300,6 +1326,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       offerKicker: "ماذا نقدم",
       offerTitle1: "خدمات مصممة",
       offerTitle2: "لكل مسافر",
+      searchPh: "ابحث عن خدمة (نقل، رحلة، نشاط…)",
       clearSearch: "مسح البحث",
       resultWord: "نتيجة",
       resultsWord: "نتائج",
@@ -1313,6 +1340,11 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       readMore: "اقرأ المزيد ↓",
       showLess: "عرض أقل ↑",
       moreIncluded: "إضافية مشمولة",
+      viewDetails: "عرض التفاصيل",
+      detailFeaturesTitle: "ما هو مشمول",
+      relatedTitle: "خدمات أخرى قد تعجبك",
+      notFoundTitle: "الخدمة غير موجودة",
+      notFoundHint: "هذه الخدمة لم تعد متوفرة.",
       whyKicker: "لماذا كالما تريب",
       whyTitle: "مصمم من أجل راحة بالك",
       why: [

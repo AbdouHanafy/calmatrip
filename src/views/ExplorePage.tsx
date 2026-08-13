@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense } from "react";
 import Image from "next/image";
 import dynamic from "next/dynamic";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
@@ -140,7 +141,9 @@ function ExplorePageContent({ events, museums, listings }: ExplorePageContentPro
 export default function ExplorePage({ events, museums, listings }: ExplorePageContentProps) {
   return (
     <CalmaLangProvider>
-      <ExplorePageContent events={events} museums={museums} listings={listings} />
+      <Suspense fallback={<div className="min-h-screen bg-calma-sand" />}>
+        <ExplorePageContent events={events} museums={museums} listings={listings} />
+      </Suspense>
     </CalmaLangProvider>
   );
 }

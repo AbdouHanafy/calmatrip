@@ -15,8 +15,10 @@ import {
   Briefcase,
   Menu,
   X,
+  ChevronDown,
 } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
+import { mapService, type DBService } from "@/lib/services/mapService";
 
 export type CalmaActiveNav = "home" | "services" | "marketplace" | "explore" | "about";
 
@@ -44,6 +46,9 @@ export default function CalmaHeader({
   const { data: session, status } = useSession();
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [servicesOpen, setServicesOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
+  const [services, setServices] = useState<DBService[] | null>(null);
 
   useEffect(() => {
     if (variant !== "overlay") return;
@@ -52,6 +57,15 @@ export default function CalmaHeader({
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
   }, [variant]);
+
+  useEffect(() => {
+    fetch("/api/services")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setServices(Array.isArray(data) ? data : []))
+      .catch(() => setServices([]));
+  }, []);
+
+  const mappedServices = (services ?? []).filter((s) => s.active !== false).map(mapService);
 
   const navItems: { key: CalmaActiveNav; href: string; label: string }[] = [
     { key: "home", href: "/", label: t.navHome },
@@ -88,19 +102,82 @@ export default function CalmaHeader({
       </Link>
 
       <nav className="hidden gap-1 text-sm font-medium text-white md:flex">
-        {navItems.map((item) => (
-          <Link
-            key={item.key}
-            href={item.href}
-            className={
-              active === item.key
-                ? "rounded-full bg-white/[.12] px-4 py-2 font-semibold text-white no-underline transition-all"
-                : "rounded-full px-4 py-2 text-white/75 no-underline transition-all hover:bg-white/[.06] hover:text-white"
-            }
-          >
-            {item.label}
-          </Link>
-        ))}
+        {navItems.map((item) =>
+          item.key === "services" ? (
+            <div
+              key={item.key}
+              className="relative"
+              onMouseEnter={() => setServicesOpen(true)}
+              onMouseLeave={() => setServicesOpen(false)}
+            >
+              <Link
+                href={item.href}
+                className={
+                  active === item.key
+                    ? "flex items-center gap-1 rounded-full bg-white/[.12] px-4 py-2 font-semibold text-white no-underline transition-all"
+                    : "flex items-center gap-1 rounded-full px-4 py-2 text-white/75 no-underline transition-all hover:bg-white/[.06] hover:text-white"
+                }
+              >
+                {item.label}
+                <ChevronDown
+                  size={14}
+                  className={`transition-transform duration-200 ${servicesOpen ? "rotate-180" : ""}`}
+                />
+              </Link>
+
+              {servicesOpen && (
+                <div className="absolute left-1/2 top-full w-[300px] -translate-x-1/2 pt-3">
+                  <div className="overflow-hidden rounded-2xl border border-calma-olive/10 bg-calma-cream p-1.5 font-hanken shadow-[0_22px_50px_-22px_rgba(42,38,34,.5)]">
+                    {mappedServices.length === 0 ? (
+                      <div className="px-3 py-3 text-sm text-calma-taupe">…</div>
+                    ) : (
+                      mappedServices.map((s) => (
+                        <Link
+                          key={s.id}
+                          href={`/services/${s.id}`}
+                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 no-underline outline-none transition-colors hover:bg-calma-terracotta/10 focus:bg-calma-terracotta/10"
+                        >
+                          <div
+                            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
+                            style={{ background: `${s.color}18` }}
+                          >
+                            <s.icon className="h-4 w-4" style={{ color: s.color }} />
+                          </div>
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-semibold text-calma-ink">
+                              {s.title}
+                            </p>
+                            <p className="truncate text-xs text-calma-taupe">{s.subtitle}</p>
+                          </div>
+                        </Link>
+                      ))
+                    )}
+                    <div className="my-1 h-px bg-calma-border" />
+                    <Link
+                      href="/services"
+                      className="flex items-center justify-center gap-1.5 rounded-xl px-3 py-2.5 text-sm font-semibold text-calma-terracotta no-underline outline-none transition-colors hover:bg-calma-terracotta/10"
+                    >
+                      {t.navServicesViewAll}
+                      <ArrowRight size={14} />
+                    </Link>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link
+              key={item.key}
+              href={item.href}
+              className={
+                active === item.key
+                  ? "rounded-full bg-white/[.12] px-4 py-2 font-semibold text-white no-underline transition-all"
+                  : "rounded-full px-4 py-2 text-white/75 no-underline transition-all hover:bg-white/[.06] hover:text-white"
+              }
+            >
+              {item.label}
+            </Link>
+          ),
+        )}
       </nav>
 
       <div className="hidden items-center gap-2 rounded-full border border-white/[.14] bg-white/[.06] p-1.5 backdrop-blur-md md:flex">
@@ -259,20 +336,64 @@ export default function CalmaHeader({
             </div>
 
             <nav className="flex flex-col gap-1">
-              {navItems.map((item) => (
-                <Link
-                  key={item.key}
-                  href={item.href}
-                  onClick={() => setMobileOpen(false)}
-                  className={
-                    active === item.key
-                      ? "rounded-xl bg-calma-terracotta/10 px-4 py-3 text-base font-semibold text-calma-ink no-underline"
-                      : "rounded-xl px-4 py-3 text-base font-medium text-calma-ink/80 no-underline transition-colors hover:bg-calma-olive/10"
-                  }
-                >
-                  {item.label}
-                </Link>
-              ))}
+              {navItems.map((item) =>
+                item.key === "services" ? (
+                  <div key={item.key}>
+                    <div className="flex items-center">
+                      <Link
+                        href={item.href}
+                        onClick={() => setMobileOpen(false)}
+                        className={
+                          active === item.key
+                            ? "flex-1 rounded-xl bg-calma-terracotta/10 px-4 py-3 text-base font-semibold text-calma-ink no-underline"
+                            : "flex-1 rounded-xl px-4 py-3 text-base font-medium text-calma-ink/80 no-underline transition-colors hover:bg-calma-olive/10"
+                        }
+                      >
+                        {item.label}
+                      </Link>
+                      <button
+                        type="button"
+                        aria-label="Afficher les services"
+                        aria-expanded={mobileServicesOpen}
+                        onClick={() => setMobileServicesOpen((v) => !v)}
+                        className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl text-calma-ink/60 transition-colors hover:bg-calma-olive/10"
+                      >
+                        <ChevronDown
+                          size={18}
+                          className={`transition-transform duration-200 ${mobileServicesOpen ? "rotate-180" : ""}`}
+                        />
+                      </button>
+                    </div>
+                    {mobileServicesOpen && (
+                      <div className="ml-2 flex flex-col gap-0.5 border-l border-calma-border pl-3 pt-1">
+                        {mappedServices.map((s) => (
+                          <Link
+                            key={s.id}
+                            href={`/services/${s.id}`}
+                            onClick={() => setMobileOpen(false)}
+                            className="rounded-lg px-3 py-2.5 text-sm font-medium text-calma-ink/75 no-underline transition-colors hover:bg-calma-olive/10"
+                          >
+                            {s.title}
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <Link
+                    key={item.key}
+                    href={item.href}
+                    onClick={() => setMobileOpen(false)}
+                    className={
+                      active === item.key
+                        ? "rounded-xl bg-calma-terracotta/10 px-4 py-3 text-base font-semibold text-calma-ink no-underline"
+                        : "rounded-xl px-4 py-3 text-base font-medium text-calma-ink/80 no-underline transition-colors hover:bg-calma-olive/10"
+                    }
+                  >
+                    {item.label}
+                  </Link>
+                ),
+              )}
             </nav>
 
             <div className="my-4 h-px bg-calma-border" />

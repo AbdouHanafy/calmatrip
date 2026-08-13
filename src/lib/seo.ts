@@ -253,6 +253,7 @@ export function serviceSchema(s: {
   price: string;
   currency?: string;
   image?: string;
+  url?: string;
 }) {
   return {
     "@context": "https://schema.org",
@@ -266,8 +267,8 @@ export function serviceSchema(s: {
       price: s.price.replace(/[^0-9.]/g, ""),
       priceCurrency: s.currency ?? "TND",
       availability: "https://schema.org/InStock",
-      url: `${SITE.url}/services`,
+      url: s.url ?? `${SITE.url}/services`,
     },
-    ...(s.image ? { image: `${SITE.url}${s.image}` } : {}),
+    ...(s.image ? { image: s.image.startsWith("http") ? s.image : `${SITE.url}${s.image}` } : {}),
   };
 }

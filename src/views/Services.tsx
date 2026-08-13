@@ -6,6 +6,7 @@ import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
 import { ServicesStatsStrip } from "@/components/services/ServicesStatsStrip";
+import { ServicesSearchBar } from "@/components/services/ServicesSearchBar";
 import { ServicesGridSection } from "@/components/services/ServicesGridSection";
 import { WhyChooseUs } from "@/components/services/WhyChooseUs";
 import { ServicesContactStrip } from "@/components/services/ServicesContactStrip";
@@ -18,7 +19,7 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const searchParams = useSearchParams();
-  const q = (searchParams?.get("q") ?? "").trim();
+  const [query, setQuery] = useState(() => (searchParams?.get("q") ?? "").trim());
 
   const services = dbServices.filter((s) => s.active !== false).map(mapService);
 
@@ -28,7 +29,7 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
   ];
   const byCategory =
     activeCategory === "all" ? services : services.filter((s) => s.subtitle === activeCategory);
-  const needle = q.toLowerCase();
+  const needle = query.trim().toLowerCase();
   const filtered = needle
     ? byCategory.filter((s) =>
         `${s.title} ${s.subtitle} ${s.description.replace(/<[^>]+>/g, " ")}`
@@ -81,13 +82,16 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
           </div>
         </section>
 
+        <ServicesSearchBar value={query} onChange={setQuery} />
+
         <ServicesStatsStrip />
 
         <ServicesGridSection
           categories={categories}
           activeCategory={activeCategory}
           onCategoryChange={setActiveCategory}
-          q={q}
+          q={query}
+          onClearQuery={() => setQuery("")}
           filtered={filtered}
           onBook={setSelectedService}
         />
