@@ -29,9 +29,16 @@ interface UseAuthFormArgs {
   mode: "login" | "register";
   audience: "traveler" | "partner";
   callbackUrl: string;
+  /** Pre-selects the partner type when arriving from the artisan/agency detail page ("?type=..."). */
+  initialPartnerType?: PartnerType | null;
 }
 
-export function useAuthForm({ mode, audience, callbackUrl }: UseAuthFormArgs) {
+export function useAuthForm({
+  mode,
+  audience,
+  callbackUrl,
+  initialPartnerType = null,
+}: UseAuthFormArgs) {
   const isLogin = mode === "login";
   const isPartner = audience === "partner";
   const router = useRouter();
@@ -42,7 +49,8 @@ export function useAuthForm({ mode, audience, callbackUrl }: UseAuthFormArgs) {
   const [website, setWebsite] = useState(""); // honeypot — left empty by real visitors, hidden from view
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [partnerType, setPartnerType] = useState<PartnerType>("artisan");
+  const [partnerType, setPartnerType] = useState<PartnerType>(initialPartnerType ?? "artisan");
+  const partnerTypeLocked = initialPartnerType !== null;
   const accountType: AccountType = isPartner ? partnerType : "user";
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
@@ -146,6 +154,7 @@ export function useAuthForm({ mode, audience, callbackUrl }: UseAuthFormArgs) {
     setConfirmPassword,
     partnerType,
     setPartnerType,
+    partnerTypeLocked,
     accountType,
     showPassword,
     setShowPassword,

@@ -1,4 +1,5 @@
 import { AuthPage } from "@/components/auth/AuthPage";
+import type { PartnerType } from "@/hooks/auth/useAuthForm";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
@@ -7,6 +8,21 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false },
 };
 
-export default function PartnerRegisterPage() {
-  return <AuthPage mode="register" audience="partner" callbackUrl="/b2b" />;
+export default async function PartnerRegisterPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ type?: string }>;
+}) {
+  const { type } = await searchParams;
+  const initialPartnerType: PartnerType | null =
+    type === "artisan" || type === "agency" ? type : null;
+
+  return (
+    <AuthPage
+      mode="register"
+      audience="partner"
+      callbackUrl="/b2b"
+      initialPartnerType={initialPartnerType}
+    />
+  );
 }

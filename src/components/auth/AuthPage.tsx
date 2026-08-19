@@ -20,7 +20,12 @@ import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
 import { AuthBackground } from "@/components/auth/AuthBackground";
 import { PartnerTypeSelector } from "@/components/auth/PartnerTypeSelector";
 import { PasswordStrengthMeter } from "@/components/auth/PasswordStrengthMeter";
-import { useAuthForm } from "@/hooks/auth/useAuthForm";
+import { useAuthForm, type PartnerType } from "@/hooks/auth/useAuthForm";
+
+const PARTNER_TYPE_LABEL: Record<PartnerType, string> = {
+  artisan: "Artisan",
+  agency: "Agence",
+};
 
 type AuthPageProps = {
   mode: "login" | "register";
@@ -28,6 +33,8 @@ type AuthPageProps = {
   /** "traveler" (default) = plain public auth, no account-type picker.
    *  "partner" = dedicated artisan/agency flow, reached via "Devenir partenaire". */
   audience?: "traveler" | "partner";
+  /** Pre-selects the partner type when arriving from the artisan/agency detail page. */
+  initialPartnerType?: PartnerType | null;
 };
 
 const TRUST_ITEMS = [
@@ -40,9 +47,10 @@ export function AuthPage({
   mode,
   callbackUrl = "/dashboard",
   audience = "traveler",
+  initialPartnerType = null,
 }: AuthPageProps) {
   const reduceMotion = useReducedMotion();
-  const form = useAuthForm({ mode, audience, callbackUrl });
+  const form = useAuthForm({ mode, audience, callbackUrl, initialPartnerType });
   const { isLogin, isPartner } = form;
 
   const inputBoxClass =
@@ -164,12 +172,28 @@ export function AuthPage({
                   className="absolute left-[-9999px] top-auto h-0 w-0 overflow-hidden"
                 />
               )}
-              {!isLogin && isPartner && (
-                <PartnerTypeSelector
-                  value={form.partnerType}
-                  onChange={form.setPartnerType}
-                  labelClassName={labelClass}
-                />
+              {!isLogin && isPartner && form.partnerTypeLocked ? (
+                <div className="flex items-center justify-between rounded-xl border border-calma-terracotta/25 bg-calma-terracotta/10 px-3.5 py-2.5 text-sm text-calma-ink">
+                  <span>
+                    Inscription en tant qu&apos;
+                    <strong>{PARTNER_TYPE_LABEL[form.partnerType]}</strong>
+                  </span>
+                  <Link
+                    href={form.partnerType === "artisan" ? "/partner/agency" : "/partner/artisan"}
+                    className="text-xs font-semibold text-calma-terracotta hover:text-calma-olive"
+                  >
+                    Changer
+                  </Link>
+                </div>
+              ) : (
+                !isLogin &&
+                isPartner && (
+                  <PartnerTypeSelector
+                    value={form.partnerType}
+                    onChange={form.setPartnerType}
+                    labelClassName={labelClass}
+                  />
+                )
               )}
 
               {!isLogin && (
@@ -403,7 +427,7 @@ export function AuthPage({
                 <p className="mt-2 text-[12px] text-calma-taupe">
                   Vous êtes artisan ou agence ?{" "}
                   <Link
-                    href="/partner/register"
+                    href="/partner"
                     className="font-semibold text-calma-terracotta transition-colors hover:text-calma-olive"
                   >
                     Devenir partenaire
