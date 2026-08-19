@@ -6,6 +6,7 @@ export type AccountType = "user" | "artisan" | "agency";
 export type PartnerType = "artisan" | "agency";
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const PHONE_RE = /^\+?[\d\s]{8,20}$/;
 
 export function passwordStrength(pw: string) {
   let score = 0;
@@ -37,6 +38,7 @@ export function useAuthForm({ mode, audience, callbackUrl }: UseAuthFormArgs) {
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [website, setWebsite] = useState(""); // honeypot — left empty by real visitors, hidden from view
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -54,6 +56,8 @@ export function useAuthForm({ mode, audience, callbackUrl }: UseAuthFormArgs) {
   const validate = (): string | null => {
     if (!isLogin && name.trim().length < 2) return "Veuillez indiquer votre nom complet.";
     if (!EMAIL_RE.test(email.trim())) return "Veuillez indiquer une adresse email valide.";
+    if (!isLogin && !PHONE_RE.test(phone.trim()))
+      return "Veuillez indiquer un numéro de téléphone valide.";
     if (password.length < 8 || !/[a-zA-Z]/.test(password) || !/[0-9]/.test(password)) {
       return "Le mot de passe doit contenir au moins 8 caractères, une lettre et un chiffre.";
     }
@@ -82,6 +86,7 @@ export function useAuthForm({ mode, audience, callbackUrl }: UseAuthFormArgs) {
           body: JSON.stringify({
             name: name.trim(),
             email: email.trim(),
+            phone: phone.trim(),
             password,
             accountType,
             website,
@@ -131,6 +136,8 @@ export function useAuthForm({ mode, audience, callbackUrl }: UseAuthFormArgs) {
     setName,
     email,
     setEmail,
+    phone,
+    setPhone,
     website,
     setWebsite,
     password,

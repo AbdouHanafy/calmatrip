@@ -25,7 +25,7 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: parsed.error.issues[0].message }, { status: 400 });
   }
 
-  const { name, email, password, accountType, website } = parsed.data;
+  const { name, email, phone, password, accountType, website } = parsed.data;
 
   // Honeypot: bots fill every field, real visitors never see this one.
   if (website && website.trim()) {
@@ -48,6 +48,7 @@ export async function POST(req: Request) {
     data: {
       name,
       email,
+      phone,
       password: passwordHash,
       role: isAdmin ? "ADMIN" : isB2B ? "B2B" : "USER",
       b2bType: isB2B ? (accountType === "artisan" ? "ARTISAN" : "AGENCY") : null,

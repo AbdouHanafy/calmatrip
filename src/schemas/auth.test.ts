@@ -6,6 +6,7 @@ describe("registerSchema", () => {
     const result = registerSchema.safeParse({
       name: "Jane Doe",
       email: "Jane@Example.com",
+      phone: "+216 20 123 456",
       password: "abc12345",
     });
     expect(result.success).toBe(true);
@@ -21,6 +22,7 @@ describe("registerSchema", () => {
     const result = registerSchema.safeParse({
       name: "J",
       email: "jane@example.com",
+      phone: "+216 20 123 456",
       password: "abc12345",
     });
     expect(result.success).toBe(false);
@@ -30,15 +32,56 @@ describe("registerSchema", () => {
     const result = registerSchema.safeParse({
       name: "Jane Doe",
       email: "not-an-email",
+      phone: "+216 20 123 456",
       password: "abc12345",
     });
     expect(result.success).toBe(false);
+  });
+
+  it("rejects a missing phone number", () => {
+    const result = registerSchema.safeParse({
+      name: "Jane Doe",
+      email: "jane@example.com",
+      password: "abc12345",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects a phone number that is too short", () => {
+    const result = registerSchema.safeParse({
+      name: "Jane Doe",
+      email: "jane@example.com",
+      phone: "123",
+      password: "abc12345",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("rejects a phone number with letters", () => {
+    const result = registerSchema.safeParse({
+      name: "Jane Doe",
+      email: "jane@example.com",
+      phone: "call-me-maybe",
+      password: "abc12345",
+    });
+    expect(result.success).toBe(false);
+  });
+
+  it("accepts a phone number without a country code", () => {
+    const result = registerSchema.safeParse({
+      name: "Jane Doe",
+      email: "jane@example.com",
+      phone: "20123456",
+      password: "abc12345",
+    });
+    expect(result.success).toBe(true);
   });
 
   it("rejects a password without a letter", () => {
     const result = registerSchema.safeParse({
       name: "Jane Doe",
       email: "jane@example.com",
+      phone: "+216 20 123 456",
       password: "12345678",
     });
     expect(result.success).toBe(false);
@@ -48,6 +91,7 @@ describe("registerSchema", () => {
     const result = registerSchema.safeParse({
       name: "Jane Doe",
       email: "jane@example.com",
+      phone: "+216 20 123 456",
       password: "abcdefgh",
     });
     expect(result.success).toBe(false);
@@ -57,6 +101,7 @@ describe("registerSchema", () => {
     const result = registerSchema.safeParse({
       name: "Jane Doe",
       email: "jane@example.com",
+      phone: "+216 20 123 456",
       password: "ab12",
     });
     expect(result.success).toBe(false);
@@ -67,6 +112,7 @@ describe("registerSchema", () => {
       const result = registerSchema.safeParse({
         name: "Jane Doe",
         email: "jane@example.com",
+        phone: "+216 20 123 456",
         password: "abc12345",
         accountType,
       });
@@ -78,6 +124,7 @@ describe("registerSchema", () => {
     const result = registerSchema.safeParse({
       name: "Jane Doe",
       email: "jane@example.com",
+      phone: "+216 20 123 456",
       password: "abc12345",
       accountType: "admin",
     });

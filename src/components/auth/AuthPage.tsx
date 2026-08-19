@@ -9,6 +9,7 @@ import {
   ArrowRight,
   Loader2,
   Mail,
+  Phone,
   Lock,
   User as UserIcon,
   ShieldCheck,
@@ -208,6 +209,26 @@ export function AuthPage({
                   />
                 </div>
               </div>
+
+              {!isLogin && (
+                <div>
+                  <label htmlFor="phone" className={labelClass}>
+                    Numéro de téléphone
+                  </label>
+                  <div className={inputBoxClass}>
+                    <Phone size={18} className="shrink-0 text-calma-terracotta" />
+                    <input
+                      id="phone"
+                      type="tel"
+                      autoComplete="tel"
+                      value={form.phone}
+                      onChange={(e) => form.setPhone(e.target.value)}
+                      placeholder="+216 XX XXX XXX"
+                      className={inputFieldClass}
+                    />
+                  </div>
+                </div>
+              )}
 
               <div>
                 <label htmlFor="password" className={labelClass}>
