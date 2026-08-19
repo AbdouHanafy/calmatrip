@@ -22,6 +22,7 @@ import {
   CalendarDays,
   Landmark,
   BookOpen,
+  MessageCircle,
 } from "lucide-react";
 import { useState } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
@@ -47,6 +48,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
     { path: "/admin/marketplace", label: "Manage Products", icon: Package },
     { path: "/admin/contacts", label: "Manage Contacts", icon: Users },
     { path: "/admin/reviews", label: "Manage Reviews", icon: Package },
+    { path: "/admin/community", label: "Community", icon: MessageCircle },
     { path: "/admin/b2b-submissions", label: "B2B Submissions", icon: ClipboardCheck },
     { path: "/admin/b2b-partners", label: "Commissions", icon: Percent },
     { path: "/admin/events", label: "Events", icon: CalendarDays },

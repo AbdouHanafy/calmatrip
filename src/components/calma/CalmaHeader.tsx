@@ -20,7 +20,8 @@ import {
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { mapService, type DBService } from "@/lib/services/mapService";
 
-export type CalmaActiveNav = "home" | "services" | "marketplace" | "explore" | "about";
+export type CalmaActiveNav =
+  "home" | "services" | "marketplace" | "explore" | "community" | "about";
 
 interface CalmaHeaderProps {
   /** 'contact'/'dashboard' (or any value outside the 5 nav tabs) leaves every tab unhighlighted — these aren't public nav tabs. */
@@ -72,6 +73,7 @@ export default function CalmaHeader({
     { key: "services", href: "/services", label: t.navServices },
     { key: "marketplace", href: "/marketplace", label: t.navMarket },
     { key: "explore", href: "/explore", label: t.navExplore },
+    { key: "community", href: "/community", label: t.navCommunity },
     { key: "about", href: "/about", label: t.navAbout },
   ];
 

@@ -30,6 +30,7 @@ model User {
   products          Product[]
   services          Service[]
   exploreListings   ExploreListing[]
+  communityPosts    CommunityPost[]
   favorites         Favorite[]
 
   @@map("users")
@@ -418,4 +419,19 @@ model Review {
   booking   Booking? @relation(fields: [bookingId], references: [id], onDelete: SetNull)
 
   @@map("reviews")
+}
+
+model CommunityPost {
+  id           Int      @id @default(autoincrement())
+  authorId     String
+  author       User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorName   String
+  authorAvatar String?
+  content      String   @db.Text
+  image        String?  @db.Text
+  approved     Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  @@index([authorId])
+  @@map("community_posts")
 }

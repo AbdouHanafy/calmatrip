@@ -238,6 +238,7 @@ export interface CalmaDict {
   navServicesViewAll: string;
   navMarket: string;
   navExplore: string;
+  navCommunity: string;
   navAbout: string;
   navContact: string;
 
@@ -332,6 +333,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navServicesViewAll: "Voir tous les services",
     navMarket: "Marketplace",
     navExplore: "Explorer",
+    navCommunity: "Communauté",
     navAbout: "À propos",
     navContact: "Contact",
 
@@ -754,6 +756,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navServicesViewAll: "View all services",
     navMarket: "Marketplace",
     navExplore: "Explore",
+    navCommunity: "Community",
     navAbout: "About Us",
     navContact: "Contact",
 
@@ -1170,6 +1173,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navServicesViewAll: "عرض كل الخدمات",
     navMarket: "السوق",
     navExplore: "استكشف",
+    navCommunity: "المجتمع",
     navAbout: "من نحن",
     navContact: "اتصل بنا",
 
