@@ -12,15 +12,56 @@ import {
   X,
   TrendingUp,
   UserCog,
+  Compass,
+  Store,
+  Clock,
+  CheckCircle2,
+  XCircle,
+  PauseCircle,
 } from "lucide-react";
 import { useState } from "react";
 import B2BOverview from "./B2BOverview";
+
+const STATUS_BADGE: Record<
+  string,
+  { label: string; icon: typeof Clock; onDark: string; onLight: string }
+> = {
+  pending: {
+    label: "En attente",
+    icon: Clock,
+    onDark: "bg-calma-gold/15 text-calma-gold",
+    onLight: "bg-calma-gold/10 text-[#8A6B2E]",
+  },
+  approved: {
+    label: "Approuvé",
+    icon: CheckCircle2,
+    onDark: "bg-calma-success/15 text-calma-success",
+    onLight: "bg-calma-success/10 text-calma-success",
+  },
+  rejected: {
+    label: "Refusé",
+    icon: XCircle,
+    onDark: "bg-red-500/15 text-red-400",
+    onLight: "bg-red-50 text-red-600",
+  },
+  suspended: {
+    label: "Suspendu",
+    icon: PauseCircle,
+    onDark: "bg-red-500/15 text-red-400",
+    onLight: "bg-red-50 text-red-600",
+  },
+};
 
 export default function B2BDashboard({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: session } = useSession();
-  const b2bType = session?.user?.b2bType;
+  // Defensive: normalize casing — some historical accounts stored the value
+  // lowercase, which silently hid every type-specific nav item below.
+  const b2bType = session?.user?.b2bType?.toUpperCase() as "ARTISAN" | "AGENCY" | undefined;
+  const b2bStatus = (session?.user?.b2bStatus ?? "pending").toLowerCase();
+  const isArtisan = b2bType === "ARTISAN";
+  const isAgency = b2bType === "AGENCY";
   const userInitials =
     session?.user?.name
       ?.split(" ")
@@ -29,13 +70,25 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
       .slice(0, 2)
       .toUpperCase() ?? "B2";
 
+  const typeLabel = isArtisan ? "Artisan" : isAgency ? "Agence" : "Partenaire";
+  const TypeIcon = isArtisan ? Store : Compass;
+  const status = STATUS_BADGE[b2bStatus] ?? STATUS_BADGE.pending;
+  const StatusIcon = status.icon;
+
   const navItems = [
     { path: "/b2b", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
-    ...(b2bType === "ARTISAN"
-      ? [{ path: "/b2b/products", label: "Mes produits", icon: Package }]
+    ...(isArtisan
+      ? [
+          { path: "/b2b/products", label: "Mes produits", icon: Package },
+          { path: "/b2b/services", label: "Mes services", icon: Compass },
+        ]
       : []),
-    ...(b2bType === "AGENCY" ? [{ path: "/b2b/explore", label: "Explore", icon: MapPin }] : []),
-    ...(b2bType === "ARTISAN" ? [{ path: "/b2b/sales", label: "Ventes", icon: TrendingUp }] : []),
+    ...(isAgency ? [{ path: "/b2b/explore", label: "Mes annonces Explore", icon: MapPin }] : []),
+    {
+      path: "/b2b/sales",
+      label: isAgency ? "Réservations" : "Ventes",
+      icon: TrendingUp,
+    },
     { path: "/b2b/profile", label: "Mon profil", icon: UserCog },
   ];
 
@@ -88,6 +141,21 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
               </h2>
               <p className="text-xs text-calma-cream/50">Calma Trip</p>
             </div>
+          </div>
+
+          {/* Partner identity — type + review status, always visible so a
+              partner never has to guess which space or state they're in. */}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-calma-cream">
+              <TypeIcon className="h-3 w-3 text-calma-gold" />
+              {typeLabel}
+            </span>
+            <span
+              className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-semibold ${status.onDark}`}
+            >
+              <StatusIcon className="h-3 w-3" />
+              {status.label}
+            </span>
           </div>
         </div>
 
@@ -158,15 +226,29 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
         <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-calma-border">
           <div className="px-4 sm:px-6 lg:px-8 py-4">
             <div className="flex items-center justify-between">
-              <div className="hidden lg:block">
-                <h1 className="font-fraunces text-2xl font-normal text-calma-ink">
-                  {b2bType === "ARTISAN"
-                    ? "Espace artisan"
-                    : b2bType === "AGENCY"
-                      ? "Espace agence"
-                      : "Espace partenaire"}
-                </h1>
-                <p className="text-sm text-calma-taupe">Gérez vos annonces sur Calma Trip</p>
+              <div className="hidden lg:flex lg:items-center lg:gap-3">
+                <div>
+                  <h1 className="font-fraunces text-2xl font-normal text-calma-ink">
+                    {isArtisan
+                      ? "Espace artisan"
+                      : isAgency
+                        ? "Espace agence"
+                        : "Espace partenaire"}
+                  </h1>
+                  <p className="text-sm text-calma-taupe">
+                    {isArtisan
+                      ? "Gérez vos produits et services sur Calma Trip"
+                      : isAgency
+                        ? "Gérez vos annonces Explore et vos réservations"
+                        : "Gérez votre activité sur Calma Trip"}
+                  </p>
+                </div>
+                <span
+                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${status.onLight}`}
+                >
+                  <StatusIcon className="h-3.5 w-3.5" />
+                  {status.label}
+                </span>
               </div>
 
               <div className="flex items-center gap-4 ml-auto lg:ml-0">

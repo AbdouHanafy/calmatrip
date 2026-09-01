@@ -11,6 +11,7 @@ import {
   Percent,
   Wallet,
   Hourglass,
+  Plus,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -31,8 +32,8 @@ interface OverviewStats {
 
 export default function B2BOverview() {
   const { data: session } = useSession();
-  const b2bType = session?.user?.b2bType;
-  const b2bStatus = session?.user?.b2bStatus ?? "pending";
+  const b2bType = session?.user?.b2bType?.toUpperCase() as "ARTISAN" | "AGENCY" | undefined;
+  const b2bStatus = (session?.user?.b2bStatus ?? "pending").toLowerCase();
   const [stats, setStats] = useState<OverviewStats | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -86,6 +87,35 @@ export default function B2BOverview() {
         </div>
       </div>
 
+      {/* Quick actions — the entry point to actually manage inventory, so the
+          space never reads as an empty shell with nothing to do. */}
+      <div className="mb-6 flex flex-wrap gap-3">
+        {b2bType === "ARTISAN" && (
+          <>
+            <Link
+              href="/b2b/products"
+              className="flex items-center gap-2 rounded-xl bg-calma-gold px-4 py-2.5 text-sm font-semibold text-[#241A12] no-underline transition-shadow hover:shadow-lg"
+            >
+              <Plus className="h-4 w-4" /> Ajouter un produit
+            </Link>
+            <Link
+              href="/b2b/services"
+              className="flex items-center gap-2 rounded-xl border border-calma-gold/40 bg-white px-4 py-2.5 text-sm font-semibold text-[#8A6B2E] no-underline transition-colors hover:bg-calma-gold/5"
+            >
+              <Plus className="h-4 w-4" /> Ajouter un service
+            </Link>
+          </>
+        )}
+        {isAgency && (
+          <Link
+            href="/b2b/explore"
+            className="flex items-center gap-2 rounded-xl bg-calma-gold px-4 py-2.5 text-sm font-semibold text-[#241A12] no-underline transition-shadow hover:shadow-lg"
+          >
+            <Plus className="h-4 w-4" /> Ajouter une annonce Explore
+          </Link>
+        )}
+      </div>
+
       {loading ? (
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
           {[1, 2, 3, 4].map((i) => (
@@ -119,7 +149,18 @@ export default function B2BOverview() {
             <p className="text-xs text-calma-taupe">En attente de validation</p>
           </div>
         </div>
-      ) : stats ? (
+      ) : null}
+
+      {!loading && stats && isAgency && (
+        <Link
+          href="/b2b/sales"
+          className="mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"
+        >
+          Voir mes réservations et commissions →
+        </Link>
+      )}
+
+      {!loading && stats && !isAgency ? (
         <>
           <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
             <Link
@@ -164,7 +205,9 @@ export default function B2BOverview() {
             Voir le détail des ventes et commissions →
           </Link>
         </>
-      ) : (
+      ) : null}
+
+      {!loading && !stats && (
         <div className="rounded-calma-card border border-calma-border bg-white p-8 text-center">
           <p className="text-sm text-calma-taupe">
             Impossible de charger vos statistiques pour le moment.

@@ -59,7 +59,7 @@ export function SingleImageUpload({
           type="button"
           onClick={() => inputRef.current?.click()}
           disabled={uploading}
-          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-calma-border text-calma-taupe transition-colors hover:border-calma-terracotta hover:text-calma-terracotta disabled:opacity-60"
+          className="flex h-32 w-full flex-col items-center justify-center gap-2 rounded-xl border border-dashed border-calma-border text-calma-taupe transition-colors hover:border-admin-gold hover:text-admin-gold disabled:opacity-60"
         >
           {uploading ? (
             <Loader2 className="h-5 w-5 animate-spin" />

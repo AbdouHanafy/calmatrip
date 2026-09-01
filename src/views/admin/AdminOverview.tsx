@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Link from "next/link";
 import {
   Calendar,
@@ -28,10 +28,10 @@ interface RecentBooking {
   id: string;
   customerName: string;
   customerEmail: string;
-  service: string;        // plain string e.g. "Airport Transfer"
+  service: string; // plain string e.g. "Airport Transfer"
   date: string;
   status: "confirmed" | "pending" | "cancelled";
-  price: string;          // e.g. "35 TND"
+  price: string; // e.g. "35 TND"
 }
 
 interface TopService {
@@ -48,7 +48,7 @@ interface DashboardData {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const SERVICE_COLORS = ["#F2994A", "#5E8B63", "#D9A441", "#F2994A", "#5E8B63"];
+const SERVICE_COLORS = ["#1a3a5c", "#c59b3d", "#0d2645", "#1a3a5c", "#c59b3d"];
 
 function StatusBadge({ status }: { status: RecentBooking["status"] }) {
   const map = {
@@ -117,10 +117,7 @@ export default function AdminOverview() {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3">
         <p className="text-red-500 font-medium">Failed to load dashboard data</p>
-        <button
-          onClick={load}
-          className="text-sm text-[#F2994A] underline hover:text-[#5E8B63]"
-        >
+        <button onClick={load} className="text-sm text-admin-navy underline hover:text-admin-gold">
           Retry
         </button>
       </div>
@@ -135,28 +132,32 @@ export default function AdminOverview() {
       value: stats.totalBookings.toLocaleString(),
       sub: `${stats.pendingBookings} pending`,
       icon: Calendar,
-      gradient: "from-[#F2994A] to-[#5E8B63]",
+      accent: "#1a3a5c",
+      gradient: "from-[#1a3a5c] to-[#0d2645]",
     },
     {
       label: "Unique Clients",
       value: stats.totalClients.toLocaleString(),
       sub: "distinct customers",
       icon: Users,
-      gradient: "from-[#D9A441] to-[#D9A441]",
+      accent: "#c59b3d",
+      gradient: "from-[#c59b3d] to-[#c59b3d]",
     },
     {
       label: "Services",
       value: stats.totalServices.toLocaleString(),
       sub: "in catalog",
       icon: Package,
-      gradient: "from-[#5E8B63] to-[#4C7350]",
+      accent: "#0d2645",
+      gradient: "from-[#0d2645] to-[#1a3a5c]",
     },
     {
       label: "Revenue",
       value: `${stats.revenue.toLocaleString()} TND`,
       sub: `${stats.confirmedBookings} confirmed`,
       icon: DollarSign,
-      gradient: "from-[#F2994A] to-[#D9A441]",
+      accent: "#c59b3d",
+      gradient: "from-[#1a3a5c] to-[#c59b3d]",
     },
   ];
 
@@ -167,8 +168,9 @@ export default function AdminOverview() {
         {statCards.map((stat, index) => (
           <div
             key={index}
-            className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-calma-border"
+            className="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-calma-border"
           >
+            <div className="absolute inset-x-0 top-0 h-1" style={{ background: stat.accent }} />
             <div className="flex items-start justify-between mb-4">
               <div
                 className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity`}
@@ -194,7 +196,7 @@ export default function AdminOverview() {
               <h3 className="text-lg font-bold text-calma-ink">Recent Activity</h3>
               <p className="text-sm text-calma-taupe">Latest bookings</p>
             </div>
-            <TrendingUp className="w-5 h-5 text-[#F2994A]" />
+            <TrendingUp className="w-5 h-5 text-admin-navy" />
           </div>
 
           {recentBookings.length === 0 ? (
@@ -207,8 +209,8 @@ export default function AdminOverview() {
                   className="flex items-center justify-between p-3 rounded-xl hover:bg-calma-sand transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#F2994A]/10 to-[#5E8B63]/10 flex items-center justify-center">
-                      <Car className="w-5 h-5 text-[#F2994A]" />
+                    <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-navy/10 to-admin-gold/10 flex items-center justify-center">
+                      <Car className="w-5 h-5 text-admin-navy" />
                     </div>
                     <div>
                       <p className="font-medium text-calma-ink text-sm">{booking.customerName}</p>
@@ -226,7 +228,7 @@ export default function AdminOverview() {
 
           <Link
             href="/admin/bookings"
-            className="mt-4 flex items-center justify-center gap-2 text-sm text-[#F2994A] hover:text-[#5E8B63] transition-colors"
+            className="mt-4 flex items-center justify-center gap-2 text-sm text-admin-navy hover:text-admin-gold transition-colors"
           >
             <span>View all bookings</span>
             <ChevronRight className="w-4 h-4" />
@@ -240,7 +242,7 @@ export default function AdminOverview() {
               <h3 className="text-lg font-bold text-calma-ink">Popular Services</h3>
               <p className="text-sm text-calma-taupe">Best sellers</p>
             </div>
-            <Star className="w-5 h-5 text-[#D9A441]" />
+            <Star className="w-5 h-5 text-admin-gold" />
           </div>
 
           {topServices.length === 0 ? (
@@ -277,41 +279,52 @@ export default function AdminOverview() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-r from-[#F2994A]/10 to-[#5E8B63]/10 rounded-2xl p-6 border border-calma-border">
+        <div className="bg-gradient-to-r from-admin-navy/10 to-admin-navy-deep/10 rounded-2xl p-6 border border-calma-border">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#F2994A] to-[#5E8B63] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-navy to-admin-navy-deep flex items-center justify-center">
               <Package className="w-5 h-5 text-white" />
             </div>
             <h3 className="font-semibold text-calma-ink">Add a Service</h3>
           </div>
-          <p className="text-sm text-calma-taupe mb-4">Create a new service to enrich your catalog</p>
-          <Link href="/admin/services" className="inline-flex items-center gap-2 text-sm font-medium text-[#F2994A] hover:text-[#5E8B63] transition-colors">
+          <p className="text-sm text-calma-taupe mb-4">
+            Create a new service to enrich your catalog
+          </p>
+          <Link
+            href="/admin/services"
+            className="inline-flex items-center gap-2 text-sm font-medium text-admin-navy hover:text-admin-gold transition-colors"
+          >
             Create <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="bg-gradient-to-r from-[#D9A441]/10 to-[#D9A441]/10 rounded-2xl p-6 border border-calma-border">
+        <div className="bg-gradient-to-r from-admin-gold/10 to-admin-gold/10 rounded-2xl p-6 border border-calma-border">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#D9A441] to-[#D9A441] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-gold to-admin-gold flex items-center justify-center">
               <Users className="w-5 h-5 text-white" />
             </div>
             <h3 className="font-semibold text-calma-ink">New Client</h3>
           </div>
           <p className="text-sm text-calma-taupe mb-4">Add a client to your database</p>
-          <Link href="/admin/clients" className="inline-flex items-center gap-2 text-sm font-medium text-[#D9A441] hover:text-[#D9A441] transition-colors">
+          <Link
+            href="/admin/clients"
+            className="inline-flex items-center gap-2 text-sm font-medium text-admin-gold hover:text-admin-navy transition-colors"
+          >
             Add <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="bg-gradient-to-r from-[#5E8B63]/10 to-[#4C7350]/10 rounded-2xl p-6 border border-calma-border">
+        <div className="bg-gradient-to-r from-admin-navy-deep/10 to-admin-navy/10 rounded-2xl p-6 border border-calma-border">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#5E8B63] to-[#4C7350] flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-navy-deep to-admin-navy flex items-center justify-center">
               <Calendar className="w-5 h-5 text-white" />
             </div>
             <h3 className="font-semibold text-calma-ink">View Bookings</h3>
           </div>
           <p className="text-sm text-calma-taupe mb-4">View and manage all bookings</p>
-          <Link href="/admin/bookings" className="inline-flex items-center gap-2 text-sm font-medium text-[#5E8B63] hover:text-[#4C7350] transition-colors">
+          <Link
+            href="/admin/bookings"
+            className="inline-flex items-center gap-2 text-sm font-medium text-admin-navy hover:text-admin-gold transition-colors"
+          >
             Access <ChevronRight className="w-4 h-4" />
           </Link>
         </div>

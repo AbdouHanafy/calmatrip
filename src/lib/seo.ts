@@ -11,8 +11,9 @@ export const SITE = {
   twitterHandle: "@calmatrip",
   themeColor: "#0C1F14",
 
-  // Default OG image — create this file at /public/og/og-default.jpg (1200×630)
-  defaultOgImage: "/og/og-default.jpg",
+  // Default OG image — served by the dynamic generator at src/app/opengraph-image.tsx
+  // (no static file needed; Next.js renders and serves it at this route).
+  defaultOgImage: "/opengraph-image",
 
   description:
     "Calma Trip is Tunisia's stress-free travel hub. Private transfers, camel treks, catamaran trips, 4x4 tours, cultural excursions — booked once, perfectly delivered. Local prices. 24/7 multilingual support.",
@@ -95,14 +96,14 @@ export function buildMetadata({
     publisher: "Calma Trip",
     category: "travel",
 
-    // ── Canonical + alternates ──
+    // ── Canonical ──
+    // No `languages` alternates: FR/EN/AR are a client-side toggle
+    // (see src/lib/calma/i18n.tsx), not separate routes — every language
+    // renders at this same URL, so a single canonical is correct. Emitting
+    // hreflang alternates that pointed at non-existent /fr and /ar prefixes
+    // was a real bug (Search Console would report 404 hreflang targets).
     alternates: {
       canonical: url,
-      languages: {
-        "en-US": url,
-        "fr-FR": `${SITE.url}/fr${path}`,
-        "ar-TN": `${SITE.url}/ar${path}`,
-      },
     },
 
     // ── Robots ──

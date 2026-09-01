@@ -39,7 +39,9 @@ export const emptyServiceForm: ServiceFormData = {
   features: [],
 };
 
-export const SERVICE_CATEGORIES = ["all", "Transport", "Excursion", "Group"];
+// Matches the categories mapService.ts actually branches on (src/lib/services/mapService.ts) —
+// keep in sync so a category picked here always maps to a real icon/color on the public site.
+export const SERVICE_CATEGORIES = ["all", "Transport", "Excursion", "Activity"];
 
 export function parseFeatures(raw: unknown): string[] {
   if (Array.isArray(raw)) return raw.filter((f) => typeof f === "string");

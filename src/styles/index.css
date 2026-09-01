@@ -20,6 +20,18 @@
   --color-calma-border: #ded7c9;
   --color-calma-success: #5e8b63;
 
+  /* Admin backoffice tokens — deliberately distinct from the client-facing
+     terracotta identity above (navy + gold) so staff never confuse the two
+     spaces. Neutrals (cream/sand/ink/taupe/border) stay shared. */
+  --color-admin-navy: #1a3a5c;
+  --color-admin-navy-deep: #0d2645;
+  --color-admin-navy-deeper: #081b33;
+  --color-admin-gold: #c59b3d;
+  --color-admin-gold-soft: #d9b968;
+  --color-admin-gold-deep: #a17f2e;
+  --color-admin-emerald: #1a8a5a;
+  --color-admin-rose: #c0392b;
+
   --radius-calma-card: 18px;
   --radius-calma-block: 26px;
   --radius-calma-pill: 999px;

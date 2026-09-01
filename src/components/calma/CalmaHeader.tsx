@@ -21,7 +21,7 @@ import { useCalmaLang } from "@/lib/calma/i18n";
 import { mapService, type DBService } from "@/lib/services/mapService";
 
 export type CalmaActiveNav =
-  "home" | "services" | "marketplace" | "explore" | "community" | "about";
+  "home" | "services" | "marketplace" | "explore" | "blog" | "community" | "about";
 
 interface CalmaHeaderProps {
   /** 'contact'/'dashboard' (or any value outside the 5 nav tabs) leaves every tab unhighlighted — these aren't public nav tabs. */
@@ -45,7 +45,11 @@ export default function CalmaHeader({
 }: CalmaHeaderProps) {
   const { lang, setLang, t } = useCalmaLang();
   const { data: session, status } = useSession();
+  // Two independent booleans, not one combined state: `scrolled` governs contrast
+  // (glass opacity), `condensed` governs density (pill width/padding). Decoupling
+  // them avoids a fragile if/else ladder every time a new scroll threshold is needed.
   const [scrolled, setScrolled] = useState(false);
+  const [condensed, setCondensed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
@@ -53,7 +57,10 @@ export default function CalmaHeader({
 
   useEffect(() => {
     if (variant !== "overlay") return;
-    const onScroll = () => setScrolled(window.scrollY > 32);
+    const onScroll = () => {
+      setScrolled(window.scrollY > 32);
+      setCondensed(window.scrollY > 120);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -72,21 +79,31 @@ export default function CalmaHeader({
     { key: "home", href: "/", label: t.navHome },
     { key: "services", href: "/services", label: t.navServices },
     { key: "marketplace", href: "/marketplace", label: t.navMarket },
-    { key: "explore", href: "/explore", label: t.navExplore },
+    { key: "blog", href: "/guides", label: t.navBlog },
     { key: "community", href: "/community", label: t.navCommunity },
     { key: "about", href: "/about", label: t.navAbout },
   ];
 
+  // Floating glass pill (overlay variant only — used on the homepage hero).
+  // While the mobile drawer is open the pill flattens into the drawer's own
+  // top edge instead of remaining a rounded shape floating over the dimmed
+  // backdrop — one merged object instead of two disconnected layers.
+  const overlayClasses = mobileOpen
+    ? "fixed inset-x-0 top-0 z-50 w-full rounded-none border-0 border-b border-calma-border bg-calma-cream shadow-none backdrop-blur-none"
+    : `fixed left-1/2 z-30 -translate-x-1/2 rounded-[20px] border ${withTicker ? "top-14" : "top-5"} ${
+        condensed
+          ? "w-[calc(100%-32px)] max-w-[1040px] px-5"
+          : "w-[calc(100%-44px)] max-w-[1180px] px-6 sm:px-8"
+      } ${
+        scrolled
+          ? "border-white/[.14] bg-calma-olive-deep/75 shadow-[0_16px_40px_-16px_rgba(8,12,20,.5)] backdrop-blur-xl"
+          : "border-white/[.1] bg-white/[.08] shadow-[0_16px_40px_-20px_rgba(8,12,20,.35)] backdrop-blur-md"
+      }`;
+
   return (
     <header
-      className={`flex items-center justify-between px-6 py-1 font-hanken transition-all duration-500 sm:px-10 ${
-        variant === "overlay"
-          ? `fixed inset-x-0 z-30 border-b ${withTicker ? "top-9" : "top-0"} ${
-              scrolled
-                ? "border-white/[.12] bg-calma-olive-deep/70 shadow-[0_8px_32px_-16px_rgba(0,0,0,.4)] backdrop-blur-xl"
-                : "border-white/[.08] bg-white/[.05] backdrop-blur-md"
-            }`
-          : "relative z-20 bg-calma-olive"
+      className={`flex items-center justify-between py-1 font-hanken transition-all duration-500 ${
+        variant === "overlay" ? overlayClasses : "relative z-20 bg-calma-olive px-6 sm:px-10"
       }`}
     >
       <Link
@@ -128,7 +145,7 @@ export default function CalmaHeader({
               </Link>
 
               {servicesOpen && (
-                <div className="absolute left-1/2 top-full w-[300px] -translate-x-1/2 pt-3">
+                <div className="absolute left-1/2 top-full w-[340px] -translate-x-1/2 pt-3">
                   <div className="overflow-hidden rounded-2xl border border-calma-olive/10 bg-calma-cream p-1.5 font-hanken shadow-[0_22px_50px_-22px_rgba(42,38,34,.5)]">
                     {mappedServices.length === 0 ? (
                       <div className="px-3 py-3 text-sm text-calma-taupe">…</div>
@@ -137,16 +154,28 @@ export default function CalmaHeader({
                         <Link
                           key={s.id}
                           href={`/services/${s.id}`}
-                          className="flex items-center gap-3 rounded-xl px-3 py-2.5 no-underline outline-none transition-colors hover:bg-calma-terracotta/10 focus:bg-calma-terracotta/10"
+                          className="flex items-center gap-3.5 rounded-xl p-2.5 no-underline outline-none transition-colors hover:bg-calma-terracotta/10 focus:bg-calma-terracotta/10"
                         >
-                          <div
-                            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
-                            style={{ background: `${s.color}18` }}
-                          >
-                            <s.icon className="h-4 w-4" style={{ color: s.color }} />
-                          </div>
+                          {s.images[0] ? (
+                            <div className="relative h-[52px] w-[72px] flex-shrink-0 overflow-hidden rounded-[10px] bg-calma-sand">
+                              <Image
+                                src={s.images[0]}
+                                alt=""
+                                fill
+                                sizes="72px"
+                                className="object-cover"
+                              />
+                            </div>
+                          ) : (
+                            <div
+                              className="flex h-[52px] w-[72px] flex-shrink-0 items-center justify-center rounded-[10px]"
+                              style={{ background: `${s.color}18` }}
+                            >
+                              <s.icon className="h-5 w-5" style={{ color: s.color }} />
+                            </div>
+                          )}
                           <div className="min-w-0">
-                            <p className="truncate text-sm font-semibold text-calma-ink">
+                            <p className="truncate font-fraunces text-[15px] font-normal text-calma-ink">
                               {s.title}
                             </p>
                             <p className="truncate text-xs text-calma-taupe">{s.subtitle}</p>

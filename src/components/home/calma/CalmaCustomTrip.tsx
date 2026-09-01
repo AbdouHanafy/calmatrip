@@ -1,13 +1,18 @@
-'use client';
-import React from 'react';
-import Image from 'next/image';
-import { CheckCircle2, Quote } from 'lucide-react';
-import { useCalmaLang } from '@/lib/calma/i18n';
+"use client";
+import React from "react";
+import Image from "next/image";
+import { CheckCircle2, Quote } from "lucide-react";
+import { useCalmaLang } from "@/lib/calma/i18n";
 
-export default function CalmaCustomTrip() {
+interface RealReview {
+  name: string;
+  comment: string;
+  service: string | null;
+}
+
+export default function CalmaCustomTrip({ review }: { review?: RealReview | null }) {
   const { t } = useCalmaLang();
   const checklist = t.whys.slice(0, 3);
-  const quote = t.testis[0];
 
   return (
     <section className="mx-auto max-w-[1240px] px-6 py-8 sm:px-10">
@@ -20,12 +25,18 @@ export default function CalmaCustomTrip() {
           <h2 className="mb-5 font-fraunces text-[clamp(28px,3.4vw,40px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-ink">
             {t.customHeading}
           </h2>
-          <p className="mb-8 max-w-[440px] text-base leading-[1.65] text-calma-taupe">{t.customSub}</p>
+          <p className="mb-8 max-w-[440px] text-base leading-[1.65] text-calma-taupe">
+            {t.customSub}
+          </p>
 
           <div className="flex flex-col gap-4">
             {checklist.map((item) => (
               <div key={item.n} className="flex items-center gap-3">
-                <CheckCircle2 size={18} className="shrink-0 text-calma-terracotta" strokeWidth={1.75} />
+                <CheckCircle2
+                  size={18}
+                  className="shrink-0 text-calma-terracotta"
+                  strokeWidth={1.75}
+                />
                 <span className="text-[14.5px] font-semibold text-calma-ink">{item.title}</span>
               </div>
             ))}
@@ -43,13 +54,20 @@ export default function CalmaCustomTrip() {
               className="object-cover"
             />
           </div>
-          <div className="absolute -bottom-6 right-4 max-w-[260px] rounded-2xl bg-calma-terracotta p-5 text-calma-cream shadow-[0_20px_40px_-16px_rgba(20,15,10,.5)] sm:right-6">
-            <Quote size={18} className="mb-2 text-calma-cream/70" />
-            <p className="m-0 font-fraunces text-[14.5px] italic leading-[1.5]">&ldquo;{quote.quote}&rdquo;</p>
-            <p className="mt-2.5 text-[11.5px] font-semibold uppercase tracking-[.06em] text-calma-cream/70">
-              {quote.name} · {quote.role}
-            </p>
-          </div>
+          {/* Real client quote only — omitted entirely until an actual review exists,
+              never a stand-in name/quote. */}
+          {review && (
+            <div className="absolute -bottom-6 right-4 max-w-[260px] rounded-2xl bg-calma-terracotta p-5 text-calma-cream shadow-[0_20px_40px_-16px_rgba(20,15,10,.5)] sm:right-6">
+              <Quote size={18} className="mb-2 text-calma-cream/70" />
+              <p className="m-0 line-clamp-3 font-fraunces text-[14.5px] italic leading-[1.5]">
+                &ldquo;{review.comment}&rdquo;
+              </p>
+              <p className="mt-2.5 text-[11.5px] font-semibold uppercase tracking-[.06em] text-calma-cream/70">
+                {review.name}
+                {review.service ? ` · ${review.service}` : ""}
+              </p>
+            </div>
+          )}
         </div>
       </div>
     </section>

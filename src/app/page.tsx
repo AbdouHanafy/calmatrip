@@ -13,7 +13,6 @@ export const metadata: Metadata = {
     description:
       "Calma Trip — Tunisia's trusted travel hub. Book private transfers, camel treks, 4x4 tours, catamaran trips and cultural excursions at local prices. Founded in Hammamet. 24/7 support in English, French & Arabic.",
     path: "/",
-    ogImage: "/og/og-home.jpg",
     keywords: [
       "travel Tunisia",
       "book excursion Tunisia",

@@ -32,8 +32,66 @@ model User {
   exploreListings   ExploreListing[]
   communityPosts    CommunityPost[]
   favorites         Favorite[]
+  partnerProfile    PartnerProfile?
 
   @@map("users")
+}
+
+// Richer B2B onboarding/application record. User.role / b2bType / b2bStatus
+// remain the authoritative fields for access control (middleware, session
+// callback); this model is the detailed wizard data + review lifecycle that
+// feeds them, and doubles as the resumable draft (status starts at DRAFT).
+model PartnerProfile {
+  id     String @id @default(cuid())
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  partnerType String // "ARTISAN" | "AGENCY"
+  status      String @default("DRAFT") // DRAFT | SUBMITTED | UNDER_REVIEW | APPROVED | REJECTED | SUSPENDED
+  currentStep Int    @default(1)
+
+  organizationName String?
+  contactFirstName String?
+  contactLastName  String?
+  phone            String?
+
+  countryCode String?
+  city        String?
+  currency    String?
+  website     String?
+
+  rejectionReason String?   @db.Text
+  submittedAt     DateTime?
+  reviewedAt      DateTime?
+
+  interests      PartnerInterest[]
+  socialProfiles PartnerSocialProfile[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("partner_profiles")
+}
+
+model PartnerInterest {
+  id        Int            @id @default(autoincrement())
+  profileId String
+  profile   PartnerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  category  String
+
+  @@unique([profileId, category])
+  @@map("partner_interests")
+}
+
+model PartnerSocialProfile {
+  id        Int            @id @default(autoincrement())
+  profileId String
+  profile   PartnerProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  platform  String
+  url       String
+
+  @@unique([profileId, platform])
+  @@map("partner_social_profiles")
 }
 
 model Account {
@@ -115,6 +173,7 @@ model ExploreListing {
   budget           Int      @default(2)
   duration         String?
   openingHours     String?
+  capacity         Int?
   lat              Float?
   lng              Float?
   active           Boolean  @default(true)
@@ -137,6 +196,10 @@ model Booking {
   fromLocation    String
   toLocation      String
   status          String    @default("pending")
+  // Manually set by an admin once payment is received — Calma Trip has no
+  // online payment gateway (cash / bank transfer on arrival), so this is a
+  // real, admin-controlled field, not a stand-in for actual payment processing.
+  paymentStatus   String    @default("pending")
   price           String?
   driver          String?
   vehicle         String?

@@ -11,7 +11,6 @@ import CalmaMarketplacePreview, {
 import CalmaShopPreview from "@/components/home/calma/CalmaShopPreview";
 import CalmaWhyBanner from "@/components/home/calma/CalmaWhyBanner";
 import CalmaCustomTrip from "@/components/home/calma/CalmaCustomTrip";
-import CalmaTestimonials from "@/components/home/calma/CalmaTestimonials";
 import CalmaFinalCTA from "@/components/home/calma/CalmaFinalCTA";
 import ReviewsSection from "@/components/home/ReviewsSection";
 import ReviewForm from "@/components/review/ReviewForm";
@@ -66,17 +65,15 @@ export default function Home({ shopProducts, reviews, experiences }: HomeProps) 
         </div>
 
         <div className="bg-calma-sand">
-          <CalmaCustomTrip />
+          <CalmaCustomTrip review={reviews[0] ?? null} />
         </div>
 
-        <div className="bg-white">
-          <CalmaTestimonials />
-        </div>
-
-        {/* Real traveler reviews (only renders once someone has submitted one) — carries its own sand background */}
+        {/* Real traveler reviews only — only a client who actually booked a service can
+            leave one, which is exactly what makes this credible. No decorative/fabricated
+            testimonials here. Section hides itself entirely until someone has submitted one. */}
         <ReviewsSection reviews={reviews} />
 
-        <section className="bg-calma-sand py-28">
+        <section className="bg-calma-cream py-28">
           <div className="mx-auto max-w-[1100px] px-6 sm:px-10">
             <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.85fr_1fr]">
               <div className="relative hidden h-[520px] overflow-hidden rounded-calma-block lg:block">

@@ -22,7 +22,7 @@ function GuidesPageContent({ guides }: { guides: Guide[] }) {
 
   return (
     <>
-      <CalmaHeader active="explore" />
+      <CalmaHeader active="blog" />
       <div className="min-h-screen bg-calma-sand font-hanken">
         <section className="relative flex min-h-[280px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
           <Image

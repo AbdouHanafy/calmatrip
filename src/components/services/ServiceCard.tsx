@@ -1,10 +1,16 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, Clock, Check, ArrowRight } from "lucide-react";
+import { Clock, ArrowRight } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
-import { htmlTextLength, DESCRIPTION_LIMIT, type MappedService } from "@/lib/services/mapService";
+import type { MappedService } from "@/lib/services/mapService";
 
+/**
+ * Portrait "visual menu" card — whole card links to the service's detail page,
+ * where the full description/features live. The card itself only carries what
+ * helps someone scan and choose: a photo, the category, the title, the duration
+ * and the price. A small "Réserver" pill stays available without leaving the grid.
+ */
 export function ServiceCard({
   service,
   onBook,
@@ -13,192 +19,88 @@ export function ServiceCard({
   onBook: (id: string) => void;
 }) {
   const { t } = useCalmaLang();
-  const [imgIdx, setImgIdx] = useState(0);
   const [imgError, setImgError] = useState(false);
-  const [expanded, setExpanded] = useState(false);
   const hasImage = service.images.length > 0 && !imgError;
-  const isLong = htmlTextLength(service.description) > DESCRIPTION_LIMIT;
   const c = service.color;
 
   return (
-    <div className="group relative bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 hover:shadow-xl hover:border-gray-200 transition-all duration-500 flex flex-col">
-      {/* Image area */}
+    <Link
+      href={`/services/${service.id}`}
+      className="group relative block aspect-[3/4] overflow-hidden rounded-[22px] no-underline shadow-[0_24px_60px_-32px_rgba(42,16,8,.35)] transition-shadow duration-500 hover:shadow-[0_32px_70px_-28px_rgba(42,16,8,.5)]"
+    >
       {hasImage ? (
-        <div className="relative w-full h-52 overflow-hidden bg-gray-100">
-          <Image
-            key={imgIdx}
-            src={service.images[imgIdx]}
-            alt={service.title}
-            fill
-            sizes="(max-width: 768px) 100vw, 33vw"
-            onError={() => setImgError(true)}
-            className="object-cover group-hover:scale-105 transition-transform duration-700"
-          />
-          {/* Dark scrim */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
-
-          {/* Carousel nav */}
-          {service.images.length > 1 && (
-            <>
-              <button
-                onClick={() =>
-                  setImgIdx((i) => (i - 1 + service.images.length) % service.images.length)
-                }
-                className="absolute left-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
-              >
-                <ChevronLeft className="w-4 h-4 text-gray-800" />
-              </button>
-              <button
-                onClick={() => setImgIdx((i) => (i + 1) % service.images.length)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
-              >
-                <ChevronRight className="w-4 h-4 text-gray-800" />
-              </button>
-              <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex gap-1.5">
-                {service.images.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setImgIdx(i)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${i === imgIdx ? "w-5 bg-white" : "w-1.5 bg-white/50"}`}
-                  />
-                ))}
-              </div>
-            </>
-          )}
-
-          {/* Badge */}
-          {service.badge && (
-            <div
-              className="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider text-white shadow"
-              style={{ background: c }}
-            >
-              {service.badge}
-            </div>
-          )}
-
-          {/* Price chip on image */}
-          <div className="absolute bottom-3 right-3 bg-white/95 backdrop-blur-sm rounded-xl px-3 py-1.5 text-right shadow-md">
-            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">
-              {t.svc.fromLabel}
-            </p>
-            <p className="text-base font-extrabold leading-none" style={{ color: c }}>
-              {service.price}
-            </p>
-          </div>
-        </div>
+        <Image
+          src={service.images[0]}
+          alt={service.title}
+          fill
+          sizes="(max-width: 768px) 100vw, 33vw"
+          onError={() => setImgError(true)}
+          className="object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.07]"
+        />
       ) : (
-        /* No-image fallback: colored header band */
         <div
-          className="relative h-24 flex items-end p-5"
-          style={{ background: `linear-gradient(135deg, ${c}22, ${c}08)` }}
+          className="absolute inset-0 flex items-center justify-center"
+          style={{ background: `linear-gradient(150deg, ${c}, ${c}99)` }}
         >
-          {service.badge && (
-            <div
-              className="absolute top-3 left-3 px-3 py-1 rounded-full text-[11px] font-bold uppercase tracking-wider text-white shadow"
-              style={{ background: c }}
-            >
-              {service.badge}
-            </div>
-          )}
-          <div className="ml-auto bg-white rounded-xl px-3 py-1.5 text-right shadow-sm">
-            <p className="text-[10px] text-gray-400 font-semibold uppercase tracking-wider leading-none mb-0.5">
-              {t.svc.fromLabel}
-            </p>
-            <p className="text-base font-extrabold leading-none" style={{ color: c }}>
-              {service.price}
-            </p>
-          </div>
+          <service.icon className="h-14 w-14 text-white/25" />
         </div>
       )}
 
-      {/* Content */}
-      <div className="p-6 flex flex-col flex-1">
-        {/* Icon + meta */}
-        <div className="flex items-center gap-3 mb-4">
-          <div
-            className="w-11 h-11 rounded-2xl flex items-center justify-center shadow-sm flex-shrink-0 transition-transform duration-300 group-hover:scale-110"
-            style={{ background: `${c}18` }}
-          >
-            <service.icon className="w-5 h-5" style={{ color: c }} />
-          </div>
+      {/* Asymmetric scrim — the photo stays readable up top, text stays legible at the bottom */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(180deg, rgba(20,8,4,0) 40%, rgba(20,8,4,.55) 72%, rgba(20,8,4,.88) 100%)",
+        }}
+      />
+
+      {service.badge && (
+        <div
+          className="absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow"
+          style={{ background: c }}
+        >
+          {service.badge}
+        </div>
+      )}
+
+      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2.5 p-5">
+        <p className="text-[11px] font-bold uppercase tracking-wider text-white/70">
+          {service.subtitle}
+        </p>
+        <h3 className="font-fraunces text-[21px] font-normal leading-[1.15] text-white">
+          {service.title}
+        </h3>
+        <div className="flex items-center gap-1.5 text-xs font-medium text-white/70">
+          <Clock className="h-3.5 w-3.5" />
+          {service.duration}
+        </div>
+
+        <div className="mt-1 flex items-center justify-between gap-3 border-t border-white/15 pt-3">
           <div>
-            <p className="text-[11px] font-bold uppercase tracking-wider text-gray-400">
-              {service.subtitle}
+            <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60">
+              {t.svc.fromLabel}
             </p>
-            <Link
-              href={`/services/${service.id}`}
-              className="text-lg font-extrabold leading-tight text-gray-900 no-underline hover:text-gray-700"
-            >
-              <h3>{service.title}</h3>
-            </Link>
+            <p className="font-fraunces text-lg font-semibold text-white">{service.price}</p>
           </div>
-          <div className="ml-auto flex items-center gap-1 text-xs text-gray-400 font-medium flex-shrink-0">
-            <Clock className="w-3.5 h-3.5" />
-            {service.duration}
-          </div>
-        </div>
-
-        {/* Description */}
-        <div className="mb-4">
-          <div
-            className={`text-gray-500 text-sm leading-relaxed
-              [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4
-              [&_li]:my-0.5 [&_p]:mb-1 [&_strong]:font-semibold [&_em]:italic
-              [&_a]:underline [&_h2]:font-bold [&_h3]:font-semibold
-              ${!expanded && isLong ? "line-clamp-3" : ""}`}
-            dangerouslySetInnerHTML={{ __html: service.description }}
-          />
-          {isLong && (
+          <div className="flex items-center gap-2">
             <button
-              onClick={() => setExpanded((p) => !p)}
-              className="mt-1.5 text-xs font-semibold hover:underline"
-              style={{ color: c }}
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                onBook(service.id);
+              }}
+              className="rounded-full bg-white/95 px-3.5 py-2 text-xs font-bold text-calma-ink transition-colors hover:bg-white"
             >
-              {expanded ? t.svc.showLess : t.svc.readMore}
+              {t.svc.bookShort}
             </button>
-          )}
-        </div>
-
-        {/* Features */}
-        {service.features.length > 0 && (
-          <div className="grid grid-cols-1 gap-2 mb-5">
-            {service.features.slice(0, 4).map((f, i) => (
-              <div key={i} className="flex items-center gap-2.5">
-                <div
-                  className="w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0"
-                  style={{ background: `${c}18` }}
-                >
-                  <Check className="w-2.5 h-2.5" style={{ color: c }} />
-                </div>
-                <span className="text-sm text-gray-600">{f}</span>
-              </div>
-            ))}
-            {service.features.length > 4 && (
-              <p className="text-xs font-medium pl-6" style={{ color: c }}>
-                +{service.features.length - 4} {t.svc.moreIncluded}
-              </p>
-            )}
+            <span className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-calma-ink">
+              <ArrowRight className="h-3.5 w-3.5" />
+            </span>
           </div>
-        )}
-
-        {/* CTA */}
-        <div className="mt-auto flex items-center gap-2">
-          <Link
-            href={`/services/${service.id}`}
-            className="rounded-2xl border border-gray-200 px-4 py-3 text-sm font-semibold text-gray-600 no-underline transition-colors hover:border-gray-300 hover:text-gray-900"
-          >
-            {t.svc.viewDetails}
-          </Link>
-          <button
-            onClick={() => onBook(service.id)}
-            className="flex flex-1 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-bold text-white transition-all duration-300 hover:opacity-90 hover:shadow-lg hover:-translate-y-0.5 group/btn"
-            style={{ background: c }}
-          >
-            {t.svc.bookThis}
-            <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
-          </button>
         </div>
       </div>
-    </div>
+    </Link>
   );
 }

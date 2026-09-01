@@ -10,7 +10,6 @@ export const metadata: Metadata = buildMetadata({
   description:
     "Browse all Calma Trip travel services: airport transfers, camel treks, 4x4 Sahara tours, catamaran trips, cultural excursions and scenic flights in Tunisia. Instant booking. Local prices.",
   path: "/services",
-  ogImage: "/og/og-services.jpg",
   keywords: [
     "Tunisia excursions list",
     "book camel trek online",

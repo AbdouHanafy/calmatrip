@@ -39,6 +39,7 @@ export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: 
       where: { id: parseInt(id) },
       data: {
         ...(body.status !== undefined && { status: body.status }),
+        ...(body.paymentStatus !== undefined && { paymentStatus: body.paymentStatus }),
         ...(body.driver !== undefined && { driver: body.driver }),
         ...(body.vehicle !== undefined && { vehicle: body.vehicle }),
       },

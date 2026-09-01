@@ -67,6 +67,7 @@ export interface CalmaServicesDict {
   emptySearch: string;
   emptyCategory: string;
   bookThis: string;
+  bookShort: string;
   fromLabel: string;
   readMore: string;
   showLess: string;
@@ -232,12 +233,237 @@ export interface CalmaContactDict {
   ctaWhatsappBtn: string;
 }
 
+export interface CalmaDashboardDict {
+  // Sidebar
+  navBookings: string;
+  navNew: string;
+  navPayments: string;
+  navReviews: string;
+  navProfile: string;
+  backToSite: string;
+  signOut: string;
+  upcomingExpSingular: string;
+  upcomingExpPlural: string;
+  actionRequiredSingular: string;
+  actionRequiredPlural: string;
+  toReviewSingular: string;
+  toReviewPlural: string;
+
+  // Payments tab
+  paymentsTitle: string;
+  paymentsSub: string;
+  paymentsEmpty: string;
+
+  // Reviews tab
+  reviewsTitle: string;
+  reviewsSub: string;
+  reviewsEmpty: string;
+  reviewsToRateTitle: string;
+  reviewsYoursTitle: string;
+  reviewsPendingApproval: string;
+  leaveReviewBtn: string;
+
+  // Profile tab
+  profileTitle: string;
+  profileSub: string;
+  profileNameLabel: string;
+  profileEmailLabel: string;
+  profilePhoneLabel: string;
+  profilePhonePh: string;
+  profileSaveBtn: string;
+  profileSavedMsg: string;
+  profileErrorMsg: string;
+
+  // Header
+  welcomeBack: string;
+  nextTripSub: string;
+  emptyHeaderSub: string;
+
+  // Hero card
+  yourNextExperience: string;
+  reservationRef: string;
+  travelersCount: string;
+  viewTrip: string;
+
+  // Payment status badge
+  paymentPaid: string;
+  paymentPending: string;
+  paymentRefunded: string;
+
+  // Booking status badge
+  statusConfirmed: string;
+  statusPending: string;
+  statusCancelled: string;
+
+  // Journey / progress steps
+  journeyTitle: string;
+  stepReceived: string;
+  stepConfirmed: string;
+  stepPrepare: string;
+  stepEnjoy: string;
+  stepShare: string;
+
+  // "At a glance" grid
+  glanceTitle: string;
+  glanceDatesLabel: string;
+  glanceDatesSub: string;
+  glanceTravelersSub: string;
+  glancePaymentSub: string;
+  glancePaymentSubPaid: string;
+  glanceDestinationLabel: string;
+
+  // "Before your trip"
+  beforeTitle: string;
+  beforeSubSoon: string;
+  beforeSubGeneral: string;
+  packingTitle: string;
+  packingDesc: string;
+  helpCardTitle: string;
+  helpCardDesc: string;
+  fullDetailsTitle: string;
+  fullDetailsDesc: string;
+
+  // Recommendations
+  alsoLikeTitle: string;
+  alsoLikeSub: string;
+
+  // Bookings list / empty states
+  otherBookingsTitle: string;
+  upcomingTitle: string;
+  historyTitle: string;
+  emptyTitle: string;
+  emptySub: string;
+  createBooking: string;
+  newBookingTitle: string;
+  newBookingSub: string;
+
+  // Support strip
+  needHelpTitle: string;
+  needHelpSub: string;
+  callBtn: string;
+  whatsappBtn: string;
+}
+
+export interface CalmaPartnerOnboardingDict {
+  pageTitle: string;
+  pageSub: string;
+  savedIndicator: string;
+  savingIndicator: string;
+
+  stepAccount: string;
+  stepPartnerType: string;
+  stepBusiness: string;
+  stepInterests: string;
+  stepPresence: string;
+  stepReview: string;
+  stepWord: string;
+  ofWord: string;
+
+  accountTitle: string;
+  accountSub: string;
+  accountNameLabel: string;
+  accountEmailLabel: string;
+  accountPhoneLabel: string;
+  accountPasswordLabel: string;
+  accountConfirmLabel: string;
+  accountSubmitBtn: string;
+  accountHaveAccount: string;
+  accountLoginLink: string;
+
+  typeTitle: string;
+  typeSub: string;
+  typeArtisanLabel: string;
+  typeArtisanTagline: string;
+  typeArtisanDesc: string;
+  typeAgencyLabel: string;
+  typeAgencyTagline: string;
+  typeAgencyDesc: string;
+
+  bizTitle: string;
+  bizSub: string;
+  bizOrgLabel: string;
+  bizOrgPh: string;
+  bizFirstNameLabel: string;
+  bizLastNameLabel: string;
+  bizPhoneLabel: string;
+  bizCountryLabel: string;
+  bizCountryPh: string;
+  bizCityLabel: string;
+  bizCityOtherLabel: string;
+  bizCityOtherPh: string;
+  bizCurrencyLabel: string;
+  bizWebsiteLabel: string;
+  bizWebsitePh: string;
+  bizWebsiteOptional: string;
+
+  interestsArtisanTitle: string;
+  interestsAgencyTitle: string;
+  interestsSub: string;
+  interestsErrorRequired: string;
+
+  presenceTitle: string;
+  presenceSub: string;
+  presenceUrlLabel: string;
+  presenceNone: string;
+
+  reviewTitle: string;
+  reviewSub: string;
+  reviewSectionAccount: string;
+  reviewSectionPartner: string;
+  reviewSectionBusiness: string;
+  reviewSectionInterests: string;
+  reviewSectionPresence: string;
+  reviewEditBtn: string;
+  reviewReadyTitle: string;
+  reviewReadySub: string;
+  reviewSubmitBtn: string;
+  reviewSubmitting: string;
+
+  successTitle: string;
+  successSub: string;
+  successBackBtn: string;
+
+  lockedSubmittedTitle: string;
+  lockedSubmittedSub: string;
+  lockedUnderReviewTitle: string;
+  lockedUnderReviewSub: string;
+  lockedApprovedTitle: string;
+  lockedApprovedSub: string;
+  lockedRejectedTitle: string;
+  lockedRejectedSub: string;
+  lockedSuspendedTitle: string;
+  lockedSuspendedSub: string;
+  goToDashboardBtn: string;
+
+  backBtn: string;
+  continueBtn: string;
+  requiredError: string;
+  invalidUrlError: string;
+
+  catTransport: string;
+  catExcursion: string;
+  catActivity: string;
+  catFoodDrink: string;
+  catSight: string;
+  catHiddenGem: string;
+  catHotel: string;
+
+  platformWebsite: string;
+  platformInstagram: string;
+  platformFacebook: string;
+  platformTiktok: string;
+  platformYoutube: string;
+  platformLinkedin: string;
+  platformOther: string;
+}
+
 export interface CalmaDict {
   navHome: string;
   navServices: string;
   navServicesViewAll: string;
   navMarket: string;
   navExplore: string;
+  navBlog: string;
   navCommunity: string;
   navAbout: string;
   navContact: string;
@@ -324,6 +550,8 @@ export interface CalmaDict {
   exp: CalmaExploreDict;
   abt: CalmaAboutDict;
   cnt: CalmaContactDict;
+  dash: CalmaDashboardDict;
+  pnr: CalmaPartnerOnboardingDict;
 }
 
 export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
@@ -333,6 +561,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navServicesViewAll: "Voir tous les services",
     navMarket: "Marketplace",
     navExplore: "Explorer",
+    navBlog: "Blog",
     navCommunity: "Communauté",
     navAbout: "À propos",
     navContact: "Contact",
@@ -512,6 +741,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       emptySearch: "Rien ne correspond à votre recherche pour le moment.",
       emptyCategory: "Aucun service dans cette catégorie pour le moment.",
       bookThis: "Réserver cette expérience",
+      bookShort: "Réserver",
       fromLabel: "Dès",
       readMore: "Lire plus ↓",
       showLess: "Réduire ↑",
@@ -749,6 +979,221 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       ctaCallBtn: "Appeler maintenant",
       ctaWhatsappBtn: "WhatsApp",
     },
+
+    dash: {
+      navBookings: "Mes réservations",
+      navNew: "Nouvelle réservation",
+      navPayments: "Paiements",
+      navReviews: "Avis",
+      navProfile: "Profil",
+      backToSite: "Retour au site",
+      signOut: "Déconnexion",
+      upcomingExpSingular: "expérience à venir",
+      upcomingExpPlural: "expériences à venir",
+      actionRequiredSingular: "action requise",
+      actionRequiredPlural: "actions requises",
+      toReviewSingular: "à évaluer",
+      toReviewPlural: "à évaluer",
+
+      paymentsTitle: "Paiements",
+      paymentsSub:
+        "Le suivi des paiements de toutes vos réservations, mis à jour par notre équipe.",
+      paymentsEmpty: "Aucun paiement à afficher pour le moment.",
+
+      reviewsTitle: "Vos avis",
+      reviewsSub:
+        "Seuls les clients ayant réellement réservé un service peuvent laisser un avis — c'est ce qui garantit leur authenticité.",
+      reviewsEmpty: "Vous n'avez pas encore d'expérience à évaluer.",
+      reviewsToRateTitle: "À évaluer",
+      reviewsYoursTitle: "Vos avis envoyés",
+      reviewsPendingApproval: "en cours de validation",
+      leaveReviewBtn: "Laisser un avis",
+
+      profileTitle: "Profil",
+      profileSub: "Vos informations personnelles.",
+      profileNameLabel: "Nom complet",
+      profileEmailLabel: "Adresse email",
+      profilePhoneLabel: "Téléphone",
+      profilePhonePh: "+216 00 000 000",
+      profileSaveBtn: "Enregistrer",
+      profileSavedMsg: "Profil mis à jour.",
+      profileErrorMsg: "Échec de la mise à jour. Réessayez.",
+
+      welcomeBack: "Bon retour",
+      nextTripSub: "vous attend.",
+      emptyHeaderSub: "Votre prochaine aventure commence ici.",
+
+      yourNextExperience: "Votre prochaine expérience",
+      reservationRef: "Réservation",
+      travelersCount: "voyageurs",
+      viewTrip: "Voir votre séjour",
+
+      paymentPaid: "Payé",
+      paymentPending: "Paiement en attente",
+      paymentRefunded: "Remboursé",
+
+      statusConfirmed: "Confirmée",
+      statusPending: "En attente",
+      statusCancelled: "Annulée",
+
+      journeyTitle: "Votre parcours",
+      stepReceived: "Réservation reçue",
+      stepConfirmed: "Confirmée",
+      stepPrepare: "Préparez votre séjour",
+      stepEnjoy: "Profitez de votre expérience",
+      stepShare: "Partagez votre expérience",
+
+      glanceTitle: "Votre séjour en un coup d'œil",
+      glanceDatesLabel: "Date",
+      glanceDatesSub: "Les dates de votre expérience",
+      glanceTravelersSub: "Inclus dans votre réservation",
+      glancePaymentSub: "Finalisez votre paiement avant le départ",
+      glancePaymentSubPaid: "Merci, tout est réglé",
+      glanceDestinationLabel: "Destination",
+
+      beforeTitle: "Avant votre départ",
+      beforeSubSoon: "Votre aventure arrive bientôt.",
+      beforeSubGeneral: "Tout ce qu'il faut savoir avant le grand jour.",
+      packingTitle: "Que faut-il emporter",
+      packingDesc: "Découvrez nos conseils pratiques pour bien préparer votre expérience.",
+      helpCardTitle: "Besoin d'aide ?",
+      helpCardDesc: "Contactez notre équipe au sujet de votre réservation.",
+      fullDetailsTitle: "Voir les détails de la réservation",
+      fullDetailsDesc: "Consultez toutes les informations de votre expérience.",
+
+      alsoLikeTitle: "Vous aimerez aussi",
+      alsoLikeSub: "Complétez votre expérience avec d'autres services Calma Trip",
+
+      otherBookingsTitle: "Vos autres réservations",
+      upcomingTitle: "À venir",
+      historyTitle: "Historique",
+      emptyTitle: "Votre prochaine aventure commence ici",
+      emptySub: "Aucune réservation pour le moment — créez-en une pour la voir apparaître ici.",
+      createBooking: "Créer une réservation",
+      newBookingTitle: "Nouvelle réservation",
+      newBookingSub: "Remplissez le formulaire pour réserver votre prochain trajet",
+
+      needHelpTitle: "Besoin d'aide ?",
+      needHelpSub: "Notre équipe est disponible 24/7",
+      callBtn: "Appeler",
+      whatsappBtn: "WhatsApp",
+    },
+    pnr: {
+      pageTitle: "Devenir partenaire CalmaTrip",
+      pageSub: "Quelques étapes pour rejoindre notre réseau de partenaires.",
+      savedIndicator: "Enregistré",
+      savingIndicator: "Enregistrement…",
+
+      stepAccount: "Compte",
+      stepPartnerType: "Type de partenaire",
+      stepBusiness: "Entreprise",
+      stepInterests: "Centres d'intérêt",
+      stepPresence: "Présence en ligne",
+      stepReview: "Vérification",
+      stepWord: "Étape",
+      ofWord: "sur",
+
+      accountTitle: "Créez votre compte",
+      accountSub: "Commencez par créer votre compte CalmaTrip Partenaires.",
+      accountNameLabel: "Nom complet",
+      accountEmailLabel: "Adresse email",
+      accountPhoneLabel: "Téléphone",
+      accountPasswordLabel: "Mot de passe",
+      accountConfirmLabel: "Confirmer le mot de passe",
+      accountSubmitBtn: "Créer mon compte",
+      accountHaveAccount: "Vous avez déjà un compte ?",
+      accountLoginLink: "Se connecter",
+
+      typeTitle: "Quel type de partenaire êtes-vous ?",
+      typeSub: "Ce choix détermine les étapes suivantes de votre inscription.",
+      typeArtisanLabel: "Artisan",
+      typeArtisanTagline: "Professionnel local",
+      typeArtisanDesc: "Proposez vos services et votre savoir-faire aux voyageurs CalmaTrip.",
+      typeAgencyLabel: "Agence",
+      typeAgencyTagline: "Professionnel du voyage",
+      typeAgencyDesc:
+        "Construisez des expériences et des offres de voyage pour vos clients avec CalmaTrip.",
+
+      bizTitle: "Informations sur votre entreprise",
+      bizSub: "Ces informations nous permettent de vérifier et présenter votre activité.",
+      bizOrgLabel: "Nom de l'entreprise / organisation",
+      bizOrgPh: "ex. Sahara Excursions",
+      bizFirstNameLabel: "Prénom du contact",
+      bizLastNameLabel: "Nom du contact",
+      bizPhoneLabel: "Téléphone",
+      bizCountryLabel: "Pays",
+      bizCountryPh: "Rechercher un pays…",
+      bizCityLabel: "Ville",
+      bizCityOtherLabel: "Autre ville",
+      bizCityOtherPh: "Précisez votre ville",
+      bizCurrencyLabel: "Devise",
+      bizWebsiteLabel: "Site web",
+      bizWebsitePh: "https://exemple.com",
+      bizWebsiteOptional: "Optionnel",
+
+      interestsArtisanTitle: "Avec quels services souhaitez-vous travailler ?",
+      interestsAgencyTitle: "Que souhaitez-vous proposer ou promouvoir avec CalmaTrip ?",
+      interestsSub: "Sélectionnez toutes les catégories qui s'appliquent.",
+      interestsErrorRequired: "Veuillez sélectionner au moins une catégorie.",
+
+      presenceTitle: "Votre présence en ligne",
+      presenceSub: "Sélectionnez les plateformes où l'on peut vous retrouver (optionnel).",
+      presenceUrlLabel: "Lien / identifiant",
+      presenceNone: "Aucune plateforme sélectionnée pour le moment.",
+
+      reviewTitle: "Vérifiez votre candidature",
+      reviewSub: "Relisez les informations avant de soumettre votre candidature à notre équipe.",
+      reviewSectionAccount: "Compte",
+      reviewSectionPartner: "Type de partenaire",
+      reviewSectionBusiness: "Entreprise",
+      reviewSectionInterests: "Centres d'intérêt",
+      reviewSectionPresence: "Présence en ligne",
+      reviewEditBtn: "Modifier",
+      reviewReadyTitle: "Prêt à soumettre votre candidature ?",
+      reviewReadySub:
+        "Notre équipe examinera votre profil partenaire et vous contactera prochainement.",
+      reviewSubmitBtn: "Soumettre ma candidature",
+      reviewSubmitting: "Envoi en cours…",
+
+      successTitle: "Votre candidature a été envoyée",
+      successSub:
+        "Merci de rejoindre CalmaTrip. Notre équipe va examiner votre profil partenaire et vous contactera prochainement.",
+      successBackBtn: "Retour à l'accueil",
+
+      lockedSubmittedTitle: "Candidature en cours d'examen",
+      lockedSubmittedSub:
+        "Votre candidature a bien été soumise. Notre équipe vous contactera prochainement.",
+      lockedUnderReviewTitle: "Candidature en cours d'examen",
+      lockedUnderReviewSub: "Notre équipe examine actuellement votre profil partenaire.",
+      lockedApprovedTitle: "Candidature approuvée",
+      lockedApprovedSub: "Votre compte partenaire est actif. Bienvenue chez CalmaTrip !",
+      lockedRejectedTitle: "Candidature non retenue",
+      lockedRejectedSub: "Votre candidature n'a pas été retenue cette fois-ci.",
+      lockedSuspendedTitle: "Compte suspendu",
+      lockedSuspendedSub: "Votre compte partenaire est actuellement suspendu.",
+      goToDashboardBtn: "Accéder à mon espace",
+
+      backBtn: "Précédent",
+      continueBtn: "Continuer",
+      requiredError: "Ce champ est obligatoire.",
+      invalidUrlError: "Veuillez indiquer un lien valide (commençant par https://).",
+
+      catTransport: "Transport",
+      catExcursion: "Excursions",
+      catActivity: "Activités",
+      catFoodDrink: "Gastronomie",
+      catSight: "Sites & monuments",
+      catHiddenGem: "Pépites cachées",
+      catHotel: "Hébergement",
+
+      platformWebsite: "Site web",
+      platformInstagram: "Instagram",
+      platformFacebook: "Facebook",
+      platformTiktok: "TikTok",
+      platformYoutube: "YouTube",
+      platformLinkedin: "LinkedIn",
+      platformOther: "Autre",
+    },
   },
   en: {
     navHome: "Home",
@@ -756,6 +1201,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navServicesViewAll: "View all services",
     navMarket: "Marketplace",
     navExplore: "Explore",
+    navBlog: "Blog",
     navCommunity: "Community",
     navAbout: "About Us",
     navContact: "Contact",
@@ -932,6 +1378,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       emptySearch: "Nothing matches your search yet.",
       emptyCategory: "No services in this category yet.",
       bookThis: "Book this experience",
+      bookShort: "Book",
       fromLabel: "From",
       readMore: "Read more ↓",
       showLess: "Show less ↑",
@@ -1166,6 +1613,217 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       ctaCallBtn: "Call now",
       ctaWhatsappBtn: "WhatsApp",
     },
+
+    dash: {
+      navBookings: "My bookings",
+      navNew: "New booking",
+      navPayments: "Payments",
+      navReviews: "Reviews",
+      navProfile: "Profile",
+      backToSite: "Back to site",
+      signOut: "Sign out",
+      upcomingExpSingular: "upcoming experience",
+      upcomingExpPlural: "upcoming experiences",
+      actionRequiredSingular: "action required",
+      actionRequiredPlural: "actions required",
+      toReviewSingular: "to review",
+      toReviewPlural: "to review",
+
+      paymentsTitle: "Payments",
+      paymentsSub: "Payment tracking for all your bookings, kept up to date by our team.",
+      paymentsEmpty: "No payments to show yet.",
+
+      reviewsTitle: "Your reviews",
+      reviewsSub:
+        "Only clients who actually booked a service can leave a review — that's what makes them credible.",
+      reviewsEmpty: "You don't have an experience to review yet.",
+      reviewsToRateTitle: "To review",
+      reviewsYoursTitle: "Your submitted reviews",
+      reviewsPendingApproval: "pending approval",
+      leaveReviewBtn: "Leave a review",
+
+      profileTitle: "Profile",
+      profileSub: "Your personal information.",
+      profileNameLabel: "Full name",
+      profileEmailLabel: "Email address",
+      profilePhoneLabel: "Phone",
+      profilePhonePh: "+216 00 000 000",
+      profileSaveBtn: "Save",
+      profileSavedMsg: "Profile updated.",
+      profileErrorMsg: "Update failed. Please try again.",
+
+      welcomeBack: "Welcome back",
+      nextTripSub: "is waiting for you.",
+      emptyHeaderSub: "Your next adventure starts here.",
+
+      yourNextExperience: "Your next experience",
+      reservationRef: "Booking",
+      travelersCount: "travelers",
+      viewTrip: "View your trip",
+
+      paymentPaid: "Paid",
+      paymentPending: "Payment pending",
+      paymentRefunded: "Refunded",
+
+      statusConfirmed: "Confirmed",
+      statusPending: "Pending",
+      statusCancelled: "Cancelled",
+
+      journeyTitle: "Your journey",
+      stepReceived: "Booking received",
+      stepConfirmed: "Confirmed",
+      stepPrepare: "Get ready",
+      stepEnjoy: "Enjoy your experience",
+      stepShare: "Share your experience",
+
+      glanceTitle: "Your trip at a glance",
+      glanceDatesLabel: "Date",
+      glanceDatesSub: "The dates of your experience",
+      glanceTravelersSub: "Included in your booking",
+      glancePaymentSub: "Complete payment before departure",
+      glancePaymentSubPaid: "Thank you, all settled",
+      glanceDestinationLabel: "Destination",
+
+      beforeTitle: "Before you go",
+      beforeSubSoon: "Your adventure is coming up soon.",
+      beforeSubGeneral: "Everything you need to know before the big day.",
+      packingTitle: "What to pack",
+      packingDesc: "Practical tips to get ready for your experience.",
+      helpCardTitle: "Need help?",
+      helpCardDesc: "Contact our team about your booking.",
+      fullDetailsTitle: "View full booking details",
+      fullDetailsDesc: "See all the information about your experience.",
+
+      alsoLikeTitle: "You might also like",
+      alsoLikeSub: "Complete your experience with other Calma Trip services",
+
+      otherBookingsTitle: "Your other bookings",
+      upcomingTitle: "Upcoming",
+      historyTitle: "History",
+      emptyTitle: "Your next adventure starts here",
+      emptySub: "No bookings yet — create one and it'll show up here.",
+      createBooking: "Create a booking",
+      newBookingTitle: "New booking",
+      newBookingSub: "Fill in the form to book your next trip",
+
+      needHelpTitle: "Need help?",
+      needHelpSub: "Our team is available 24/7",
+      callBtn: "Call",
+      whatsappBtn: "WhatsApp",
+    },
+    pnr: {
+      pageTitle: "Become a CalmaTrip partner",
+      pageSub: "A few steps to join our partner network.",
+      savedIndicator: "Saved",
+      savingIndicator: "Saving…",
+
+      stepAccount: "Account",
+      stepPartnerType: "Partner type",
+      stepBusiness: "Business",
+      stepInterests: "Interests",
+      stepPresence: "Online presence",
+      stepReview: "Review",
+      stepWord: "Step",
+      ofWord: "of",
+
+      accountTitle: "Create your account",
+      accountSub: "Start by creating your CalmaTrip Partners account.",
+      accountNameLabel: "Full name",
+      accountEmailLabel: "Email address",
+      accountPhoneLabel: "Phone",
+      accountPasswordLabel: "Password",
+      accountConfirmLabel: "Confirm password",
+      accountSubmitBtn: "Create my account",
+      accountHaveAccount: "Already have an account?",
+      accountLoginLink: "Sign in",
+
+      typeTitle: "What type of partner are you?",
+      typeSub: "This choice determines the rest of your application.",
+      typeArtisanLabel: "Artisan",
+      typeArtisanTagline: "Local professional",
+      typeArtisanDesc: "Offer your services and expertise to CalmaTrip travelers.",
+      typeAgencyLabel: "Agency",
+      typeAgencyTagline: "Travel professional",
+      typeAgencyDesc: "Build experiences and travel offers for your clients with CalmaTrip.",
+
+      bizTitle: "Your business details",
+      bizSub: "This lets us verify and showcase your business.",
+      bizOrgLabel: "Organization / business name",
+      bizOrgPh: "e.g. Sahara Excursions",
+      bizFirstNameLabel: "Contact first name",
+      bizLastNameLabel: "Contact last name",
+      bizPhoneLabel: "Phone",
+      bizCountryLabel: "Country",
+      bizCountryPh: "Search a country…",
+      bizCityLabel: "City",
+      bizCityOtherLabel: "Other city",
+      bizCityOtherPh: "Enter your city",
+      bizCurrencyLabel: "Currency",
+      bizWebsiteLabel: "Website",
+      bizWebsitePh: "https://example.com",
+      bizWebsiteOptional: "Optional",
+
+      interestsArtisanTitle: "What services do you work with?",
+      interestsAgencyTitle: "What are you interested in offering or promoting with CalmaTrip?",
+      interestsSub: "Select every category that applies.",
+      interestsErrorRequired: "Please select at least one category.",
+
+      presenceTitle: "Your online presence",
+      presenceSub: "Select the platforms where you can be found (optional).",
+      presenceUrlLabel: "Link / handle",
+      presenceNone: "No platform selected yet.",
+
+      reviewTitle: "Review your application",
+      reviewSub: "Review the information before submitting your application to our team.",
+      reviewSectionAccount: "Account",
+      reviewSectionPartner: "Partner type",
+      reviewSectionBusiness: "Business",
+      reviewSectionInterests: "Interests",
+      reviewSectionPresence: "Online presence",
+      reviewEditBtn: "Edit",
+      reviewReadyTitle: "Ready to submit your partner application?",
+      reviewReadySub: "Our team will review your partner profile and contact you shortly.",
+      reviewSubmitBtn: "Submit application",
+      reviewSubmitting: "Submitting…",
+
+      successTitle: "Your application has been submitted",
+      successSub:
+        "Thank you for joining CalmaTrip. Our team will review your partner profile and contact you shortly.",
+      successBackBtn: "Back to home",
+
+      lockedSubmittedTitle: "Application under review",
+      lockedSubmittedSub: "Your application has been submitted. Our team will contact you shortly.",
+      lockedUnderReviewTitle: "Application under review",
+      lockedUnderReviewSub: "Our team is currently reviewing your partner profile.",
+      lockedApprovedTitle: "Application approved",
+      lockedApprovedSub: "Your partner account is active. Welcome to CalmaTrip!",
+      lockedRejectedTitle: "Application not approved",
+      lockedRejectedSub: "Your application wasn't approved this time.",
+      lockedSuspendedTitle: "Account suspended",
+      lockedSuspendedSub: "Your partner account is currently suspended.",
+      goToDashboardBtn: "Go to my dashboard",
+
+      backBtn: "Back",
+      continueBtn: "Continue",
+      requiredError: "This field is required.",
+      invalidUrlError: "Please enter a valid link (starting with https://).",
+
+      catTransport: "Transport",
+      catExcursion: "Excursions",
+      catActivity: "Activities",
+      catFoodDrink: "Food & Drink",
+      catSight: "Sights & landmarks",
+      catHiddenGem: "Hidden gems",
+      catHotel: "Accommodation",
+
+      platformWebsite: "Website",
+      platformInstagram: "Instagram",
+      platformFacebook: "Facebook",
+      platformTiktok: "TikTok",
+      platformYoutube: "YouTube",
+      platformLinkedin: "LinkedIn",
+      platformOther: "Other",
+    },
   },
   ar: {
     navHome: "الرئيسية",
@@ -1173,6 +1831,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navServicesViewAll: "عرض كل الخدمات",
     navMarket: "السوق",
     navExplore: "استكشف",
+    navBlog: "المدونة",
     navCommunity: "المجتمع",
     navAbout: "من نحن",
     navContact: "اتصل بنا",
@@ -1340,6 +1999,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       emptySearch: "لا شيء يطابق بحثك حاليًا.",
       emptyCategory: "لا خدمات في هذه الفئة حاليًا.",
       bookThis: "احجز هذه التجربة",
+      bookShort: "احجز",
       fromLabel: "ابتداءً من",
       readMore: "اقرأ المزيد ↓",
       showLess: "عرض أقل ↑",
@@ -1563,6 +2223,215 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       ctaSub: "فريقنا متاح على مدار الساعة للإجابة على أسئلتكم وتنظيم مغامرتكم التونسية القادمة.",
       ctaCallBtn: "اتصل الآن",
       ctaWhatsappBtn: "واتساب",
+    },
+
+    dash: {
+      navBookings: "حجوزاتي",
+      navNew: "حجز جديد",
+      navPayments: "المدفوعات",
+      navReviews: "التقييمات",
+      navProfile: "الملف الشخصي",
+      backToSite: "العودة إلى الموقع",
+      signOut: "تسجيل الخروج",
+      upcomingExpSingular: "تجربة قادمة",
+      upcomingExpPlural: "تجارب قادمة",
+      actionRequiredSingular: "إجراء مطلوب",
+      actionRequiredPlural: "إجراءات مطلوبة",
+      toReviewSingular: "بانتظار التقييم",
+      toReviewPlural: "بانتظار التقييم",
+
+      paymentsTitle: "المدفوعات",
+      paymentsSub: "متابعة مدفوعات كل حجوزاتك، محدّثة من طرف فريقنا.",
+      paymentsEmpty: "لا توجد مدفوعات لعرضها بعد.",
+
+      reviewsTitle: "تقييماتك",
+      reviewsSub: "فقط العملاء الذين حجزوا فعلاً خدمة يمكنهم ترك تقييم — وهذا ما يجعله موثوقًا.",
+      reviewsEmpty: "ليس لديك بعد تجربة لتقييمها.",
+      reviewsToRateTitle: "بانتظار التقييم",
+      reviewsYoursTitle: "تقييماتك المرسلة",
+      reviewsPendingApproval: "قيد المراجعة",
+      leaveReviewBtn: "ترك تقييم",
+
+      profileTitle: "الملف الشخصي",
+      profileSub: "معلوماتك الشخصية.",
+      profileNameLabel: "الاسم الكامل",
+      profileEmailLabel: "البريد الإلكتروني",
+      profilePhoneLabel: "الهاتف",
+      profilePhonePh: "+216 00 000 000",
+      profileSaveBtn: "حفظ",
+      profileSavedMsg: "تم تحديث الملف الشخصي.",
+      profileErrorMsg: "فشل التحديث. حاول مرة أخرى.",
+
+      welcomeBack: "مرحبًا بعودتك",
+      nextTripSub: "بانتظارك.",
+      emptyHeaderSub: "مغامرتك القادمة تبدأ هنا.",
+
+      yourNextExperience: "تجربتك القادمة",
+      reservationRef: "الحجز",
+      travelersCount: "مسافرين",
+      viewTrip: "عرض رحلتك",
+
+      paymentPaid: "تم الدفع",
+      paymentPending: "الدفع قيد الانتظار",
+      paymentRefunded: "تم الاسترداد",
+
+      statusConfirmed: "مؤكدة",
+      statusPending: "قيد الانتظار",
+      statusCancelled: "ملغاة",
+
+      journeyTitle: "مسار رحلتك",
+      stepReceived: "تم استلام الحجز",
+      stepConfirmed: "مؤكد",
+      stepPrepare: "جهّز نفسك",
+      stepEnjoy: "استمتع بتجربتك",
+      stepShare: "شارك تجربتك",
+
+      glanceTitle: "رحلتك بنظرة سريعة",
+      glanceDatesLabel: "التاريخ",
+      glanceDatesSub: "تواريخ تجربتك",
+      glanceTravelersSub: "مشمول في حجزك",
+      glancePaymentSub: "أكمل الدفع قبل المغادرة",
+      glancePaymentSubPaid: "شكرًا، تم الدفع بالكامل",
+      glanceDestinationLabel: "الوجهة",
+
+      beforeTitle: "قبل الرحيل",
+      beforeSubSoon: "مغامرتك تقترب قريبًا.",
+      beforeSubGeneral: "كل ما تحتاج معرفته قبل اليوم الموعود.",
+      packingTitle: "ماذا تحضر معك",
+      packingDesc: "نصائح عملية للاستعداد لتجربتك.",
+      helpCardTitle: "بحاجة للمساعدة؟",
+      helpCardDesc: "تواصل مع فريقنا بخصوص حجزك.",
+      fullDetailsTitle: "عرض كل تفاصيل الحجز",
+      fullDetailsDesc: "اطّلع على كل معلومات تجربتك.",
+
+      alsoLikeTitle: "قد يعجبك أيضًا",
+      alsoLikeSub: "أكمل تجربتك مع خدمات كالما تريب الأخرى",
+
+      otherBookingsTitle: "حجوزاتك الأخرى",
+      upcomingTitle: "القادمة",
+      historyTitle: "السجل",
+      emptyTitle: "مغامرتك القادمة تبدأ هنا",
+      emptySub: "لا توجد حجوزات بعد — أنشئ واحدة لتظهر هنا.",
+      createBooking: "إنشاء حجز",
+      newBookingTitle: "حجز جديد",
+      newBookingSub: "املأ النموذج لحجز رحلتك القادمة",
+
+      needHelpTitle: "بحاجة للمساعدة؟",
+      needHelpSub: "فريقنا متاح على مدار الساعة",
+      callBtn: "اتصل",
+      whatsappBtn: "واتساب",
+    },
+    pnr: {
+      pageTitle: "كن شريكاً في CalmaTrip",
+      pageSub: "بضع خطوات للانضمام إلى شبكة شركائنا.",
+      savedIndicator: "تم الحفظ",
+      savingIndicator: "جارٍ الحفظ…",
+
+      stepAccount: "الحساب",
+      stepPartnerType: "نوع الشريك",
+      stepBusiness: "النشاط التجاري",
+      stepInterests: "مجالات الاهتمام",
+      stepPresence: "الحضور الرقمي",
+      stepReview: "المراجعة",
+      stepWord: "خطوة",
+      ofWord: "من",
+
+      accountTitle: "أنشئ حسابك",
+      accountSub: "ابدأ بإنشاء حساب شركاء CalmaTrip الخاص بك.",
+      accountNameLabel: "الاسم الكامل",
+      accountEmailLabel: "البريد الإلكتروني",
+      accountPhoneLabel: "الهاتف",
+      accountPasswordLabel: "كلمة المرور",
+      accountConfirmLabel: "تأكيد كلمة المرور",
+      accountSubmitBtn: "إنشاء حسابي",
+      accountHaveAccount: "لديك حساب بالفعل؟",
+      accountLoginLink: "تسجيل الدخول",
+
+      typeTitle: "ما نوع الشريك الذي تمثله؟",
+      typeSub: "هذا الاختيار يحدد بقية خطوات التسجيل.",
+      typeArtisanLabel: "حرفي",
+      typeArtisanTagline: "محترف محلي",
+      typeArtisanDesc: "قدّم خدماتك وخبرتك لمسافري CalmaTrip.",
+      typeAgencyLabel: "وكالة",
+      typeAgencyTagline: "محترف سياحي",
+      typeAgencyDesc: "ابنِ تجارب وعروض سفر لعملائك مع CalmaTrip.",
+
+      bizTitle: "معلومات نشاطك التجاري",
+      bizSub: "تتيح لنا هذه المعلومات التحقق من نشاطك وعرضه.",
+      bizOrgLabel: "اسم المؤسسة / النشاط",
+      bizOrgPh: "مثال: رحلات الصحراء",
+      bizFirstNameLabel: "الاسم الأول لجهة الاتصال",
+      bizLastNameLabel: "اسم العائلة لجهة الاتصال",
+      bizPhoneLabel: "الهاتف",
+      bizCountryLabel: "الدولة",
+      bizCountryPh: "ابحث عن دولة…",
+      bizCityLabel: "المدينة",
+      bizCityOtherLabel: "مدينة أخرى",
+      bizCityOtherPh: "حدد مدينتك",
+      bizCurrencyLabel: "العملة",
+      bizWebsiteLabel: "الموقع الإلكتروني",
+      bizWebsitePh: "https://example.com",
+      bizWebsiteOptional: "اختياري",
+
+      interestsArtisanTitle: "ما الخدمات التي تعمل بها؟",
+      interestsAgencyTitle: "ما الذي ترغب في تقديمه أو الترويج له مع CalmaTrip؟",
+      interestsSub: "اختر كل الفئات التي تنطبق عليك.",
+      interestsErrorRequired: "يرجى اختيار فئة واحدة على الأقل.",
+
+      presenceTitle: "حضورك الرقمي",
+      presenceSub: "اختر المنصات التي يمكن إيجادك فيها (اختياري).",
+      presenceUrlLabel: "الرابط / المعرّف",
+      presenceNone: "لم يتم اختيار أي منصة بعد.",
+
+      reviewTitle: "راجع طلبك",
+      reviewSub: "راجع المعلومات قبل إرسال طلبك إلى فريقنا.",
+      reviewSectionAccount: "الحساب",
+      reviewSectionPartner: "نوع الشريك",
+      reviewSectionBusiness: "النشاط التجاري",
+      reviewSectionInterests: "مجالات الاهتمام",
+      reviewSectionPresence: "الحضور الرقمي",
+      reviewEditBtn: "تعديل",
+      reviewReadyTitle: "هل أنت جاهز لإرسال طلبك؟",
+      reviewReadySub: "سيراجع فريقنا ملف شراكتك ويتواصل معك قريباً.",
+      reviewSubmitBtn: "إرسال الطلب",
+      reviewSubmitting: "جارٍ الإرسال…",
+
+      successTitle: "تم إرسال طلبك",
+      successSub: "شكراً لانضمامك إلى CalmaTrip. سيراجع فريقنا ملف شراكتك ويتواصل معك قريباً.",
+      successBackBtn: "العودة إلى الرئيسية",
+
+      lockedSubmittedTitle: "الطلب قيد المراجعة",
+      lockedSubmittedSub: "تم إرسال طلبك بنجاح. سيتواصل معك فريقنا قريباً.",
+      lockedUnderReviewTitle: "الطلب قيد المراجعة",
+      lockedUnderReviewSub: "يقوم فريقنا حالياً بمراجعة ملف شراكتك.",
+      lockedApprovedTitle: "تم قبول الطلب",
+      lockedApprovedSub: "حساب الشراكة الخاص بك نشط الآن. أهلاً بك في CalmaTrip!",
+      lockedRejectedTitle: "لم يتم قبول الطلب",
+      lockedRejectedSub: "لم تتم الموافقة على طلبك هذه المرة.",
+      lockedSuspendedTitle: "الحساب موقوف",
+      lockedSuspendedSub: "حساب الشراكة الخاص بك موقوف حالياً.",
+      goToDashboardBtn: "الذهاب إلى مساحتي",
+
+      backBtn: "السابق",
+      continueBtn: "متابعة",
+      requiredError: "هذا الحقل إلزامي.",
+      invalidUrlError: "يرجى إدخال رابط صالح (يبدأ بـ https://).",
+
+      catTransport: "النقل",
+      catExcursion: "الرحلات",
+      catActivity: "الأنشطة",
+      catFoodDrink: "المطاعم والمقاهي",
+      catSight: "المعالم",
+      catHiddenGem: "كنوز خفية",
+      catHotel: "الإقامة",
+
+      platformWebsite: "الموقع الإلكتروني",
+      platformInstagram: "إنستغرام",
+      platformFacebook: "فيسبوك",
+      platformTiktok: "تيك توك",
+      platformYoutube: "يوتيوب",
+      platformLinkedin: "لينكد إن",
+      platformOther: "أخرى",
     },
   },
 };

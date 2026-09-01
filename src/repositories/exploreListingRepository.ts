@@ -18,6 +18,7 @@ interface CreateExploreListingInput {
   budget?: number;
   duration?: string | null;
   openingHours?: string | null;
+  capacity?: number | null;
   lat?: number | null;
   lng?: number | null;
   image?: string | null;
@@ -37,6 +38,7 @@ export async function createExploreListing(input: CreateExploreListingInput) {
       budget: input.budget ?? 2,
       duration: input.duration ?? null,
       openingHours: input.openingHours ?? null,
+      capacity: input.capacity ?? null,
       lat: input.lat ?? null,
       lng: input.lng ?? null,
       image: input.image ?? null,

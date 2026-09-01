@@ -1,8 +1,23 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus, Pencil, Trash2, X, Clock, Check } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  X,
+  Clock,
+  Check,
+  Package,
+  Tag,
+  Layers,
+  Boxes,
+  ImageIcon,
+  AlignLeft,
+  Infinity as InfinityIcon,
+} from "lucide-react";
 import { ConfirmDialog } from "@/components/b2b/ConfirmDialog";
+import { UNLIMITED_STOCK, isUnlimitedStock } from "@/lib/products";
 
 const AVAILABLE_SIZES = ["S", "M", "L", "XL", "XXL"] as const;
 
@@ -51,12 +66,20 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
+// Shared premium field chrome, consistent across every B2B form.
+const inputBoxClass =
+  "flex h-12 items-center gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]";
+const inputFieldClass =
+  "w-full border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/50";
+const labelClass = "mb-1.5 block text-[13px] font-semibold text-calma-ink";
+
 export default function B2BProducts() {
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<Product | null>(null);
   const [form, setForm] = useState(EMPTY_FORM);
+  const [unlimited, setUnlimited] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
@@ -77,17 +100,20 @@ export default function B2BProducts() {
   const openCreate = () => {
     setEditing(null);
     setForm(EMPTY_FORM);
+    setUnlimited(false);
     setModalOpen(true);
   };
 
   const openEdit = (p: Product) => {
     setEditing(p);
+    const productUnlimited = isUnlimitedStock(p.stock);
+    setUnlimited(productUnlimited);
     setForm({
       name: p.name,
       price: String(p.price),
       category: p.category,
       description: p.description,
-      stock: String(p.stock),
+      stock: productUnlimited ? "100" : String(p.stock),
       image: p.image ?? "",
       sizes: Array.isArray(p.sizes) ? p.sizes : [],
     });
@@ -123,6 +149,7 @@ export default function B2BProducts() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           ...form,
+          stock: unlimited ? String(UNLIMITED_STOCK) : form.stock,
           image: form.image || null,
           sizes: form.sizes.length > 0 ? form.sizes : null,
         }),
@@ -163,156 +190,240 @@ export default function B2BProducts() {
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-calma-border bg-white shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-calma-border text-left text-calma-taupe">
-                <th className="px-4 py-3 font-medium">Produit</th>
-                <th className="px-4 py-3 font-medium">Catégorie</th>
-                <th className="px-4 py-3 font-medium">Prix</th>
-                <th className="px-4 py-3 font-medium">Statut</th>
-                <th className="px-4 py-3 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                    Chargement...
-                  </td>
+      {!loading && products.length === 0 ? (
+        <div className="rounded-2xl border-2 border-dashed border-calma-border bg-white p-10 text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-calma-gold/10">
+            <Package className="h-7 w-7 text-calma-gold" />
+          </div>
+          <h2 className="mb-1.5 font-fraunces text-lg font-normal text-calma-ink">
+            Vous n&apos;avez pas encore de produit
+          </h2>
+          <p className="mx-auto mb-5 max-w-sm text-sm text-calma-taupe">
+            Ajoutez un article à vendre sur la Marketplace Calma Trip. Il sera visible une fois
+            validé par notre équipe.
+          </p>
+          <button
+            onClick={openCreate}
+            className="inline-flex items-center gap-2 rounded-xl bg-calma-gold px-5 py-2.5 font-medium text-[#241A12] transition-shadow hover:shadow-lg"
+          >
+            <Plus className="h-4 w-4" /> Ajouter mon premier produit
+          </button>
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-calma-border bg-white shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-calma-border text-left text-calma-taupe">
+                  <th className="px-4 py-3 font-medium">Produit</th>
+                  <th className="px-4 py-3 font-medium">Catégorie</th>
+                  <th className="px-4 py-3 font-medium">Prix</th>
+                  <th className="px-4 py-3 font-medium">Stock</th>
+                  <th className="px-4 py-3 font-medium">Statut</th>
+                  <th className="px-4 py-3 font-medium text-right">Actions</th>
                 </tr>
-              ) : products.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                    Aucun produit pour l&apos;instant
-                  </td>
-                </tr>
-              ) : (
-                products.map((p) => (
-                  <tr key={p.id} className="border-b border-calma-border hover:bg-calma-sand/50">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-calma-sand">
-                          <Image
-                            src={p.image || "/placeholder-product.png"}
-                            alt={p.name}
-                            fill
-                            className="object-cover"
-                            sizes="40px"
-                          />
-                        </div>
-                        <span className="line-clamp-1 font-medium text-calma-ink">{p.name}</span>
-                      </div>
-                    </td>
-                    <td className="px-4 py-3 capitalize text-calma-taupe">{p.category}</td>
-                    <td className="px-4 py-3 font-medium text-calma-ink">
-                      {p.price.toFixed(2)} TND
-                    </td>
-                    <td className="px-4 py-3">
-                      <StatusBadge status={p.submissionStatus} />
-                      {p.submissionStatus === "rejected" && p.rejectionReason && (
-                        <p className="mt-1 max-w-[200px] text-xs text-red-600">
-                          {p.rejectionReason}
-                        </p>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => requestEdit(p)}
-                          aria-label={`Modifier ${p.name}`}
-                          className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => setDeleteTarget(p)}
-                          aria-label={`Supprimer ${p.name}`}
-                          className="rounded-lg p-2 text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-calma-taupe">
+                      Chargement...
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  products.map((p) => (
+                    <tr key={p.id} className="border-b border-calma-border hover:bg-calma-sand/50">
+                      <td className="px-4 py-3">
+                        <div className="flex items-center gap-3">
+                          <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-calma-sand">
+                            <Image
+                              src={p.image || "/placeholder-product.png"}
+                              alt={p.name}
+                              fill
+                              className="object-cover"
+                              sizes="40px"
+                            />
+                          </div>
+                          <span className="line-clamp-1 font-medium text-calma-ink">{p.name}</span>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3 capitalize text-calma-taupe">{p.category}</td>
+                      <td className="px-4 py-3 font-medium text-calma-ink">
+                        {p.price.toFixed(2)} TND
+                      </td>
+                      <td className="px-4 py-3">
+                        {isUnlimitedStock(p.stock) ? (
+                          <span className="inline-flex items-center gap-1 text-calma-olive">
+                            <InfinityIcon className="h-3.5 w-3.5" /> Illimité
+                          </span>
+                        ) : (
+                          <span
+                            className={
+                              p.stock <= 5
+                                ? "font-semibold text-calma-terracotta"
+                                : "text-calma-ink"
+                            }
+                          >
+                            {p.stock}
+                          </span>
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={p.submissionStatus} />
+                        {p.submissionStatus === "rejected" && p.rejectionReason && (
+                          <p className="mt-1 max-w-[200px] text-xs text-red-600">
+                            {p.rejectionReason}
+                          </p>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => requestEdit(p)}
+                            aria-label={`Modifier ${p.name}`}
+                            className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteTarget(p)}
+                            aria-label={`Supprimer ${p.name}`}
+                            className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-calma-ink">
-                {editing ? "Modifier le produit" : "Nouveau produit"}
-              </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-calma-border bg-white px-6 py-5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-calma-gold/15 text-calma-gold">
+                  <Package className="h-5 w-5" />
+                </div>
+                <h2 className="font-fraunces text-lg font-normal text-calma-ink">
+                  {editing ? "Modifier le produit" : "Nouveau produit"}
+                </h2>
+              </div>
               <button
                 onClick={() => setModalOpen(false)}
                 aria-label="Fermer"
-                className="text-calma-taupe hover:text-calma-ink"
+                className="rounded-lg p-1.5 text-calma-taupe transition-colors hover:bg-calma-sand hover:text-calma-ink"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {error && (
-              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                {error}
-              </div>
-            )}
+            <form onSubmit={handleSave} className="space-y-4 px-6 py-6">
+              {error && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
 
-            <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">Nom</label>
-                <input
-                  required
-                  value={form.name}
-                  onChange={(e) => setForm({ ...form, name: e.target.value })}
-                  className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                />
+                <label className={labelClass}>Nom du produit</label>
+                <div className={inputBoxClass}>
+                  <Tag size={18} className="shrink-0 text-calma-gold" />
+                  <input
+                    required
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="ex. Tapis berbère fait main"
+                    className={inputFieldClass}
+                  />
+                </div>
               </div>
+
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">
-                    Prix (TND)
-                  </label>
-                  <input
-                    required
-                    type="number"
-                    min="0"
-                    step="0.01"
-                    inputMode="decimal"
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                  />
+                  <label className={labelClass}>Prix (TND)</label>
+                  <div className={inputBoxClass}>
+                    <input
+                      required
+                      type="number"
+                      min="0"
+                      step="0.01"
+                      inputMode="decimal"
+                      value={form.price}
+                      onChange={(e) => setForm({ ...form, price: e.target.value })}
+                      className={inputFieldClass}
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">Stock</label>
-                  <input
-                    required
-                    type="number"
-                    value={form.stock}
-                    onChange={(e) => setForm({ ...form, stock: e.target.value })}
-                    className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                  />
+                  <label className={labelClass}>Catégorie</label>
+                  <div className={inputBoxClass}>
+                    <Layers size={18} className="shrink-0 text-calma-gold" />
+                    <input
+                      required
+                      value={form.category}
+                      onChange={(e) => setForm({ ...form, category: e.target.value })}
+                      placeholder="ex. Artisanat"
+                      className={inputFieldClass}
+                    />
+                  </div>
                 </div>
               </div>
+
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">Catégorie</label>
-                <input
-                  required
-                  value={form.category}
-                  onChange={(e) => setForm({ ...form, category: e.target.value })}
-                  className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                />
+                <label className={labelClass}>Stock disponible</label>
+                <div className="mb-2.5 flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => setUnlimited(false)}
+                    className={`flex-1 rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all ${
+                      !unlimited
+                        ? "border-calma-gold bg-calma-gold/10 text-[#8A6B2E]"
+                        : "border-calma-border text-calma-taupe hover:border-calma-gold/40"
+                    }`}
+                  >
+                    Quantité définie
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setUnlimited(true)}
+                    className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all ${
+                      unlimited
+                        ? "border-calma-gold bg-calma-gold/10 text-[#8A6B2E]"
+                        : "border-calma-border text-calma-taupe hover:border-calma-gold/40"
+                    }`}
+                  >
+                    <InfinityIcon size={15} /> Illimité
+                  </button>
+                </div>
+                {!unlimited && (
+                  <div className={inputBoxClass}>
+                    <Boxes size={18} className="shrink-0 text-calma-gold" />
+                    <input
+                      required
+                      type="number"
+                      min="0"
+                      value={form.stock}
+                      onChange={(e) => setForm({ ...form, stock: e.target.value })}
+                      className={inputFieldClass}
+                    />
+                  </div>
+                )}
+                <p className="mt-1.5 text-xs text-calma-taupe">
+                  {unlimited
+                    ? "Le produit restera toujours disponible à l'achat."
+                    : "Le produit sera masqué automatiquement une fois le stock épuisé."}
+                </p>
               </div>
+
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                <label className={labelClass}>
                   Tailles <span className="font-normal text-calma-taupe">(optionnel)</span>
                 </label>
                 <div className="flex flex-wrap gap-2">
@@ -332,34 +443,43 @@ export default function B2BProducts() {
                   ))}
                 </div>
               </div>
+
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                <label className={labelClass}>
                   Image (URL) <span className="font-normal text-calma-taupe">(optionnel)</span>
                 </label>
-                <input
-                  value={form.image}
-                  onChange={(e) => setForm({ ...form, image: e.target.value })}
-                  placeholder="https://..."
-                  className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                />
+                <div className={inputBoxClass}>
+                  <ImageIcon size={18} className="shrink-0 text-calma-gold" />
+                  <input
+                    value={form.image}
+                    onChange={(e) => setForm({ ...form, image: e.target.value })}
+                    placeholder="https://..."
+                    className={inputFieldClass}
+                  />
+                </div>
               </div>
+
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">
-                  Description
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full resize-none rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                />
+                <label className={labelClass}>Description</label>
+                <div className="flex items-start gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 py-3 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]">
+                  <AlignLeft size={18} className="mt-0.5 shrink-0 text-calma-gold" />
+                  <textarea
+                    required
+                    rows={3}
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    className="w-full resize-none border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/50"
+                  />
+                </div>
               </div>
 
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full rounded-xl bg-calma-gold py-3 font-semibold text-[#241A12] transition-shadow hover:shadow-lg disabled:opacity-60"
+                className="w-full rounded-xl py-3.5 font-semibold text-[#241A12] shadow-[0_14px_30px_-12px_rgba(217,164,65,.6)] transition-shadow hover:shadow-[0_18px_36px_-12px_rgba(217,164,65,.75)] disabled:opacity-60"
+                style={{
+                  background: "linear-gradient(135deg,#D9A441 0%,#D9A441 55%,#B8842E 100%)",
+                }}
               >
                 {saving
                   ? "Enregistrement..."

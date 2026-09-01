@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import { useEffect, useState } from "react";
 
 interface OrderItem {
@@ -35,7 +35,7 @@ const STATUS_LABEL: Record<string, string> = {
 const STATUS_STYLE: Record<string, string> = {
   pending: "bg-[#D9A441]/10 text-[#8A6B2E] border-[#D9A441]/20",
   confirmed: "bg-[#F2994A]/10 text-[#9C5236] border-[#F2994A]/20",
-  shipped: "bg-calma-olive/10 text-calma-olive border-calma-olive/20",
+  shipped: "bg-admin-navy/10 text-admin-navy border-admin-navy/20",
   delivered: "bg-[#5E8B63]/10 text-[#5E8B63] border-[#5E8B63]/20",
   cancelled: "bg-red-500/10 text-red-500 border-red-500/20",
 };
@@ -77,7 +77,9 @@ export default function AdminOrdersPage() {
             key={s}
             onClick={() => setFilter(s)}
             className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
-              filter === s ? "bg-calma-ink text-white" : "bg-calma-sand text-calma-taupe hover:bg-calma-sand"
+              filter === s
+                ? "bg-calma-ink text-white"
+                : "bg-calma-sand text-calma-taupe hover:bg-calma-sand"
             }`}
           >
             {s === "all" ? "Toutes" : STATUS_LABEL[s]}
@@ -96,15 +98,21 @@ export default function AdminOrdersPage() {
       ) : (
         <div className="space-y-4">
           {orders.map((order) => (
-            <div key={order.id} className="bg-white rounded-2xl border border-calma-border shadow-sm p-5">
+            <div
+              key={order.id}
+              className="bg-white rounded-2xl border border-calma-border shadow-sm p-5"
+            >
               <div className="flex flex-wrap items-start justify-between gap-3 mb-3">
                 <div>
                   <p className="font-semibold text-calma-ink">
                     #{order.id} — {order.customerName}
                   </p>
-                  <p className="text-xs text-calma-taupe">{order.customerEmail} · {order.customerPhone || "—"}</p>
+                  <p className="text-xs text-calma-taupe">
+                    {order.customerEmail} · {order.customerPhone || "—"}
+                  </p>
                   <p className="text-xs text-calma-taupe mt-0.5">
-                    {order.address}{order.city ? `, ${order.city}` : ""}
+                    {order.address}
+                    {order.city ? `, ${order.city}` : ""}
                   </p>
                 </div>
                 <select
@@ -113,15 +121,22 @@ export default function AdminOrdersPage() {
                   className={`px-3 py-1.5 rounded-lg text-xs font-medium border ${STATUS_STYLE[order.status] || ""}`}
                 >
                   {STATUSES.map((s) => (
-                    <option key={s} value={s}>{STATUS_LABEL[s]}</option>
+                    <option key={s} value={s}>
+                      {STATUS_LABEL[s]}
+                    </option>
                   ))}
                 </select>
               </div>
 
               <div className="space-y-1 border-t border-calma-border pt-3">
                 {order.items.map((item) => (
-                  <div key={item.id} className="flex items-center justify-between text-sm text-calma-taupe">
-                    <span>{item.productName} × {item.quantity}</span>
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between text-sm text-calma-taupe"
+                  >
+                    <span>
+                      {item.productName} × {item.quantity}
+                    </span>
                     <span>{(item.price * item.quantity).toFixed(2)} TND</span>
                   </div>
                 ))}
@@ -129,7 +144,11 @@ export default function AdminOrdersPage() {
 
               <div className="flex items-center justify-between mt-3 pt-3 border-t border-calma-border">
                 <span className="text-xs text-calma-taupe">
-                  {new Date(order.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                  {new Date(order.createdAt).toLocaleDateString("fr-FR", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
                   {" · "}
                   {order.paymentMethod === "cod" ? "Paiement à la livraison" : "Carte bancaire"}
                 </span>
