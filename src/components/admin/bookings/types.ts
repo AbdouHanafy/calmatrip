@@ -1,6 +1,7 @@
 import { CheckCircle, AlertCircle, XCircle } from "lucide-react";
 
 export type BookingStatus = "confirmed" | "pending" | "cancelled" | "completed";
+export type PaymentStatus = "pending" | "paid" | "refunded";
 
 export interface Booking {
   id: number;
@@ -18,6 +19,7 @@ export interface Booking {
   fromLocation: string;
   toLocation: string;
   status: BookingStatus;
+  paymentStatus: PaymentStatus;
   price: string | null;
   passengers: number;
   specialRequests: string | null;
@@ -71,6 +73,33 @@ export const STATUS_CONFIG: Record<
     border: "border-[#F2994A]/20",
     icon: CheckCircle,
     label: "Completed",
+  },
+};
+
+export const PAYMENT_STATUS_CONFIG: Record<
+  PaymentStatus,
+  { bg: string; text: string; border: string; icon: typeof CheckCircle; label: string }
+> = {
+  paid: {
+    bg: "bg-[#5E8B63]/10",
+    text: "text-[#5E8B63]",
+    border: "border-[#5E8B63]/20",
+    icon: CheckCircle,
+    label: "Paid",
+  },
+  pending: {
+    bg: "bg-[#D9A441]/10",
+    text: "text-[#8A6B2E]",
+    border: "border-[#D9A441]/20",
+    icon: AlertCircle,
+    label: "Payment pending",
+  },
+  refunded: {
+    bg: "bg-[#726C64]/10",
+    text: "text-[#726C64]",
+    border: "border-[#726C64]/20",
+    icon: XCircle,
+    label: "Refunded",
   },
 };
 

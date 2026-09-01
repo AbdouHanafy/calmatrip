@@ -84,10 +84,11 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         />
       )}
 
-      {/* Sidebar — deep olive, the admin space's identity color */}
+      {/* Sidebar — deep navy + gold, deliberately distinct from the client
+          space's terracotta identity so staff never confuse the two contexts */}
       <aside
         className={`
-          fixed lg:relative z-40 w-72 bg-gradient-to-b from-calma-olive-deeper via-calma-olive-deep to-calma-olive-deeper text-calma-cream flex flex-col shadow-2xl
+          fixed lg:relative z-40 w-72 bg-gradient-to-b from-admin-navy-deeper via-admin-navy-deep to-admin-navy-deeper text-calma-cream flex flex-col shadow-2xl
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
@@ -96,10 +97,10 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         <div className="p-6 border-b border-white/10">
           <div className="flex items-center space-x-3 mb-2">
             <div className="relative">
-              <div className="w-12 h-12 rounded-xl bg-calma-terracotta flex items-center justify-center shadow-lg">
-                <LayoutDashboard className="w-6 h-6 text-white" />
+              <div className="w-12 h-12 rounded-xl bg-admin-navy flex items-center justify-center shadow-lg border border-admin-gold/30">
+                <LayoutDashboard className="w-6 h-6 text-admin-gold" />
               </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-calma-gold rounded-full animate-pulse" />
+              <div className="absolute -top-1 -right-1 w-3 h-3 bg-admin-gold rounded-full animate-pulse" />
             </div>
             <div>
               <h2 className="font-fraunces text-xl font-normal text-calma-cream">Admin</h2>
@@ -122,20 +123,20 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
                   onClick={() => setSidebarOpen(false)}
                   className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${
                     isActive(item.path, item.exact)
-                      ? "bg-calma-terracotta/[.18] text-calma-cream border border-calma-terracotta/25"
+                      ? "bg-admin-gold/[.16] text-calma-cream border border-admin-gold/30"
                       : "text-calma-cream/70 hover:bg-white/5 hover:text-calma-cream"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <item.icon
                       className={`w-5 h-5 transition-colors ${
-                        isActive(item.path, item.exact) ? "text-calma-terracotta-soft" : ""
+                        isActive(item.path, item.exact) ? "text-admin-gold-soft" : ""
                       }`}
                     />
                     <span className="font-medium text-sm">{item.label}</span>
                   </div>
                   {isActive(item.path, item.exact) && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-calma-terracotta-soft" />
+                    <div className="w-1.5 h-1.5 rounded-full bg-admin-gold-soft" />
                   )}
                 </Link>
               ))}
@@ -156,7 +157,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
               </Link>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-calma-cream/70 hover:bg-red-500/10 hover:text-red-300 transition-all duration-300"
+                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-calma-cream/70 hover:bg-admin-rose/10 hover:text-red-300 transition-all duration-300"
               >
                 <LogOut className="w-5 h-5" />
                 <span className="font-medium text-sm">Sign out</span>
@@ -207,7 +208,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
                       className="w-8 h-8 rounded-xl object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-xl bg-calma-olive flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-xl bg-admin-navy flex items-center justify-center">
                       <span className="text-calma-cream text-sm font-bold">{userInitials}</span>
                     </div>
                   )}

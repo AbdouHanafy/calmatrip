@@ -1,5 +1,5 @@
-import { AuthPage } from "@/components/auth/AuthPage";
 import type { Metadata } from "next";
+import PartnerOnboardingView from "@/views/b2b/PartnerOnboarding";
 
 export const metadata: Metadata = {
   title: "Devenir partenaire — Calma Trip",
@@ -8,5 +8,5 @@ export const metadata: Metadata = {
 };
 
 export default function PartnerRegisterPage() {
-  return <AuthPage mode="register" audience="partner" callbackUrl="/b2b" />;
+  return <PartnerOnboardingView />;
 }

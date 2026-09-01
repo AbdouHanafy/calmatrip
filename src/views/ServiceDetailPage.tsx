@@ -7,6 +7,7 @@ import { ArrowLeft, Check, Clock, MapPin } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
+import { Breadcrumbs } from "@/components/calma/Breadcrumbs";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { BookingPromptModal } from "@/components/services/BookingPromptModal";
 import { mapService, type DBService } from "@/lib/services/mapService";
@@ -106,6 +107,13 @@ function ServiceDetailContent() {
         </section>
 
         <section className="mx-auto max-w-5xl px-6 py-14 lg:px-0">
+          <Breadcrumbs
+            items={[
+              { label: "Accueil", href: "/" },
+              { label: "Services", href: "/services" },
+              { label: service.title },
+            ]}
+          />
           <Link
             href="/services"
             className="mb-8 inline-flex items-center gap-1.5 text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"

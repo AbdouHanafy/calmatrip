@@ -1,127 +1,180 @@
 import Link from "next/link";
 import { signOut } from "next-auth/react";
-import { Calendar, Plus, LayoutDashboard, LogOut, ChevronRight, Menu, X } from "lucide-react";
+import { Calendar, Plus, CreditCard, Star, User, ArrowLeft, LogOut } from "lucide-react";
+import { useCalmaLang } from "@/lib/calma/i18n";
 
-type TabKey = "bookings" | "new";
-
-const navItems = [
-  { key: "bookings" as const, label: "Mes réservations", icon: Calendar },
-  { key: "new" as const, label: "Nouvelle réservation", icon: Plus },
-];
+export type TabKey = "bookings" | "new" | "payments" | "reviews" | "profile";
 
 interface DashboardSidebarProps {
-  sidebarOpen: boolean;
-  onToggleSidebar: () => void;
-  onCloseSidebar: () => void;
   activeTab: TabKey;
   onTabChange: (tab: TabKey) => void;
+  /** Real count of upcoming (non-cancelled) trips — the badge is omitted entirely when 0, never shown as "0". */
+  upcomingCount?: number;
+  /** Real count of confirmed bookings still awaiting payment. */
+  actionRequiredCount?: number;
+  /** Real count of past bookings eligible for a review that hasn't been left yet. */
+  toReviewCount?: number;
+  userName: string;
+  userInitials: string;
 }
 
 export function DashboardSidebar({
-  sidebarOpen,
-  onToggleSidebar,
-  onCloseSidebar,
   activeTab,
   onTabChange,
+  upcomingCount = 0,
+  actionRequiredCount = 0,
+  toReviewCount = 0,
+  userName,
+  userInitials,
 }: DashboardSidebarProps) {
+  const { t } = useCalmaLang();
+  const navItems = [
+    {
+      key: "bookings" as const,
+      label: t.dash.navBookings,
+      icon: Calendar,
+      caption:
+        upcomingCount > 0
+          ? `${upcomingCount} ${upcomingCount > 1 ? t.dash.upcomingExpPlural : t.dash.upcomingExpSingular}`
+          : null,
+    },
+    { key: "new" as const, label: t.dash.navNew, icon: Plus, caption: null },
+    {
+      key: "payments" as const,
+      label: t.dash.navPayments,
+      icon: CreditCard,
+      caption:
+        actionRequiredCount > 0
+          ? `${actionRequiredCount} ${actionRequiredCount > 1 ? t.dash.actionRequiredPlural : t.dash.actionRequiredSingular}`
+          : null,
+    },
+    {
+      key: "reviews" as const,
+      label: t.dash.navReviews,
+      icon: Star,
+      caption:
+        toReviewCount > 0
+          ? `${toReviewCount} ${toReviewCount > 1 ? t.dash.toReviewPlural : t.dash.toReviewSingular}`
+          : null,
+    },
+    { key: "profile" as const, label: t.dash.navProfile, icon: User, caption: null },
+  ];
+
   return (
     <>
-      {/* Mobile menu button */}
-      <button
-        onClick={onToggleSidebar}
-        aria-label={sidebarOpen ? "Fermer le menu" : "Ouvrir le menu"}
-        aria-expanded={sidebarOpen}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl shadow-lg border border-calma-border"
-      >
-        {sidebarOpen ? (
-          <X className="w-5 h-5 text-calma-terracotta" />
-        ) : (
-          <Menu className="w-5 h-5 text-calma-taupe" />
-        )}
-      </button>
-
-      {sidebarOpen && (
-        <div className="fixed inset-0 bg-black/50 z-40 lg:hidden" onClick={onCloseSidebar} />
-      )}
-
-      {/* Sidebar — deep terracotta, the traveler space's identity color */}
-      <aside
-        className={`
-          fixed lg:relative z-40 w-72 bg-gradient-to-b from-[#4A2818] via-[#5C3620] to-[#4A2818] text-calma-cream flex flex-col shadow-2xl
-          transition-transform duration-300 ease-in-out
-          ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
-        `}
-      >
-        <div className="p-6 border-b border-white/10">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="w-12 h-12 rounded-xl bg-calma-terracotta flex items-center justify-center shadow-lg">
-              <LayoutDashboard className="w-6 h-6 text-white" />
+      {/* Desktop — a compact, self-contained card that sticks near the top of the
+          viewport as you scroll; it never stretches to match the main column's
+          height (that's what produced the large dead space below the nav items). */}
+      <aside className="hidden lg:block lg:w-72 lg:flex-shrink-0 lg:p-4">
+        <div className="rounded-3xl border border-calma-border bg-calma-cream p-5 shadow-sm lg:sticky lg:top-4">
+          <div className="flex items-center gap-3.5 pb-5">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-lg font-bold text-white">
+              {userInitials}
             </div>
-            <div>
-              <h2 className="font-fraunces text-xl font-normal text-calma-cream">Mon espace</h2>
-              <p className="text-xs text-calma-cream/50">Calma Trip</p>
-            </div>
-          </div>
-        </div>
-
-        <nav className="flex-1 p-4">
-          <div className="mb-6">
-            <p className="text-xs uppercase tracking-wider text-calma-cream/40 mb-3 px-4">Menu</p>
-            <div className="space-y-1.5">
-              {navItems.map((item) => (
-                <button
-                  key={item.key}
-                  onClick={() => {
-                    onTabChange(item.key);
-                    onCloseSidebar();
-                  }}
-                  className={`w-full group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${
-                    activeTab === item.key
-                      ? "bg-calma-terracotta/[.18] text-calma-cream border border-calma-terracotta/25"
-                      : "text-calma-cream/70 hover:bg-white/5 hover:text-calma-cream"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <item.icon
-                      className={`w-5 h-5 transition-colors ${activeTab === item.key ? "text-calma-terracotta-soft" : ""}`}
-                    />
-                    <span className="font-medium text-sm">{item.label}</span>
-                  </div>
-                  {activeTab === item.key && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-calma-terracotta-soft" />
-                  )}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div>
-            <p className="text-xs uppercase tracking-wider text-calma-cream/40 mb-3 px-4">
-              Navigation
-            </p>
-            <div className="space-y-1.5">
-              <Link
-                href="/"
-                className="flex items-center gap-3 px-4 py-3 rounded-xl text-calma-cream/70 hover:bg-white/5 hover:text-calma-cream transition-all duration-300"
-              >
-                <ChevronRight className="w-5 h-5 rotate-180" />
-                <span className="font-medium text-sm">Retour au site</span>
-              </Link>
+            <div className="min-w-0">
+              <p className="truncate text-base font-semibold text-calma-ink">{userName}</p>
               <button
                 onClick={() => signOut({ callbackUrl: "/" })}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-calma-cream/70 hover:bg-red-500/10 hover:text-red-300 transition-all duration-300"
+                className="text-sm font-medium text-calma-taupe underline decoration-calma-taupe/40 underline-offset-2 transition-colors hover:text-calma-terracotta"
               >
-                <LogOut className="w-5 h-5" />
-                <span className="font-medium text-sm">Se déconnecter</span>
+                {t.dash.signOut}
               </button>
             </div>
           </div>
-        </nav>
 
-        <div className="p-4 border-t border-white/10">
-          <p className="text-xs text-center text-calma-cream/40">© 2026 Calma Trip</p>
+          <div className="h-px bg-calma-border" />
+
+          <nav className="space-y-1 pt-3">
+            {navItems.map((item) => {
+              const highlighted = item.caption !== null || activeTab === item.key;
+              return (
+                <button
+                  key={item.key}
+                  onClick={() => onTabChange(item.key)}
+                  className="flex w-full items-start gap-3 rounded-xl px-2 py-3 text-left transition-colors hover:bg-calma-olive/[.05]"
+                >
+                  <item.icon
+                    className={`mt-0.5 h-5 w-5 flex-shrink-0 ${
+                      highlighted ? "text-calma-terracotta" : "text-calma-taupe"
+                    }`}
+                    strokeWidth={1.6}
+                  />
+                  <span>
+                    <span
+                      className={`block text-[15px] font-semibold ${
+                        highlighted ? "text-calma-terracotta" : "text-calma-ink"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+                    {item.caption && (
+                      <span className="block text-xs font-medium text-calma-terracotta/80">
+                        {item.caption}
+                      </span>
+                    )}
+                  </span>
+                </button>
+              );
+            })}
+          </nav>
+
+          <div className="my-2 h-px bg-calma-border" />
+
+          <Link
+            href="/"
+            className="flex items-center gap-3 rounded-xl px-2 py-3 text-sm font-medium text-calma-ink/60 no-underline transition-colors hover:bg-calma-olive/[.05] hover:text-calma-ink"
+          >
+            <ArrowLeft className="h-5 w-5" strokeWidth={1.6} />
+            {t.dash.backToSite}
+          </Link>
         </div>
       </aside>
+
+      {/* Mobile — a compact, horizontally scrollable icon row, never a panel that covers the page */}
+      <nav className="calma-scrollbar-hide sticky top-0 z-30 flex items-center gap-1 overflow-x-auto border-b border-calma-border bg-calma-cream px-3 py-2 lg:hidden">
+        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-xs font-bold text-white">
+          {userInitials}
+        </div>
+        <div className="mx-1 h-6 w-px flex-shrink-0 bg-calma-border" />
+        {navItems.map((item) => (
+          <button
+            key={item.key}
+            onClick={() => onTabChange(item.key)}
+            aria-label={item.label}
+            aria-pressed={activeTab === item.key}
+            className={`relative flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full transition-colors ${
+              activeTab === item.key
+                ? "bg-calma-terracotta/10 text-calma-terracotta"
+                : "text-calma-ink/60 hover:bg-calma-olive/[.06]"
+            }`}
+          >
+            <item.icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
+            {item.caption && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-calma-terracotta text-[9px] font-bold text-white">
+                {item.key === "bookings"
+                  ? upcomingCount
+                  : item.key === "payments"
+                    ? actionRequiredCount
+                    : toReviewCount}
+              </span>
+            )}
+          </button>
+        ))}
+        <Link
+          href="/"
+          aria-label={t.dash.backToSite}
+          className="ml-auto flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-calma-ink/60 no-underline transition-colors hover:bg-calma-olive/[.06]"
+        >
+          <ArrowLeft className="h-[18px] w-[18px]" strokeWidth={1.75} />
+        </Link>
+        <button
+          onClick={() => signOut({ callbackUrl: "/" })}
+          aria-label={t.dash.signOut}
+          className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full text-calma-ink/40 transition-colors hover:bg-red-50 hover:text-red-500"
+        >
+          <LogOut className="h-[18px] w-[18px]" strokeWidth={1.75} />
+        </button>
+      </nav>
     </>
   );
 }

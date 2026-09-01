@@ -18,6 +18,16 @@ export async function GET() {
       b2bStatus: true,
       commissionRate: true,
       createdAt: true,
+      partnerProfile: {
+        select: {
+          status: true,
+          organizationName: true,
+          countryCode: true,
+          city: true,
+          submittedAt: true,
+          rejectionReason: true,
+        },
+      },
     },
     orderBy: { createdAt: "desc" },
   });

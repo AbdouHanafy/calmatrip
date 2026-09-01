@@ -47,6 +47,9 @@ export async function PATCH(req: Request, { params }: { params: Promise<{ id: st
     if (json.budget !== undefined) data.budget = Number(json.budget);
     if (json.duration !== undefined) data.duration = json.duration;
     if (json.openingHours !== undefined) data.openingHours = json.openingHours;
+    if (json.capacity !== undefined) {
+      data.capacity = json.capacity !== null && json.capacity !== "" ? Number(json.capacity) : null;
+    }
     if (json.image !== undefined) data.image = json.image;
 
     const listing = await updateExploreListing(id, data);

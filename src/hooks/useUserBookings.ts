@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useSession } from "next-auth/react";
 import type { Booking, ServiceInfo } from "@/components/dashboard/types";
+import type { DBService } from "@/lib/services/mapService";
 
 interface RawBooking {
   id: number | string;
@@ -10,7 +11,9 @@ interface RawBooking {
   fromLocation: string | null;
   toLocation: string | null;
   status: string;
+  paymentStatus: string | null;
   price: string | number | null;
+  passengers: number | null;
   tripType: "one-way" | "round-trip" | null;
   returnDate: string | null;
   returnTime: string | null;
@@ -28,7 +31,11 @@ function mapBooking(b: RawBooking): Booking {
     from: b.fromLocation || "—",
     to: b.toLocation || "—",
     status: b.status.toLowerCase() as Booking["status"],
-    price: b.price ? `${b.price} TND` : "À confirmer",
+    // service.price is already a fully formatted string (e.g. "From 80 TND") —
+    // it's snapshotted as-is at booking time, never append a currency suffix here.
+    price: b.price ? String(b.price) : "À confirmer",
+    passengers: b.passengers ?? 1,
+    paymentStatus: (b.paymentStatus?.toLowerCase() as Booking["paymentStatus"]) || "pending",
     tripType: b.tripType || "one-way",
     returnDate: b.returnDate ? b.returnDate.split("T")[0] : null,
     returnTime: b.returnTime || null,
@@ -41,7 +48,9 @@ function mapBooking(b: RawBooking): Booking {
 export function useUserBookings() {
   const { data: session } = useSession();
   const [bookings, setBookings] = useState<Booking[]>([]);
-  const [services, setServices] = useState<ServiceInfo[]>([]);
+  // Full catalog rows — reused both for the booked service's photo (serviceDetailsFor)
+  // and for real "you might also like" recommendations, so we only fetch this once.
+  const [services, setServices] = useState<DBService[]>([]);
 
   const fetchServices = useCallback(async () => {
     try {
@@ -73,7 +82,18 @@ export function useUserBookings() {
     fetchServices();
   }, [fetchServices]);
 
-  const serviceDetailsFor = (title: string) => services.find((s) => s.title === title) ?? null;
+  const serviceDetailsFor = (title: string): ServiceInfo | null => {
+    const s = services.find((s) => s.title === title);
+    if (!s) return null;
+    return {
+      id: s.id,
+      title: s.title,
+      description: s.description,
+      image: s.image ?? null,
+      category: s.category ?? null,
+      duration: s.duration ?? null,
+    };
+  };
 
   const handleCancelBooking = async (id: string) => {
     try {
@@ -117,6 +137,7 @@ export function useUserBookings() {
   return {
     session,
     bookings,
+    services,
     serviceDetailsFor,
     handleCancelBooking,
     submitReview,

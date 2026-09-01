@@ -1,3 +1,5 @@
+export type PaymentStatus = "pending" | "paid" | "refunded";
+
 export type Booking = {
   id: string;
   service: string;
@@ -6,7 +8,9 @@ export type Booking = {
   from: string;
   to: string;
   status: "confirmed" | "pending" | "cancelled";
+  paymentStatus: PaymentStatus;
   price: string;
+  passengers: number;
   driver?: string;
   vehicle?: string;
   tripType: "one-way" | "round-trip";

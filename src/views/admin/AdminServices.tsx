@@ -1,42 +1,22 @@
 "use client";
 import { useState } from "react";
-import { Plus, X, AlertCircle, Loader2 } from "lucide-react";
+import { Loader2, Package, Star } from "lucide-react";
 import { useServices } from "@/hooks/admin/useServices";
 import { ServiceStatsCards } from "@/components/admin/services/ServiceStatsCards";
 import { ServiceFilters } from "@/components/admin/services/ServiceFilters";
-import { ServiceTable } from "@/components/admin/services/ServiceTable";
-import { ServiceFormModal } from "@/components/admin/services/ServiceFormModal";
-import { DeleteServiceModal } from "@/components/admin/services/DeleteServiceModal";
 import {
-  emptyServiceForm,
-  parseFeatures,
-  parseImages,
-  type ImageEntry,
-  type Service,
-  type ServiceFormData,
-} from "@/components/admin/services/types";
+  CollectionList,
+  type CollectionColumn,
+} from "@/components/admin/collection/CollectionList";
+import { DeleteConfirmModal } from "@/components/admin/collection/DeleteConfirmModal";
+import type { Service } from "@/components/admin/services/types";
 
 export default function AdminServices() {
-  const {
-    services,
-    loading,
-    saving,
-    error,
-    setError,
-    saveService,
-    toggleServiceStatus,
-    togglePopular,
-    deleteService,
-  } = useServices();
-
-  const [showAddModal, setShowAddModal] = useState(false);
-  const [editingService, setEditingService] = useState<Service | null>(null);
-  const [formData, setFormData] = useState<ServiceFormData>(emptyServiceForm);
-  const [imageEntries, setImageEntries] = useState<ImageEntry[]>([]);
+  const { services, loading, saving, deleteService } = useServices();
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
-  const [showDeleteConfirm, setShowDeleteConfirm] = useState<number | null>(null);
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<Service | null>(null);
 
   const filteredServices = services.filter((service) => {
     const matchesSearch =
@@ -45,52 +25,6 @@ export default function AdminServices() {
     const matchesCategory = selectedCategory === "all" || service.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
-
-  const openAddModal = () => {
-    setFormData(emptyServiceForm);
-    setImageEntries([]);
-    setEditingService(null);
-    setShowAddModal(true);
-  };
-
-  const openEditModal = (service: Service) => {
-    setFormData({
-      title: service.title,
-      subtitle: service.subtitle ?? "",
-      description: service.description,
-      price: service.price,
-      category: service.category ?? "Transport",
-      duration: service.duration ?? "",
-      active: service.active,
-      popular: service.popular,
-      features: parseFeatures(service.features),
-    });
-    const existing = parseImages(service.image).map((url) => ({
-      id: `existing-${url}`,
-      url,
-    }));
-    setImageEntries(existing);
-    setEditingService(service);
-    setShowAddModal(true);
-  };
-
-  const closeModal = () => {
-    setShowAddModal(false);
-    setEditingService(null);
-    setFormData(emptyServiceForm);
-    setImageEntries([]);
-    setError(null);
-  };
-
-  const handleSave = async () => {
-    const result = await saveService(
-      formData,
-      imageEntries,
-      setImageEntries,
-      editingService?.id ?? null,
-    );
-    if (result.ok) closeModal();
-  };
 
   const exportCsv = () => {
     const headers = ["ID", "Title", "Category", "Price", "Duration", "Active", "Popular"];
@@ -115,45 +49,62 @@ export default function AdminServices() {
     URL.revokeObjectURL(url);
   };
 
+  const columns: CollectionColumn<Service>[] = [
+    {
+      key: "title",
+      label: "Service",
+      render: (s) => (
+        <div className="flex items-center gap-2">
+          <span className="font-semibold text-calma-ink">{s.title}</span>
+          {s.popular && <Star className="h-3.5 w-3.5 fill-admin-gold text-admin-gold" />}
+        </div>
+      ),
+    },
+    {
+      key: "category",
+      label: "Category",
+      render: (s) => <span className="text-sm text-calma-taupe">{s.category ?? "—"}</span>,
+    },
+    {
+      key: "price",
+      label: "Price",
+      render: (s) => <span className="font-semibold text-admin-gold">{s.price}</span>,
+    },
+    {
+      key: "duration",
+      label: "Duration",
+      render: (s) => <span className="text-sm text-calma-taupe">{s.duration ?? "—"}</span>,
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (s) => (
+        <span
+          className={`inline-flex rounded-full border px-2.5 py-1 text-xs font-semibold ${
+            s.active
+              ? "border-calma-success/20 bg-calma-success/10 text-calma-success"
+              : "border-calma-taupe/20 bg-calma-taupe/10 text-calma-taupe"
+          }`}
+        >
+          {s.active ? "Active" : "Inactive"}
+        </span>
+      ),
+    },
+  ];
+
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#F2994A]" />
+      <div className="flex min-h-[400px] items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-admin-gold" />
       </div>
     );
   }
 
   return (
     <div className="space-y-6">
-      {error && (
-        <div className="flex items-center gap-3 p-4 bg-red-50 border border-red-200 rounded-xl text-red-700">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <p className="text-sm flex-1">{error}</p>
-          <button
-            onClick={() => setError(null)}
-            aria-label="Fermer"
-            className="p-1 hover:bg-red-100 rounded-lg"
-          >
-            <X className="w-4 h-4" />
-          </button>
-        </div>
-      )}
-
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F2994A] via-[#5E8B63] to-[#D9A441] bg-clip-text text-transparent">
-            Manage Services
-          </h1>
-          <p className="text-calma-taupe mt-1">Add, modify or manage your services</p>
-        </div>
-        <button
-          onClick={openAddModal}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 bg-gradient-to-r from-[#F2994A] to-[#5E8B63] text-white rounded-xl font-semibold hover:shadow-lg hover:shadow-[#F2994A]/30 transform hover:scale-105 transition-all duration-300"
-        >
-          <Plus className="w-5 h-5" />
-          New Service
-        </button>
+      <div>
+        <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Services</h1>
+        <p className="mt-1 text-calma-taupe">Manage the public service catalog</p>
       </div>
 
       <ServiceStatsCards services={services} />
@@ -166,45 +117,30 @@ export default function AdminServices() {
         onExportCsv={exportCsv}
       />
 
-      <ServiceTable
-        services={services}
-        filteredServices={filteredServices}
-        onEdit={openEditModal}
+      <CollectionList
+        items={filteredServices}
+        getId={(s) => s.id}
+        columns={columns}
+        getRowHref={(s) => `/admin/services/${s.id}`}
+        createHref="/admin/services/new"
+        createLabel="New service"
         onDeleteRequest={setShowDeleteConfirm}
-        onToggleStatus={toggleServiceStatus}
-        onTogglePopular={togglePopular}
+        emptyIcon={Package}
+        emptyTitle="No services found"
+        emptySub="Try changing your search or filters."
       />
 
-      {showAddModal && (
-        <ServiceFormModal
-          editingService={editingService}
-          formData={formData}
-          onFormDataChange={setFormData}
-          imageEntries={imageEntries}
-          onImageEntriesChange={setImageEntries}
-          saving={saving}
-          error={error}
-          onClose={closeModal}
-          onSubmit={handleSave}
-        />
-      )}
-
-      {showDeleteConfirm !== null && (
-        <DeleteServiceModal
+      {showDeleteConfirm && (
+        <DeleteConfirmModal
+          itemLabel={showDeleteConfirm.title}
+          isDeleting={saving}
           onCancel={() => setShowDeleteConfirm(null)}
           onConfirm={() => {
-            deleteService(showDeleteConfirm);
+            deleteService(showDeleteConfirm.id);
             setShowDeleteConfirm(null);
           }}
         />
       )}
-
-      <style>{`
-        @keyframes fade-in { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes scale-up { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        .animate-fade-in { animation: fade-in 0.3s ease-out forwards; }
-        .animate-scale-up { animation: scale-up 0.3s ease-out forwards; }
-      `}</style>
     </div>
   );
 }

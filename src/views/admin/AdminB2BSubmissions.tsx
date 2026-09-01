@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { Check, X, Clock, Package, Compass, MapPin } from "lucide-react";
+import {
+  CollectionList,
+  type CollectionColumn,
+} from "@/components/admin/collection/CollectionList";
 
 interface OwnedItem {
   id: number;
@@ -29,24 +33,30 @@ interface ExploreListingItem extends OwnedItem {
   price: string | null;
 }
 
+type SubmissionItem = ProductItem | ServiceItem | ExploreListingItem;
+
+function itemLabel(item: SubmissionItem) {
+  return "name" in item ? item.name : item.title;
+}
+
 function StatusBadge({ status }: { status: string }) {
   if (status === "approved") {
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-calma-success/10 px-2.5 py-1 text-xs font-semibold text-calma-success">
-        <Check size={11} /> Approuvé
+        <Check size={11} /> Approved
       </span>
     );
   }
   if (status === "rejected") {
     return (
       <span className="inline-flex items-center gap-1 rounded-full bg-red-50 px-2.5 py-1 text-xs font-semibold text-red-600">
-        <X size={11} /> Refusé
+        <X size={11} /> Rejected
       </span>
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-calma-gold/10 px-2.5 py-1 text-xs font-semibold text-[#8A6B2E]">
-      <Clock size={11} /> En attente
+    <span className="inline-flex items-center gap-1 rounded-full bg-admin-gold/10 px-2.5 py-1 text-xs font-semibold text-[#8A6B2E]">
+      <Clock size={11} /> Pending
     </span>
   );
 }
@@ -66,6 +76,9 @@ export default function AdminB2BSubmissions() {
   const [tab, setTab] = useState<Tab>("products");
   const [filter, setFilter] = useState<"all" | "pending" | "approved" | "rejected">("pending");
   const [loading, setLoading] = useState(true);
+  const [rejectTarget, setRejectTarget] = useState<SubmissionItem | null>(null);
+  const [reason, setReason] = useState("");
+  const [rejecting, setRejecting] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -86,13 +99,17 @@ export default function AdminB2BSubmissions() {
     load();
   };
 
-  const reject = async (kind: Tab, id: number) => {
-    const reason = window.prompt("Raison du refus (optionnel) :") ?? "";
-    await fetch(`/api/admin/${API_SEGMENT[kind]}/${id}/reject`, {
+  const confirmReject = async () => {
+    if (!rejectTarget) return;
+    setRejecting(true);
+    await fetch(`/api/admin/${API_SEGMENT[tab]}/${rejectTarget.id}/reject`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ reason }),
     });
+    setRejecting(false);
+    setRejectTarget(null);
+    setReason("");
     load();
   };
 
@@ -100,39 +117,96 @@ export default function AdminB2BSubmissions() {
   const filtered = items.filter((i) => filter === "all" || i.submissionStatus === filter);
   const pendingCount = items.filter((i) => i.submissionStatus === "pending").length;
 
+  const columns: CollectionColumn<SubmissionItem>[] = [
+    {
+      key: "item",
+      label: "Item",
+      render: (item) => (
+        <div>
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="font-semibold text-calma-ink">{itemLabel(item)}</span>
+            {item.category && (
+              <span className="rounded-full bg-admin-navy/[.08] px-2 py-0.5 text-xs text-admin-navy">
+                {item.category}
+              </span>
+            )}
+          </div>
+          {item.submissionStatus === "rejected" && item.rejectionReason && (
+            <p className="mt-1 text-xs text-red-600">Reason: {item.rejectionReason}</p>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "owner",
+      label: "Partner",
+      render: (item) => (
+        <div className="text-xs text-calma-taupe">
+          <p>{item.owner?.name ?? "Unknown"}</p>
+          <p>{item.owner?.email ?? ""}</p>
+        </div>
+      ),
+    },
+    {
+      key: "status",
+      label: "Status",
+      render: (item) =>
+        item.submissionStatus === "pending" ? (
+          <div className="flex items-center gap-2">
+            <StatusBadge status={item.submissionStatus} />
+            <button
+              onClick={() => approve(tab, item.id)}
+              className="rounded-lg bg-calma-success px-2.5 py-1 text-xs font-medium text-white transition-colors hover:bg-calma-success/90"
+            >
+              Approve
+            </button>
+            <button
+              onClick={() => {
+                setRejectTarget(item);
+                setReason("");
+              }}
+              className="rounded-lg bg-red-50 px-2.5 py-1 text-xs font-medium text-red-600 transition-colors hover:bg-red-100"
+            >
+              Reject
+            </button>
+          </div>
+        ) : (
+          <StatusBadge status={item.submissionStatus} />
+        ),
+    },
+  ];
+
   return (
-    <div className="max-w-5xl">
-      <div className="mb-8">
-        <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Soumissions B2B</h1>
-        <p className="mt-1 text-sm text-calma-taupe">
+    <div className="space-y-6">
+      <div>
+        <h1 className="font-fraunces text-2xl font-normal text-calma-ink">B2B Submissions</h1>
+        <p className="mt-1 text-calma-taupe">
           {pendingCount > 0 ? (
-            <span className="font-medium text-[#8A6B2E]">
-              {pendingCount} en attente de validation
-            </span>
+            <span className="font-medium text-[#8A6B2E]">{pendingCount} awaiting review</span>
           ) : (
-            "Rien à valider pour le moment"
+            "Nothing to review right now"
           )}
         </p>
       </div>
 
-      <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div className="flex gap-2">
           <button
             onClick={() => setTab("products")}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
               tab === "products"
-                ? "bg-calma-olive text-white"
+                ? "bg-admin-navy text-white"
                 : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
             }`}
           >
-            <Package size={14} /> Produits
+            <Package size={14} /> Products
             <span className="ml-1 text-xs opacity-70">{products.length}</span>
           </button>
           <button
             onClick={() => setTab("services")}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
               tab === "services"
-                ? "bg-calma-olive text-white"
+                ? "bg-admin-navy text-white"
                 : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
             }`}
           >
@@ -143,7 +217,7 @@ export default function AdminB2BSubmissions() {
             onClick={() => setTab("explore")}
             className={`flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium transition-colors ${
               tab === "explore"
-                ? "bg-calma-olive text-white"
+                ? "bg-admin-navy text-white"
                 : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
             }`}
           >
@@ -159,88 +233,69 @@ export default function AdminB2BSubmissions() {
               onClick={() => setFilter(f)}
               className={`rounded-xl px-3 py-1.5 text-xs font-medium transition-colors ${
                 filter === f
-                  ? "bg-calma-terracotta text-white"
-                  : "bg-white text-calma-taupe border border-calma-border hover:border-calma-terracotta/40"
+                  ? "bg-admin-gold text-white"
+                  : "border border-calma-border bg-white text-calma-taupe hover:border-admin-gold/40"
               }`}
             >
               {f === "all"
-                ? "Tous"
+                ? "All"
                 : f === "pending"
-                  ? "En attente"
+                  ? "Pending"
                   : f === "approved"
-                    ? "Approuvés"
-                    : "Refusés"}
+                    ? "Approved"
+                    : "Rejected"}
             </button>
           ))}
         </div>
       </div>
 
-      {loading ? (
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 animate-pulse rounded-2xl bg-calma-sand" />
-          ))}
-        </div>
-      ) : filtered.length === 0 ? (
-        <div className="py-16 text-center text-calma-taupe">
-          {tab === "products" ? (
-            <Package size={40} className="mx-auto mb-3 opacity-30" />
-          ) : tab === "services" ? (
-            <Compass size={40} className="mx-auto mb-3 opacity-30" />
-          ) : (
-            <MapPin size={40} className="mx-auto mb-3 opacity-30" />
-          )}
-          <p>Rien dans cette catégorie</p>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {filtered.map((item) => (
-            <div
-              key={item.id}
-              className={`flex flex-col gap-4 rounded-2xl border bg-white p-5 sm:flex-row sm:items-center sm:justify-between ${
-                item.submissionStatus === "pending"
-                  ? "border-calma-gold/30 bg-calma-gold/[.03]"
-                  : "border-calma-border"
-              }`}
-            >
-              <div className="min-w-0 flex-1">
-                <div className="mb-1.5 flex flex-wrap items-center gap-2.5">
-                  <span className="font-semibold text-calma-ink">
-                    {"name" in item ? item.name : item.title}
-                  </span>
-                  <StatusBadge status={item.submissionStatus} />
-                  {item.category && (
-                    <span className="rounded-full bg-calma-olive/[.08] px-2.5 py-1 text-xs text-calma-olive">
-                      {item.category}
-                    </span>
-                  )}
-                </div>
-                <p className="text-xs text-calma-taupe">
-                  {item.owner?.name ?? "Inconnu"} · {item.owner?.email ?? ""}
-                </p>
-                {item.submissionStatus === "rejected" && item.rejectionReason && (
-                  <p className="mt-1.5 text-xs text-red-600">Raison : {item.rejectionReason}</p>
-                )}
-              </div>
+      <CollectionList
+        items={filtered}
+        getId={(i) => i.id}
+        columns={columns}
+        loading={loading}
+        emptyIcon={tab === "products" ? Package : tab === "services" ? Compass : MapPin}
+        emptyTitle="Nothing in this category"
+      />
 
-              {item.submissionStatus === "pending" && (
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => approve(tab, item.id)}
-                    className="flex items-center gap-1.5 rounded-xl bg-calma-success px-3 py-2 text-xs font-medium text-white transition-colors hover:bg-calma-success/90"
-                  >
-                    <Check size={14} /> Approuver
-                  </button>
-                  <button
-                    onClick={() => reject(tab, item.id)}
-                    className="flex items-center gap-1.5 rounded-xl bg-red-50 px-3 py-2 text-xs font-medium text-red-600 transition-colors hover:bg-red-100"
-                  >
-                    <X size={14} /> Refuser
-                  </button>
-                </div>
-              )}
+      {rejectTarget && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
+          onClick={() => setRejectTarget(null)}
+        >
+          <div
+            className="w-full max-w-md rounded-2xl bg-white p-6"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3 className="mb-1 text-lg font-bold text-calma-ink">
+              Reject &ldquo;{itemLabel(rejectTarget)}&rdquo;?
+            </h3>
+            <p className="mb-4 text-sm text-calma-taupe">
+              Optionally tell the partner why — this reason is shown to them.
+            </p>
+            <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
+              rows={3}
+              placeholder="Reason (optional)"
+              className="mb-4 w-full resize-none rounded-xl border border-calma-border px-3 py-2 text-sm focus:border-admin-gold focus:outline-none"
+            />
+            <div className="flex gap-3">
+              <button
+                onClick={() => setRejectTarget(null)}
+                className="flex-1 rounded-xl border border-calma-border px-4 py-2.5 font-medium text-calma-ink transition-colors hover:bg-calma-sand"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={confirmReject}
+                disabled={rejecting}
+                className="flex-1 rounded-xl bg-red-500 px-4 py-2.5 font-medium text-white transition-colors hover:bg-red-600 disabled:opacity-50"
+              >
+                {rejecting ? "Rejecting…" : "Reject"}
+              </button>
             </div>
-          ))}
+          </div>
         </div>
       )}
     </div>

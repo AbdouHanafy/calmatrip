@@ -1,7 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Mail, Trash2, Download } from "lucide-react";
+import { Mail, Download } from "lucide-react";
+import {
+  CollectionList,
+  type CollectionColumn,
+} from "@/components/admin/collection/CollectionList";
+import { DeleteConfirmModal } from "@/components/admin/collection/DeleteConfirmModal";
 
 interface Subscriber {
   id: number;
@@ -13,6 +18,9 @@ interface Subscriber {
 export default function AdminNewsletter() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [loading, setLoading] = useState(true);
+  const [search, setSearch] = useState("");
+  const [showDeleteConfirm, setShowDeleteConfirm] = useState<Subscriber | null>(null);
+  const [deleting, setDeleting] = useState(false);
 
   const load = async () => {
     setLoading(true);
@@ -26,9 +34,12 @@ export default function AdminNewsletter() {
     load();
   }, []);
 
-  const remove = async (id: number) => {
-    if (!confirm("Supprimer cet abonné ?")) return;
-    await fetch(`/api/admin/newsletter/${id}`, { method: "DELETE" });
+  const handleDelete = async () => {
+    if (!showDeleteConfirm) return;
+    setDeleting(true);
+    await fetch(`/api/admin/newsletter/${showDeleteConfirm.id}`, { method: "DELETE" });
+    setDeleting(false);
+    setShowDeleteConfirm(null);
     load();
   };
 
@@ -46,73 +57,68 @@ export default function AdminNewsletter() {
     URL.revokeObjectURL(url);
   };
 
+  const filtered = subscribers.filter((s) => s.email.toLowerCase().includes(search.toLowerCase()));
+
+  const columns: CollectionColumn<Subscriber>[] = [
+    {
+      key: "email",
+      label: "Email",
+      render: (s) => <span className="font-medium text-calma-ink">{s.email}</span>,
+    },
+    {
+      key: "date",
+      label: "Subscribed on",
+      render: (s) => (
+        <span className="text-sm text-calma-taupe">
+          {new Date(s.createdAt).toLocaleDateString("en-GB", {
+            day: "numeric",
+            month: "long",
+            year: "numeric",
+          })}
+        </span>
+      ),
+    },
+  ];
+
   return (
-    <div className="mx-auto max-w-4xl p-6">
-      <div className="mb-8 flex items-center justify-between">
+    <div className="space-y-6">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Newsletter</h1>
-          <p className="mt-1 text-sm text-calma-taupe">
-            {subscribers.length} abonné{subscribers.length !== 1 ? "s" : ""}
+          <p className="mt-1 text-calma-taupe">
+            {subscribers.length} subscriber{subscribers.length !== 1 ? "s" : ""}
           </p>
         </div>
         <button
           onClick={exportCsv}
           disabled={subscribers.length === 0}
-          className="flex items-center gap-2 rounded-xl bg-calma-terracotta px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:opacity-50"
+          className="flex items-center justify-center gap-2 rounded-xl bg-admin-gold px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-admin-gold-deep disabled:opacity-50"
         >
           <Download className="h-4 w-4" />
-          Exporter CSV
+          Export CSV
         </button>
       </div>
 
-      {loading ? (
-        <div className="space-y-3">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="h-14 animate-pulse rounded-2xl bg-calma-sand" />
-          ))}
-        </div>
-      ) : subscribers.length === 0 ? (
-        <div className="rounded-2xl border border-dashed border-calma-border py-16 text-center text-calma-taupe">
-          <Mail className="mx-auto mb-3 h-10 w-10 opacity-30" />
-          <p>Aucun abonné pour le moment</p>
-        </div>
-      ) : (
-        <div className="overflow-hidden rounded-2xl border border-calma-border bg-white">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-calma-sand text-xs uppercase tracking-wide text-calma-taupe">
-                <tr>
-                  <th className="px-5 py-3 font-medium">Email</th>
-                  <th className="px-5 py-3 font-medium">Inscrit le</th>
-                  <th className="px-5 py-3 font-medium" />
-                </tr>
-              </thead>
-              <tbody>
-                {subscribers.map((s) => (
-                  <tr key={s.id} className="border-t border-calma-border">
-                    <td className="px-5 py-3.5 text-calma-ink">{s.email}</td>
-                    <td className="px-5 py-3.5 text-calma-taupe">
-                      {new Date(s.createdAt).toLocaleDateString("fr-FR", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric",
-                      })}
-                    </td>
-                    <td className="px-5 py-3.5 text-right">
-                      <button
-                        onClick={() => remove(s.id)}
-                        aria-label={`Supprimer ${s.email}`}
-                        className="rounded-lg p-1.5 text-red-600 transition-colors hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
+      <CollectionList
+        items={filtered}
+        getId={(s) => s.id}
+        columns={columns}
+        loading={loading}
+        searchTerm={search}
+        onSearchChange={setSearch}
+        searchPlaceholder="Search an email..."
+        onDeleteRequest={setShowDeleteConfirm}
+        emptyIcon={Mail}
+        emptyTitle="No subscribers yet"
+      />
+
+      {showDeleteConfirm && (
+        <DeleteConfirmModal
+          itemLabel={showDeleteConfirm.email}
+          isDeleting={deleting}
+          onCancel={() => setShowDeleteConfirm(null)}
+          onConfirm={handleDelete}
+        />
       )}
     </div>
   );

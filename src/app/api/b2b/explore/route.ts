@@ -47,6 +47,10 @@ export async function POST(req: NextRequest) {
       budget: json.budget !== undefined ? Number(json.budget) : undefined,
       duration: json.duration,
       openingHours: json.openingHours,
+      capacity:
+        json.capacity !== undefined && json.capacity !== null && json.capacity !== ""
+          ? Number(json.capacity)
+          : null,
       image: json.image,
       ownerId: session!.user.id,
       submissionStatus: "pending",

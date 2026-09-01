@@ -7,6 +7,7 @@ import { ArrowLeft, BookOpen } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
+import { Breadcrumbs } from "@/components/calma/Breadcrumbs";
 
 interface Guide {
   id: number;
@@ -41,7 +42,7 @@ function GuideDetailContent() {
   if (guide === undefined) {
     return (
       <>
-        <CalmaHeader active="explore" />
+        <CalmaHeader active="blog" />
         <div className="min-h-screen bg-calma-sand" />
         <CalmaFooter />
       </>
@@ -51,7 +52,7 @@ function GuideDetailContent() {
   if (!guide) {
     return (
       <>
-        <CalmaHeader active="explore" />
+        <CalmaHeader active="blog" />
         <div className="flex min-h-[70vh] flex-col items-center justify-center bg-calma-sand px-6 text-center">
           <BookOpen className="mb-4 h-12 w-12 text-calma-taupe/30" />
           <h1 className="mb-2 font-fraunces text-2xl text-calma-ink">Guide introuvable</h1>
@@ -69,7 +70,7 @@ function GuideDetailContent() {
 
   return (
     <>
-      <CalmaHeader active="explore" />
+      <CalmaHeader active="blog" />
       <div className="min-h-screen bg-calma-sand font-hanken">
         <section className="relative flex min-h-[260px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
           {guide.image ? (
@@ -105,6 +106,13 @@ function GuideDetailContent() {
         </section>
 
         <section className="mx-auto max-w-3xl px-6 py-14 lg:px-0">
+          <Breadcrumbs
+            items={[
+              { label: "Accueil", href: "/" },
+              { label: "Guides pratiques", href: "/guides" },
+              { label: guide.title },
+            ]}
+          />
           <Link
             href="/guides"
             className="mb-8 inline-flex items-center gap-1.5 text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"

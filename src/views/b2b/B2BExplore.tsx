@@ -1,6 +1,20 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Plus, Pencil, Trash2, X, Clock, Check } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  X,
+  Clock,
+  Check,
+  MapPin,
+  MapPinned,
+  Tag,
+  Timer,
+  CalendarClock,
+  Users,
+  AlignLeft,
+} from "lucide-react";
 import { SingleImageUpload } from "@/components/admin/SingleImageUpload";
 import { ConfirmDialog } from "@/components/b2b/ConfirmDialog";
 import { AGENCY_EXPLORE_CATEGORIES, STATIC_CITIES } from "@/lib/explore/places";
@@ -23,6 +37,7 @@ const EMPTY_FORM = {
   budget: 2,
   duration: "",
   openingHours: "",
+  capacity: "",
   image: "",
 };
 
@@ -37,10 +52,20 @@ interface ListingItem {
   budget: number;
   duration: string | null;
   openingHours: string | null;
+  capacity: number | null;
   image: string | null;
   submissionStatus: string;
   rejectionReason: string | null;
 }
+
+// Shared premium field chrome, consistent across every B2B form.
+const inputBoxClass =
+  "flex h-12 items-center gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]";
+const inputFieldClass =
+  "w-full border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/50";
+const selectClass =
+  "h-12 w-full rounded-xl border border-calma-border bg-white px-3.5 text-[15px] text-calma-ink outline-none transition-all duration-300 focus:border-calma-gold focus:shadow-[0_0_0_4px_rgba(217,164,65,.15)]";
+const labelClass = "mb-1.5 block text-[13px] font-semibold text-calma-ink";
 
 function StatusBadge({ status }: { status: string }) {
   if (status === "approved") {
@@ -105,6 +130,7 @@ export default function B2BExplore() {
       budget: l.budget,
       duration: l.duration ?? "",
       openingHours: l.openingHours ?? "",
+      capacity: l.capacity !== null ? String(l.capacity) : "",
       image: l.image ?? "",
     });
     setModalOpen(true);
@@ -178,116 +204,148 @@ export default function B2BExplore() {
         </button>
       </div>
 
-      <div className="overflow-hidden rounded-2xl border border-calma-border bg-white shadow-sm">
-        <div className="overflow-x-auto">
-          <table className="w-full text-sm">
-            <thead>
-              <tr className="border-b border-calma-border text-left text-calma-taupe">
-                <th className="px-4 py-3 font-medium">Annonce</th>
-                <th className="px-4 py-3 font-medium">Catégorie</th>
-                <th className="px-4 py-3 font-medium">Ville</th>
-                <th className="px-4 py-3 font-medium">Statut</th>
-                <th className="px-4 py-3 font-medium text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                    Chargement...
-                  </td>
+      {!loading && listings.length === 0 ? (
+        <div className="rounded-2xl border-2 border-dashed border-calma-border bg-white p-10 text-center">
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-calma-gold/10">
+            <MapPin className="h-7 w-7 text-calma-gold" />
+          </div>
+          <h2 className="mb-1.5 font-fraunces text-lg font-normal text-calma-ink">
+            Vous n&apos;avez pas encore d&apos;annonce
+          </h2>
+          <p className="mx-auto mb-5 max-w-sm text-sm text-calma-taupe">
+            Publiez une activité, un restaurant ou une adresse à découvrir sur la page Explore. Elle
+            sera visible une fois validée par notre équipe.
+          </p>
+          <button
+            onClick={openCreate}
+            className="inline-flex items-center gap-2 rounded-xl bg-calma-gold px-5 py-2.5 font-medium text-[#241A12] transition-shadow hover:shadow-lg"
+          >
+            <Plus className="h-4 w-4" /> Publier ma première annonce
+          </button>
+        </div>
+      ) : (
+        <div className="overflow-hidden rounded-2xl border border-calma-border bg-white shadow-sm">
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm">
+              <thead>
+                <tr className="border-b border-calma-border text-left text-calma-taupe">
+                  <th className="px-4 py-3 font-medium">Annonce</th>
+                  <th className="px-4 py-3 font-medium">Catégorie</th>
+                  <th className="px-4 py-3 font-medium">Ville</th>
+                  <th className="px-4 py-3 font-medium">Places</th>
+                  <th className="px-4 py-3 font-medium">Statut</th>
+                  <th className="px-4 py-3 font-medium text-right">Actions</th>
                 </tr>
-              ) : listings.length === 0 ? (
-                <tr>
-                  <td colSpan={5} className="px-4 py-8 text-center text-calma-taupe">
-                    Aucune annonce pour l&apos;instant
-                  </td>
-                </tr>
-              ) : (
-                listings.map((l) => (
-                  <tr key={l.id} className="border-b border-calma-border hover:bg-calma-sand/50">
-                    <td className="px-4 py-3">
-                      <span className="line-clamp-1 font-medium text-calma-ink">{l.title}</span>
-                    </td>
-                    <td className="px-4 py-3 text-calma-taupe">{l.category}</td>
-                    <td className="px-4 py-3 text-calma-taupe">{l.city}</td>
-                    <td className="px-4 py-3">
-                      <StatusBadge status={l.submissionStatus} />
-                      {l.submissionStatus === "rejected" && l.rejectionReason && (
-                        <p className="mt-1 max-w-[200px] text-xs text-red-600">
-                          {l.rejectionReason}
-                        </p>
-                      )}
-                    </td>
-                    <td className="px-4 py-3 text-right">
-                      <div className="flex items-center justify-end gap-2">
-                        <button
-                          onClick={() => requestEdit(l)}
-                          aria-label={`Modifier ${l.title}`}
-                          className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
-                        >
-                          <Pencil className="h-4 w-4" />
-                        </button>
-                        <button
-                          onClick={() => setDeleteTarget(l)}
-                          aria-label={`Supprimer ${l.title}`}
-                          className="rounded-lg p-2 text-red-500 hover:bg-red-50"
-                        >
-                          <Trash2 className="h-4 w-4" />
-                        </button>
-                      </div>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr>
+                    <td colSpan={6} className="px-4 py-8 text-center text-calma-taupe">
+                      Chargement...
                     </td>
                   </tr>
-                ))
-              )}
-            </tbody>
-          </table>
+                ) : (
+                  listings.map((l) => (
+                    <tr key={l.id} className="border-b border-calma-border hover:bg-calma-sand/50">
+                      <td className="px-4 py-3">
+                        <span className="line-clamp-1 font-medium text-calma-ink">{l.title}</span>
+                      </td>
+                      <td className="px-4 py-3 text-calma-taupe">{l.category}</td>
+                      <td className="px-4 py-3 text-calma-taupe">{l.city}</td>
+                      <td className="px-4 py-3 text-calma-taupe">
+                        {l.capacity !== null ? (
+                          <span className="inline-flex items-center gap-1">
+                            <Users className="h-3.5 w-3.5 text-calma-olive" /> {l.capacity}
+                          </span>
+                        ) : (
+                          "—"
+                        )}
+                      </td>
+                      <td className="px-4 py-3">
+                        <StatusBadge status={l.submissionStatus} />
+                        {l.submissionStatus === "rejected" && l.rejectionReason && (
+                          <p className="mt-1 max-w-[200px] text-xs text-red-600">
+                            {l.rejectionReason}
+                          </p>
+                        )}
+                      </td>
+                      <td className="px-4 py-3 text-right">
+                        <div className="flex items-center justify-end gap-2">
+                          <button
+                            onClick={() => requestEdit(l)}
+                            aria-label={`Modifier ${l.title}`}
+                            className="rounded-lg p-2 text-calma-taupe hover:bg-calma-sand"
+                          >
+                            <Pencil className="h-4 w-4" />
+                          </button>
+                          <button
+                            onClick={() => setDeleteTarget(l)}
+                            aria-label={`Supprimer ${l.title}`}
+                            className="rounded-lg p-2 text-red-500 hover:bg-red-50"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
 
       {modalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
-          <div className="max-h-[90vh] w-full max-w-lg overflow-y-auto rounded-2xl bg-white p-6">
-            <div className="mb-4 flex items-center justify-between">
-              <h2 className="text-lg font-bold text-calma-ink">
-                {editing ? "Modifier l'annonce" : "Nouvelle annonce Explore"}
-              </h2>
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm">
+          <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-2xl">
+            <div className="sticky top-0 z-10 flex items-center justify-between border-b border-calma-border bg-white px-6 py-5">
+              <div className="flex items-center gap-3">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-calma-gold/15 text-calma-gold">
+                  <MapPin className="h-5 w-5" />
+                </div>
+                <h2 className="font-fraunces text-lg font-normal text-calma-ink">
+                  {editing ? "Modifier l'annonce" : "Nouvelle annonce Explore"}
+                </h2>
+              </div>
               <button
                 onClick={() => setModalOpen(false)}
                 aria-label="Fermer"
-                className="text-calma-taupe hover:text-calma-ink"
+                className="rounded-lg p-1.5 text-calma-taupe transition-colors hover:bg-calma-sand hover:text-calma-ink"
               >
                 <X className="h-5 w-5" />
               </button>
             </div>
 
-            {error && (
-              <div className="mb-4 rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
-                {error}
-              </div>
-            )}
+            <form onSubmit={handleSave} className="space-y-4 px-6 py-6">
+              {error && (
+                <div className="rounded-xl border border-red-200 bg-red-50 p-3 text-sm text-red-700">
+                  {error}
+                </div>
+              )}
 
-            <form onSubmit={handleSave} className="space-y-4">
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">Titre</label>
-                <input
-                  required
-                  value={form.title}
-                  onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                />
+                <label className={labelClass}>Titre</label>
+                <div className={inputBoxClass}>
+                  <Tag size={18} className="shrink-0 text-calma-gold" />
+                  <input
+                    required
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    placeholder="ex. Balade en calèche à Sidi Bou Saïd"
+                    className={inputFieldClass}
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">
-                    Catégorie
-                  </label>
+                  <label className={labelClass}>Catégorie</label>
                   <select
                     required
                     value={form.category}
                     onChange={(e) => setForm({ ...form, category: e.target.value })}
-                    className="w-full rounded-xl border border-calma-border bg-white px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
+                    className={selectClass}
                   >
                     <option value="" disabled>
                       Choisir
@@ -300,12 +358,12 @@ export default function B2BExplore() {
                   </select>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">Ville</label>
+                  <label className={labelClass}>Ville</label>
                   <select
                     required
                     value={form.city}
                     onChange={(e) => setForm({ ...form, city: e.target.value })}
-                    className="w-full rounded-xl border border-calma-border bg-white px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
+                    className={selectClass}
                   >
                     <option value="" disabled>
                       Choisir
@@ -320,34 +378,39 @@ export default function B2BExplore() {
               </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                <label className={labelClass}>
                   Adresse <span className="font-normal text-calma-taupe">(optionnel)</span>
                 </label>
-                <input
-                  value={form.address}
-                  onChange={(e) => setForm({ ...form, address: e.target.value })}
-                  className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                />
+                <div className={inputBoxClass}>
+                  <MapPinned size={18} className="shrink-0 text-calma-gold" />
+                  <input
+                    value={form.address}
+                    onChange={(e) => setForm({ ...form, address: e.target.value })}
+                    className={inputFieldClass}
+                  />
+                </div>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                  <label className={labelClass}>
                     Prix <span className="font-normal text-calma-taupe">(optionnel)</span>
                   </label>
-                  <input
-                    value={form.price}
-                    onChange={(e) => setForm({ ...form, price: e.target.value })}
-                    placeholder="ex. 20 TND ou Gratuit"
-                    className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                  />
+                  <div className={inputBoxClass}>
+                    <input
+                      value={form.price}
+                      onChange={(e) => setForm({ ...form, price: e.target.value })}
+                      placeholder="ex. 20 TND ou Gratuit"
+                      className={inputFieldClass}
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">Budget</label>
+                  <label className={labelClass}>Budget</label>
                   <select
                     value={form.budget}
                     onChange={(e) => setForm({ ...form, budget: Number(e.target.value) })}
-                    className="w-full rounded-xl border border-calma-border bg-white px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
+                    className={selectClass}
                   >
                     {BUDGETS.map((b) => (
                       <option key={b.value} value={b.value}>
@@ -360,53 +423,89 @@ export default function B2BExplore() {
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                  <label className={labelClass}>
                     Durée <span className="font-normal text-calma-taupe">(optionnel)</span>
                   </label>
-                  <input
-                    value={form.duration}
-                    onChange={(e) => setForm({ ...form, duration: e.target.value })}
-                    placeholder="ex. 2 heures"
-                    className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                  />
+                  <div className={inputBoxClass}>
+                    <Timer size={18} className="shrink-0 text-calma-gold" />
+                    <input
+                      value={form.duration}
+                      onChange={(e) => setForm({ ...form, duration: e.target.value })}
+                      placeholder="ex. 2 heures"
+                      className={inputFieldClass}
+                    />
+                  </div>
                 </div>
                 <div>
-                  <label className="mb-1.5 block text-sm font-medium text-calma-ink">
+                  <label className={labelClass}>
                     Horaires <span className="font-normal text-calma-taupe">(optionnel)</span>
                   </label>
-                  <input
-                    value={form.openingHours}
-                    onChange={(e) => setForm({ ...form, openingHours: e.target.value })}
-                    placeholder="ex. 9h - 18h"
-                    className="w-full rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
-                  />
+                  <div className={inputBoxClass}>
+                    <CalendarClock size={18} className="shrink-0 text-calma-gold" />
+                    <input
+                      value={form.openingHours}
+                      onChange={(e) => setForm({ ...form, openingHours: e.target.value })}
+                      placeholder="ex. 9h - 18h"
+                      className={inputFieldClass}
+                    />
+                  </div>
                 </div>
               </div>
 
-              <SingleImageUpload
-                value={form.image}
-                onChange={(url) => setForm({ ...form, image: url })}
-                label="Image"
-                endpoint="/api/b2b/upload"
-              />
+              <div>
+                <label className={labelClass}>
+                  Nombre de places{" "}
+                  <span className="font-normal text-calma-taupe">
+                    (optionnel — capacité maximale par créneau)
+                  </span>
+                </label>
+                <div className={inputBoxClass}>
+                  <Users size={18} className="shrink-0 text-calma-gold" />
+                  <input
+                    type="number"
+                    min="1"
+                    value={form.capacity}
+                    onChange={(e) => setForm({ ...form, capacity: e.target.value })}
+                    placeholder="ex. 12"
+                    className={inputFieldClass}
+                  />
+                </div>
+                <p className="mt-1.5 text-xs text-calma-taupe">
+                  Laissez vide si l&apos;activité n&apos;a pas de limite de participants.
+                </p>
+              </div>
 
               <div>
-                <label className="mb-1.5 block text-sm font-medium text-calma-ink">
-                  Description
-                </label>
-                <textarea
-                  required
-                  rows={3}
-                  value={form.description}
-                  onChange={(e) => setForm({ ...form, description: e.target.value })}
-                  className="w-full resize-none rounded-xl border border-calma-border px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-gold"
+                <label className={labelClass}>Image</label>
+                <SingleImageUpload
+                  value={form.image}
+                  onChange={(url) => setForm({ ...form, image: url })}
+                  label="Image"
+                  endpoint="/api/b2b/upload"
                 />
+              </div>
+
+              <div>
+                <label className={labelClass}>Description</label>
+                <div className="flex items-start gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 py-3 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]">
+                  <AlignLeft size={18} className="mt-0.5 shrink-0 text-calma-gold" />
+                  <textarea
+                    required
+                    rows={3}
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    className="w-full resize-none border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/50"
+                  />
+                </div>
               </div>
 
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full rounded-xl bg-calma-gold py-3 font-semibold text-[#241A12] transition-shadow hover:shadow-lg disabled:opacity-60"
+                className="w-full rounded-xl py-3.5 font-semibold text-[#241A12] shadow-[0_14px_30px_-12px_rgba(217,164,65,.6)] transition-shadow hover:shadow-[0_18px_36px_-12px_rgba(217,164,65,.75)] disabled:opacity-60"
+                style={{
+                  background: "linear-gradient(135deg,#D9A441 0%,#D9A441 55%,#B8842E 100%)",
+                }}
               >
                 {saving
                   ? "Enregistrement..."
