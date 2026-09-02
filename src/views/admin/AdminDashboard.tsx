@@ -36,7 +36,6 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [navQuery, setNavQuery] = useState("");
   const { data: session } = useSession();
-  const isCmsWorkspace = pathname === "/admin/cms" || pathname?.startsWith("/admin/cms/pages/");
   const userInitials =
     session?.user?.name
       ?.split(" ")
@@ -135,7 +134,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className={`${isCmsWorkspace ? "hidden" : "fixed flex"} left-4 top-3 z-50 h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm lg:hidden`}
+        className="fixed left-4 top-3 z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm lg:hidden"
       >
         {sidebarOpen ? (
           <X className="w-5 h-5 text-calma-terracotta" />
@@ -145,7 +144,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
       </button>
 
       {/* Overlay */}
-      {sidebarOpen && !isCmsWorkspace && (
+      {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
@@ -156,7 +155,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
           space's terracotta identity so staff never confuse the two contexts */}
       <aside
         className={`
-          ${isCmsWorkspace ? "hidden" : "fixed flex lg:sticky"} lg:top-0 z-40 h-screen w-72 flex-shrink-0 bg-admin-navy-deeper text-white flex-col border-r border-white/[.07]
+          fixed flex lg:sticky lg:top-0 z-40 h-screen w-72 flex-shrink-0 bg-admin-navy-deeper text-white flex-col border-r border-white/[.07]
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
@@ -251,9 +250,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden">
         {/* Top Bar */}
-        <div
-          className={`${isCmsWorkspace ? "hidden" : "sticky"} top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl`}
-        >
+        <div className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
           <div className="px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
               <div className="min-w-0 pl-12 lg:pl-0">
@@ -311,7 +308,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         </div>
 
         {/* Page content — children from nested routes, or overview as fallback */}
-        <div className={isCmsWorkspace ? "" : "mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8"}>
+        <div className="mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8">
           {children ?? <AdminOverview />}
         </div>
       </main>

@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { FIELD_TYPES, FORM_FIELD_TYPES } from "@/features/cms/types";
 import { hasPermission } from "@/features/cms/services/permissions";
-import NotificationBell from "@/components/ui/NotificationBell";
 
 type Section = "pages" | "types" | "forms";
 type PageItem = {
@@ -226,10 +225,10 @@ export default function CmsStudio() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      <div className="grid min-h-screen md:grid-cols-[220px_minmax(0,1fr)]">
+    <div className="bg-white">
+      <div className="grid md:grid-cols-[220px_minmax(0,1fr)]">
         <aside className="hidden border-r border-slate-200 bg-white md:block">
-          <div className="sticky top-0 p-4">
+          <div className="p-4">
             <div className="mb-5 flex items-center gap-2 px-2 text-sm font-semibold text-slate-950">
               <Layers3 className="h-4 w-4" /> Content workspace
             </div>
@@ -244,7 +243,7 @@ export default function CmsStudio() {
                 <span className="flex items-center gap-2">
                   <FileText className="h-3.5 w-3.5" /> Pages
                 </span>
-                <span>{pages.length}</span>
+                <span>{loading ? "" : pages.length}</span>
               </button>
               {types.map((type) => (
                 <Link
@@ -263,7 +262,7 @@ export default function CmsStudio() {
                 <span className="flex items-center gap-2">
                   <Braces className="h-3.5 w-3.5" /> All collections
                 </span>
-                <span>{types.length}</span>
+                <span>{loading ? "" : types.length}</span>
               </button>
             </nav>
             {canManageForms && (
@@ -278,7 +277,7 @@ export default function CmsStudio() {
                   <span className="flex items-center gap-2">
                     <FormInput className="h-3.5 w-3.5" /> Form builder
                   </span>
-                  <span>{forms.length}</span>
+                  <span>{loading ? "" : forms.length}</span>
                 </button>
                 <Link
                   href="/admin/cms/submissions"
@@ -319,7 +318,6 @@ export default function CmsStudio() {
                 <option value="en">EN</option>
                 <option value="ar">AR</option>
               </select>
-              <NotificationBell tone="admin" />
             </div>
           </div>
           <div className="mb-4 flex items-center justify-between border-b border-slate-200 pb-3 md:hidden">
