@@ -189,7 +189,7 @@ function CommunityPageContent() {
                   disabled={submitting}
                   className="group flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                   style={{
-                    background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)",
+                    backgroundColor: "#F2994A",
                   }}
                 >
                   {submitting ? (
@@ -241,7 +241,7 @@ function CommunityPageContent() {
                           className="h-10 w-10 rounded-full object-cover"
                         />
                       ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-gradient-to-br from-calma-olive to-calma-olive-deep text-sm font-bold text-white">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-calma-olive text-sm font-bold text-white">
                           {post.authorName.charAt(0).toUpperCase()}
                         </div>
                       )}

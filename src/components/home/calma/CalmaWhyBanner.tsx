@@ -1,9 +1,9 @@
-'use client';
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Compass, Users } from 'lucide-react';
-import { useCalmaLang } from '@/lib/calma/i18n';
+"use client";
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Compass, Users } from "lucide-react";
+import { useCalmaLang } from "@/lib/calma/i18n";
 
 export default function CalmaWhyBanner() {
   const { t } = useCalmaLang();
@@ -73,7 +73,7 @@ export default function CalmaWhyBanner() {
           <Link
             href="/about"
             className="group inline-flex items-center gap-2 rounded-full px-6 py-3.5 font-hanken text-[14.5px] font-semibold text-calma-cream no-underline shadow-[0_10px_24px_-8px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_14px_30px_-8px_rgba(242,153,74,.75)]"
-            style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+            style={{ backgroundColor: "#F2994A" }}
           >
             {t.whyBtn}
             <span className="transition-transform duration-300 group-hover:translate-x-1">→</span>

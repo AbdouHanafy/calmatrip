@@ -185,7 +185,7 @@ export function ReviewStep({
           onClick={onSubmit}
           disabled={submitting}
           className="mt-4 inline-flex items-center justify-center gap-2 rounded-full px-7 py-3 text-[15px] font-bold text-calma-cream shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-shadow duration-300 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)] disabled:cursor-not-allowed disabled:opacity-60"
-          style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+          style={{ backgroundColor: "#F2994A" }}
         >
           {submitting ? <Loader2 size={18} className="animate-spin" /> : t.reviewSubmitBtn}
         </button>

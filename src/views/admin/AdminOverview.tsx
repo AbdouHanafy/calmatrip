@@ -18,6 +18,7 @@ interface DashboardStats {
   totalBookings: number;
   pendingBookings: number;
   confirmedBookings: number;
+  paidBookings: number;
   totalClients: number;
   totalServices: number;
   revenue: number;
@@ -48,12 +49,12 @@ interface DashboardData {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-const SERVICE_COLORS = ["#1a3a5c", "#c59b3d", "#0d2645", "#1a3a5c", "#c59b3d"];
+const SERVICE_COLORS = ["#243b63", "#3d67b5", "#5683d8", "#82a7eb", "#17233b"];
 
 function StatusBadge({ status }: { status: RecentBooking["status"] }) {
   const map = {
-    confirmed: "bg-[#5E8B63]/10 text-[#5E8B63] border border-[#5E8B63]/20",
-    pending: "bg-[#D9A441]/10 text-[#8A6B2E] border border-[#D9A441]/20",
+    confirmed: "border border-blue-200 bg-blue-50 text-blue-700",
+    pending: "border border-amber-200 bg-amber-50 text-amber-700",
     cancelled: "bg-red-500/10 text-red-500 border border-red-500/20",
   } as const;
   const label = { confirmed: "Confirmed", pending: "Pending", cancelled: "Cancelled" };
@@ -132,32 +133,32 @@ export default function AdminOverview() {
       value: stats.totalBookings.toLocaleString(),
       sub: `${stats.pendingBookings} pending`,
       icon: Calendar,
-      accent: "#1a3a5c",
-      gradient: "from-[#1a3a5c] to-[#0d2645]",
+      accent: "#243b63",
+      iconBg: "bg-admin-navy",
     },
     {
       label: "Unique Clients",
       value: stats.totalClients.toLocaleString(),
       sub: "distinct customers",
       icon: Users,
-      accent: "#c59b3d",
-      gradient: "from-[#c59b3d] to-[#c59b3d]",
+      accent: "#5683d8",
+      iconBg: "bg-admin-gold",
     },
     {
       label: "Services",
       value: stats.totalServices.toLocaleString(),
       sub: "in catalog",
       icon: Package,
-      accent: "#0d2645",
-      gradient: "from-[#0d2645] to-[#1a3a5c]",
+      accent: "#17233b",
+      iconBg: "bg-admin-navy-deep",
     },
     {
-      label: "Revenue",
+      label: "Paid booking revenue",
       value: `${stats.revenue.toLocaleString()} TND`,
-      sub: `${stats.confirmedBookings} confirmed`,
+      sub: `${stats.paidBookings} paid bookings`,
       icon: DollarSign,
-      accent: "#c59b3d",
-      gradient: "from-[#1a3a5c] to-[#c59b3d]",
+      accent: "#3d67b5",
+      iconBg: "bg-admin-gold-deep",
     },
   ];
 
@@ -168,12 +169,12 @@ export default function AdminOverview() {
         {statCards.map((stat, index) => (
           <div
             key={index}
-            className="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-calma-border"
+            className="group relative overflow-hidden bg-white rounded-2xl p-6 shadow-sm hover:shadow-md transition-shadow border border-calma-border"
           >
             <div className="absolute inset-x-0 top-0 h-1" style={{ background: stat.accent }} />
             <div className="flex items-start justify-between mb-4">
               <div
-                className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity`}
+                className={`flex h-12 w-12 items-center justify-center rounded-xl ${stat.iconBg}`}
               >
                 <stat.icon className="w-6 h-6 text-white" />
               </div>
@@ -190,7 +191,7 @@ export default function AdminOverview() {
       {/* Charts Section */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Recent Bookings */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-calma-border">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-calma-border">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-bold text-calma-ink">Recent Activity</h3>
@@ -209,7 +210,7 @@ export default function AdminOverview() {
                   className="flex items-center justify-between p-3 rounded-xl hover:bg-calma-sand transition-colors"
                 >
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-navy/10 to-admin-gold/10 flex items-center justify-center">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-gold/10">
                       <Car className="w-5 h-5 text-admin-navy" />
                     </div>
                     <div>
@@ -236,7 +237,7 @@ export default function AdminOverview() {
         </div>
 
         {/* Top Services */}
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-calma-border">
+        <div className="bg-white rounded-2xl shadow-sm p-6 border border-calma-border">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-bold text-calma-ink">Popular Services</h3>
@@ -279,9 +280,9 @@ export default function AdminOverview() {
 
       {/* Quick Actions */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-r from-admin-navy/10 to-admin-navy-deep/10 rounded-2xl p-6 border border-calma-border">
+        <div className="rounded-2xl border border-calma-border bg-admin-navy/5 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-navy to-admin-navy-deep flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-navy">
               <Package className="w-5 h-5 text-white" />
             </div>
             <h3 className="font-semibold text-calma-ink">Add a Service</h3>
@@ -297,25 +298,27 @@ export default function AdminOverview() {
           </Link>
         </div>
 
-        <div className="bg-gradient-to-r from-admin-gold/10 to-admin-gold/10 rounded-2xl p-6 border border-calma-border">
+        <div className="rounded-2xl border border-calma-border bg-admin-gold/5 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-gold to-admin-gold flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-gold">
               <Users className="w-5 h-5 text-white" />
             </div>
-            <h3 className="font-semibold text-calma-ink">New Client</h3>
+            <h3 className="font-semibold text-calma-ink">Customer records</h3>
           </div>
-          <p className="text-sm text-calma-taupe mb-4">Add a client to your database</p>
+          <p className="text-sm text-calma-taupe mb-4">
+            Review traveler profiles and booking history
+          </p>
           <Link
             href="/admin/clients"
             className="inline-flex items-center gap-2 text-sm font-medium text-admin-gold hover:text-admin-navy transition-colors"
           >
-            Add <ChevronRight className="w-4 h-4" />
+            Open <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="bg-gradient-to-r from-admin-navy-deep/10 to-admin-navy/10 rounded-2xl p-6 border border-calma-border">
+        <div className="rounded-2xl border border-calma-border bg-admin-navy-deep/5 p-6">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-admin-navy-deep to-admin-navy flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-navy-deep">
               <Calendar className="w-5 h-5 text-white" />
             </div>
             <h3 className="font-semibold text-calma-ink">View Bookings</h3>

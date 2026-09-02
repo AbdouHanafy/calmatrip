@@ -57,9 +57,17 @@ export default function InstallPWA() {
 
         <button
           onClick={install}
+          disabled={loading}
           className="rounded-xl bg-blue-600 px-3 py-2 text-xs font-semibold text-white"
         >
-          Installer
+          {loading ? "…" : "Installer"}
+        </button>
+        <button
+          onClick={() => setVisible(false)}
+          aria-label="Fermer"
+          className="rounded-lg p-1 text-gray-400 hover:bg-gray-100 hover:text-gray-700"
+        >
+          <X size={16} />
         </button>
       </div>
     </div>

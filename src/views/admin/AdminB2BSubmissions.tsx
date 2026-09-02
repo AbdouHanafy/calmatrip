@@ -55,7 +55,7 @@ function StatusBadge({ status }: { status: string }) {
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-admin-gold/10 px-2.5 py-1 text-xs font-semibold text-[#8A6B2E]">
+    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
       <Clock size={11} /> Pending
     </span>
   );
@@ -182,7 +182,7 @@ export default function AdminB2BSubmissions() {
         <h1 className="font-fraunces text-2xl font-normal text-calma-ink">B2B Submissions</h1>
         <p className="mt-1 text-calma-taupe">
           {pendingCount > 0 ? (
-            <span className="font-medium text-[#8A6B2E]">{pendingCount} awaiting review</span>
+            <span className="font-medium text-amber-700">{pendingCount} awaiting review</span>
           ) : (
             "Nothing to review right now"
           )}

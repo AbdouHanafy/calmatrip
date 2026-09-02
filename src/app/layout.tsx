@@ -1,9 +1,8 @@
 import "@/styles/index.css";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { MarketplaceProvider } from "@/components/marketplace/Marketplacecontext";
-import InstallPWA from "@/components/ui/InstallPWA";
 import ServiceWorkerRegister from "@/components/ServiceWorkerRegister";
-import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
+import PublicUtilities from "@/components/layouts/PublicUtilities";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { SITE, organizationSchema } from "@/lib/seo";
@@ -62,11 +61,11 @@ export const metadata: Metadata = {
   manifest: "/site.webmanifest",
   icons: {
     icon: [
-      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
-      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/favicon.svg", type: "image/svg+xml" },
+      { url: "/icons/favicon-96x96.png", sizes: "96x96", type: "image/png" },
     ],
-    apple: "/apple-touch-icon.png",
-    shortcut: "/favicon.ico",
+    apple: "/icons/apple-touch-icon.png",
+    shortcut: "/icons/favicon.ico",
   },
   ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
     ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
@@ -121,9 +120,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="min-h-screen flex flex-col bg-gray-50">
             <main className="flex-1 w-full relative">
               <MarketplaceProvider>
-                <InstallPWA />
                 {children}
-                <FloatingWhatsApp />
+                <PublicUtilities />
               </MarketplaceProvider>
             </main>
           </div>

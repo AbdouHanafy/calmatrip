@@ -71,7 +71,7 @@ export default function AdminClientEditPage({ id }: { id: string }) {
       ]}
     >
       <div className="flex items-center gap-4 border-b border-calma-border pb-6">
-        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-calma-terracotta to-calma-success">
+        <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-admin-navy">
           <span className="text-xl font-bold text-white">{getInitials(client.name)}</span>
         </div>
         <div>

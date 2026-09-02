@@ -91,7 +91,7 @@ export default function ReviewsAdminPage() {
               className="h-9 w-9 rounded-full object-cover"
             />
           ) : (
-            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-gradient-to-br from-admin-navy to-admin-navy-deep">
+            <div className="flex h-9 w-9 items-center justify-center rounded-full bg-admin-navy">
               <span className="text-sm font-bold text-white">{r.name.charAt(0)}</span>
             </div>
           )}

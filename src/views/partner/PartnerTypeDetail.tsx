@@ -64,7 +64,7 @@ function PartnerTypeDetailContent({
             <Link
               href={ctaHref}
               className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-calma-cream no-underline shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)]"
-              style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+              style={{ backgroundColor: "#F2994A" }}
             >
               {ctaLabel}
               <ArrowRight
@@ -139,7 +139,7 @@ function PartnerTypeDetailContent({
             <Link
               href={ctaHref}
               className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-calma-cream no-underline shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)]"
-              style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+              style={{ backgroundColor: "#F2994A" }}
             >
               {ctaLabel}
               <ArrowRight

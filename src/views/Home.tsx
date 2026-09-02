@@ -84,7 +84,7 @@ export default function Home({ shopProducts, reviews, experiences }: HomeProps) 
                   sizes="500px"
                   className="object-cover"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent" />
+                <div className="absolute inset-0 bg-black/30" />
                 <div className="absolute bottom-7 left-7 right-7">
                   <p className="font-fraunces text-[22px] italic leading-snug text-white">
                     &ldquo;Votre voix aide le prochain voyageur à choisir en confiance.&rdquo;

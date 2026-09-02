@@ -17,6 +17,9 @@ const eslintConfig = [
       ".next/**",
       "public/**",
       "prisma/migrations/**",
+      "design_handoff_calma_home/**",
+      "scripts/**",
+      "next-env.d.ts",
     ],
   },
 ];

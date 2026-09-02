@@ -61,7 +61,7 @@ export default function ProductDetailPage() {
         <Navbar />
         <div className="flex flex-col items-center justify-center h-[60vh] gap-3">
           <p className="text-gray-500">Produit introuvable</p>
-          <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
+          <Link href="/marketplace" className="text-sm text-calma-terracotta underline">
             Retour à la marketplace
           </Link>
         </div>
@@ -148,7 +148,7 @@ export default function ProductDetailPage() {
               >
                 <ShoppingCart className="w-5 h-5 text-gray-700" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#4CAF50] text-white text-[10px] font-bold flex items-center justify-center">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-white">
                     {cartCount}
                   </span>
                 )}
@@ -157,7 +157,7 @@ export default function ProductDetailPage() {
               {/* Orders */}
               <Link
                 href="/marketplace/orders"
-                className="flex-1 sm:flex-none w-full sm:w-auto text-center text-sm font-medium text-gray-600 hover:text-[#87CEEB] px-3 py-2 rounded-xl transition-colors"
+                className="w-full flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium text-gray-600 transition-colors hover:text-calma-terracotta sm:w-auto sm:flex-none"
               >
                 Mes commandes
               </Link>
@@ -187,7 +187,7 @@ export default function ProductDetailPage() {
                       onClick={() => setActiveImg(i)}
                       className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
                         activeImg === i
-                          ? "border-[#4CAF50] shadow-md"
+                          ? "border-calma-terracotta shadow-md"
                           : "border-gray-200 opacity-60 hover:opacity-100"
                       }`}
                     >
@@ -210,7 +210,7 @@ export default function ProductDetailPage() {
                 {product.category}
               </p>
               <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{product.name}</h1>
-              <p className="text-2xl font-bold text-[#4CAF50] mb-4">
+              <p className="mb-4 text-2xl font-bold text-calma-terracotta">
                 {product.price.toFixed(2)} TND
               </p>
 
@@ -234,8 +234,8 @@ export default function ProductDetailPage() {
                         onClick={() => setSelectedSize(selectedSize === size ? null : size)}
                         className={`px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all ${
                           selectedSize === size
-                            ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50]"
-                            : "border-gray-200 text-gray-500 hover:border-[#87CEEB]/50"
+                            ? "border-calma-terracotta bg-calma-terracotta/10 text-calma-terracotta"
+                            : "border-gray-200 text-gray-500 hover:border-calma-terracotta/50"
                         }`}
                       >
                         {size}
@@ -253,7 +253,7 @@ export default function ProductDetailPage() {
                     Plus que {product.stock} en stock
                   </span>
                 ) : (
-                  <span className="text-sm font-medium text-[#4CAF50]">En stock</span>
+                  <span className="text-sm font-medium text-emerald-700">En stock</span>
                 )}
               </div>
 
@@ -281,7 +281,7 @@ export default function ProductDetailPage() {
                 <button
                   onClick={handleAdd}
                   disabled={outOfStock}
-                  className="flex-1 flex items-center justify-center gap-2 bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold py-3 rounded-xl disabled:opacity-40 disabled:cursor-not-allowed hover:shadow-lg transition-shadow"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {added ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
                   {added ? "Ajouté !" : "Ajouter au panier"}

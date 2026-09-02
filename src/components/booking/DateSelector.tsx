@@ -12,7 +12,7 @@ export function DateSelector({ date, onChange, availableDates }: DateSelectorPro
   return (
     <div>
       <label className="text-sm font-bold text-gray-700 block mb-3 flex items-center gap-2">
-        <Calendar className="w-4 h-4 text-[#87CEEB]" />
+        <Calendar className="h-4 w-4 text-calma-terracotta" />
         Select Date
       </label>
       <div className="relative">
@@ -21,7 +21,7 @@ export function DateSelector({ date, onChange, availableDates }: DateSelectorPro
           value={date}
           onChange={(e) => onChange(e.target.value)}
           min={toISODate(new Date())}
-          className="w-full px-4 py-3.5 rounded-2xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-gray-50/50"
+          className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50/50 px-4 py-3.5 outline-none transition-all focus:border-calma-terracotta focus:ring-2 focus:ring-calma-terracotta/20"
         />
       </div>
       {availableDates.length > 0 && (
@@ -33,8 +33,8 @@ export function DateSelector({ date, onChange, availableDates }: DateSelectorPro
               onClick={() => onChange(d.date)}
               className={`shrink-0 px-4 py-2 rounded-xl text-xs font-medium border-2 transition-all ${
                 date === d.date
-                  ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50]"
-                  : "border-gray-200 hover:border-[#87CEEB] hover:bg-gray-50"
+                  ? "border-calma-terracotta bg-calma-terracotta/10 text-calma-terracotta"
+                  : "border-gray-200 hover:border-calma-terracotta hover:bg-gray-50"
               }`}
             >
               {new Date(d.date).toLocaleDateString("en-US", {

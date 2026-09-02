@@ -18,7 +18,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { path: "/guides", priority: 0.7, changeFrequency: "weekly" as const },
   ];
 
-  const [products, guides, services] = await Promise.all([
+  const [products, guides, services, cmsPages] = await Promise.all([
     prisma.product.findMany({
       where: { submissionStatus: "approved" },
       select: { id: true, updatedAt: true },
@@ -30,6 +30,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     prisma.service.findMany({
       where: { submissionStatus: "approved", active: true },
       select: { id: true, updatedAt: true },
+    }),
+    prisma.cmsPage.findMany({
+      where: { status: "PUBLISHED" },
+      select: { slug: true, updatedAt: true, seo: true },
     }),
   ]);
 
@@ -63,5 +67,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.75,
   }));
 
-  return [...staticEntries, ...productEntries, ...guideEntries, ...serviceEntries];
+  const cmsEntries: MetadataRoute.Sitemap = cmsPages
+    .filter((page) => (page.seo as { sitemap?: boolean } | null)?.sitemap !== false)
+    .map((page) => ({
+      url: `${BASE_URL}/${page.slug}`,
+      lastModified: page.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.7,
+    }));
+
+  return [...staticEntries, ...productEntries, ...guideEntries, ...serviceEntries, ...cmsEntries];
 }

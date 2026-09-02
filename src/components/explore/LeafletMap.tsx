@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
@@ -42,25 +42,31 @@ export default function LeafletMap({ places, userLocation }: Props) {
   const markersRef = useRef<L.Marker[]>([]);
 
   // Custom Icon for places - style bleu/beige
-  const customIcon =
-    typeof window !== "undefined"
-      ? new L.Icon({
-          iconUrl: "https://cdn-icons-png.flaticon.com/512/3173/3173556.png",
-          iconSize: [38, 38],
-          iconAnchor: [19, 38],
-          popupAnchor: [0, -38],
-        })
-      : null;
+  const customIcon = useMemo(
+    () =>
+      typeof window !== "undefined"
+        ? new L.Icon({
+            iconUrl: "https://cdn-icons-png.flaticon.com/512/3173/3173556.png",
+            iconSize: [38, 38],
+            iconAnchor: [19, 38],
+            popupAnchor: [0, -38],
+          })
+        : null,
+    [],
+  );
 
   // Custom Icon for user - style bleu
-  const userIcon =
-    typeof window !== "undefined"
-      ? new L.Icon({
-          iconUrl: "https://cdn-icons-png.flaticon.com/512/447/447031.png",
-          iconSize: [34, 34],
-          iconAnchor: [17, 34],
-        })
-      : null;
+  const userIcon = useMemo(
+    () =>
+      typeof window !== "undefined"
+        ? new L.Icon({
+            iconUrl: "https://cdn-icons-png.flaticon.com/512/447/447031.png",
+            iconSize: [34, 34],
+            iconAnchor: [17, 34],
+          })
+        : null,
+    [],
+  );
 
   useEffect(() => {
     if (!mapRef.current) return;
@@ -137,7 +143,7 @@ export default function LeafletMap({ places, userLocation }: Props) {
       // We don't remove the map on every render to keep it smooth,
       // but we do clean up markers.
     };
-  }, [places, userLocation]);
+  }, [places, userLocation, customIcon, userIcon]);
 
   // Handle map removal on unmount
   useEffect(() => {

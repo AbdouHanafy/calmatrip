@@ -86,7 +86,7 @@ export function DashboardSidebar({
 
           <nav className="space-y-1 pt-3">
             {navItems.map((item) => {
-              const highlighted = item.caption !== null || activeTab === item.key;
+              const highlighted = activeTab === item.key;
               return (
                 <button
                   key={item.key}

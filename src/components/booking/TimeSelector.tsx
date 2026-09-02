@@ -24,7 +24,7 @@ export function TimeSelector({
     <div>
       <div className="flex items-center justify-between mb-3">
         <label className="text-sm font-bold text-gray-700 flex items-center gap-2">
-          <Clock className="w-4 h-4 text-[#87CEEB]" />
+          <Clock className="h-4 w-4 text-calma-terracotta" />
           Select Time
         </label>
         <div className="flex gap-2 bg-gray-100 p-1 rounded-xl">
@@ -57,10 +57,10 @@ export function TimeSelector({
                 onClick={() => onTimeChange(slot.time)}
                 className={`py-3 rounded-xl text-sm font-medium border-2 transition-all ${
                   time === slot.time
-                    ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50] shadow-lg shadow-[#4CAF50]/10"
+                    ? "border-calma-terracotta bg-calma-terracotta/10 text-calma-terracotta shadow-sm"
                     : slot.full
                       ? "border-gray-100 bg-gray-50 text-gray-300 cursor-not-allowed"
-                      : "border-gray-100 hover:border-[#87CEEB] hover:bg-gray-50"
+                      : "border-gray-100 hover:border-calma-terracotta hover:bg-gray-50"
                 }`}
               >
                 <Clock className="w-3.5 h-3.5 inline mr-1.5" />
@@ -74,7 +74,7 @@ export function TimeSelector({
           type="time"
           value={manualTime}
           onChange={(e) => onManualTimeChange(e.target.value)}
-          className="w-full px-4 py-3.5 rounded-2xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-gray-50/50"
+          className="w-full rounded-2xl border-2 border-gray-100 bg-gray-50/50 px-4 py-3.5 outline-none transition-all focus:border-calma-terracotta focus:ring-2 focus:ring-calma-terracotta/20"
         />
       )}
     </div>

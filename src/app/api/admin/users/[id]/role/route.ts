@@ -12,11 +12,12 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   const body = await req.json().catch(() => ({}));
   const role = body.role;
 
-  if (role !== "ADMIN" && role !== "USER") {
+  const allowedRoles = ["USER", "ADMIN", "CONTENT_MANAGER", "EDITOR", "SUPPORT_AGENT"];
+  if (!allowedRoles.includes(role)) {
     return NextResponse.json({ error: "Rôle invalide" }, { status: 400 });
   }
 
-  if (id === session.user.id && role === "USER") {
+  if (id === session.user.id && !["ADMIN", "SUPER_ADMIN"].includes(role)) {
     return NextResponse.json(
       { error: "Vous ne pouvez pas retirer vos propres droits admin." },
       { status: 400 },
@@ -24,7 +25,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
   }
 
   const target = await prisma.user.findUnique({ where: { id }, select: { role: true } });
-  if (!target || (target.role !== "USER" && target.role !== "ADMIN")) {
+  if (!target) {
     return NextResponse.json({ error: "Utilisateur introuvable" }, { status: 404 });
   }
 

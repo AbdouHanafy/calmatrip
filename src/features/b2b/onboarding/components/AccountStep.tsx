@@ -97,11 +97,11 @@ export function AccountStep({ t, onCreated }: AccountStepProps) {
       />
 
       <div className="my-4 flex items-center gap-4">
-        <div className="h-px flex-1 bg-gradient-to-r from-transparent to-calma-olive/15" />
+        <div className="h-px flex-1 bg-calma-olive/15" />
         <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-calma-taupe/70">
           or
         </span>
-        <div className="h-px flex-1 bg-gradient-to-l from-transparent to-calma-olive/15" />
+        <div className="h-px flex-1 bg-calma-olive/15" />
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3.5" noValidate>
@@ -207,7 +207,7 @@ export function AccountStep({ t, onCreated }: AccountStepProps) {
           type="submit"
           disabled={loading}
           className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-[15px] font-bold text-calma-cream shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-shadow duration-300 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)] disabled:opacity-70"
-          style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+          style={{ backgroundColor: "#F2994A" }}
         >
           {loading ? (
             <Loader2 size={18} className="animate-spin" />

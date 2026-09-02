@@ -1,13 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
+import { isApprovedPartner } from "@/lib/access";
 import { sanitizeHtml } from "@/lib/sanitize";
 import { createNotification } from "@/lib/notifications";
 import { b2bServiceCreateSchema } from "@/schemas/service";
 import { createService, getOwnedServices } from "@/repositories/serviceRepository";
 
 function requireArtisan(session: Session | null) {
-  return session?.user?.role === "B2B" && session.user.b2bType === "ARTISAN";
+  return isApprovedPartner(session, "ARTISAN");
 }
 
 // GET /api/b2b/services — the artisan's own services, any submission status

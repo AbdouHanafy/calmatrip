@@ -13,6 +13,7 @@ export async function GET() {
       totalBookings,
       pendingBookings,
       confirmedBookings,
+      paidBookings,
       totalServices,
       recentBookings,
       allBookings,
@@ -30,12 +31,16 @@ export async function GET() {
         where: { status: "confirmed" },
       }),
 
+      prisma.booking.count({
+        where: { status: "confirmed", paymentStatus: "paid" },
+      }),
+
       // Total services in catalog
       prisma.service.count(),
 
       // Recent bookings — flat model, no user relation
       prisma.booking.findMany({
-        orderBy: { date: "desc" },
+        orderBy: { createdAt: "desc" },
         take: 5,
         select: {
           id: true,
@@ -50,27 +55,31 @@ export async function GET() {
 
       // All bookings for revenue + top-services aggregation
       prisma.booking.findMany({
-        select: { service: true, status: true, price: true },
+        select: { service: true, status: true, paymentStatus: true, price: true },
       }),
     ]);
 
     // Revenue: price is stored as "35 TND" — extract the numeric part
     const revenue = allBookings
-      .filter((b) => b.status === "confirmed")
+      .filter((b) => b.status === "confirmed" && b.paymentStatus === "paid")
       .reduce((sum, b) => {
-        const n = parseFloat(b.price?.replace(/[^\d.]/g, "") ?? "0");
+        const n = parseFloat(b.price?.replace(/[^\d,.-]/g, "").replace(",", ".") ?? "0");
         return sum + (isNaN(n) ? 0 : n);
       }, 0);
 
     // Unique clients by distinct customerEmail
     const distinctClients = await prisma.booking
-      .findMany({ select: { customerEmail: true }, distinct: ["customerEmail"] })
+      .findMany({
+        where: { customerEmail: { not: null } },
+        select: { customerEmail: true },
+        distinct: ["customerEmail"],
+      })
       .then((rows) => rows.length);
 
     // Top services: group by service string field
     const serviceCountMap = new Map<string, number>();
     for (const b of allBookings) {
-      if (!b.service) continue;
+      if (!b.service || b.status !== "confirmed") continue;
       serviceCountMap.set(b.service, (serviceCountMap.get(b.service) ?? 0) + 1);
     }
 
@@ -89,6 +98,7 @@ export async function GET() {
         totalBookings,
         pendingBookings,
         confirmedBookings,
+        paidBookings,
         totalClients: distinctClients,
         totalServices,
         revenue: Math.round(revenue),

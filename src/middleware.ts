@@ -1,17 +1,27 @@
 import { auth } from "@/auth";
 import { NextResponse } from "next/server";
-
-
+import { isAdminWorkspaceRole } from "@/lib/access";
 
 export default auth((req) => {
   const { pathname } = req.nextUrl;
   const isLoggedIn = !!req.auth;
-  const isAdmin = req.auth?.user?.role === "ADMIN";
+  const role = req.auth?.user?.role;
+  const isAdmin = isAdminWorkspaceRole(role);
   const isB2B = req.auth?.user?.role === "B2B";
-  const homeSpace = isAdmin ? "/admin" : isB2B ? "/b2b" : "/dashboard";
+  const adminHome =
+    role === "ADMIN"
+      ? "/admin"
+      : role === "SUPPORT_AGENT"
+        ? "/admin/cms/submissions"
+        : "/admin/cms";
+  const homeSpace = isAdmin ? adminHome : isB2B ? "/b2b" : "/dashboard";
 
   // Logged-in users landing on the wrong space get bounced to their own
-  if (isLoggedIn && (pathname === "/dashboard" || pathname === "/admin" || pathname === "/b2b") && pathname !== homeSpace) {
+  if (
+    isLoggedIn &&
+    (pathname === "/dashboard" || pathname === "/admin" || pathname === "/b2b") &&
+    pathname !== homeSpace
+  ) {
     return NextResponse.redirect(new URL(homeSpace, req.url));
   }
 
@@ -25,6 +35,13 @@ export default auth((req) => {
     if (!isAdmin) {
       return NextResponse.redirect(new URL(homeSpace, req.url));
     }
+    if (role !== "ADMIN") {
+      const allowed =
+        role === "SUPPORT_AGENT"
+          ? pathname.startsWith("/admin/cms/submissions")
+          : pathname.startsWith("/admin/cms");
+      if (!allowed) return NextResponse.redirect(new URL(adminHome, req.url));
+    }
   }
 
   // Protect b2b routes
@@ -36,6 +53,14 @@ export default auth((req) => {
     }
     if (!isB2B) {
       return NextResponse.redirect(new URL(homeSpace, req.url));
+    }
+    const approved = req.auth?.user?.b2bStatus?.toLowerCase() === "approved";
+    const allowedBeforeApproval = pathname === "/b2b" || pathname === "/b2b/profile";
+    if (!approved && !allowedBeforeApproval) {
+      return NextResponse.redirect(new URL("/b2b", req.url));
+    }
+    if (req.auth?.user?.b2bType?.toUpperCase() === "AGENCY" && pathname === "/b2b/sales") {
+      return NextResponse.redirect(new URL("/b2b", req.url));
     }
   }
 

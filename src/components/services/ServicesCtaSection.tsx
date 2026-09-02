@@ -11,7 +11,7 @@ export function ServicesCtaSection() {
         <div className="relative overflow-hidden rounded-calma-block bg-calma-olive p-12">
           <div
             className="pointer-events-none absolute -bottom-1/3 -left-1/4 h-[420px] w-[420px] rounded-full opacity-[.15] blur-[90px]"
-            style={{ background: "radial-gradient(circle, #F2994A 0%, transparent 70%)" }}
+            style={{ backgroundColor: "#F2994A" }}
           />
           <div className="relative">
             <p className="mb-4 text-xs font-bold uppercase tracking-[.3em] text-calma-terracotta-soft">
@@ -26,7 +26,7 @@ export function ServicesCtaSection() {
                 href="/contact"
                 className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
                 style={{
-                  background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)",
+                  backgroundColor: "#F2994A",
                 }}
               >
                 <Phone className="h-4 w-4" /> {t.svc.ctaBtn1}

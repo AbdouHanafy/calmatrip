@@ -24,7 +24,7 @@ export function CustomerInfoFields({
   return (
     <div className="bg-gray-50/70 rounded-2xl p-6 space-y-4 border-2 border-gray-100/50">
       <div className="flex items-center gap-2 text-sm font-bold text-gray-700">
-        <User className="w-4 h-4 text-[#87CEEB]" />
+        <User className="h-4 w-4 text-calma-terracotta" />
         Contact Information
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -35,7 +35,7 @@ export function CustomerInfoFields({
             placeholder="John Doe"
             value={customerName}
             onChange={(e) => onCustomerNameChange(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-white"
+            className="w-full rounded-xl border-2 border-gray-100 bg-white px-4 py-3 outline-none transition-all focus:border-calma-terracotta focus:ring-2 focus:ring-calma-terracotta/20"
           />
         </div>
         <div>
@@ -46,7 +46,7 @@ export function CustomerInfoFields({
             placeholder="john@example.com"
             value={customerEmail}
             onChange={(e) => onCustomerEmailChange(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-white"
+            className="w-full rounded-xl border-2 border-gray-100 bg-white px-4 py-3 outline-none transition-all focus:border-calma-terracotta focus:ring-2 focus:ring-calma-terracotta/20"
           />
         </div>
         <div>
@@ -57,7 +57,7 @@ export function CustomerInfoFields({
             placeholder="+44 6 00 00 00 00"
             value={customerPhone}
             onChange={(e) => onCustomerPhoneChange(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-white"
+            className="w-full rounded-xl border-2 border-gray-100 bg-white px-4 py-3 outline-none transition-all focus:border-calma-terracotta focus:ring-2 focus:ring-calma-terracotta/20"
           />
         </div>
         <div>
@@ -66,7 +66,7 @@ export function CustomerInfoFields({
             placeholder="Any special requests?"
             value={specialRequests}
             onChange={(e) => onSpecialRequestsChange(e.target.value)}
-            className="w-full px-4 py-3 rounded-xl border-2 border-gray-100 focus:border-[#87CEEB] focus:ring-2 focus:ring-[#87CEEB]/20 outline-none transition-all bg-white"
+            className="w-full rounded-xl border-2 border-gray-100 bg-white px-4 py-3 outline-none transition-all focus:border-calma-terracotta focus:ring-2 focus:ring-calma-terracotta/20"
           />
         </div>
       </div>

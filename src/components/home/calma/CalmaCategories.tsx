@@ -40,8 +40,7 @@ function DestinationTile({
       <div
         className="absolute inset-0"
         style={{
-          background:
-            "linear-gradient(to top,rgba(20,18,16,.85),rgba(20,18,16,.1) 55%,transparent)",
+          background: "rgba(20,18,16,.38)",
         }}
       />
       <div className="absolute left-4 top-4 rounded-full border border-white/20 bg-black/25 px-3 py-[6px] text-[11px] font-bold text-white backdrop-blur-md">

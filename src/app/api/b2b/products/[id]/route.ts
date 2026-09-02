@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
+import { isApprovedPartner } from "@/lib/access";
 import { createNotification } from "@/lib/notifications";
 import { productUpdateSchema } from "@/schemas/product";
 import {
@@ -11,7 +12,7 @@ import {
 } from "@/repositories/productRepository";
 
 function requireArtisan(session: Session | null) {
-  return session?.user?.role === "B2B" && session.user.b2bType === "ARTISAN";
+  return isApprovedPartner(session, "ARTISAN");
 }
 
 // PATCH /api/b2b/products/[id] — edit own product; re-queues for review

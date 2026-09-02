@@ -1,8 +1,9 @@
-'use client';
+"use client";
 
 import { Suspense, useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { Loader2 } from "lucide-react";
+import Link from "next/link";
 
 function AuthFinishInner() {
   const params = useSearchParams();
@@ -44,10 +45,11 @@ function AuthFinishInner() {
           <>
             <p className="font-fraunces text-lg text-calma-ink">Une erreur est survenue</p>
             <p className="text-sm text-calma-taupe">
-              Votre connexion a réussi, mais nous n&apos;avons pas pu finaliser votre profil partenaire.{" "}
-              <a href="/dashboard" className="font-semibold text-calma-terracotta">
+              Votre connexion a réussi, mais nous n&apos;avons pas pu finaliser votre profil
+              partenaire.{" "}
+              <Link href="/dashboard" className="font-semibold text-calma-terracotta">
                 Continuer vers mon espace
-              </a>
+              </Link>
             </p>
           </>
         ) : (

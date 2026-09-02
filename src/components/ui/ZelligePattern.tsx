@@ -9,17 +9,11 @@ export function ZelligePattern({
   return (
     <svg
       className={`absolute inset-0 w-full h-full pointer-events-none ${className}`}
+      style={style}
       xmlns="http://www.w3.org/2000/svg"
     >
       <defs>
-        <pattern
-          id="zellige"
-          x="0"
-          y="0"
-          width="60"
-          height="60"
-          patternUnits="userSpaceOnUse"
-        >
+        <pattern id="zellige" x="0" y="0" width="60" height="60" patternUnits="userSpaceOnUse">
           <polygon
             points="30,2 58,15 58,45 30,58 2,45 2,15"
             fill="none"

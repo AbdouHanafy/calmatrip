@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { auth } from "@/auth";
+import { isApprovedPartner } from "@/lib/access";
 
 export async function GET() {
   const session = await auth();
-  if (session?.user?.role !== "B2B") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!isApprovedPartner(session)) {
+    return NextResponse.json({ error: "An approved partner account is required" }, { status: 403 });
   }
 
-  const ownerId = session.user.id;
-  const b2bType = session.user.b2bType;
+  const ownerId = session!.user.id;
+  const b2bType = session!.user.b2bType;
 
   const me = await prisma.user.findUnique({
     where: { id: ownerId },
@@ -33,8 +34,9 @@ export async function GET() {
   }
 
   // ARTISAN
-  const [productCount, items] = await Promise.all([
+  const [productCount, serviceCount, items, serviceBookings] = await Promise.all([
     prisma.product.count({ where: { ownerId } }),
+    prisma.service.count({ where: { ownerId } }),
     prisma.orderItem.findMany({
       where: { ownerId },
       select: {
@@ -44,17 +46,29 @@ export async function GET() {
         order: { select: { status: true } },
       },
     }),
+    prisma.booking.findMany({
+      where: { ownerId, status: "confirmed", paymentStatus: "paid" },
+      select: { price: true, commissionAmount: true },
+    }),
   ]);
 
   const paid = items.filter((i) => ["confirmed", "shipped", "delivered"].includes(i.order.status));
-  const revenue = paid.reduce((sum, i) => sum + i.price * i.quantity, 0);
-  const commission = paid.reduce((sum, i) => sum + (i.commissionAmount ?? 0), 0);
+  const serviceRevenue = serviceBookings.reduce(
+    (sum, booking) =>
+      sum +
+      (Number.parseFloat((booking.price ?? "0").replace(/[^0-9.,-]/g, "").replace(",", ".")) || 0),
+    0,
+  );
+  const revenue = paid.reduce((sum, i) => sum + i.price * i.quantity, 0) + serviceRevenue;
+  const commission =
+    paid.reduce((sum, i) => sum + (i.commissionAmount ?? 0), 0) +
+    serviceBookings.reduce((sum, booking) => sum + (booking.commissionAmount ?? 0), 0);
 
   return NextResponse.json({
     b2bType,
-    listingsCount: productCount,
-    bookingsCount: items.length,
-    confirmedCount: paid.length,
+    listingsCount: productCount + serviceCount,
+    bookingsCount: items.length + serviceBookings.length,
+    confirmedCount: paid.length + serviceBookings.length,
     revenue: Math.round(revenue * 100) / 100,
     commission: Math.round(commission * 100) / 100,
     netEarnings: Math.round((revenue - commission) * 100) / 100,

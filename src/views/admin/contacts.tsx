@@ -148,7 +148,7 @@ export default function AdminContactsPage() {
             {contact.isRead ? (
               <MailOpen className="h-4 w-4 text-calma-taupe" />
             ) : (
-              <Mail className="h-4 w-4 text-[#F2994A]" />
+              <Mail className="h-4 w-4 text-admin-gold" />
             )}
           </div>
           <div className="min-w-0">
@@ -197,7 +197,7 @@ export default function AdminContactsPage() {
       render: (contact) => (
         <button
           onClick={(e) => toggleRead(contact, e)}
-          className="rounded-lg p-1.5 text-calma-taupe transition-all hover:bg-[#F2994A]/10 hover:text-[#F2994A]"
+          className="rounded-lg p-1.5 text-calma-taupe transition-all hover:bg-admin-gold/10 hover:text-admin-gold"
           title={contact.isRead ? "Mark as unread" : "Mark as read"}
         >
           {contact.isRead ? <Mail className="h-4 w-4" /> : <MailOpen className="h-4 w-4" />}
@@ -209,7 +209,7 @@ export default function AdminContactsPage() {
   if (loading) {
     return (
       <div className="flex items-center justify-center min-h-[400px]">
-        <Loader2 className="w-8 h-8 animate-spin text-[#F2994A]" />
+        <Loader2 className="h-8 w-8 animate-spin text-admin-gold" />
       </div>
     );
   }
@@ -229,9 +229,7 @@ export default function AdminContactsPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-[#F2994A] via-[#5E8B63] to-[#D9A441] bg-clip-text text-transparent">
-            Messages
-          </h1>
+          <h1 className="text-3xl font-bold text-slate-900">Messages</h1>
           <p className="text-calma-taupe mt-1">
             {unreadCount > 0
               ? `${unreadCount} unread message${unreadCount > 1 ? "s" : ""}`
@@ -299,7 +297,7 @@ export default function AdminContactsPage() {
             </div>
 
             <div className="mb-4">
-              <span className="inline-flex items-center px-3 py-1 rounded-lg text-xs font-medium bg-[#F2994A]/10 text-[#F2994A]">
+              <span className="inline-flex items-center rounded-lg bg-admin-gold/10 px-3 py-1 text-xs font-medium text-admin-gold-deep">
                 {subjectLabels[selected.subject] ?? selected.subject}
               </span>
             </div>

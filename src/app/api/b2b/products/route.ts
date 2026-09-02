@@ -2,12 +2,13 @@ import { NextRequest, NextResponse } from "next/server";
 import { Prisma } from "@prisma/client";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
+import { isApprovedPartner } from "@/lib/access";
 import { createNotification } from "@/lib/notifications";
 import { productCreateSchema } from "@/schemas/product";
 import { createProduct, getOwnedProducts } from "@/repositories/productRepository";
 
 function requireArtisan(session: Session | null) {
-  return session?.user?.role === "B2B" && session.user.b2bType === "ARTISAN";
+  return isApprovedPartner(session, "ARTISAN");
 }
 
 // GET /api/b2b/products — the artisan's own products, any submission status

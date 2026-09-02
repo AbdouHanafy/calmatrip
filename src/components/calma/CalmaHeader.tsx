@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { mapService, type DBService } from "@/lib/services/mapService";
+import { isAdminWorkspaceRole } from "@/lib/access";
 
 export type CalmaActiveNav =
   "home" | "services" | "marketplace" | "explore" | "blog" | "community" | "about";
@@ -33,7 +34,7 @@ interface CalmaHeaderProps {
 }
 
 function spaceHomeFor(role?: string | null): { href: string; label: string } {
-  if (role === "ADMIN") return { href: "/admin", label: "Espace admin" };
+  if (isAdminWorkspaceRole(role)) return { href: "/admin", label: "Espace admin" };
   if (role === "B2B") return { href: "/b2b", label: "Espace partenaire" };
   return { href: "/dashboard", label: "Mon espace" };
 }
@@ -76,7 +77,7 @@ export default function CalmaHeader({
   const mappedServices = (services ?? []).filter((s) => s.active !== false).map(mapService);
 
   const navItems: { key: CalmaActiveNav; href: string; label: string }[] = [
-    { key: "home", href: "/", label: t.navHome },
+    { key: "explore", href: "/explore", label: t.navExplore },
     { key: "services", href: "/services", label: t.navServices },
     { key: "marketplace", href: "/marketplace", label: t.navMarket },
     { key: "blog", href: "/guides", label: t.navBlog },
@@ -238,7 +239,7 @@ export default function CalmaHeader({
         <Link
           href="/contact"
           className="group inline-flex items-center gap-1.5 rounded-full px-[18px] py-2.5 font-hanken text-[13.5px] font-semibold text-white no-underline shadow-[0_8px_20px_-6px_rgba(242,153,74,.7)] transition-all duration-200 hover:-translate-y-px hover:shadow-[0_12px_24px_-6px_rgba(242,153,74,.85)] active:translate-y-0"
-          style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+          style={{ backgroundColor: "#F2994A" }}
         >
           {t.navContact}
           <ArrowRight
@@ -512,7 +513,7 @@ export default function CalmaHeader({
               href="/contact"
               onClick={() => setMobileOpen(false)}
               className="mt-4 flex items-center justify-center gap-1.5 rounded-full px-5 py-3 text-base font-semibold text-white no-underline shadow-[0_8px_20px_-6px_rgba(242,153,74,.7)]"
-              style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+              style={{ backgroundColor: "#F2994A" }}
             >
               {t.navContact}
               <ArrowRight size={16} />

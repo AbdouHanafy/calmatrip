@@ -152,11 +152,11 @@ export function AuthPage({
             />
 
             <div className="my-4 flex items-center gap-4">
-              <div className="h-px flex-1 bg-gradient-to-r from-transparent to-calma-olive/15" />
+              <div className="h-px flex-1 bg-calma-olive/15" />
               <span className="text-[11px] font-bold uppercase tracking-[0.2em] text-calma-taupe/70">
                 ou
               </span>
-              <div className="h-px flex-1 bg-gradient-to-l from-transparent to-calma-olive/15" />
+              <div className="h-px flex-1 bg-calma-olive/15" />
             </div>
 
             <form onSubmit={form.handleSubmit} className="space-y-3" noValidate>
@@ -374,7 +374,7 @@ export function AuthPage({
                 disabled={form.loading}
                 className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-[15px] font-bold text-calma-cream shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-shadow duration-300 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)] disabled:opacity-70"
                 style={{
-                  background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)",
+                  backgroundColor: "#F2994A",
                 }}
                 whileHover={reduceMotion ? undefined : { y: -2 }}
                 whileTap={{ scale: 0.98 }}

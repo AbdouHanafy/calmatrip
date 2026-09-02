@@ -92,15 +92,13 @@ function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[]
           <div
             className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.55) 45%,rgba(42,38,34,.82) 100%)",
+              background: "rgba(42,38,34,.66)",
             }}
           />
           <div
             className="pointer-events-none absolute inset-0 opacity-[.07]"
             style={{
-              backgroundImage:
-                "repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)",
+              backgroundImage: "transparent",
             }}
           />
           <div className="relative z-[2] mx-auto max-w-[640px]">
@@ -300,7 +298,7 @@ function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[]
               <ZelligePattern id="about-cta-zellige" opacity={0.08} />
               <div
                 className="pointer-events-none absolute -right-1/4 -top-1/3 h-[480px] w-[480px] rounded-full opacity-20 blur-[90px]"
-                style={{ background: "radial-gradient(circle, #F2994A 0%, transparent 70%)" }}
+                style={{ backgroundColor: "#F2994A" }}
               />
               <div className="relative">
                 <h2 className="mb-4 font-fraunces text-3xl font-normal md:text-4xl">
@@ -312,7 +310,7 @@ function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[]
                   href="/services"
                   className="group inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
                   style={{
-                    background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)",
+                    backgroundColor: "#F2994A",
                   }}
                 >
                   <span>{t.abt.ctaBtn}</span>

@@ -41,26 +41,24 @@ export function AuthBackground({ reduceMotion }: { reduceMotion: boolean | null 
         />
       </div>
 
-      {/* Warm cinematic gradient overlay */}
+      {/* Solid overlay keeps text readable without decorative color blending. */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "linear-gradient(160deg,rgba(36,26,14,.82) 0%,rgba(36,51,63,.62) 45%,rgba(24,18,12,.88) 100%)",
+          background: "rgba(24,18,12,.76)",
         }}
       />
       {/* Soft radial vignette centered behind the card */}
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background:
-            "radial-gradient(55% 50% at 50% 46%, rgba(20,14,8,.2) 0%, rgba(20,14,8,.55) 100%)",
+          background: "rgba(20,14,8,.24)",
         }}
       />
       {/* Warm atmospheric glow */}
       <div
         className="pointer-events-none absolute -right-[10%] -top-[10%] h-[55%] w-[50%] rounded-full opacity-[.25] blur-[120px]"
-        style={{ background: "radial-gradient(circle, #F2994A 0%, transparent 70%)" }}
+        style={{ backgroundColor: "#F2994A" }}
       />
 
       {/* Slow floating dust particles */}

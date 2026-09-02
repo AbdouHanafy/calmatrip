@@ -71,7 +71,7 @@ export function NotFound() {
       <Link
         href="/"
         className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white no-underline shadow-[0_8px_20px_-6px_rgba(242,153,74,.65)]"
-        style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+        style={{ backgroundColor: "#F2994A" }}
       >
         <Home className="h-4 w-4" />
         Retour à l&apos;accueil

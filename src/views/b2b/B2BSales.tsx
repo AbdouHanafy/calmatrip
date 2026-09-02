@@ -1,38 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Calendar, Package } from "lucide-react";
+import { Package } from "lucide-react";
 
-// Older bookings snapshot a price without a currency suffix — add it only if missing.
-function withTnd(price: string) {
-  return /tnd/i.test(price) ? price : `${price} TND`;
-}
-
-interface BookingRow {
-  id: number;
-  service: string;
+interface SaleRow {
+  id: string;
+  kind: "PRODUCT" | "SERVICE";
+  title: string;
+  quantity: number;
   date: string;
-  time: string;
   status: string;
   customerName: string | null;
-  price: string | null;
+  gross: number;
   commissionRate: number | null;
   commissionAmount: number | null;
-}
-
-interface OrderItemRow {
-  id: number;
-  productName: string;
-  quantity: number;
-  price: number;
-  commissionRate: number | null;
-  commissionAmount: number | null;
-  order: { customerName: string; createdAt: string; status: string };
 }
 
 function StatusBadge({ status }: { status: string }) {
   const map: Record<string, string> = {
-    pending: "bg-calma-gold/10 text-[#8A6B2E]",
+    pending: "bg-amber-50 text-amber-700",
     confirmed: "bg-calma-success/10 text-calma-success",
     shipped: "bg-calma-success/10 text-calma-success",
     delivered: "bg-calma-success/10 text-calma-success",
@@ -48,39 +34,40 @@ function StatusBadge({ status }: { status: string }) {
 }
 
 export default function B2BSales() {
-  const [b2bType, setB2bType] = useState<string | null>(null);
-  const [rows, setRows] = useState<(BookingRow | OrderItemRow)[]>([]);
+  const [rows, setRows] = useState<SaleRow[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("/api/b2b/sales")
       .then((res) => res.json())
       .then((data) => {
-        setB2bType(data.b2bType ?? null);
         setRows(Array.isArray(data.rows) ? data.rows : []);
       })
       .catch(() => setRows([]))
       .finally(() => setLoading(false));
   }, []);
 
-  const isAgency = b2bType === "AGENCY";
-
   const totalCommission = rows.reduce((sum, r) => sum + (r.commissionAmount ?? 0), 0);
+  const netRevenue = rows
+    .filter((row) => ["confirmed", "shipped", "delivered"].includes(row.status))
+    .reduce((sum, row) => sum + row.gross - (row.commissionAmount ?? 0), 0);
 
   return (
-    <div className="max-w-5xl">
+    <div className="mx-auto max-w-7xl">
       <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
         <div>
-          <h1 className="font-fraunces text-2xl font-normal text-calma-ink">
-            {isAgency ? "Mes réservations" : "Mes ventes"}
-          </h1>
+          <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Ventes et revenus</h1>
           <p className="mt-1 text-sm text-calma-taupe">
-            {rows.length} {isAgency ? "réservation" : "vente"}
-            {rows.length !== 1 ? "s" : ""}
+            {rows.length} transaction{rows.length !== 1 ? "s" : ""} produit et service
           </p>
         </div>
-        <div className="rounded-xl bg-calma-terracotta/10 px-4 py-2.5 text-sm font-semibold text-calma-terracotta">
-          {totalCommission.toFixed(2)} TND de commission prélevée au total
+        <div className="flex gap-2">
+          <div className="rounded-xl bg-calma-success/10 px-4 py-2.5 text-sm font-semibold text-calma-success">
+            {netRevenue.toFixed(2)} TND net confirmé
+          </div>
+          <div className="rounded-xl bg-calma-terracotta/10 px-4 py-2.5 text-sm font-semibold text-calma-terracotta">
+            {totalCommission.toFixed(2)} TND de commission
+          </div>
         </div>
       </div>
 
@@ -92,12 +79,8 @@ export default function B2BSales() {
         </div>
       ) : rows.length === 0 ? (
         <div className="rounded-2xl border border-dashed border-calma-border py-16 text-center text-calma-taupe">
-          {isAgency ? (
-            <Calendar className="mx-auto mb-3 h-10 w-10 opacity-30" />
-          ) : (
-            <Package className="mx-auto mb-3 h-10 w-10 opacity-30" />
-          )}
-          <p>{isAgency ? "Aucune réservation pour le moment" : "Aucune vente pour le moment"}</p>
+          <Package className="mx-auto mb-3 h-10 w-10 opacity-30" />
+          <p>Aucune vente pour le moment</p>
         </div>
       ) : (
         <div className="overflow-hidden rounded-2xl border border-calma-border bg-white">
@@ -105,7 +88,7 @@ export default function B2BSales() {
             <table className="w-full text-left text-sm">
               <thead className="bg-calma-sand text-xs uppercase tracking-wide text-calma-taupe">
                 <tr>
-                  <th className="px-5 py-3 font-medium">{isAgency ? "Service" : "Produit"}</th>
+                  <th className="px-5 py-3 font-medium">Offre</th>
                   <th className="px-5 py-3 font-medium">Client</th>
                   <th className="px-5 py-3 font-medium">Date</th>
                   <th className="px-5 py-3 font-medium">Statut</th>
@@ -114,55 +97,29 @@ export default function B2BSales() {
                 </tr>
               </thead>
               <tbody>
-                {rows.map((row) => {
-                  if (isAgency) {
-                    const b = row as BookingRow;
-                    return (
-                      <tr key={b.id} className="border-t border-calma-border">
-                        <td className="px-5 py-3.5 font-medium text-calma-ink">{b.service}</td>
-                        <td className="px-5 py-3.5 text-calma-taupe">{b.customerName ?? "—"}</td>
-                        <td className="px-5 py-3.5 text-calma-taupe">
-                          {new Date(b.date).toLocaleDateString("fr-FR")} {b.time}
-                        </td>
-                        <td className="px-5 py-3.5">
-                          <StatusBadge status={b.status} />
-                        </td>
-                        <td className="px-5 py-3.5 text-calma-ink">
-                          {b.price ? withTnd(b.price) : "—"}
-                        </td>
-                        <td className="px-5 py-3.5 text-calma-terracotta">
-                          {b.commissionAmount !== null
-                            ? `${b.commissionAmount.toFixed(2)} TND (${b.commissionRate}%)`
-                            : "—"}
-                        </td>
-                      </tr>
-                    );
-                  }
-                  const o = row as OrderItemRow;
-                  return (
-                    <tr key={o.id} className="border-t border-calma-border">
-                      <td className="px-5 py-3.5 font-medium text-calma-ink">
-                        {o.productName}{" "}
-                        <span className="text-xs text-calma-taupe">×{o.quantity}</span>
-                      </td>
-                      <td className="px-5 py-3.5 text-calma-taupe">{o.order.customerName}</td>
-                      <td className="px-5 py-3.5 text-calma-taupe">
-                        {new Date(o.order.createdAt).toLocaleDateString("fr-FR")}
-                      </td>
-                      <td className="px-5 py-3.5">
-                        <StatusBadge status={o.order.status} />
-                      </td>
-                      <td className="px-5 py-3.5 text-calma-ink">
-                        {(o.price * o.quantity).toFixed(2)} TND
-                      </td>
-                      <td className="px-5 py-3.5 text-calma-terracotta">
-                        {o.commissionAmount !== null
-                          ? `${o.commissionAmount.toFixed(2)} TND (${o.commissionRate}%)`
-                          : "—"}
-                      </td>
-                    </tr>
-                  );
-                })}
+                {rows.map((row) => (
+                  <tr key={row.id} className="border-t border-calma-border">
+                    <td className="px-5 py-3.5 font-medium text-calma-ink">
+                      {row.title}{" "}
+                      <span className="ml-1 rounded-full bg-calma-sand px-2 py-0.5 text-[10px] text-calma-taupe">
+                        {row.kind === "SERVICE" ? "Service" : `Produit ×${row.quantity}`}
+                      </span>
+                    </td>
+                    <td className="px-5 py-3.5 text-calma-taupe">{row.customerName ?? "—"}</td>
+                    <td className="px-5 py-3.5 text-calma-taupe">
+                      {new Date(row.date).toLocaleDateString("fr-FR")}
+                    </td>
+                    <td className="px-5 py-3.5">
+                      <StatusBadge status={row.status} />
+                    </td>
+                    <td className="px-5 py-3.5 text-calma-ink">{row.gross.toFixed(2)} TND</td>
+                    <td className="px-5 py-3.5 text-calma-terracotta">
+                      {row.commissionAmount !== null
+                        ? `${row.commissionAmount.toFixed(2)} TND (${row.commissionRate}%)`
+                        : "—"}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

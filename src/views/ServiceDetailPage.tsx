@@ -85,8 +85,7 @@ function ServiceDetailContent() {
           <div
             className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.6) 45%,rgba(42,38,34,.8) 100%)",
+              background: "rgba(42,38,34,.66)",
             }}
           />
           <div className="relative z-[2] mx-auto max-w-[640px]">

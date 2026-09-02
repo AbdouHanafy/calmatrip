@@ -12,7 +12,7 @@ export function ServiceSelector({ services, loading, serviceId, onSelect }: Serv
   return (
     <div>
       <label className="text-sm font-bold text-gray-700 block mb-3 flex items-center gap-2">
-        <Car className="w-4 h-4 text-[#87CEEB]" />
+        <Car className="h-4 w-4 text-calma-terracotta" />
         Choose Service
       </label>
 
@@ -35,15 +35,17 @@ export function ServiceSelector({ services, loading, serviceId, onSelect }: Serv
               onClick={() => onSelect(s.id)}
               className={`group text-left p-4 rounded-2xl border-2 transition-all duration-300 ${
                 serviceId === s.id
-                  ? "border-[#4CAF50] bg-gradient-to-r from-[#4CAF50]/10 to-[#87CEEB]/10 shadow-lg shadow-[#4CAF50]/10"
-                  : "border-gray-100 hover:border-[#87CEEB]/50 hover:shadow-md hover:bg-gray-50"
+                  ? "border-calma-terracotta bg-calma-terracotta/5 shadow-sm"
+                  : "border-gray-100 hover:border-calma-terracotta/50 hover:bg-gray-50"
               }`}
             >
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
                   <div
                     className={`p-2 rounded-xl ${
-                      serviceId === s.id ? "bg-[#4CAF50] text-white" : "bg-gray-100 text-gray-500"
+                      serviceId === s.id
+                        ? "bg-calma-terracotta text-white"
+                        : "bg-gray-100 text-gray-500"
                     }`}
                   >
                     <Car className="w-4 h-4" />
@@ -54,13 +56,13 @@ export function ServiceSelector({ services, loading, serviceId, onSelect }: Serv
                   </div>
                 </div>
                 <div
-                  className={`font-bold text-sm ${serviceId === s.id ? "text-[#4CAF50]" : "text-gray-400"}`}
+                  className={`text-sm font-bold ${serviceId === s.id ? "text-calma-terracotta" : "text-gray-400"}`}
                 >
                   {s.price}
                 </div>
               </div>
               {serviceId === s.id && (
-                <div className="mt-2 flex items-center gap-1 text-[10px] font-medium text-[#4CAF50]">
+                <div className="mt-2 flex items-center gap-1 text-[10px] font-medium text-calma-terracotta">
                   <ChevronRight className="w-3 h-3" />
                   Selected
                 </div>

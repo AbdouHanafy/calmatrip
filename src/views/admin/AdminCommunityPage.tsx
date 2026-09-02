@@ -121,7 +121,7 @@ export default function AdminCommunityPage() {
                     className="w-11 h-11 rounded-full object-cover"
                   />
                 ) : (
-                  <div className="w-11 h-11 rounded-full bg-gradient-to-br from-calma-olive to-calma-olive-deep flex items-center justify-center">
+                  <div className="flex h-11 w-11 items-center justify-center rounded-full bg-admin-navy">
                     <span className="text-white font-bold">{post.authorName.charAt(0)}</span>
                   </div>
                 )}

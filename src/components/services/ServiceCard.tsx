@@ -40,7 +40,7 @@ export function ServiceCard({
       ) : (
         <div
           className="absolute inset-0 flex items-center justify-center"
-          style={{ background: `linear-gradient(150deg, ${c}, ${c}99)` }}
+          style={{ backgroundColor: c }}
         >
           <service.icon className="h-14 w-14 text-white/25" />
         </div>
@@ -50,8 +50,7 @@ export function ServiceCard({
       <div
         className="absolute inset-0"
         style={{
-          background:
-            "linear-gradient(180deg, rgba(20,8,4,0) 40%, rgba(20,8,4,.55) 72%, rgba(20,8,4,.88) 100%)",
+          background: "rgba(20,8,4,.38)",
         }}
       />
 

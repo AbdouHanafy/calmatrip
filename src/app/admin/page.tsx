@@ -1,8 +1,8 @@
-import AdminOverview from '@/views/admin/AdminOverview';
-import type { Metadata } from 'next';
+import AdminOverview from "@/views/admin/AdminOverview";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Admin Dashboard — Sahara Tunisia',
+  title: "Operations dashboard",
   robots: {
     index: false,
     follow: false,

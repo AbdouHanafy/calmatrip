@@ -50,12 +50,12 @@ export function TripHeroCard({
           ) : (
             <div
               className="flex h-full items-center justify-center"
-              style={{ background: "linear-gradient(150deg, #4A667D, #24333F)" }}
+              style={{ backgroundColor: "#24333F" }}
             >
               <MapPin className="h-10 w-10 text-white/25" />
             </div>
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/45 via-transparent to-transparent md:bg-gradient-to-r" />
+          <div className="absolute inset-0 bg-black/35" />
         </div>
 
         <div className="flex flex-col p-5 md:p-6">

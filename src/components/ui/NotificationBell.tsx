@@ -15,7 +15,33 @@ type Notification = {
   createdAt: string;
 };
 
-export default function NotificationBell() {
+type NotificationBellProps = {
+  tone?: "neutral" | "admin" | "partner";
+};
+
+const TONES = {
+  neutral: {
+    button:
+      "text-calma-taupe hover:border-calma-terracotta/30 hover:bg-calma-terracotta/5 hover:text-calma-terracotta",
+    action: "text-calma-terracotta",
+    unread: "bg-calma-terracotta/5",
+    dot: "bg-calma-terracotta",
+  },
+  admin: {
+    button: "text-slate-500 hover:border-admin-gold/30 hover:bg-admin-gold/5 hover:text-admin-gold",
+    action: "text-admin-gold-deep",
+    unread: "bg-admin-gold/5",
+    dot: "bg-admin-gold",
+  },
+  partner: {
+    button: "text-slate-500 hover:border-b2b-teal/30 hover:bg-b2b-teal/5 hover:text-b2b-teal",
+    action: "text-b2b-teal",
+    unread: "bg-b2b-teal/5",
+    dot: "bg-b2b-teal",
+  },
+} as const;
+
+export default function NotificationBell({ tone = "neutral" }: NotificationBellProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [open, setOpen] = useState(false);
@@ -23,6 +49,7 @@ export default function NotificationBell() {
   const buttonRef = useRef<HTMLButtonElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const palette = TONES[tone];
 
   // ─── Fetch notifs ────────────────────────────────────────────
   const fetchNotifications = async () => {
@@ -30,8 +57,8 @@ export default function NotificationBell() {
     try {
       const res = await fetch("/api/notifications");
       const data = await res.json();
-      setNotifications(data.notifications);
-      setUnreadCount(data.unreadCount);
+      setNotifications(Array.isArray(data.notifications) ? data.notifications : []);
+      setUnreadCount(Number(data.unreadCount) || 0);
     } finally {
       setLoading(false);
     }
@@ -117,16 +144,15 @@ export default function NotificationBell() {
       <button
         ref={buttonRef}
         onClick={() => setOpen((prev) => !prev)}
-        className="relative flex h-11 w-11 items-center justify-center rounded-full hover:bg-gray-100 transition-colors"
+        className={`relative flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white transition-colors ${palette.button}`}
         aria-label="Notifications"
+        aria-expanded={open}
+        aria-haspopup="dialog"
+        title="Notifications"
       >
-        <Bell className="w-6 h-6 text-gray-600" />
+        <Bell className="h-[18px] w-[18px]" />
         {unreadCount > 0 && (
-          <span
-            className="absolute -top-1 -right-1 bg-red-500 text-white text-xs
-                           font-bold rounded-full min-w-[18px] h-[18px] flex
-                           items-center justify-center px-1 leading-none"
-          >
+          <span className="absolute -right-1.5 -top-1.5 flex h-[17px] min-w-[17px] items-center justify-center rounded-full border-2 border-white bg-red-500 px-0.5 text-[9px] font-bold leading-none text-white">
             {unreadCount > 99 ? "99+" : unreadCount}
           </span>
         )}
@@ -139,20 +165,23 @@ export default function NotificationBell() {
           <div
             ref={dropdownRef}
             style={getDropdownPosition()}
-            className="w-80 bg-white rounded-xl shadow-xl border border-gray-100 overflow-hidden"
+            className="w-[min(22rem,calc(100vw-2rem))] overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-[0_24px_70px_-24px_rgba(15,23,42,.32)]"
           >
             {/* Header */}
-            <div className="flex items-center justify-between px-4 py-3 border-b border-gray-100">
-              <span className="font-semibold text-gray-800">Notifications</span>
+            <div className="flex items-center justify-between border-b border-slate-100 px-4 py-3.5">
+              <span className="font-semibold text-slate-900">Notifications</span>
               {unreadCount > 0 && (
-                <button onClick={markAllAsRead} className="text-xs text-blue-600 hover:underline">
+                <button
+                  onClick={markAllAsRead}
+                  className={`text-xs font-semibold hover:underline ${palette.action}`}
+                >
                   Tout marquer lu
                 </button>
               )}
             </div>
 
             {/* Liste */}
-            <div className="max-h-96 overflow-y-auto divide-y divide-gray-50">
+            <div className="max-h-96 divide-y divide-slate-100 overflow-y-auto">
               {loading && notifications.length === 0 ? (
                 <div className="py-8 text-center text-sm text-gray-400">Chargement...</div>
               ) : notifications.length === 0 ? (
@@ -162,14 +191,13 @@ export default function NotificationBell() {
                   <button
                     key={notif.id}
                     onClick={() => handleClick(notif)}
-                    className={`w-full text-left px-4 py-3 flex gap-3 hover:bg-gray-50
-                              transition-colors ${!notif.isRead ? "bg-blue-50/60" : ""}`}
+                    className={`flex w-full gap-3 px-4 py-3 text-left transition-colors hover:bg-slate-50 ${!notif.isRead ? palette.unread : ""}`}
                   >
                     {/* Dot non-lu */}
                     <div className="mt-1 flex-shrink-0">
                       <span
                         className={`block w-2 h-2 rounded-full mt-1
-                        ${!notif.isRead ? "bg-blue-500" : "bg-transparent"}`}
+                        ${!notif.isRead ? palette.dot : "bg-transparent"}`}
                       />
                     </div>
 

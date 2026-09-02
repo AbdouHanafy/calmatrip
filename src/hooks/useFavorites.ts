@@ -17,7 +17,7 @@ const key = (itemType: FavoriteType, itemId: number) => `${itemType}:${itemId}`;
 // products, Explorer places/events/museums/services). Requires a session —
 // toggling while logged out redirects to /login.
 export function useFavorites() {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const router = useRouter();
   const pathname = usePathname();
   const [ids, setIds] = useState<Set<string>>(new Set());

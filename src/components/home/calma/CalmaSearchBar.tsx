@@ -99,7 +99,7 @@ export default function CalmaSearchBar() {
           <button
             type="submit"
             className="mt-0.5 flex h-[48px] w-full items-center justify-center gap-2 rounded-full font-hanken text-[15px] font-bold text-white shadow-[0_14px_28px_-8px_rgba(242,153,74,.65)] transition-transform active:scale-[.97]"
-            style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+            style={{ backgroundColor: "#F2994A" }}
           >
             {t.browse}
             <ArrowRight size={17} />
@@ -170,7 +170,7 @@ export default function CalmaSearchBar() {
           <button
             type="submit"
             className="group flex min-w-[210px] flex-[1_1_auto] items-center justify-center gap-2.5 rounded-3xl px-8 py-5 font-hanken text-[16px] font-bold text-white shadow-[0_18px_36px_-12px_rgba(242,153,74,.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_-12px_rgba(242,153,74,.8)] active:translate-y-0 active:scale-[.98]"
-            style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+            style={{ backgroundColor: "#F2994A" }}
           >
             {t.browse}
             <ArrowRight

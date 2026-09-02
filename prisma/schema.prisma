@@ -8,22 +8,22 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  name          String?
-  email         String?   @unique
-  emailVerified DateTime?
-  image         String?
-  phone         String?
-  password      String?
-  role          String    @default("USER")
-  status        String    @default("active")
-  b2bType       String?
-  b2bStatus     String?   @default("pending")
-  commissionRate Float    @default(10)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
-  accounts      Account[]
-  sessions      Session[]
+  id             String    @id @default(cuid())
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime?
+  image          String?
+  phone          String?
+  password       String?
+  role           String    @default("USER")
+  status         String    @default("active")
+  b2bType        String?
+  b2bStatus      String?   @default("pending")
+  commissionRate Float     @default(10)
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  accounts       Account[]
+  sessions       Session[]
 
   notifications     Notification[]
   pushSubscriptions PushSubscription[]
@@ -214,16 +214,16 @@ model Booking {
   updatedAt       DateTime  @updatedAt
   hasLuggage      Boolean   @default(false)
 
-  tripType    String   @default("one-way")
-  returnDate  DateTime?
-  returnTime  String?
+  tripType   String    @default("one-way")
+  returnDate DateTime?
+  returnTime String?
 
   // Snapshotted at booking time when the service belongs to a B2B partner —
   // lets us track what the platform earned without recomputing from
   // service/user records that may change later.
-  serviceId      Int?
-  ownerId        String?
-  commissionRate Float?
+  serviceId        Int?
+  ownerId          String?
+  commissionRate   Float?
   commissionAmount Float?
 
   review Review?
@@ -300,10 +300,10 @@ model FAQ {
 }
 
 model Event {
-  id          Int      @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   title       String
-  description String   @db.Text
-  image       String?  @db.Text
+  description String    @db.Text
+  image       String?   @db.Text
   city        String
   address     String?
   startDate   DateTime
@@ -312,29 +312,29 @@ model Event {
   category    String?
   lat         Float?
   lng         Float?
-  active      Boolean  @default(true)
-  order       Int      @default(0)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  active      Boolean   @default(true)
+  order       Int       @default(0)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   @@map("events")
 }
 
 model Museum {
-  id            Int      @id @default(autoincrement())
-  name          String
-  description   String   @db.Text
-  image         String?  @db.Text
-  city          String
-  address       String?
-  openingHours  String?
-  price         String?
-  lat           Float?
-  lng           Float?
-  active        Boolean  @default(true)
-  order         Int      @default(0)
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id           Int      @id @default(autoincrement())
+  name         String
+  description  String   @db.Text
+  image        String?  @db.Text
+  city         String
+  address      String?
+  openingHours String?
+  price        String?
+  lat          Float?
+  lng          Float?
+  active       Boolean  @default(true)
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   @@map("museums")
 }
@@ -359,7 +359,7 @@ model PracticalGuide {
 model Favorite {
   id        Int      @id @default(autoincrement())
   userId    String
-  itemType  String   // "product" | "place" | "event" | "museum" | "service"
+  itemType  String // "product" | "place" | "event" | "museum" | "service"
   itemId    Int
   createdAt DateTime @default(now())
 
@@ -431,17 +431,17 @@ model Contact {
 }
 
 model Notification {
-  id        Int      @id @default(autoincrement())
+  id        Int       @id @default(autoincrement())
   userId    String?
   recipient String
   type      String
   title     String
-  body      String   @db.Text
+  body      String    @db.Text
   link      String?
-  isRead    Boolean  @default(false)
+  isRead    Boolean   @default(false)
   readAt    DateTime?
   metadata  Json?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   user User? @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -467,6 +467,7 @@ model PushSubscription {
   @@index([userId])
   @@map("push_subscriptions")
 }
+
 model Review {
   id        Int      @id @default(autoincrement())
   name      String
@@ -497,4 +498,308 @@ model CommunityPost {
 
   @@index([authorId])
   @@map("community_posts")
+}
+
+// ---------------------------------------------------------------------------
+// Extensible CMS. These additive models deliberately do not replace any of
+// the strongly typed booking, commerce, user, or partner models above.
+// Administrator-defined values are validated by the CMS service before they
+// are stored in JSON columns.
+// ---------------------------------------------------------------------------
+
+model ContentType {
+  id                String            @id @default(cuid())
+  name              String
+  slug              String            @unique
+  description       String?           @db.Text
+  icon              String?
+  listColumns       Json?
+  defaultSort       Json?
+  publishingEnabled Boolean           @default(true)
+  localized         Boolean           @default(true)
+  active            Boolean           @default(true)
+  createdBy         String?
+  updatedBy         String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+  fields            FieldDefinition[]
+  entries           ContentEntry[]
+
+  @@map("cms_content_types")
+}
+
+model FieldDefinition {
+  id            String      @id @default(cuid())
+  contentTypeId String
+  contentType   ContentType @relation(fields: [contentTypeId], references: [id], onDelete: Cascade)
+  key           String
+  label         String
+  type          String
+  required      Boolean     @default(false)
+  unique        Boolean     @default(false)
+  localized     Boolean     @default(false)
+  searchable    Boolean     @default(false)
+  sortable      Boolean     @default(false)
+  position      Int         @default(0)
+  placeholder   Json?
+  helpText      Json?
+  defaultValue  Json?
+  validation    Json?
+  options       Json?
+  visibility    Json?
+  relation      Json?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([contentTypeId, key])
+  @@index([contentTypeId, position])
+  @@map("cms_field_definitions")
+}
+
+model ContentEntry {
+  id            String      @id @default(cuid())
+  contentTypeId String
+  contentType   ContentType @relation(fields: [contentTypeId], references: [id], onDelete: Restrict)
+  slug          String
+  status        String      @default("DRAFT")
+  locale        String      @default("fr")
+  data          Json
+  seo           Json?
+  createdBy     String?
+  updatedBy     String?
+  publishedBy   String?
+  publishedAt   DateTime?
+  createdAt     DateTime    @default(now())
+  updatedAt     DateTime    @updatedAt
+
+  @@unique([contentTypeId, slug, locale])
+  @@index([contentTypeId, status, updatedAt])
+  @@index([slug, locale, status])
+  @@map("cms_content_entries")
+}
+
+model CmsPage {
+  id          String         @id @default(cuid())
+  title       String
+  slug        String
+  locale      String         @default("fr")
+  status      String         @default("DRAFT")
+  seo         Json?
+  createdBy   String?
+  updatedBy   String?
+  publishedBy String?
+  publishedAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  blocks      CmsPageBlock[]
+
+  @@unique([slug, locale])
+  @@index([status, locale, updatedAt])
+  @@map("cms_pages")
+}
+
+model CmsPageBlock {
+  id        String   @id @default(cuid())
+  pageId    String
+  page      CmsPage  @relation(fields: [pageId], references: [id], onDelete: Cascade)
+  type      String
+  position  Int      @default(0)
+  data      Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([pageId, position])
+  @@map("cms_page_blocks")
+}
+
+model FormDefinition {
+  id          String           @id @default(cuid())
+  name        String
+  slug        String           @unique
+  description Json?
+  status      String           @default("DRAFT")
+  settings    Json?
+  createdBy   String?
+  updatedBy   String?
+  publishedBy String?
+  publishedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+  steps       FormStep[]
+  submissions FormSubmission[]
+
+  @@index([status, updatedAt])
+  @@map("cms_form_definitions")
+}
+
+model FormStep {
+  id          String         @id @default(cuid())
+  formId      String
+  form        FormDefinition @relation(fields: [formId], references: [id], onDelete: Cascade)
+  title       Json
+  description Json?
+  position    Int            @default(0)
+  condition   Json?
+  fields      FormField[]
+
+  @@index([formId, position])
+  @@map("cms_form_steps")
+}
+
+model FormField {
+  id           String   @id @default(cuid())
+  stepId       String
+  step         FormStep @relation(fields: [stepId], references: [id], onDelete: Cascade)
+  key          String
+  label        Json
+  type         String
+  required     Boolean  @default(false)
+  position     Int      @default(0)
+  placeholder  Json?
+  helpText     Json?
+  defaultValue Json?
+  validation   Json?
+  options      Json?
+  condition    Json?
+
+  @@unique([stepId, key])
+  @@index([stepId, position])
+  @@map("cms_form_fields")
+}
+
+model FormSubmission {
+  id          String         @id @default(cuid())
+  formId      String
+  form        FormDefinition @relation(fields: [formId], references: [id], onDelete: Restrict)
+  status      String         @default("NEW")
+  locale      String         @default("fr")
+  data        Json
+  notes       Json?
+  assignedTo  String?
+  submitterId String?
+  draftToken  String?        @unique
+  submittedAt DateTime?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  @@index([formId, status, createdAt])
+  @@map("cms_form_submissions")
+}
+
+model CmsMedia {
+  id          String   @id @default(cuid())
+  filename    String
+  publicId    String?  @unique
+  url         String   @db.Text
+  mimeType    String
+  size        Int
+  width       Int?
+  height      Int?
+  title       String?
+  alt         Json?
+  caption     Json?
+  description Json?
+  folder      String?
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([mimeType, createdAt])
+  @@map("cms_media")
+}
+
+model CmsMediaFolder {
+  id        String   @id @default(cuid())
+  name      String   @unique
+  createdBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("cms_media_folders")
+}
+
+model CmsNavigation {
+  id        String              @id @default(cuid())
+  name      String
+  key       String              @unique
+  createdAt DateTime            @default(now())
+  updatedAt DateTime            @updatedAt
+  items     CmsNavigationItem[]
+
+  @@map("cms_navigations")
+}
+
+model CmsNavigationItem {
+  id           String              @id @default(cuid())
+  navigationId String
+  navigation   CmsNavigation       @relation(fields: [navigationId], references: [id], onDelete: Cascade)
+  parentId     String?
+  parent       CmsNavigationItem?  @relation("NavigationTree", fields: [parentId], references: [id], onDelete: Cascade)
+  children     CmsNavigationItem[] @relation("NavigationTree")
+  label        Json
+  url          String
+  type         String              @default("INTERNAL")
+  target       String              @default("_self")
+  visible      Boolean             @default(true)
+  position     Int                 @default(0)
+
+  @@index([navigationId, parentId, position])
+  @@map("cms_navigation_items")
+}
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  group     String   @default("general")
+  updatedBy String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([group])
+  @@map("cms_site_settings")
+}
+
+model CmsRedirect {
+  id          String   @id @default(cuid())
+  source      String   @unique
+  destination String
+  statusCode  Int      @default(301)
+  active      Boolean  @default(true)
+  createdBy   String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([active])
+  @@map("cms_redirects")
+}
+
+model CmsRevision {
+  id         String   @id @default(cuid())
+  entityType String
+  entityId   String
+  version    Int
+  snapshot   Json
+  actorId    String?
+  createdAt  DateTime @default(now())
+
+  @@unique([entityType, entityId, version])
+  @@index([entityType, entityId, createdAt])
+  @@map("cms_revisions")
+}
+
+model CmsAuditLog {
+  id         String   @id @default(cuid())
+  actorId    String?
+  action     String
+  entityType String
+  entityId   String?
+  before     Json?
+  after      Json?
+  metadata   Json?
+  createdAt  DateTime @default(now())
+
+  @@index([entityType, entityId, createdAt])
+  @@index([actorId, createdAt])
+  @@map("cms_audit_logs")
 }

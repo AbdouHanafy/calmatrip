@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import { Heart, ShoppingCart } from "lucide-react";
@@ -69,13 +69,15 @@ export function ProductCard({ product }: { product: Product }) {
           </h3>
         </Link>
         <div className="flex items-center justify-between">
-          <span className="font-fraunces text-lg font-semibold text-calma-ink">{product.price.toFixed(2)} TND</span>
+          <span className="font-fraunces text-lg font-semibold text-calma-ink">
+            {product.price.toFixed(2)} TND
+          </span>
           <button
             onClick={() => addToCart(product, 1)}
             disabled={outOfStock}
             aria-label="Ajouter au panier"
             className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-            style={{ background: 'linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)' }}
+            style={{ backgroundColor: "#F2994A" }}
           >
             <ShoppingCart className="w-4 h-4 text-white" />
           </button>

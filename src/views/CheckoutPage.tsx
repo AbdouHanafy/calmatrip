@@ -26,16 +26,18 @@ export default function CheckoutPage() {
   });
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const sessionName = session?.user?.name;
+  const sessionEmail = session?.user?.email;
 
   // Prefill from session once it loads, without clobbering user edits
   useEffect(() => {
-    if (session?.user?.name) {
-      setForm((f) => (f.customerName ? f : { ...f, customerName: session.user!.name! }));
+    if (sessionName) {
+      setForm((f) => (f.customerName ? f : { ...f, customerName: sessionName }));
     }
-    if (session?.user?.email) {
-      setForm((f) => (f.customerEmail ? f : { ...f, customerEmail: session.user!.email! }));
+    if (sessionEmail) {
+      setForm((f) => (f.customerEmail ? f : { ...f, customerEmail: sessionEmail }));
     }
-  }, [session?.user?.name, session?.user?.email]);
+  }, [sessionName, sessionEmail]);
 
   const orderTotal = cartTotal + DELIVERY_FEE;
 
@@ -45,7 +47,7 @@ export default function CheckoutPage() {
         <Navbar />
         <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
           <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
-          <Link href="/marketplace" className="text-[#87CEEB] underline text-sm">
+          <Link href="/marketplace" className="text-sm text-calma-terracotta underline">
             Retour à la marketplace
           </Link>
         </div>
@@ -110,7 +112,7 @@ export default function CheckoutPage() {
                     required
                     value={form.customerName}
                     onChange={(e) => setForm({ ...form, customerName: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
                   />
                 </div>
                 <div>
@@ -122,7 +124,7 @@ export default function CheckoutPage() {
                     inputMode="tel"
                     value={form.customerPhone}
                     onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
-                    className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
+                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
                   />
                 </div>
               </div>
@@ -134,7 +136,7 @@ export default function CheckoutPage() {
                   type="email"
                   value={form.customerEmail}
                   onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
                 />
               </div>
 
@@ -147,7 +149,7 @@ export default function CheckoutPage() {
                   rows={2}
                   value={form.address}
                   onChange={(e) => setForm({ ...form, address: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB] resize-none"
+                  className="w-full resize-none rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
                 />
               </div>
 
@@ -156,7 +158,7 @@ export default function CheckoutPage() {
                 <input
                   value={form.city}
                   onChange={(e) => setForm({ ...form, city: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
+                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
                 />
               </div>
 
@@ -172,7 +174,7 @@ export default function CheckoutPage() {
                       onClick={() => setForm({ ...form, paymentMethod: opt.value })}
                       className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
                         form.paymentMethod === opt.value
-                          ? "border-[#4CAF50] bg-[#4CAF50]/10 text-[#4CAF50]"
+                          ? "border-calma-terracotta bg-calma-terracotta/10 text-calma-terracotta"
                           : "border-gray-200 text-gray-600 hover:bg-gray-50"
                       }`}
                     >
@@ -190,7 +192,7 @@ export default function CheckoutPage() {
                   rows={2}
                   value={form.notes}
                   onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                  className="w-full px-4 py-2.5 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#87CEEB] resize-none"
+                  className="w-full resize-none rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
                 />
               </div>
 
@@ -199,7 +201,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold disabled:opacity-60 hover:shadow-lg transition-shadow"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
               >
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
                 Confirmer la commande

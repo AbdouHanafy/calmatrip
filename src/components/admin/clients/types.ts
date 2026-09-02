@@ -17,7 +17,6 @@ export type StatCard = {
   label: string;
   value: number;
   icon: LucideIcon;
-  gradient: string;
   change: string;
 };
 
@@ -39,9 +38,9 @@ export function getInitials(name: string) {
 export function getStatusBadge(status: string) {
   if (status === "active") {
     return {
-      bg: "bg-[#5E8B63]/10",
-      text: "text-[#5E8B63]",
-      border: "border-[#5E8B63]/20",
+      bg: "bg-emerald-50",
+      text: "text-emerald-700",
+      border: "border-emerald-200",
       icon: CheckCircle,
       label: "Active",
     };

@@ -1,4 +1,3 @@
-import { NextRequest } from "next/server";
 import { auth } from "@/auth";
 import { notificationEvents } from "@/lib/notificationEvents";
 
@@ -6,7 +5,7 @@ export const dynamic = "force-dynamic";
 
 // Server-Sent Events stream — pushes new notifications to the client the
 // instant they're created (see src/lib/notificationEvents.ts for scope caveats).
-export async function GET(req: NextRequest) {
+export async function GET() {
   const session = await auth();
   if (!session?.user) {
     return new Response("Unauthorized", { status: 401 });

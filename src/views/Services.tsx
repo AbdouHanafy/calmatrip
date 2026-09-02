@@ -55,16 +55,14 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
           <div
             className="absolute inset-0"
             style={{
-              background:
-                "linear-gradient(180deg,rgba(42,38,34,.72) 0%,rgba(42,38,34,.6) 45%,rgba(42,38,34,.8) 100%)",
+              background: "rgba(42,38,34,.66)",
             }}
           />
           {/* subtle sand-ripple texture, replaces literal decorative shapes */}
           <div
             className="pointer-events-none absolute inset-0 opacity-[.07]"
             style={{
-              backgroundImage:
-                "repeating-linear-gradient(100deg,transparent 0 26px,#F8F5F0 26px 27px)",
+              backgroundImage: "transparent",
             }}
           />
 

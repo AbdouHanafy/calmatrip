@@ -71,16 +71,16 @@ export function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
         onClick={() => inputRef.current?.click()}
         className={`relative border-2 border-dashed rounded-xl p-6 flex flex-col items-center justify-center gap-3 cursor-pointer transition-all duration-200 ${
           dragging
-            ? "border-[#F2994A] bg-[#F2994A]/5 scale-[1.01]"
-            : "border-calma-border hover:border-[#F2994A] hover:bg-[#F2994A]/5"
+            ? "scale-[1.01] border-admin-gold bg-admin-gold/5"
+            : "border-slate-300 hover:border-admin-gold hover:bg-admin-gold/5"
         }`}
       >
-        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#F2994A]/20 to-[#5E8B63]/20 flex items-center justify-center">
-          <Upload className="w-6 h-6 text-[#F2994A]" />
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-slate-100">
+          <Upload className="h-6 w-6 text-admin-navy" />
         </div>
         <div className="text-center">
           <p className="text-sm font-medium text-calma-ink">
-            Drop images here or <span className="text-[#F2994A]">browse</span>
+            Drop images here or <span className="text-admin-gold-deep">browse</span>
           </p>
           <p className="text-xs text-calma-taupe mt-1">PNG, JPG, WEBP — max 5 MB each</p>
         </div>
@@ -106,15 +106,15 @@ export function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
               onDragEnd={onDragEndThumb}
               onDragOver={(e) => e.preventDefault()}
               className={`relative group aspect-square rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-grab active:cursor-grabbing ${
-                index === 0 ? "border-[#F2994A]" : "border-calma-border"
-              } ${dragOverIndex === index && dragItem.current !== index ? "scale-105 border-[#5E8B63]" : ""}`}
+                index === 0 ? "border-admin-gold" : "border-slate-200"
+              } ${dragOverIndex === index && dragItem.current !== index ? "scale-105 border-admin-gold" : ""}`}
             >
               {/* eslint-disable-next-line @next/next/no-img-element -- img.url can be a local blob: preview before upload, which next/image cannot render */}
               <img src={img.url} alt="" className="w-full h-full object-cover" />
 
               {/* Primary badge */}
               {index === 0 && (
-                <span className="absolute top-1 left-1 px-1.5 py-0.5 bg-[#F2994A] text-white text-[10px] font-bold rounded-md">
+                <span className="absolute left-1 top-1 rounded-md bg-admin-navy px-1.5 py-0.5 text-[10px] font-bold text-white">
                   Main
                 </span>
               )}
@@ -157,7 +157,7 @@ export function ImageUploadZone({ images, onChange }: ImageUploadZoneProps) {
           <button
             type="button"
             onClick={() => inputRef.current?.click()}
-            className="aspect-square rounded-xl border-2 border-dashed border-calma-border hover:border-[#F2994A] hover:bg-[#F2994A]/5 flex flex-col items-center justify-center gap-1 transition-all"
+            className="flex aspect-square flex-col items-center justify-center gap-1 rounded-xl border-2 border-dashed border-slate-300 transition-all hover:border-admin-gold hover:bg-admin-gold/5"
           >
             <Plus className="w-5 h-5 text-calma-taupe" />
             <span className="text-[10px] text-calma-taupe">Add more</span>

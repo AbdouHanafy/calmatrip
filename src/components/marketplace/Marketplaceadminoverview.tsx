@@ -1,4 +1,4 @@
-'use client';
+"use client";
 import Link from "next/link";
 import {
   Package,
@@ -55,11 +55,11 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  pending: "bg-[#FFD700]/10 text-[#856B00] border border-[#FFD700]/20",
-  confirmed: "bg-[#87CEEB]/10 text-[#3a7d99] border border-[#87CEEB]/20",
-  shipped: "bg-blue-500/10 text-blue-600 border border-blue-500/20",
-  delivered: "bg-[#4CAF50]/10 text-[#4CAF50] border border-[#4CAF50]/20",
-  cancelled: "bg-red-500/10 text-red-500 border border-red-500/20",
+  pending: "border border-amber-200 bg-amber-50 text-amber-700",
+  confirmed: "border border-blue-200 bg-blue-50 text-blue-700",
+  shipped: "border border-indigo-200 bg-indigo-50 text-indigo-700",
+  delivered: "border border-emerald-200 bg-emerald-50 text-emerald-700",
+  cancelled: "border border-red-200 bg-red-50 text-red-700",
 };
 
 function SkeletonBlock({ className }: { className?: string }) {
@@ -106,7 +106,10 @@ export function MarketplaceAdminOverview() {
     return (
       <div className="flex flex-col items-center justify-center h-64 gap-3">
         <p className="text-red-500 font-medium">Failed to load dashboard</p>
-        <button onClick={load} className="text-sm text-[#87CEEB] underline hover:text-[#4CAF50]">
+        <button
+          onClick={load}
+          className="text-sm text-admin-gold-deep underline hover:text-admin-navy"
+        >
           Retry
         </button>
       </div>
@@ -121,28 +124,24 @@ export function MarketplaceAdminOverview() {
       value: stats.totalProducts.toLocaleString(),
       sub: `${stats.lowStockProducts} low stock`,
       icon: Package,
-      gradient: "from-[#87CEEB] to-[#4CAF50]",
     },
     {
       label: "Orders",
       value: stats.totalOrders.toLocaleString(),
       sub: `${stats.pendingOrders} pending`,
       icon: ShoppingCart,
-      gradient: "from-[#FFD700] to-[#FFC107]",
     },
     {
       label: "Low Stock",
       value: stats.lowStockProducts.toLocaleString(),
       sub: "≤ 5 units",
       icon: AlertTriangle,
-      gradient: "from-red-400 to-orange-400",
     },
     {
       label: "Revenue",
       value: `${stats.revenue.toLocaleString()} TND`,
       sub: "confirmed orders",
       icon: DollarSign,
-      gradient: "from-[#4CAF50] to-[#45A049]",
     },
   ];
 
@@ -152,11 +151,11 @@ export function MarketplaceAdminOverview() {
         {statCards.map((stat, index) => (
           <div
             key={index}
-            className="group bg-white rounded-2xl p-6 shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1 border border-gray-100"
+            className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm transition-shadow hover:shadow-md"
           >
             <div className="flex items-start justify-between mb-4">
-              <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${stat.gradient} flex items-center justify-center opacity-90 group-hover:opacity-100 transition-opacity`}>
-                <stat.icon className="w-6 h-6 text-white" />
+              <div className="flex h-12 w-12 items-center justify-center rounded-xl border border-slate-200 bg-slate-100">
+                <stat.icon className="h-6 w-6 text-admin-navy" />
               </div>
               <span className="text-xs font-medium text-gray-400 bg-gray-50 px-2 py-1 rounded-lg">
                 {stat.sub}
@@ -169,13 +168,13 @@ export function MarketplaceAdminOverview() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-bold text-gray-900">Recent Orders</h3>
               <p className="text-sm text-gray-500">Latest activities</p>
             </div>
-            <TrendingUp className="w-5 h-5 text-[#87CEEB]" />
+            <TrendingUp className="h-5 w-5 text-admin-gold" />
           </div>
 
           {recentOrders.length === 0 ? (
@@ -183,7 +182,10 @@ export function MarketplaceAdminOverview() {
           ) : (
             <div className="space-y-4">
               {recentOrders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors">
+                <div
+                  key={order.id}
+                  className="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                >
                   <div>
                     <p className="font-medium text-gray-900 text-sm">{order.customerName}</p>
                     <p className="text-xs text-gray-500">
@@ -191,8 +193,12 @@ export function MarketplaceAdminOverview() {
                     </p>
                   </div>
                   <div className="text-right space-y-1">
-                    <p className="text-sm font-semibold text-gray-900">{order.total.toFixed(2)} TND</p>
-                    <span className={`px-2 py-1 rounded-lg text-xs font-medium ${STATUS_STYLE[order.status] || ""}`}>
+                    <p className="text-sm font-semibold text-gray-900">
+                      {order.total.toFixed(2)} TND
+                    </p>
+                    <span
+                      className={`px-2 py-1 rounded-lg text-xs font-medium ${STATUS_STYLE[order.status] || ""}`}
+                    >
                       {STATUS_LABEL[order.status] || order.status}
                     </span>
                   </div>
@@ -203,27 +209,27 @@ export function MarketplaceAdminOverview() {
 
           <Link
             href="/admin/marketplace/orders"
-            className="mt-4 flex items-center justify-center gap-2 text-sm text-[#87CEEB] hover:text-[#4CAF50] transition-colors"
+            className="mt-4 flex items-center justify-center gap-2 text-sm text-admin-gold-deep transition-colors hover:text-admin-navy"
           >
             <span>View all orders</span>
             <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-100">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center justify-between mb-6">
             <div>
               <h3 className="text-lg font-bold text-gray-900">Popular Products</h3>
               <p className="text-sm text-gray-500">Best sellers</p>
             </div>
-            <Star className="w-5 h-5 text-[#FFD700]" />
+            <Star className="h-5 w-5 text-admin-gold" />
           </div>
 
           {topProducts.length === 0 ? (
             <p className="text-sm text-gray-400 text-center py-8">No sales yet</p>
           ) : (
             <div className="space-y-4">
-              {topProducts.map((product, index) => (
+              {topProducts.map((product) => (
                 <div key={product.name}>
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm font-medium text-gray-700">{product.name}</span>
@@ -231,7 +237,7 @@ export function MarketplaceAdminOverview() {
                   </div>
                   <div className="w-full h-2 bg-gray-100 rounded-full overflow-hidden">
                     <div
-                      className="h-full rounded-full bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] transition-all duration-500"
+                      className="h-full rounded-full bg-admin-gold transition-all duration-500"
                       style={{ width: `${product.percent}%` }}
                     />
                   </div>
@@ -243,41 +249,52 @@ export function MarketplaceAdminOverview() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-        <div className="bg-gradient-to-r from-[#87CEEB]/10 to-[#4CAF50]/10 rounded-2xl p-6 border border-gray-100">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-navy">
               <Package className="w-5 h-5 text-white" />
             </div>
             <h3 className="font-semibold text-gray-900">Manage Products</h3>
           </div>
           <p className="text-sm text-gray-600 mb-4">Add, edit or remove products</p>
-          <Link href="/admin/marketplace/products" className="inline-flex items-center gap-2 text-sm font-medium text-[#87CEEB] hover:text-[#4CAF50] transition-colors">
+          <Link
+            href="/admin/marketplace/products"
+            className="inline-flex items-center gap-2 text-sm font-medium text-admin-gold-deep transition-colors hover:text-admin-navy"
+          >
             Manage <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="bg-gradient-to-r from-[#FFD700]/10 to-[#FFC107]/10 rounded-2xl p-6 border border-gray-100">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-[#FFD700] to-[#FFC107] flex items-center justify-center">
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-admin-navy">
               <ShoppingCart className="w-5 h-5 text-white" />
             </div>
             <h3 className="font-semibold text-gray-900">Orders</h3>
           </div>
           <p className="text-sm text-gray-600 mb-4">Track and update statuses</p>
-          <Link href="/admin/marketplace/orders" className="inline-flex items-center gap-2 text-sm font-medium text-[#FFD700] hover:text-[#FFC107] transition-colors">
+          <Link
+            href="/admin/marketplace/orders"
+            className="inline-flex items-center gap-2 text-sm font-medium text-admin-gold-deep transition-colors hover:text-admin-navy"
+          >
             Access <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
-        <div className="bg-gradient-to-r from-red-400/10 to-orange-400/10 rounded-2xl p-6 border border-gray-100">
+        <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
           <div className="flex items-center gap-3 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-r from-red-400 to-orange-400 flex items-center justify-center">
-              <AlertTriangle className="w-5 h-5 text-white" />
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-100">
+              <AlertTriangle className="h-5 w-5 text-admin-navy" />
             </div>
             <h3 className="font-semibold text-gray-900">Low Stock</h3>
           </div>
-          <p className="text-sm text-gray-600 mb-4">{stats.lowStockProducts} product(s) to restock</p>
-          <Link href="/admin/marketplace/products?filter=low_stock" className="inline-flex items-center gap-2 text-sm font-medium text-red-500 hover:text-orange-500 transition-colors">
+          <p className="text-sm text-gray-600 mb-4">
+            {stats.lowStockProducts} product(s) to restock
+          </p>
+          <Link
+            href="/admin/marketplace/products?filter=low_stock"
+            className="inline-flex items-center gap-2 text-sm font-medium text-admin-gold-deep transition-colors hover:text-admin-navy"
+          >
             Check <ChevronRight className="w-4 h-4" />
           </Link>
         </div>

@@ -136,7 +136,7 @@ export default function CalmaHero() {
     <section
       ref={heroRef}
       className="relative h-auto overflow-hidden md:h-[84vh] md:min-h-[640px] md:max-h-[840px]"
-      style={{ background: "linear-gradient(180deg,#4A667D 0%,#3A5164 48%,#5B7A90 100%)" }}
+      style={{ backgroundColor: "#3A5164" }}
     >
       <motion.div className="absolute inset-0" style={{ y: parallaxY, opacity: parallaxOpacity }}>
         {/* Slow cinematic Ken Burns zoom — separate layer from the mouse-parallax translate below */}
@@ -169,42 +169,38 @@ export default function CalmaHero() {
       <div
         className="pointer-events-none absolute inset-0 hidden md:block"
         style={{
-          background:
-            "linear-gradient(180deg,rgba(36,51,63,.55) 0%,rgba(36,51,63,.35) 45%,rgba(36,51,63,.60) 100%)",
+          background: "rgba(36,51,63,.48)",
         }}
       />
       {/* Soft blue-grey radial scrim behind the text block — just enough for AA contrast, not a wall of black */}
       <div
         className="pointer-events-none absolute inset-0 hidden md:block"
         style={{
-          background:
-            "radial-gradient(60% 44% at 50% 36%, rgba(28,40,50,.4) 0%, rgba(28,40,50,0) 72%)",
+          background: "rgba(28,40,50,.12)",
         }}
       />
       {/* Mobile-only scrim — lighter than desktop so the landscape reads clearly, plus a soft edge vignette */}
       <div
         className="pointer-events-none absolute inset-0 md:hidden"
         style={{
-          background:
-            "linear-gradient(180deg,rgba(36,51,63,.40) 0%,rgba(36,51,63,.18) 42%,rgba(36,51,63,.50) 100%)",
+          background: "rgba(36,51,63,.34)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0 md:hidden"
         style={{
-          background:
-            "radial-gradient(120% 85% at 50% 45%, transparent 55%, rgba(20,18,16,.32) 100%)",
+          background: "rgba(20,18,16,.12)",
         }}
       />
       {/* Atmospheric golden-hour glow, upper right — adds depth without darkening the frame */}
       <div
         className="pointer-events-none absolute -right-[10%] -top-[15%] h-[60%] w-[55%] rounded-full opacity-[.22] blur-[120px]"
-        style={{ background: "radial-gradient(circle, #E8B978 0%, transparent 70%)" }}
+        style={{ backgroundColor: "#E8B978" }}
       />
       {/* Cool ambient falloff, lower left — balances the warm glow and deepens the frame */}
       <div
         className="pointer-events-none absolute -bottom-[20%] -left-[10%] h-[55%] w-[50%] rounded-full opacity-[.16] blur-[110px]"
-        style={{ background: "radial-gradient(circle, #24333F 0%, transparent 70%)" }}
+        style={{ backgroundColor: "#24333F" }}
       />
 
       {particles && (

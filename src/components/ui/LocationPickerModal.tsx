@@ -158,7 +158,7 @@ export default function LocationPickerModal({
           <button
             onClick={handleConfirm}
             disabled={!selectedPosition}
-            className="flex-1 px-4 py-2 bg-gradient-to-r from-[#D4A373] to-[#E9B35F] text-white rounded-xl font-semibold hover:shadow-lg transition disabled:opacity-50"
+            className="flex-1 rounded-xl bg-calma-terracotta px-4 py-2 font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:opacity-50"
           >
             Confirm
           </button>

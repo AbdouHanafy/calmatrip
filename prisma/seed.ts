@@ -227,7 +227,7 @@ async function main() {
   });
 
   // Sample bookings
-  const b1 = await prisma.booking.create({
+  await prisma.booking.create({
     data: {
       service: "Airport Transfer",
       date: new Date("2026-06-20"),

@@ -8,11 +8,29 @@ import {
   type CollectionColumn,
 } from "@/components/admin/collection/CollectionList";
 
+type AdminRole =
+  | "USER"
+  | "ADMIN"
+  | "SUPER_ADMIN"
+  | "CONTENT_MANAGER"
+  | "SEO_MANAGER"
+  | "BOOKING_MANAGER"
+  | "PARTNER_MANAGER"
+  | "SUPPORT_AGENT"
+  | "EDITOR";
+const ASSIGNABLE_ROLES: AdminRole[] = [
+  "USER",
+  "ADMIN",
+  "CONTENT_MANAGER",
+  "EDITOR",
+  "SUPPORT_AGENT",
+];
+
 interface AdminUser {
   id: string;
   name: string | null;
   email: string | null;
-  role: "USER" | "ADMIN";
+  role: AdminRole;
   createdAt: string;
   image: string | null;
 }
@@ -25,6 +43,7 @@ export default function AdminAccess() {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [confirmTarget, setConfirmTarget] = useState<AdminUser | null>(null);
+  const [selectedRole, setSelectedRole] = useState<AdminRole>("USER");
 
   const load = async () => {
     setLoading(true);
@@ -41,7 +60,7 @@ export default function AdminAccess() {
   const applyRoleChange = async () => {
     if (!confirmTarget) return;
     const user = confirmTarget;
-    const nextRole = user.role === "ADMIN" ? "USER" : "ADMIN";
+    const nextRole = selectedRole;
     setConfirmTarget(null);
     setBusyId(user.id);
     setError(null);
@@ -64,8 +83,8 @@ export default function AdminAccess() {
     return (u.name ?? "").toLowerCase().includes(q) || (u.email ?? "").toLowerCase().includes(q);
   });
 
-  const admins = filtered.filter((u) => u.role === "ADMIN");
-  const others = filtered.filter((u) => u.role !== "ADMIN");
+  const admins = filtered.filter((u) => u.role !== "USER");
+  const others = filtered.filter((u) => u.role === "USER");
 
   const columns = (): CollectionColumn<AdminUser>[] => [
     {
@@ -93,22 +112,27 @@ export default function AdminAccess() {
       label: "",
       render: (u) => {
         const isSelf = u.id === session?.user?.id;
-        const disabled = busyId === u.id || (isSelf && u.role === "ADMIN");
+        const disabled = busyId === u.id || isSelf;
         return (
-          <button
-            onClick={() => setConfirmTarget(u)}
+          <select
+            value={u.role}
+            onChange={(event) => {
+              setSelectedRole(event.target.value as AdminRole);
+              setConfirmTarget(u);
+            }}
             disabled={disabled}
-            title={
-              isSelf && u.role === "ADMIN" ? "You can't remove your own admin rights" : undefined
-            }
-            className={`rounded-xl px-3 py-1.5 text-xs font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-40 ${
-              u.role === "ADMIN"
-                ? "bg-red-50 text-red-600 hover:bg-red-100"
-                : "bg-admin-gold text-white hover:bg-admin-gold-deep"
-            }`}
+            title={isSelf ? "You cannot change your own role" : "Assign a least-privilege role"}
+            className="rounded-xl border border-calma-border bg-white px-3 py-2 text-xs font-semibold text-admin-navy disabled:cursor-not-allowed disabled:opacity-40"
           >
-            {busyId === u.id ? "…" : u.role === "ADMIN" ? "Remove admin" : "Promote to admin"}
-          </button>
+            {!ASSIGNABLE_ROLES.includes(u.role) && (
+              <option value={u.role}>{u.role.replaceAll("_", " ")}</option>
+            )}
+            {ASSIGNABLE_ROLES.map((role) => (
+              <option key={role} value={role}>
+                {role.replaceAll("_", " ")}
+              </option>
+            ))}
+          </select>
         );
       },
     },
@@ -119,7 +143,7 @@ export default function AdminAccess() {
       <div>
         <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Admin access</h1>
         <p className="mt-1 text-calma-taupe">
-          {admins.length} active administrator{admins.length !== 1 ? "s" : ""}
+          {admins.length} staff account{admins.length !== 1 ? "s" : ""} with scoped access
         </p>
       </div>
 
@@ -132,7 +156,7 @@ export default function AdminAccess() {
       <div>
         <h2 className="mb-3 flex items-center gap-2 text-sm font-semibold text-calma-ink">
           <ShieldCheck className="h-4 w-4 text-admin-gold" />
-          Administrators
+          Staff access
         </h2>
         <CollectionList
           items={admins}
@@ -174,11 +198,13 @@ export default function AdminAccess() {
             <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-admin-gold/10">
               <ShieldCheck className="h-8 w-8 text-admin-gold" />
             </div>
-            <h3 className="mb-2 text-xl font-bold text-calma-ink">
-              {confirmTarget.role === "ADMIN" ? "Remove admin rights?" : "Grant admin rights?"}
-            </h3>
+            <h3 className="mb-2 text-xl font-bold text-calma-ink">Change this user&apos;s role?</h3>
             <p className="mb-6 text-calma-taupe">
-              {confirmTarget.role === "ADMIN" ? "Revoke" : "Grant"} admin access for{" "}
+              Assign{" "}
+              <span className="font-semibold text-calma-ink">
+                {selectedRole.replaceAll("_", " ")}
+              </span>{" "}
+              to{" "}
               <span className="font-semibold text-calma-ink">
                 {confirmTarget.name ?? confirmTarget.email}
               </span>

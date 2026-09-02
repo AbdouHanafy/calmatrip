@@ -6,7 +6,7 @@ import { getPublicProducts } from "@/repositories/productRepository";
 export const metadata: Metadata = buildMetadata({
   title: "Sahara Marketplace — Premium Tunisian Souvenirs",
   description:
-    "Shop authentic Tunisian souvenirs, local products, clothing, and accessories from the official Sahara Tunisia store.",
+    "Shop authentic Tunisian souvenirs, local products, clothing, and accessories from CalmaTrip partners.",
   path: "/marketplace",
 });
 

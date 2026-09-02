@@ -60,7 +60,7 @@ function StatusBadge({ status }: { status: string }) {
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-calma-gold/10 px-2.5 py-1 text-xs font-semibold text-[#8A6B2E]">
+    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
       <Clock size={11} /> En attente
     </span>
   );
@@ -68,7 +68,7 @@ function StatusBadge({ status }: { status: string }) {
 
 // Shared premium field chrome, consistent across every B2B form.
 const inputBoxClass =
-  "flex h-12 items-center gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]";
+  "flex h-12 items-center gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 transition-all duration-300 focus-within:border-b2b-teal focus-within:shadow-[0_0_0_4px_rgba(31,92,85,.15)]";
 const inputFieldClass =
   "w-full border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/50";
 const labelClass = "mb-1.5 block text-[13px] font-semibold text-calma-ink";
@@ -184,7 +184,7 @@ export default function B2BProducts() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 rounded-xl bg-calma-gold px-4 py-2.5 font-medium text-[#241A12] transition-shadow hover:shadow-lg"
+          className="flex items-center gap-2 rounded-xl bg-b2b-teal px-4 py-2.5 font-medium text-white transition-shadow hover:shadow-lg"
         >
           <Plus className="h-4 w-4" /> Ajouter
         </button>
@@ -192,8 +192,8 @@ export default function B2BProducts() {
 
       {!loading && products.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-calma-border bg-white p-10 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-calma-gold/10">
-            <Package className="h-7 w-7 text-calma-gold" />
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-b2b-teal/10">
+            <Package className="h-7 w-7 text-b2b-teal" />
           </div>
           <h2 className="mb-1.5 font-fraunces text-lg font-normal text-calma-ink">
             Vous n&apos;avez pas encore de produit
@@ -204,7 +204,7 @@ export default function B2BProducts() {
           </p>
           <button
             onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-xl bg-calma-gold px-5 py-2.5 font-medium text-[#241A12] transition-shadow hover:shadow-lg"
+            className="inline-flex items-center gap-2 rounded-xl bg-b2b-teal px-5 py-2.5 font-medium text-white transition-shadow hover:shadow-lg"
           >
             <Plus className="h-4 w-4" /> Ajouter mon premier produit
           </button>
@@ -308,7 +308,7 @@ export default function B2BProducts() {
           <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-2xl">
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-calma-border bg-white px-6 py-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-calma-gold/15 text-calma-gold">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-b2b-teal/15 text-b2b-teal">
                   <Package className="h-5 w-5" />
                 </div>
                 <h2 className="font-fraunces text-lg font-normal text-calma-ink">
@@ -334,7 +334,7 @@ export default function B2BProducts() {
               <div>
                 <label className={labelClass}>Nom du produit</label>
                 <div className={inputBoxClass}>
-                  <Tag size={18} className="shrink-0 text-calma-gold" />
+                  <Tag size={18} className="shrink-0 text-b2b-teal" />
                   <input
                     required
                     value={form.name}
@@ -364,7 +364,7 @@ export default function B2BProducts() {
                 <div>
                   <label className={labelClass}>Catégorie</label>
                   <div className={inputBoxClass}>
-                    <Layers size={18} className="shrink-0 text-calma-gold" />
+                    <Layers size={18} className="shrink-0 text-b2b-teal" />
                     <input
                       required
                       value={form.category}
@@ -384,8 +384,8 @@ export default function B2BProducts() {
                     onClick={() => setUnlimited(false)}
                     className={`flex-1 rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                       !unlimited
-                        ? "border-calma-gold bg-calma-gold/10 text-[#8A6B2E]"
-                        : "border-calma-border text-calma-taupe hover:border-calma-gold/40"
+                        ? "border-b2b-teal bg-b2b-teal/10 text-[var(--color-b2b-teal-deep)]"
+                        : "border-calma-border text-calma-taupe hover:border-b2b-teal/40"
                     }`}
                   >
                     Quantité définie
@@ -395,8 +395,8 @@ export default function B2BProducts() {
                     onClick={() => setUnlimited(true)}
                     className={`flex flex-1 items-center justify-center gap-1.5 rounded-xl border-2 px-4 py-2.5 text-sm font-semibold transition-all ${
                       unlimited
-                        ? "border-calma-gold bg-calma-gold/10 text-[#8A6B2E]"
-                        : "border-calma-border text-calma-taupe hover:border-calma-gold/40"
+                        ? "border-b2b-teal bg-b2b-teal/10 text-[var(--color-b2b-teal-deep)]"
+                        : "border-calma-border text-calma-taupe hover:border-b2b-teal/40"
                     }`}
                   >
                     <InfinityIcon size={15} /> Illimité
@@ -404,7 +404,7 @@ export default function B2BProducts() {
                 </div>
                 {!unlimited && (
                   <div className={inputBoxClass}>
-                    <Boxes size={18} className="shrink-0 text-calma-gold" />
+                    <Boxes size={18} className="shrink-0 text-b2b-teal" />
                     <input
                       required
                       type="number"
@@ -434,8 +434,8 @@ export default function B2BProducts() {
                       onClick={() => toggleSize(size)}
                       className={`rounded-xl border-2 px-4 py-2 text-sm font-semibold transition-all ${
                         form.sizes.includes(size)
-                          ? "border-calma-gold bg-calma-gold/10 text-[#8A6B2E]"
-                          : "border-calma-border text-calma-taupe hover:border-calma-gold/50"
+                          ? "border-b2b-teal bg-b2b-teal/10 text-[var(--color-b2b-teal-deep)]"
+                          : "border-calma-border text-calma-taupe hover:border-b2b-teal/50"
                       }`}
                     >
                       {size}
@@ -449,7 +449,7 @@ export default function B2BProducts() {
                   Image (URL) <span className="font-normal text-calma-taupe">(optionnel)</span>
                 </label>
                 <div className={inputBoxClass}>
-                  <ImageIcon size={18} className="shrink-0 text-calma-gold" />
+                  <ImageIcon size={18} className="shrink-0 text-b2b-teal" />
                   <input
                     value={form.image}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
@@ -461,8 +461,8 @@ export default function B2BProducts() {
 
               <div>
                 <label className={labelClass}>Description</label>
-                <div className="flex items-start gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 py-3 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]">
-                  <AlignLeft size={18} className="mt-0.5 shrink-0 text-calma-gold" />
+                <div className="flex items-start gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 py-3 transition-all duration-300 focus-within:border-b2b-teal focus-within:shadow-[0_0_0_4px_rgba(31,92,85,.15)]">
+                  <AlignLeft size={18} className="mt-0.5 shrink-0 text-b2b-teal" />
                   <textarea
                     required
                     rows={3}
@@ -476,10 +476,8 @@ export default function B2BProducts() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full rounded-xl py-3.5 font-semibold text-[#241A12] shadow-[0_14px_30px_-12px_rgba(217,164,65,.6)] transition-shadow hover:shadow-[0_18px_36px_-12px_rgba(217,164,65,.75)] disabled:opacity-60"
-                style={{
-                  background: "linear-gradient(135deg,#D9A441 0%,#D9A441 55%,#B8842E 100%)",
-                }}
+                className="w-full rounded-xl py-3.5 font-semibold text-white shadow-[0_14px_30px_-12px_rgba(31,92,85,.55)] transition-shadow hover:shadow-[0_18px_36px_-12px_rgba(31,92,85,.7)] disabled:opacity-60"
+                style={{ backgroundColor: "var(--color-b2b-teal-deep)" }}
               >
                 {saving
                   ? "Enregistrement..."

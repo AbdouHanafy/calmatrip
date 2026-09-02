@@ -61,7 +61,7 @@ export function TripDetailsFields({
       <div className="flex flex-wrap items-center gap-6">
         <div>
           <label className="text-sm font-bold text-gray-700 block mb-2 flex items-center gap-2">
-            <Users className="w-4 h-4 text-[#87CEEB]" />
+            <Users className="h-4 w-4 text-calma-terracotta" />
             Passengers
           </label>
 
@@ -88,12 +88,12 @@ export function TripDetailsFields({
           <p className="mt-2 text-xs text-gray-400">Maximum 4 passengers</p>
         </div>
 
-        <label className="flex items-center gap-3 cursor-pointer py-2 px-4 bg-gray-50 rounded-2xl border-2 border-gray-100 hover:border-[#87CEEB]/50 transition-all">
+        <label className="flex cursor-pointer items-center gap-3 rounded-2xl border-2 border-gray-100 bg-gray-50 px-4 py-2 transition-all hover:border-calma-terracotta/50">
           <input
             type="checkbox"
             checked={hasLuggage}
             onChange={(e) => onHasLuggageChange(e.target.checked)}
-            className="w-5 h-5 rounded-lg border-2 border-gray-300 text-[#4CAF50] focus:ring-[#87CEEB] focus:ring-2"
+            className="h-5 w-5 rounded-lg border-2 border-gray-300 text-calma-terracotta focus:ring-2 focus:ring-calma-terracotta/20"
           />
           <Luggage className="w-5 h-5 text-gray-600" />
           <span className="text-sm font-medium text-gray-700">With luggage</span>

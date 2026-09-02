@@ -1,9 +1,9 @@
-import CheckoutPage from '@/views/CheckoutPage';
-import type { Metadata } from 'next';
+import CheckoutPage from "@/views/CheckoutPage";
+import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: 'Sahara Marketplace — Premium Tunisian Souvenirs',
-  description: 'Shop authentic Tunisian souvenirs, local products, clothing, and accessories from the official Sahara Tunisia store.',
+  title: "Sahara Marketplace — Premium Tunisian Souvenirs",
+  description: "Complete your CalmaTrip marketplace order securely.",
 };
 
 export default function Checkout() {

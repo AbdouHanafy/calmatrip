@@ -32,7 +32,7 @@ export function ConfirmDialog({
         <div className="flex items-start gap-3">
           <div
             className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full ${
-              danger ? "bg-red-50 text-red-500" : "bg-calma-gold/10 text-[#8A6B2E]"
+              danger ? "bg-red-50 text-red-500" : "bg-amber-50 text-amber-700"
             }`}
           >
             <AlertTriangle className="h-5 w-5" />
@@ -57,7 +57,7 @@ export function ConfirmDialog({
             className={`rounded-xl px-4 py-2 text-sm font-semibold transition-colors ${
               danger
                 ? "bg-red-500 text-white hover:bg-red-600"
-                : "bg-calma-gold text-[#241A12] hover:shadow-lg"
+                : "bg-b2b-teal text-white hover:shadow-lg"
             }`}
           >
             {confirmLabel}

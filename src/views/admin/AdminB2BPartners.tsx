@@ -59,7 +59,7 @@ function ProfileStatusBadge({ status }: { status: PartnerProfileStatus | undefin
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-admin-gold/10 px-2.5 py-1 text-xs font-semibold text-[#8A6B2E]">
+    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
       <Clock size={11} /> {status === "SUBMITTED" ? "Submitted" : "Under review"}
     </span>
   );

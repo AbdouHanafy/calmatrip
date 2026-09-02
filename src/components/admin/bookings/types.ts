@@ -47,16 +47,16 @@ export const STATUS_CONFIG: Record<
   { bg: string; text: string; border: string; icon: typeof CheckCircle; label: string }
 > = {
   confirmed: {
-    bg: "bg-[#5E8B63]/10",
-    text: "text-[#5E8B63]",
-    border: "border-[#5E8B63]/20",
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
     icon: CheckCircle,
     label: "Confirmed",
   },
   pending: {
-    bg: "bg-[#D9A441]/10",
-    text: "text-[#8A6B2E]",
-    border: "border-[#D9A441]/20",
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    border: "border-amber-200",
     icon: AlertCircle,
     label: "Pending",
   },
@@ -68,9 +68,9 @@ export const STATUS_CONFIG: Record<
     label: "Cancelled",
   },
   completed: {
-    bg: "bg-[#F2994A]/10",
-    text: "text-[#C97A34]",
-    border: "border-[#F2994A]/20",
+    bg: "bg-blue-50",
+    text: "text-blue-700",
+    border: "border-blue-200",
     icon: CheckCircle,
     label: "Completed",
   },
@@ -81,23 +81,23 @@ export const PAYMENT_STATUS_CONFIG: Record<
   { bg: string; text: string; border: string; icon: typeof CheckCircle; label: string }
 > = {
   paid: {
-    bg: "bg-[#5E8B63]/10",
-    text: "text-[#5E8B63]",
-    border: "border-[#5E8B63]/20",
+    bg: "bg-emerald-50",
+    text: "text-emerald-700",
+    border: "border-emerald-200",
     icon: CheckCircle,
     label: "Paid",
   },
   pending: {
-    bg: "bg-[#D9A441]/10",
-    text: "text-[#8A6B2E]",
-    border: "border-[#D9A441]/20",
+    bg: "bg-amber-50",
+    text: "text-amber-700",
+    border: "border-amber-200",
     icon: AlertCircle,
     label: "Payment pending",
   },
   refunded: {
-    bg: "bg-[#726C64]/10",
-    text: "text-[#726C64]",
-    border: "border-[#726C64]/20",
+    bg: "bg-slate-100",
+    text: "text-slate-600",
+    border: "border-slate-200",
     icon: XCircle,
     label: "Refunded",
   },

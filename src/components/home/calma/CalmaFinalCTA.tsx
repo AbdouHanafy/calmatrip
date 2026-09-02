@@ -1,7 +1,7 @@
-'use client';
-import React from 'react';
-import Link from 'next/link';
-import { useCalmaLang } from '@/lib/calma/i18n';
+"use client";
+import React from "react";
+import Link from "next/link";
+import { useCalmaLang } from "@/lib/calma/i18n";
 
 export default function CalmaFinalCTA() {
   const { t } = useCalmaLang();
@@ -11,11 +11,11 @@ export default function CalmaFinalCTA() {
       <div className="relative overflow-hidden rounded-calma-block bg-calma-olive p-[72px_clamp(28px,6vw,72px)] text-center text-calma-cream">
         <div
           className="pointer-events-none absolute -right-1/4 -top-1/3 h-[520px] w-[520px] rounded-full opacity-20 blur-[90px]"
-          style={{ background: 'radial-gradient(circle, #F2994A 0%, transparent 70%)' }}
+          style={{ backgroundColor: "#F2994A" }}
         />
         <div
           className="pointer-events-none absolute -bottom-1/3 -left-1/4 h-[420px] w-[420px] rounded-full opacity-[.12] blur-[90px]"
-          style={{ background: 'radial-gradient(circle, #F1EBE1 0%, transparent 70%)' }}
+          style={{ backgroundColor: "#F1EBE1" }}
         />
         <div className="relative mx-auto max-w-[640px]">
           <div className="mb-4 inline-flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-[.18em] text-calma-terracotta-soft">
@@ -42,7 +42,9 @@ export default function CalmaFinalCTA() {
               ☏ {t.newsBtn2}
             </a>
           </div>
-          <div className="text-[13px] font-semibold tracking-[.04em] text-calma-cream/70">{t.newsTrust}</div>
+          <div className="text-[13px] font-semibold tracking-[.04em] text-calma-cream/70">
+            {t.newsTrust}
+          </div>
         </div>
       </div>
     </section>

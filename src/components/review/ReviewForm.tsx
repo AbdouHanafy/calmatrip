@@ -71,9 +71,7 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
         <h3 className="font-fraunces text-2xl font-normal text-calma-olive mb-2">
           Merci pour votre avis !
         </h3>
-        <p className="text-calma-taupe">
-          Il sera publié après validation par notre équipe.
-        </p>
+        <p className="text-calma-taupe">Il sera publié après validation par notre équipe.</p>
       </div>
     );
   }
@@ -157,24 +155,23 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
         </label>
         <p className="text-xs text-calma-taupe -mt-3">{comment.length} / 500 caractères</p>
 
-        {error && (
-          <p className="text-red-600 text-sm bg-red-50 rounded-2xl px-4 py-3">
-            {error}
-          </p>
-        )}
+        {error && <p className="text-red-600 text-sm bg-red-50 rounded-2xl px-4 py-3">{error}</p>}
 
         <button
           onClick={handleSubmit}
           disabled={loading || !session}
           className="group flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-[15px] font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-          style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+          style={{ backgroundColor: "#F2994A" }}
         >
           {loading ? (
             "Envoi en cours..."
           ) : (
             <>
               Publier mon avis
-              <Send size={16} className="transition-transform duration-300 group-hover:translate-x-1" />
+              <Send
+                size={16}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
             </>
           )}
         </button>

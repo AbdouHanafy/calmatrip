@@ -38,7 +38,7 @@ export function StepActions({
         onClick={onContinue}
         disabled={disabled || loading}
         className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full px-7 py-3 text-[15px] font-bold text-calma-cream shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-shadow duration-300 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)] disabled:cursor-not-allowed disabled:opacity-60"
-        style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+        style={{ backgroundColor: "#F2994A" }}
       >
         {loading ? (
           <Loader2 size={18} className="animate-spin" />

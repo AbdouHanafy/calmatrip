@@ -54,7 +54,7 @@ function ToolBtn({
       }}
       className={`p-1.5 rounded-lg transition-all duration-150 ${
         active
-          ? "bg-[#87CEEB]/20 text-[#87CEEB]"
+          ? "bg-admin-gold/10 text-admin-gold-deep"
           : "text-gray-500 hover:bg-gray-100 hover:text-gray-800"
       }`}
     >
@@ -201,7 +201,7 @@ export function RichTextEditor({
   ];
 
   return (
-    <div className="border border-gray-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-[#87CEEB] focus-within:border-transparent transition-all">
+    <div className="overflow-hidden rounded-xl border border-gray-200 transition-all focus-within:border-transparent focus-within:ring-2 focus-within:ring-admin-gold/20">
       {/* ── Toolbar ── */}
       <div className="flex flex-wrap items-center gap-0.5 px-2 py-1.5 bg-gray-50 border-b border-gray-200">
         {toolbar.map((group, gi) => (
@@ -255,7 +255,7 @@ export function RichTextEditor({
 
       {/* ── Link input bar ── */}
       {showLinkInput && (
-        <div className="flex items-center gap-2 px-3 py-2 bg-[#87CEEB]/5 border-b border-gray-200">
+        <div className="flex items-center gap-2 border-b border-gray-200 bg-slate-50 px-3 py-2">
           <input
             autoFocus
             type="text"
@@ -269,12 +269,12 @@ export function RichTextEditor({
               if (e.key === "Escape") setShowLinkInput(false);
             }}
             placeholder="https://example.com"
-            className="flex-1 text-sm px-3 py-1.5 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#87CEEB]"
+            className="flex-1 rounded-lg border border-gray-200 px-3 py-1.5 text-sm focus:outline-none focus:ring-2 focus:ring-admin-gold/20"
           />
           <button
             type="button"
             onClick={insertLink}
-            className="px-3 py-1.5 bg-[#87CEEB] text-white text-sm rounded-lg hover:bg-[#6ab8d8] transition-colors"
+            className="rounded-lg bg-admin-navy px-3 py-1.5 text-sm text-white transition-colors hover:bg-admin-navy-deep"
           >
             Insert
           </button>
@@ -310,8 +310,8 @@ export function RichTextEditor({
             [&_ul]:list-disc   [&_ul]:pl-5 [&_ul]:my-1
             [&_ol]:list-decimal [&_ol]:pl-5 [&_ol]:my-1
             [&_li]:my-0.5
-            [&_blockquote]:border-l-4 [&_blockquote]:border-[#87CEEB] [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-2
-            [&_a]:text-[#87CEEB] [&_a]:underline [&_a]:cursor-pointer
+            [&_blockquote]:border-l-4 [&_blockquote]:border-admin-gold [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:text-gray-600 [&_blockquote]:my-2
+            [&_a]:text-admin-gold-deep [&_a]:underline [&_a]:cursor-pointer
             [&_strong]:font-bold [&_em]:italic [&_u]:underline [&_s]:line-through
             [&_p]:my-1"
         />

@@ -19,11 +19,11 @@ import { ARTISAN_INTEREST_CATEGORIES } from "@/lib/partners/constants";
 
 // Shared premium field chrome, consistent across every B2B form.
 const inputBoxClass =
-  "flex h-12 items-center gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]";
+  "flex h-12 items-center gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 transition-all duration-300 focus-within:border-b2b-teal focus-within:shadow-[0_0_0_4px_rgba(31,92,85,.15)]";
 const inputFieldClass =
   "w-full border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/50";
 const selectClass =
-  "h-12 w-full rounded-xl border border-calma-border bg-white px-3.5 text-[15px] text-calma-ink outline-none transition-all duration-300 focus:border-calma-gold focus:shadow-[0_0_0_4px_rgba(217,164,65,.15)]";
+  "h-12 w-full rounded-xl border border-calma-border bg-white px-3.5 text-[15px] text-calma-ink outline-none transition-all duration-300 focus:border-b2b-teal focus:shadow-[0_0_0_4px_rgba(31,92,85,.15)]";
 const labelClass = "mb-1.5 block text-[13px] font-semibold text-calma-ink";
 
 const EMPTY_FORM = {
@@ -65,7 +65,7 @@ function StatusBadge({ status }: { status: string }) {
     );
   }
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-calma-gold/10 px-2.5 py-1 text-xs font-semibold text-[#8A6B2E]">
+    <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1 text-xs font-semibold text-amber-700">
       <Clock size={11} /> En attente
     </span>
   );
@@ -174,7 +174,7 @@ export default function B2BServices() {
         </div>
         <button
           onClick={openCreate}
-          className="flex items-center gap-2 rounded-xl bg-calma-gold px-4 py-2.5 font-medium text-[#241A12] transition-shadow hover:shadow-lg"
+          className="flex items-center gap-2 rounded-xl bg-b2b-teal px-4 py-2.5 font-medium text-white transition-shadow hover:shadow-lg"
         >
           <Plus className="h-4 w-4" /> Ajouter
         </button>
@@ -182,8 +182,8 @@ export default function B2BServices() {
 
       {!loading && services.length === 0 ? (
         <div className="rounded-2xl border-2 border-dashed border-calma-border bg-white p-10 text-center">
-          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-calma-gold/10">
-            <Compass className="h-7 w-7 text-calma-gold" />
+          <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-b2b-teal/10">
+            <Compass className="h-7 w-7 text-b2b-teal" />
           </div>
           <h2 className="mb-1.5 font-fraunces text-lg font-normal text-calma-ink">
             Vous n&apos;avez pas encore de service
@@ -194,7 +194,7 @@ export default function B2BServices() {
           </p>
           <button
             onClick={openCreate}
-            className="inline-flex items-center gap-2 rounded-xl bg-calma-gold px-5 py-2.5 font-medium text-[#241A12] transition-shadow hover:shadow-lg"
+            className="inline-flex items-center gap-2 rounded-xl bg-b2b-teal px-5 py-2.5 font-medium text-white transition-shadow hover:shadow-lg"
           >
             <Plus className="h-4 w-4" /> Ajouter mon premier service
           </button>
@@ -284,7 +284,7 @@ export default function B2BServices() {
           <div className="max-h-[92vh] w-full max-w-lg overflow-y-auto rounded-3xl bg-white shadow-2xl">
             <div className="sticky top-0 z-10 flex items-center justify-between border-b border-calma-border bg-white px-6 py-5">
               <div className="flex items-center gap-3">
-                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-calma-gold/15 text-calma-gold">
+                <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-b2b-teal/15 text-b2b-teal">
                   <Compass className="h-5 w-5" />
                 </div>
                 <h2 className="font-fraunces text-lg font-normal text-calma-ink">
@@ -310,7 +310,7 @@ export default function B2BServices() {
               <div>
                 <label className={labelClass}>Titre</label>
                 <div className={inputBoxClass}>
-                  <Tag size={18} className="shrink-0 text-calma-gold" />
+                  <Tag size={18} className="shrink-0 text-b2b-teal" />
                   <input
                     required
                     value={form.title}
@@ -349,7 +349,7 @@ export default function B2BServices() {
                     Durée <span className="font-normal text-calma-taupe">(optionnel)</span>
                   </label>
                   <div className={inputBoxClass}>
-                    <Timer size={18} className="shrink-0 text-calma-gold" />
+                    <Timer size={18} className="shrink-0 text-b2b-teal" />
                     <input
                       value={form.duration}
                       onChange={(e) => setForm({ ...form, duration: e.target.value })}
@@ -378,7 +378,7 @@ export default function B2BServices() {
                   Image (URL) <span className="font-normal text-calma-taupe">(optionnel)</span>
                 </label>
                 <div className={inputBoxClass}>
-                  <ImageIcon size={18} className="shrink-0 text-calma-gold" />
+                  <ImageIcon size={18} className="shrink-0 text-b2b-teal" />
                   <input
                     value={form.image}
                     onChange={(e) => setForm({ ...form, image: e.target.value })}
@@ -389,8 +389,8 @@ export default function B2BServices() {
               </div>
               <div>
                 <label className={labelClass}>Description</label>
-                <div className="flex items-start gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 py-3 transition-all duration-300 focus-within:border-calma-gold focus-within:shadow-[0_0_0_4px_rgba(217,164,65,.15)]">
-                  <AlignLeft size={18} className="mt-0.5 shrink-0 text-calma-gold" />
+                <div className="flex items-start gap-2.5 rounded-xl border border-calma-border bg-white px-3.5 py-3 transition-all duration-300 focus-within:border-b2b-teal focus-within:shadow-[0_0_0_4px_rgba(31,92,85,.15)]">
+                  <AlignLeft size={18} className="mt-0.5 shrink-0 text-b2b-teal" />
                   <textarea
                     required
                     rows={3}
@@ -404,10 +404,8 @@ export default function B2BServices() {
               <button
                 type="submit"
                 disabled={saving}
-                className="w-full rounded-xl py-3.5 font-semibold text-[#241A12] shadow-[0_14px_30px_-12px_rgba(217,164,65,.6)] transition-shadow hover:shadow-[0_18px_36px_-12px_rgba(217,164,65,.75)] disabled:opacity-60"
-                style={{
-                  background: "linear-gradient(135deg,#D9A441 0%,#D9A441 55%,#B8842E 100%)",
-                }}
+                className="w-full rounded-xl py-3.5 font-semibold text-white shadow-[0_14px_30px_-12px_rgba(31,92,85,.55)] transition-shadow hover:shadow-[0_18px_36px_-12px_rgba(31,92,85,.7)] disabled:opacity-60"
+                style={{ backgroundColor: "var(--color-b2b-teal-deep)" }}
               >
                 {saving
                   ? "Enregistrement..."

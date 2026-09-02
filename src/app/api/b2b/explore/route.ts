@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
 import type { Session } from "next-auth";
+import { isApprovedPartner } from "@/lib/access";
 import { createNotification } from "@/lib/notifications";
 import { sanitizeHtml } from "@/lib/sanitize";
 import {
@@ -9,7 +10,7 @@ import {
 } from "@/repositories/exploreListingRepository";
 
 function requireAgency(session: Session | null) {
-  return session?.user?.role === "B2B" && session.user.b2bType === "AGENCY";
+  return isApprovedPartner(session, "AGENCY");
 }
 
 // GET /api/b2b/explore — the agency's own Explore listings, any submission status

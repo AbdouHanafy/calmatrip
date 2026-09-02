@@ -21,7 +21,7 @@ export default function CartPage() {
           <p className="text-sm text-gray-500 mb-6">Découvre nos produits et ajoute-les ici</p>
           <Link
             href="/marketplace"
-            className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-semibold"
+            className="rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-white hover:bg-calma-terracotta-deep"
           >
             Voir la marketplace
           </Link>
@@ -66,7 +66,7 @@ export default function CartPage() {
               >
                 <ShoppingCart className="w-5 h-5 text-gray-700" />
                 {cartCount > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-[#4CAF50] text-white text-[10px] font-bold flex items-center justify-center">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-white">
                     {cartCount}
                   </span>
                 )}
@@ -75,7 +75,7 @@ export default function CartPage() {
               {/* Orders */}
               <Link
                 href="/marketplace/orders"
-                className="flex-1 sm:flex-none w-full sm:w-auto text-center text-sm font-medium text-gray-600 hover:text-[#87CEEB] px-3 py-2 rounded-xl transition-colors"
+                className="w-full flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium text-gray-600 transition-colors hover:text-calma-terracotta sm:w-auto sm:flex-none"
               >
                 Mes commandes
               </Link>

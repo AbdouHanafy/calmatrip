@@ -83,7 +83,7 @@ export default function CalmaMarketplacePreview({
                     sizes="(min-width: 1024px) 33vw, 100vw"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+                  <div className="absolute inset-0 bg-black/25" />
                   <div className="absolute left-3.5 top-3.5 rounded-full border border-white/25 bg-black/25 px-3 py-[6px] text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-md">
                     {exp.category}
                   </div>
@@ -164,7 +164,7 @@ export default function CalmaMarketplacePreview({
                 sizes="(min-width: 1024px) 33vw, 100vw"
                 className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
+              <div className="absolute inset-0 bg-black/25" />
               <div className="absolute left-3.5 top-3.5 rounded-full border border-white/25 bg-black/25 px-3 py-[6px] text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-md">
                 {EXTRA[i].category}
               </div>

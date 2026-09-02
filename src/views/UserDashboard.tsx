@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   Calendar,
   Car,
@@ -43,7 +44,22 @@ function UserDashboardInner() {
   const { bookings, services, serviceDetailsFor, handleCancelBooking, submitReview } =
     useUserBookings();
 
-  const [activeTab, setActiveTab] = useState<TabKey>("bookings");
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const requestedTab = searchParams.get("view");
+  const initialTab: TabKey = ["bookings", "new", "payments", "reviews", "profile"].includes(
+    requestedTab ?? "",
+  )
+    ? (requestedTab as TabKey)
+    : "bookings";
+  const [activeTab, setActiveTab] = useState<TabKey>(initialTab);
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+  const changeTab = (tab: TabKey) => {
+    setActiveTab(tab);
+    router.replace(tab === "bookings" ? "/dashboard" : `/dashboard?view=${tab}`, { scroll: false });
+  };
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [detailsBooking, setDetailsBooking] = useState<Booking | null>(null);
   const [reviewBooking, setReviewBooking] = useState<Booking | null>(null);
@@ -105,7 +121,7 @@ function UserDashboardInner() {
     <div className="min-h-screen bg-calma-sand font-hanken lg:flex lg:items-start">
       <DashboardSidebar
         activeTab={activeTab}
-        onTabChange={setActiveTab}
+        onTabChange={changeTab}
         upcomingCount={upcomingBookings.length}
         actionRequiredCount={actionRequiredCount}
         toReviewCount={reviewEligible.length}
@@ -129,7 +145,7 @@ function UserDashboardInner() {
           </div>
         </div>
 
-        <div className="p-4 sm:p-6 lg:p-8">
+        <div className="mx-auto max-w-[1440px] p-4 sm:p-6 lg:p-8">
           {/* Push notifications */}
           <div className="mb-6">
             <PushToggle />
@@ -246,7 +262,7 @@ function UserDashboardInner() {
                   </h3>
                   <p className="mb-4 text-calma-taupe">{t.dash.emptySub}</p>
                   <button
-                    onClick={() => setActiveTab("new")}
+                    onClick={() => changeTab("new")}
                     className="rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-white transition-all duration-300 hover:shadow-lg"
                   >
                     {t.dash.createBooking}
@@ -310,7 +326,7 @@ function UserDashboardInner() {
                   <p className="mb-4 text-sm text-calma-taupe">{t.dash.alsoLikeSub}</p>
                   <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
                     {recommendedServices.map((s) => (
-                      <ServiceCard key={s.id} service={s} onBook={() => setActiveTab("new")} />
+                      <ServiceCard key={s.id} service={s} onBook={() => changeTab("new")} />
                     ))}
                   </div>
                 </div>

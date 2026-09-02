@@ -23,14 +23,26 @@
   /* Admin backoffice tokens — deliberately distinct from the client-facing
      terracotta identity above (navy + gold) so staff never confuse the two
      spaces. Neutrals (cream/sand/ink/taupe/border) stay shared. */
-  --color-admin-navy: #1a3a5c;
-  --color-admin-navy-deep: #0d2645;
-  --color-admin-navy-deeper: #081b33;
-  --color-admin-gold: #c59b3d;
-  --color-admin-gold-soft: #d9b968;
-  --color-admin-gold-deep: #a17f2e;
+  --color-admin-navy: #243b63;
+  --color-admin-navy-deep: #17233b;
+  --color-admin-navy-deeper: #0f172a;
+  --color-admin-gold: #5683d8;
+  --color-admin-gold-soft: #82a7eb;
+  --color-admin-gold-deep: #3d67b5;
   --color-admin-emerald: #1a8a5a;
   --color-admin-rose: #c0392b;
+
+  /* B2B partner workspace tokens — deep teal primary with a muted copper
+     secondary, distinct from both the client terracotta identity and the
+     admin midnight/blue identity, but part of the same restrained family.
+     Neutrals (cream/sand/ink/taupe/border) stay shared across all three. */
+  --color-b2b-teal: #1f5c55;
+  --color-b2b-teal-light: #4f9b8b;
+  --color-b2b-teal-soft: #9ed1c5;
+  --color-b2b-teal-deep: #102f2e;
+  --color-b2b-copper: #a9714d;
+  --color-b2b-copper-soft: #d9b393;
+  --color-b2b-copper-deep: #7c5236;
 
   --radius-calma-card: 18px;
   --radius-calma-block: 26px;
@@ -40,6 +52,25 @@
   --font-poppins: var(--font-poppins), sans-serif;
   --font-hanken: var(--font-hanken), sans-serif;
   --font-space: var(--font-space), sans-serif;
+}
+
+@layer components {
+  .admin-workspace {
+    --workspace-bg: #f4f6f9;
+    --workspace-surface: #ffffff;
+    --workspace-border: #e2e7ef;
+    background: var(--workspace-bg);
+  }
+
+  .partner-workspace {
+    --color-calma-gold: #4f9b8b;
+    --color-calma-terracotta: #bd7447;
+    --color-calma-terracotta-deep: #955936;
+    --workspace-bg: #f3f6f4;
+    --workspace-surface: #ffffff;
+    --workspace-border: #dce6e2;
+    background: var(--workspace-bg);
+  }
 }
 
 @layer base {
@@ -107,11 +138,14 @@
   }
 
   body {
-    @apply bg-gray-50 text-gray-900;
-    cursor:
-      url("/images/gazelle_cursor.png") 16 16,
-      auto;
+    @apply bg-calma-cream text-calma-ink;
     -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: rgba(242, 153, 74, 0.25);
+    color: #2d2926;
   }
 
   /* Focus clavier visible et cohérent avec la charte */

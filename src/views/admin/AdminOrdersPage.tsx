@@ -33,10 +33,10 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 const STATUS_STYLE: Record<string, string> = {
-  pending: "bg-[#D9A441]/10 text-[#8A6B2E] border-[#D9A441]/20",
-  confirmed: "bg-[#F2994A]/10 text-[#9C5236] border-[#F2994A]/20",
+  pending: "border-amber-200 bg-amber-50 text-amber-700",
+  confirmed: "border-blue-200 bg-blue-50 text-blue-700",
   shipped: "bg-admin-navy/10 text-admin-navy border-admin-navy/20",
-  delivered: "bg-[#5E8B63]/10 text-[#5E8B63] border-[#5E8B63]/20",
+  delivered: "border-emerald-200 bg-emerald-50 text-emerald-700",
   cancelled: "bg-red-500/10 text-red-500 border-red-500/20",
 };
 

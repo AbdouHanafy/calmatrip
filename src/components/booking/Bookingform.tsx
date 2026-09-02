@@ -113,7 +113,7 @@ export function BookingForm() {
           !form.date ||
           (!form.useManualTime ? !form.time : !form.manualTime)
         }
-        className="w-full relative overflow-hidden group py-4 rounded-2xl bg-gradient-to-r from-[#87CEEB] to-[#4CAF50] text-white font-bold text-lg disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-2xl transition-all duration-300"
+        className="group relative w-full overflow-hidden rounded-2xl bg-calma-terracotta py-4 text-lg font-bold text-white transition-colors duration-300 hover:bg-calma-terracotta-deep disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="relative z-10 flex items-center justify-center gap-3">
           {form.submitting ? (
@@ -128,7 +128,6 @@ export function BookingForm() {
             </>
           )}
         </span>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000" />
       </button>
 
       <div className="relative w-full h-72">

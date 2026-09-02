@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import {
@@ -20,6 +21,7 @@ import {
   PauseCircle,
 } from "lucide-react";
 import { useState } from "react";
+import NotificationBell from "@/components/ui/NotificationBell";
 import B2BOverview from "./B2BOverview";
 
 const STATUS_BADGE: Record<
@@ -29,8 +31,8 @@ const STATUS_BADGE: Record<
   pending: {
     label: "En attente",
     icon: Clock,
-    onDark: "bg-calma-gold/15 text-calma-gold",
-    onLight: "bg-calma-gold/10 text-[#8A6B2E]",
+    onDark: "bg-amber-400/15 text-amber-300",
+    onLight: "border border-amber-200 bg-amber-50 text-amber-700",
   },
   approved: {
     label: "Approuvé",
@@ -60,6 +62,7 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
   // lowercase, which silently hid every type-specific nav item below.
   const b2bType = session?.user?.b2bType?.toUpperCase() as "ARTISAN" | "AGENCY" | undefined;
   const b2bStatus = (session?.user?.b2bStatus ?? "pending").toLowerCase();
+  const isApproved = b2bStatus === "approved";
   const isArtisan = b2bType === "ARTISAN";
   const isAgency = b2bType === "AGENCY";
   const userInitials =
@@ -77,18 +80,24 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
 
   const navItems = [
     { path: "/b2b", label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
-    ...(isArtisan
+    ...(isApproved && isArtisan
       ? [
           { path: "/b2b/products", label: "Mes produits", icon: Package },
           { path: "/b2b/services", label: "Mes services", icon: Compass },
         ]
       : []),
-    ...(isAgency ? [{ path: "/b2b/explore", label: "Mes annonces Explore", icon: MapPin }] : []),
-    {
-      path: "/b2b/sales",
-      label: isAgency ? "Réservations" : "Ventes",
-      icon: TrendingUp,
-    },
+    ...(isApproved && isAgency
+      ? [{ path: "/b2b/explore", label: "Mes annonces Explore", icon: MapPin }]
+      : []),
+    ...(isApproved && !isAgency
+      ? [
+          {
+            path: "/b2b/sales",
+            label: "Ventes",
+            icon: TrendingUp,
+          },
+        ]
+      : []),
     { path: "/b2b/profile", label: "Mon profil", icon: UserCog },
   ];
 
@@ -96,16 +105,38 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
     if (exact) return pathname === path;
     return pathname?.startsWith(path);
   };
+  const pageTitle =
+    pathname === "/b2b/products"
+      ? "Mes produits"
+      : pathname === "/b2b/services"
+        ? "Mes services"
+        : pathname === "/b2b/explore"
+          ? "Mes annonces"
+          : pathname === "/b2b/sales"
+            ? "Ventes et revenus"
+            : pathname === "/b2b/profile"
+              ? "Profil partenaire"
+              : isArtisan
+                ? "Tableau de bord artisan"
+                : isAgency
+                  ? "Tableau de bord agence"
+                  : "Espace partenaire";
+  const pageDescription =
+    pathname === "/b2b"
+      ? isApproved
+        ? "Pilotez votre activité CalmaTrip"
+        : "Suivez la validation de votre candidature"
+      : "Gérez votre activité et son statut de publication";
 
   return (
-    <div className="min-h-screen bg-calma-sand font-hanken flex">
+    <div className="partner-workspace min-h-screen font-hanken flex text-calma-ink">
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl shadow-lg border border-calma-border"
+        className="fixed left-4 top-3 z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm lg:hidden"
       >
         {sidebarOpen ? (
-          <X className="w-5 h-5 text-calma-gold" />
+          <X className="h-5 w-5 text-calma-terracotta" />
         ) : (
           <Menu className="w-5 h-5 text-calma-taupe" />
         )}
@@ -119,35 +150,37 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
         />
       )}
 
-      {/* Sidebar — warm bronze/gold, the B2B partner space's identity color */}
+      {/* Sidebar — deep teal + muted copper, the B2B partner space's identity
+          color, distinct from the client terracotta and admin midnight/blue
+          spaces but part of the same restrained CalmaTrip product family. */}
       <aside
         className={`
-          fixed lg:relative z-40 w-72 bg-gradient-to-b from-[#241A12] via-[#3D2A14] to-[#241A12] text-calma-cream flex flex-col shadow-2xl
+          fixed lg:sticky lg:top-0 z-40 h-screen w-72 flex-shrink-0 bg-b2b-teal-deep text-white flex flex-col border-r border-white/[.08]
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         {/* Logo */}
-        <div className="p-6 border-b border-white/10">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="relative">
-              <div className="w-12 h-12 rounded-xl bg-calma-gold flex items-center justify-center shadow-lg">
-                <LayoutDashboard className="w-6 h-6 text-[#241A12]" />
-              </div>
-            </div>
-            <div>
-              <h2 className="font-fraunces text-xl font-normal text-calma-cream">
-                Espace partenaire
-              </h2>
-              <p className="text-xs text-calma-cream/50">Calma Trip</p>
-            </div>
+        <div className="border-b border-white/10 px-5 py-5">
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <Image
+              src="/images/logo-cream.png"
+              alt="CalmaTrip"
+              width={170}
+              height={52}
+              className="h-8 w-auto"
+              priority
+            />
+            <span className="rounded-md border border-b2b-copper/30 bg-b2b-copper/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[.14em] text-b2b-copper-soft">
+              Partner
+            </span>
           </div>
 
           {/* Partner identity — type + review status, always visible so a
               partner never has to guess which space or state they're in. */}
           <div className="flex flex-wrap items-center gap-1.5">
             <span className="inline-flex items-center gap-1.5 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-semibold text-calma-cream">
-              <TypeIcon className="h-3 w-3 text-calma-gold" />
+              <TypeIcon className="h-3 w-3 text-b2b-teal-soft" />
               {typeLabel}
             </span>
             <span
@@ -160,7 +193,7 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4">
+        <nav className="flex-1 overflow-y-auto p-4">
           <div className="mb-6">
             <p className="text-xs uppercase tracking-wider text-calma-cream/40 mb-3 px-4">Menu</p>
             <div className="space-y-1.5">
@@ -171,20 +204,20 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
                   onClick={() => setSidebarOpen(false)}
                   className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${
                     isActive(item.path, item.exact)
-                      ? "bg-calma-gold/[.18] text-calma-cream border border-calma-gold/25"
-                      : "text-calma-cream/70 hover:bg-white/5 hover:text-calma-cream"
+                      ? "bg-b2b-teal-light text-white shadow-sm"
+                      : "text-emerald-50/70 hover:bg-white/[.06] hover:text-white"
                   }`}
                 >
                   <div className="flex items-center gap-3">
                     <item.icon
                       className={`w-5 h-5 transition-colors ${
-                        isActive(item.path, item.exact) ? "text-calma-gold" : ""
+                        isActive(item.path, item.exact) ? "text-white" : "text-emerald-50/60"
                       }`}
                     />
                     <span className="font-medium text-sm">{item.label}</span>
                   </div>
                   {isActive(item.path, item.exact) && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-calma-gold" />
+                    <div className="h-1.5 w-1.5 rounded-full bg-white" />
                   )}
                 </Link>
               ))}
@@ -223,25 +256,15 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden">
         {/* Top Bar */}
-        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-calma-border">
-          <div className="px-4 sm:px-6 lg:px-8 py-4">
+        <div className="sticky top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl">
+          <div className="px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
-              <div className="hidden lg:flex lg:items-center lg:gap-3">
-                <div>
-                  <h1 className="font-fraunces text-2xl font-normal text-calma-ink">
-                    {isArtisan
-                      ? "Espace artisan"
-                      : isAgency
-                        ? "Espace agence"
-                        : "Espace partenaire"}
+              <div className="flex min-w-0 items-center gap-3 pl-12 lg:pl-0">
+                <div className="min-w-0">
+                  <h1 className="truncate font-space text-lg font-semibold tracking-tight text-slate-900 lg:text-xl">
+                    {pageTitle}
                   </h1>
-                  <p className="text-sm text-calma-taupe">
-                    {isArtisan
-                      ? "Gérez vos produits et services sur Calma Trip"
-                      : isAgency
-                        ? "Gérez vos annonces Explore et vos réservations"
-                        : "Gérez votre activité sur Calma Trip"}
-                  </p>
+                  <p className="hidden text-xs text-slate-500 sm:block">{pageDescription}</p>
                 </div>
                 <span
                   className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${status.onLight}`}
@@ -251,10 +274,11 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
                 </span>
               </div>
 
-              <div className="flex items-center gap-4 ml-auto lg:ml-0">
+              <div className="ml-auto flex items-center gap-3 lg:ml-0">
+                <NotificationBell tone="partner" />
                 <div className="flex items-center gap-3">
-                  <div className="w-8 h-8 rounded-xl bg-calma-gold flex items-center justify-center">
-                    <span className="text-[#241A12] text-sm font-bold">{userInitials}</span>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-b2b-teal">
+                    <span className="text-sm font-bold text-white">{userInitials}</span>
                   </div>
                   <div className="hidden md:block">
                     <p className="text-sm font-semibold text-calma-ink">
@@ -269,7 +293,9 @@ export default function B2BDashboard({ children }: { children?: React.ReactNode 
         </div>
 
         {/* Page content — children from nested routes, or overview as fallback */}
-        <div className="p-4 sm:p-6 lg:p-8">{children ?? <B2BOverview />}</div>
+        <div className="mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8">
+          {children ?? <B2BOverview />}
+        </div>
       </main>
     </div>
   );

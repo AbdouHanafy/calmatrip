@@ -9,7 +9,7 @@ export function ServicesContactStrip() {
     <section className="relative overflow-hidden bg-calma-olive py-20">
       <div
         className="pointer-events-none absolute -right-1/4 -top-1/3 h-[520px] w-[520px] rounded-full opacity-20 blur-[90px]"
-        style={{ background: "radial-gradient(circle, #F2994A 0%, transparent 70%)" }}
+        style={{ backgroundColor: "#F2994A" }}
       />
       <div className="relative mx-auto max-w-7xl px-6 lg:px-12">
         <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
@@ -35,7 +35,7 @@ export function ServicesContactStrip() {
             <Link
               href="/contact"
               className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
-              style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+              style={{ backgroundColor: "#F2994A" }}
             >
               {t.svc.contactCta} <ArrowRight className="h-4 w-4" />
             </Link>

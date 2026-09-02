@@ -151,7 +151,7 @@ export function ContactForm() {
             <button
               type="submit"
               className="group flex w-full items-center justify-center gap-2.5 rounded-2xl px-8 py-[18px] text-[15px] font-bold text-white shadow-[0_16px_32px_-12px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.75)] active:translate-y-0"
-              style={{ background: "linear-gradient(135deg,#F2994A 0%,#F2994A 55%,#C97A34 100%)" }}
+              style={{ backgroundColor: "#F2994A" }}
             >
               <Send className="h-[18px] w-[18px] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-1" />
               {t.cnt.sendBtn}

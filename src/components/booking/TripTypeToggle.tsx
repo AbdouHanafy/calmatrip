@@ -14,8 +14,8 @@ export function TripTypeToggle({ tripType, onChange }: TripTypeToggleProps) {
           onClick={() => onChange("one-way")}
           className={`rounded-2xl border-2 p-5 transition-all ${
             tripType === "one-way"
-              ? "border-[#4CAF50] bg-[#4CAF50]/10 shadow-md"
-              : "border-gray-200 hover:border-[#87CEEB]"
+              ? "border-calma-terracotta bg-calma-terracotta/10 shadow-sm"
+              : "border-gray-200 hover:border-calma-terracotta"
           }`}
         >
           <h3 className="font-bold text-lg">One Trip</h3>
@@ -27,8 +27,8 @@ export function TripTypeToggle({ tripType, onChange }: TripTypeToggleProps) {
           onClick={() => onChange("round-trip")}
           className={`rounded-2xl border-2 p-5 transition-all ${
             tripType === "round-trip"
-              ? "border-[#4CAF50] bg-[#4CAF50]/10 shadow-md"
-              : "border-gray-200 hover:border-[#87CEEB]"
+              ? "border-calma-terracotta bg-calma-terracotta/10 shadow-sm"
+              : "border-gray-200 hover:border-calma-terracotta"
           }`}
         >
           <h3 className="font-bold text-lg">Round Trip</h3>

@@ -8,7 +8,6 @@ import {
   Package,
   Users,
   LogOut,
-  Bell,
   Search,
   Calendar,
   ChevronRight,
@@ -18,20 +17,26 @@ import {
   HelpCircle,
   Mail,
   UserCog,
-  Percent,
   CalendarDays,
   Landmark,
   BookOpen,
   MessageCircle,
+  Database,
+  ShoppingBag,
+  Handshake,
+  Images,
 } from "lucide-react";
 import { useState } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
 import AdminOverview from "./AdminOverview"; // ← import the dynamic version
+import { hasPermission } from "@/features/cms/services/permissions";
 
 export default function AdminDashboard({ children }: { children?: React.ReactNode }) {
   const pathname = usePathname();
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [navQuery, setNavQuery] = useState("");
   const { data: session } = useSession();
+  const isCmsWorkspace = pathname === "/admin/cms" || pathname?.startsWith("/admin/cms/pages/");
   const userInitials =
     session?.user?.name
       ?.split(" ")
@@ -40,36 +45,97 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
       .slice(0, 2)
       .toUpperCase() ?? "AD";
 
-  const navItems = [
-    { path: "/admin", label: "Dashboard", icon: LayoutDashboard, exact: true },
-    { path: "/admin/services", label: "Manage Services", icon: Package },
-    { path: "/admin/clients", label: "Manage Clients", icon: Users },
-    { path: "/admin/bookings", label: "Bookings", icon: Calendar },
-    { path: "/admin/marketplace", label: "Manage Products", icon: Package },
-    { path: "/admin/contacts", label: "Manage Contacts", icon: Users },
-    { path: "/admin/reviews", label: "Manage Reviews", icon: Package },
-    { path: "/admin/community", label: "Community", icon: MessageCircle },
-    { path: "/admin/b2b-submissions", label: "B2B Submissions", icon: ClipboardCheck },
-    { path: "/admin/b2b-partners", label: "Commissions", icon: Percent },
-    { path: "/admin/events", label: "Events", icon: CalendarDays },
-    { path: "/admin/museums", label: "Museums", icon: Landmark },
-    { path: "/admin/guides", label: "Practical Guides", icon: BookOpen },
-    { path: "/admin/faq", label: "FAQ", icon: HelpCircle },
-    { path: "/admin/newsletter", label: "Newsletter", icon: Mail },
-    { path: "/admin/access", label: "Admin Access", icon: UserCog },
-  ];
+  const role = session?.user?.role;
+  const managesLegacyOperations = role === "ADMIN" || role === "SUPER_ADMIN";
+  const navGroups = [
+    {
+      label: "Dashboard",
+      items: managesLegacyOperations
+        ? [{ path: "/admin", label: "Overview", icon: LayoutDashboard, exact: true }]
+        : [],
+    },
+    {
+      label: "Content",
+      items: [
+        ...(hasPermission(role, "cms.read")
+          ? [{ path: "/admin/cms", label: "Collections", icon: Database, exact: true }]
+          : []),
+        ...(hasPermission(role, "media.manage")
+          ? [{ path: "/admin/cms/media", label: "Media Library", icon: Images }]
+          : []),
+        ...(managesLegacyOperations
+          ? [
+              { path: "/admin/services", label: "Experiences & services", icon: Package },
+              { path: "/admin/events", label: "Events", icon: CalendarDays },
+              { path: "/admin/museums", label: "Museums", icon: Landmark },
+              { path: "/admin/guides", label: "Blog & guides", icon: BookOpen },
+              { path: "/admin/faq", label: "FAQ", icon: HelpCircle },
+              { path: "/admin/reviews", label: "Reviews", icon: MessageCircle },
+              { path: "/admin/community", label: "Community", icon: Users },
+            ]
+          : []),
+      ],
+    },
+    {
+      label: "Commerce",
+      items: managesLegacyOperations
+        ? [
+            { path: "/admin/bookings", label: "Reservations", icon: Calendar },
+            { path: "/admin/marketplace", label: "Marketplace", icon: ShoppingBag },
+            { path: "/admin/clients", label: "Customers", icon: Users },
+          ]
+        : [],
+    },
+    {
+      label: "Partners & forms",
+      items: [
+        ...(hasPermission(role, "forms.submissions.read")
+          ? [{ path: "/admin/cms/submissions", label: "Form submissions", icon: ClipboardCheck }]
+          : []),
+        ...(managesLegacyOperations
+          ? [
+              { path: "/admin/b2b-submissions", label: "Applications", icon: ClipboardCheck },
+              { path: "/admin/b2b-partners", label: "Partners & commissions", icon: Handshake },
+              { path: "/admin/contacts", label: "Contact submissions", icon: Mail },
+              { path: "/admin/newsletter", label: "Newsletter", icon: Mail },
+            ]
+          : []),
+      ],
+    },
+    {
+      label: "Users & access",
+      items: hasPermission(role, "users.manage")
+        ? [{ path: "/admin/access", label: "Admin users", icon: UserCog }]
+        : [],
+    },
+  ].filter((group) => group.items.length > 0);
 
   const isActive = (path: string, exact?: boolean) => {
     if (exact) return pathname === path;
     return pathname?.startsWith(path);
   };
+  const currentNavItem = navGroups
+    .flatMap((group) => group.items)
+    .sort((a, b) => b.path.length - a.path.length)
+    .find((item) => isActive(item.path, "exact" in item ? (item.exact as boolean) : undefined));
+  const pageTitle = currentNavItem?.label ?? "Backoffice";
+  const visibleNavGroups = navQuery.trim()
+    ? navGroups
+        .map((group) => ({
+          ...group,
+          items: group.items.filter((item) =>
+            item.label.toLowerCase().includes(navQuery.trim().toLowerCase()),
+          ),
+        }))
+        .filter((group) => group.items.length)
+    : navGroups;
 
   return (
-    <div className="min-h-screen bg-calma-sand font-hanken flex">
+    <div className="admin-workspace min-h-screen font-hanken flex text-calma-ink">
       {/* Mobile menu button */}
       <button
         onClick={() => setSidebarOpen(!sidebarOpen)}
-        className="lg:hidden fixed top-4 left-4 z-50 p-2 bg-white rounded-xl shadow-lg border border-calma-border"
+        className={`${isCmsWorkspace ? "hidden" : "fixed flex"} left-4 top-3 z-50 h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm lg:hidden`}
       >
         {sidebarOpen ? (
           <X className="w-5 h-5 text-calma-terracotta" />
@@ -79,7 +145,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
       </button>
 
       {/* Overlay */}
-      {sidebarOpen && (
+      {sidebarOpen && !isCmsWorkspace && (
         <div
           className="fixed inset-0 bg-black/50 z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
@@ -90,60 +156,68 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
           space's terracotta identity so staff never confuse the two contexts */}
       <aside
         className={`
-          fixed lg:relative z-40 w-72 bg-gradient-to-b from-admin-navy-deeper via-admin-navy-deep to-admin-navy-deeper text-calma-cream flex flex-col shadow-2xl
+          ${isCmsWorkspace ? "hidden" : "fixed flex lg:sticky"} lg:top-0 z-40 h-screen w-72 flex-shrink-0 bg-admin-navy-deeper text-white flex-col border-r border-white/[.07]
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}
         `}
       >
         {/* Logo */}
-        <div className="p-6 border-b border-white/10">
-          <div className="flex items-center space-x-3 mb-2">
-            <div className="relative">
-              <div className="w-12 h-12 rounded-xl bg-admin-navy flex items-center justify-center shadow-lg border border-admin-gold/30">
-                <LayoutDashboard className="w-6 h-6 text-admin-gold" />
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-admin-gold rounded-full animate-pulse" />
-            </div>
-            <div>
-              <h2 className="font-fraunces text-xl font-normal text-calma-cream">Admin</h2>
-              <p className="text-xs text-calma-cream/50">Calma Trip</p>
-            </div>
+        <div className="border-b border-white/10 px-5 py-5">
+          <div className="flex items-center justify-between gap-3">
+            <Image
+              src="/images/logo-cream.png"
+              alt="CalmaTrip"
+              width={170}
+              height={52}
+              className="h-8 w-auto"
+              priority
+            />
+            <span className="rounded-md border border-admin-gold/30 bg-admin-gold/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[.14em] text-admin-gold-soft">
+              Admin
+            </span>
           </div>
         </div>
 
         {/* Navigation */}
-        <nav className="flex-1 p-4">
-          <div className="mb-6">
-            <p className="text-xs uppercase tracking-wider text-calma-cream/40 mb-3 px-4">
-              Main Menu
-            </p>
-            <div className="space-y-1.5">
-              {navItems.map((item) => (
-                <Link
-                  key={item.path}
-                  href={item.path}
-                  onClick={() => setSidebarOpen(false)}
-                  className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${
-                    isActive(item.path, item.exact)
-                      ? "bg-admin-gold/[.16] text-calma-cream border border-admin-gold/30"
-                      : "text-calma-cream/70 hover:bg-white/5 hover:text-calma-cream"
-                  }`}
-                >
-                  <div className="flex items-center gap-3">
-                    <item.icon
-                      className={`w-5 h-5 transition-colors ${
-                        isActive(item.path, item.exact) ? "text-admin-gold-soft" : ""
-                      }`}
-                    />
-                    <span className="font-medium text-sm">{item.label}</span>
-                  </div>
-                  {isActive(item.path, item.exact) && (
-                    <div className="w-1.5 h-1.5 rounded-full bg-admin-gold-soft" />
-                  )}
-                </Link>
-              ))}
+        <nav className="flex-1 overflow-y-auto p-4">
+          {visibleNavGroups.map((group) => (
+            <div className="mb-5" key={group.label}>
+              <p className="text-[11px] uppercase tracking-[.16em] text-calma-cream/40 mb-2 px-4">
+                {group.label}
+              </p>
+              <div className="space-y-1">
+                {group.items.map((item) => (
+                  <Link
+                    key={item.path}
+                    href={item.path}
+                    onClick={() => {
+                      setSidebarOpen(false);
+                      setNavQuery("");
+                    }}
+                    className={`group flex items-center justify-between px-4 py-3 rounded-xl transition-all duration-300 ${
+                      isActive(item.path, "exact" in item ? item.exact : undefined)
+                        ? "bg-admin-gold text-white shadow-sm"
+                        : "text-slate-300 hover:bg-white/[.06] hover:text-white"
+                    }`}
+                  >
+                    <div className="flex items-center gap-3">
+                      <item.icon
+                        className={`w-5 h-5 transition-colors ${
+                          isActive(item.path, "exact" in item ? item.exact : undefined)
+                            ? "text-white"
+                            : "text-slate-400"
+                        }`}
+                      />
+                      <span className="font-medium text-sm">{item.label}</span>
+                    </div>
+                    {isActive(item.path, "exact" in item ? item.exact : undefined) && (
+                      <div className="h-1.5 w-1.5 rounded-full bg-white" />
+                    )}
+                  </Link>
+                ))}
+              </div>
             </div>
-          </div>
+          ))}
 
           <div>
             <p className="text-xs uppercase tracking-wider text-calma-cream/40 mb-3 px-4">
@@ -177,27 +251,35 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
       {/* Main Content */}
       <main className="flex-1 overflow-x-hidden">
         {/* Top Bar */}
-        <div className="sticky top-0 z-30 bg-white/95 backdrop-blur-sm border-b border-calma-border">
-          <div className="px-4 sm:px-6 lg:px-8 py-4">
+        <div
+          className={`${isCmsWorkspace ? "hidden" : "sticky"} top-0 z-30 border-b border-slate-200/80 bg-white/90 backdrop-blur-xl`}
+        >
+          <div className="px-4 py-3 sm:px-6 lg:px-8">
             <div className="flex items-center justify-between">
-              <div className="hidden lg:block">
-                <h1 className="font-fraunces text-2xl font-normal text-calma-ink">Dashboard</h1>
-                <p className="text-sm text-calma-taupe">Welcome to your admin space</p>
+              <div className="min-w-0 pl-12 lg:pl-0">
+                <h1 className="truncate font-space text-lg font-semibold tracking-tight text-slate-900 lg:text-xl">
+                  {pageTitle}
+                </h1>
+                <p className="hidden text-xs text-slate-500 sm:block">
+                  Operations and content workspace
+                </p>
               </div>
 
               <div className="flex items-center gap-4 ml-auto lg:ml-0">
                 {/* Search */}
-                <div className="hidden md:flex items-center bg-calma-sand rounded-xl px-3 py-2">
+                <div className="hidden items-center rounded-xl border border-slate-200 bg-slate-50 px-3 py-2 md:flex">
                   <Search className="w-4 h-4 text-calma-taupe" />
                   <input
                     type="text"
-                    placeholder="Search..."
-                    className="bg-transparent border-none focus:outline-none text-sm ml-2 w-48 text-calma-ink placeholder:text-calma-taupe/60"
+                    value={navQuery}
+                    onChange={(event) => setNavQuery(event.target.value)}
+                    placeholder="Search navigation..."
+                    className="ml-2 w-44 border-none bg-transparent text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none"
                   />
                 </div>
 
                 {/* Notifications */}
-                <NotificationBell />
+                <NotificationBell tone="admin" />
 
                 {/* Profile */}
                 <div className="flex items-center gap-3">
@@ -210,15 +292,17 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
                       className="w-8 h-8 rounded-xl object-cover"
                     />
                   ) : (
-                    <div className="w-8 h-8 rounded-xl bg-admin-navy flex items-center justify-center">
+                    <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-admin-navy">
                       <span className="text-calma-cream text-sm font-bold">{userInitials}</span>
                     </div>
                   )}
-                  <div className="hidden md:block">
+                  <div className="hidden lg:block">
                     <p className="text-sm font-semibold text-calma-ink">
                       {session?.user?.name ?? "Admin"}
                     </p>
-                    <p className="text-xs text-calma-taupe">{session?.user?.email ?? ""}</p>
+                    <p className="text-xs text-calma-taupe">
+                      {session?.user?.role?.replaceAll("_", " ") ?? ""}
+                    </p>
                   </div>
                 </div>
               </div>
@@ -227,7 +311,9 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         </div>
 
         {/* Page content — children from nested routes, or overview as fallback */}
-        <div className="p-4 sm:p-6 lg:p-8">{children ?? <AdminOverview />}</div>
+        <div className={isCmsWorkspace ? "" : "mx-auto max-w-[1600px] p-4 sm:p-6 lg:p-8"}>
+          {children ?? <AdminOverview />}
+        </div>
       </main>
     </div>
   );
