@@ -107,72 +107,72 @@ export default function CalmaSearchBar() {
       </div>
 
       {/* Desktop/tablet — unchanged */}
-      <div className="relative z-[15] mx-auto -mt-24 hidden max-w-[1040px] px-6 sm:px-10 md:block">
+      <div className="relative z-[15] mx-auto -mt-16 hidden max-w-[900px] px-6 sm:px-10 md:block">
         <motion.form
           onSubmit={onSubmit}
-          className="flex flex-wrap items-center gap-2 rounded-[32px] border border-white/60 bg-white/90 p-4 backdrop-blur-2xl transition-shadow duration-300 focus-within:shadow-[0_40px_80px_-28px_rgba(21,36,46,.6)] sm:p-5"
-          style={{ boxShadow: "0 32px 70px -26px rgba(21,36,46,.5)" }}
-          initial={reduceMotion ? undefined : { opacity: 0, y: 36 }}
+          className="flex flex-wrap items-center gap-1 rounded-[28px] border border-white/60 bg-white/90 p-2 backdrop-blur-2xl transition-shadow duration-300 focus-within:shadow-[0_32px_64px_-24px_rgba(21,36,46,.6)]"
+          style={{ boxShadow: "0 24px 56px -22px rgba(21,36,46,.5)" }}
+          initial={reduceMotion ? undefined : { opacity: 0, y: 28 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
         >
-          <label className="group block flex-[2_1_240px] rounded-3xl px-6 py-3.5 transition-colors duration-300 hover:bg-calma-terracotta/[.05] focus-within:bg-calma-terracotta/[.07]">
-            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-[.08em] text-calma-taupe">
+          <label className="group block min-w-0 flex-[2_1_180px] rounded-full px-4 py-2 transition-colors duration-300 hover:bg-calma-terracotta/[.05] focus-within:bg-calma-terracotta/[.07]">
+            <div className="mb-0.5 text-[10px] font-bold uppercase tracking-[.08em] text-calma-taupe">
               {t.searchDestL}
             </div>
-            <div className="flex items-center gap-3">
-              <MapPin size={20} className="shrink-0 text-calma-terracotta" />
+            <div className="flex items-center gap-2">
+              <MapPin size={16} className="shrink-0 text-calma-terracotta" />
               <CalmaFieldSelect
                 value={destination}
                 options={destinationOptions}
                 onChange={setDestination}
-                triggerClassName="text-[16px] text-calma-ink"
+                triggerClassName="text-[14px] text-calma-ink"
               />
             </div>
           </label>
 
-          <div className="hidden h-12 w-px bg-calma-olive/[.12] sm:block" />
+          <div className="hidden h-8 w-px shrink-0 bg-calma-olive/[.12] sm:block" />
 
-          <label className="group block flex-[1_1_170px] rounded-3xl px-6 py-3.5 transition-colors duration-300 hover:bg-calma-terracotta/[.05] focus-within:bg-calma-terracotta/[.07]">
-            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-[.08em] text-calma-taupe">
+          <label className="group block min-w-0 flex-[1_1_130px] rounded-full px-4 py-2 transition-colors duration-300 hover:bg-calma-terracotta/[.05] focus-within:bg-calma-terracotta/[.07]">
+            <div className="mb-0.5 text-[10px] font-bold uppercase tracking-[.08em] text-calma-taupe">
               {t.searchDateL}
             </div>
-            <div className="flex items-center gap-3">
-              <Calendar size={20} className="shrink-0 text-calma-terracotta" />
+            <div className="flex items-center gap-2">
+              <Calendar size={16} className="shrink-0 text-calma-terracotta" />
               <input
                 type="date"
                 min={TODAY_ISO()}
                 value={date}
                 onChange={(e) => setDate(e.target.value)}
-                className="w-full border-none bg-transparent font-hanken text-[16px] text-calma-ink outline-none [color-scheme:light]"
+                className="w-full border-none bg-transparent font-hanken text-[14px] text-calma-ink outline-none [color-scheme:light]"
               />
             </div>
           </label>
 
-          <div className="hidden h-12 w-px bg-calma-olive/[.12] sm:block" />
+          <div className="hidden h-8 w-px shrink-0 bg-calma-olive/[.12] sm:block" />
 
-          <label className="group block flex-[1_1_170px] rounded-3xl px-6 py-3.5 transition-colors duration-300 hover:bg-calma-terracotta/[.05] focus-within:bg-calma-terracotta/[.07]">
-            <div className="mb-1.5 text-[11px] font-bold uppercase tracking-[.08em] text-calma-taupe">
+          <label className="group block min-w-0 flex-[1_1_130px] rounded-full px-4 py-2 transition-colors duration-300 hover:bg-calma-terracotta/[.05] focus-within:bg-calma-terracotta/[.07]">
+            <div className="mb-0.5 text-[10px] font-bold uppercase tracking-[.08em] text-calma-taupe">
               {t.searchCatL}
             </div>
-            <div className="flex items-center gap-3">
-              <Compass size={20} className="shrink-0 text-calma-terracotta" />
+            <div className="flex items-center gap-2">
+              <Compass size={16} className="shrink-0 text-calma-terracotta" />
               <CalmaFieldSelect
                 value={category}
                 options={categoryOptions}
                 onChange={setCategory}
-                triggerClassName="text-[16px] text-calma-ink"
+                triggerClassName="text-[14px] text-calma-ink"
               />
             </div>
           </label>
 
           <button
             type="submit"
-            className="group flex min-w-[210px] flex-[1_1_auto] items-center justify-center gap-2.5 rounded-3xl bg-calma-terracotta px-8 py-5 font-hanken text-[16px] font-bold text-calma-ink shadow-[0_18px_36px_-12px_rgba(210,179,139,.65)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_24px_44px_-12px_rgba(210,179,139,.8)] active:translate-y-0 active:scale-[.98]"
+            className="group flex shrink-0 items-center justify-center gap-1.5 rounded-full bg-calma-terracotta px-5 py-3 font-hanken text-[14px] font-bold text-calma-ink shadow-[0_12px_24px_-10px_rgba(210,179,139,.65)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_16px_30px_-10px_rgba(210,179,139,.8)] active:translate-y-0 active:scale-[.98]"
           >
             {t.browse}
             <ArrowRight
-              size={18}
+              size={15}
               className="transition-transform duration-300 group-hover:translate-x-1"
             />
           </button>
