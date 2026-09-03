@@ -173,7 +173,7 @@ export function organizationSchema(overrides?: {
     "@type": "TravelAgency",
     name: overrides?.name ?? SITE.name,
     url: SITE.url,
-    logo: `${SITE.url}/images/logo-calma-trip.jpg`,
+    logo: `${SITE.url}/images/brand/logo-lockup-primary.png`,
     image: `${SITE.url}${SITE.defaultOgImage}`,
     description: overrides?.description ?? SITE.description,
     foundingDate: "2026",

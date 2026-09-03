@@ -73,8 +73,8 @@ export type GeneralSettings = z.infer<typeof generalSettingsSchema>;
 // image field in this app — Product.image, ExploreListing.image, etc. —
 // stores a URL rather than a media foreign key). Safe-deletion is already
 // covered by the existing usage-scanner (mediaUsage.ts scans SiteSetting.value).
-// Accepts either a same-origin path (a Media Library asset, or a bundled
-// static fallback like /images/logo-cream.png) or a safe http(s) URL.
+// Accepts either a same-origin path (a Media Library asset) or a safe
+// http(s) URL. Null/empty means "use the built-in CalmaLogo brand mark".
 const optionalBrandingAsset = z
   .union([z.string().trim().max(500), z.literal(""), z.null(), z.undefined()])
   .transform((value) => (value ? value : null))

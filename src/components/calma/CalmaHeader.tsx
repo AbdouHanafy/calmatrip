@@ -1,7 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useSession, signOut } from "next-auth/react";
@@ -9,6 +8,7 @@ import { User, LogIn, UserPlus, LayoutDashboard, LogOut, Briefcase, Menu, X } fr
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { isAdminWorkspaceRole } from "@/lib/access";
 import { useSiteSettings } from "@/features/cms/components/settings/SiteSettingsProvider";
+import { CalmaLogoOrCustom } from "@/components/calma/CalmaLogo";
 import {
   DesktopPublicNavigation,
   MobilePublicNavigation,
@@ -80,13 +80,12 @@ export default function CalmaHeader({ variant = "solid", withTicker = false }: C
         href="/"
         className="flex flex-shrink-0 items-center transition-opacity hover:opacity-90"
       >
-        <Image
-          src={settings?.branding.logoUrl || "/images/logo-cream.png"}
+        <CalmaLogoOrCustom
+          customUrl={settings?.branding.logoUrl}
           alt={settings?.general.siteName ?? "Calma Trip"}
-          width={252}
-          height={78}
-          className="h-8 w-auto sm:h-10"
-          priority
+          tone="cream"
+          imgClassName="h-8 w-auto sm:h-10"
+          iconSize={32}
         />
       </Link>
 

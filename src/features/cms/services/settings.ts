@@ -33,7 +33,10 @@ const DEFAULT_SETTINGS: SiteSettings = {
     timezone: "Africa/Tunis",
   },
   branding: {
-    logoUrl: "/images/logo-cream.png",
+    // null = render the real brand mark (CalmaLogo component) rather than a
+    // static image; an admin can still override with an uploaded logo via
+    // Site Settings, which takes priority wherever CalmaLogoOrCustom is used.
+    logoUrl: null,
     faviconUrl: "/icons/favicon.svg",
   },
   contact: {

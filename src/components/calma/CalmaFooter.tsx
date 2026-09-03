@@ -1,11 +1,11 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Send, Check, Facebook, Instagram, Youtube } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { FooterPublicNavigation } from "@/features/cms/components/navigation/PublicNavigation";
 import { useSiteSettings } from "@/features/cms/components/settings/SiteSettingsProvider";
+import { CalmaLogoOrCustom } from "@/components/calma/CalmaLogo";
 
 function TikTokIcon({ className }: { className?: string }) {
   return (
@@ -89,12 +89,12 @@ export default function CalmaFooter() {
       <div className="mx-auto flex max-w-[1240px] flex-wrap justify-between gap-8 px-6 pb-14 pt-[52px] sm:px-10">
         <div className="max-w-[280px]">
           <Link href="/" className="mb-4 flex items-center no-underline">
-            <Image
-              src={settings?.branding.logoUrl || "/images/logo-cream.png"}
+            <CalmaLogoOrCustom
+              customUrl={settings?.branding.logoUrl}
               alt={settings?.general.siteName ?? "Calma Trip"}
-              width={252}
-              height={78}
-              className="h-8 w-auto"
+              tone="cream"
+              imgClassName="h-8 w-auto"
+              iconSize={32}
             />
           </Link>
           <p className="m-0 text-[13.5px] leading-[1.55] text-calma-cream/[.68]">

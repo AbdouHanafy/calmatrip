@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
+import CalmaLogo from "@/components/calma/CalmaLogo";
 import {
   Eye,
   EyeOff,
@@ -73,15 +73,8 @@ export function AuthPage({
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
-            <Link href="/" className="inline-flex items-center">
-              <Image
-                src="/images/logo-cream.png"
-                alt="Calma Trip"
-                width={252}
-                height={78}
-                className="h-8 w-auto sm:h-9"
-                priority
-              />
+            <Link href="/" className="inline-flex items-center justify-center">
+              <CalmaLogo tone="cream" iconSize={30} />
             </Link>
             <p className="mx-auto mt-1.5 max-w-[380px] text-pretty font-fraunces text-[13px] italic leading-[1.4] text-white/80">
               {isPartner

@@ -1,6 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
+import CalmaLogo from "@/components/calma/CalmaLogo";
 import { usePathname } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import {
@@ -171,14 +172,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         {/* Logo */}
         <div className="border-b border-white/10 px-5 py-5">
           <div className="flex items-center justify-between gap-3">
-            <Image
-              src="/images/logo-cream.png"
-              alt="CalmaTrip"
-              width={170}
-              height={52}
-              className="h-8 w-auto"
-              priority
-            />
+            <CalmaLogo tone="cream" iconSize={26} />
             <span className="rounded-md border border-admin-gold/30 bg-admin-gold/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[.14em] text-admin-gold-soft">
               Admin
             </span>

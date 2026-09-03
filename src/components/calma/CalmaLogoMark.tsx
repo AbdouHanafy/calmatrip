@@ -8,7 +8,7 @@ interface CalmaLogoMarkProps {
 }
 
 const TONE_COLOR: Record<NonNullable<CalmaLogoMarkProps["tone"]>, string> = {
-  cream: "#F8F5F0",
+  cream: "#F0E2CE",
   white: "#FFFFFF",
   olive: "#4C7A92",
 };
@@ -28,8 +28,8 @@ export default function CalmaLogoMark({
         width,
         height,
         backgroundColor: TONE_COLOR[tone],
-        WebkitMaskImage: "url(/images/ct-mark.png)",
-        maskImage: "url(/images/ct-mark.png)",
+        WebkitMaskImage: "url(/images/brand/logo-mark.png)",
+        maskImage: "url(/images/brand/logo-mark.png)",
         WebkitMaskPosition: "center",
         maskPosition: "center",
         WebkitMaskSize: "contain",
