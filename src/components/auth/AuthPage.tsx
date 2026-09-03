@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import CalmaLogo from "@/components/calma/CalmaLogo";
+import { useCalmaLang } from "@/lib/calma/i18n";
 import {
   Eye,
   EyeOff,
@@ -50,6 +51,7 @@ export function AuthPage({
   initialPartnerType = null,
 }: AuthPageProps) {
   const reduceMotion = useReducedMotion();
+  const { t } = useCalmaLang();
   const form = useAuthForm({ mode, audience, callbackUrl, initialPartnerType });
   const { isLogin, isPartner } = form;
 
@@ -122,7 +124,7 @@ export function AuthPage({
                 {isPartner
                   ? isLogin
                     ? "Bon retour, partenaire"
-                    : "Devenir partenaire"
+                    : t.navBecomePartner
                   : isLogin
                     ? "Bon retour"
                     : "Créer un compte"}
@@ -423,7 +425,7 @@ export function AuthPage({
                     href="/partner"
                     className="font-semibold text-calma-terracotta transition-colors hover:text-calma-olive"
                   >
-                    Devenir partenaire
+                    {t.navBecomePartner}
                   </Link>
                 </p>
               )}

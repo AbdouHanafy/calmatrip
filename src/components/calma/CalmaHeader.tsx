@@ -33,7 +33,7 @@ function spaceHomeFor(role?: string | null): { href: string; label: string } {
 }
 
 export default function CalmaHeader({ variant = "solid", withTicker = false }: CalmaHeaderProps) {
-  const { lang, setLang } = useCalmaLang();
+  const { lang, setLang, t } = useCalmaLang();
   const { data: session, status } = useSession();
   const settings = useSiteSettings();
   // Two independent booleans, not one combined state: `scrolled` governs contrast
@@ -113,7 +113,7 @@ export default function CalmaHeader({ variant = "solid", withTicker = false }: C
           className="hidden items-center gap-1.5 rounded-full border border-white/25 px-4 py-2.5 font-hanken text-[13px] font-semibold text-white/90 no-underline transition-all duration-200 hover:border-white/45 hover:bg-white/10 hover:text-white md:inline-flex"
         >
           <Briefcase size={14} />
-          Devenir partenaire
+          {t.navBecomePartner}
         </Link>
         <DropdownMenu.Root>
           <DropdownMenu.Trigger asChild>
@@ -197,7 +197,7 @@ export default function CalmaHeader({ variant = "solid", withTicker = false }: C
                       className="flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium text-calma-ink no-underline outline-none transition-colors hover:bg-calma-terracotta/10 focus:bg-calma-terracotta/10 md:hidden"
                     >
                       <Briefcase size={16} className="text-calma-terracotta" />
-                      Devenir partenaire
+                      {t.navBecomePartner}
                     </Link>
                   </DropdownMenu.Item>
                 </>
@@ -315,7 +315,7 @@ export default function CalmaHeader({ variant = "solid", withTicker = false }: C
               className="flex items-center gap-2.5 rounded-xl px-4 py-3 text-base font-medium text-calma-ink no-underline transition-colors hover:bg-calma-olive/10"
             >
               <Briefcase size={18} className="text-calma-terracotta" />
-              Devenir partenaire
+              {t.navBecomePartner}
             </Link>
           </Dialog.Content>
         </Dialog.Portal>

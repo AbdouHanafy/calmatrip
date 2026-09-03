@@ -475,6 +475,7 @@ export interface CalmaDict {
   navCommunity: string;
   navAbout: string;
   navContact: string;
+  navBecomePartner: string;
 
   heroEyebrow: string;
   heroTitle: string;
@@ -589,6 +590,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navCommunity: "Communauté",
     navAbout: "À propos",
     navContact: "Contact",
+    navBecomePartner: "Devenir partenaire",
 
     heroEyebrow: "Expériences locales · Tunisie",
     heroTitle: "Une Tunisie qui se",
@@ -1268,6 +1270,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navCommunity: "Community",
     navAbout: "About Us",
     navContact: "Contact",
+    navBecomePartner: "Become a partner",
 
     heroEyebrow: "Local experiences · Tunisia",
     heroTitle: "A Tunisia you",
@@ -1938,6 +1941,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     navCommunity: "المجتمع",
     navAbout: "من نحن",
     navContact: "اتصل بنا",
+    navBecomePartner: "كن شريكًا",
 
     heroEyebrow: "تجارب محلية · تونس",
     heroTitle: "تونس تُعاش",
