@@ -245,7 +245,7 @@ export default function CalmaHero() {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
         >
           <motion.div
-            className="mb-8 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.16em] text-calma-cream backdrop-blur-md"
+            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.16em] text-calma-cream backdrop-blur-md"
             style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
             initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -255,7 +255,7 @@ export default function CalmaHero() {
             {t.heroEyebrow}
           </motion.div>
           <h1
-            className="mb-8 text-balance font-fraunces text-[clamp(52px,6.4vw,92px)] font-normal italic leading-[1.05] tracking-[-0.01em] text-calma-cream"
+            className="mb-6 text-balance font-fraunces text-[clamp(44px,5.6vw,80px)] font-normal italic leading-[1.05] tracking-[-0.01em] text-calma-cream"
             style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
           >
             {t.heroTitle}{" "}
@@ -269,7 +269,7 @@ export default function CalmaHero() {
           </p>
 
           <motion.div
-            className="mt-9 flex flex-wrap items-center justify-center gap-3.5"
+            className="mt-6 flex flex-wrap items-center justify-center gap-3.5"
             initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
