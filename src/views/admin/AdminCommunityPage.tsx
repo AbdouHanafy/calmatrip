@@ -75,7 +75,7 @@ export default function AdminCommunityPage() {
             onClick={() => setFilter(f)}
             className={`px-4 py-2 rounded-xl text-sm font-medium transition-colors ${
               filter === f
-                ? "bg-calma-olive text-white"
+                ? "bg-admin-navy text-white"
                 : "bg-calma-sand text-calma-taupe hover:bg-calma-border"
             }`}
           >

@@ -146,7 +146,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         className="fixed left-4 top-3 z-50 flex h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-white shadow-sm lg:hidden"
       >
         {sidebarOpen ? (
-          <X className="w-5 h-5 text-calma-terracotta" />
+          <X className="w-5 h-5 text-admin-gold" />
         ) : (
           <Menu className="w-5 h-5 text-calma-taupe" />
         )}
