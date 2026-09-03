@@ -237,102 +237,107 @@ export default function CalmaHero() {
       <CalmaPromoTicker />
       <CalmaHeader active="home" variant="overlay" withTicker />
 
-      <div className="pointer-events-none absolute inset-0 z-10 hidden flex-col items-center justify-center px-6 pb-[164px] pt-16 text-center md:flex">
-        <motion.div
-          className="pointer-events-auto max-w-[760px]"
-          initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-        >
+      <div className="pointer-events-none absolute inset-0 z-10 hidden flex-col items-center justify-center px-6 pb-20 pt-16 text-center md:flex">
+        {/* Content block + category pills are one flow unit (not two independently
+            positioned elements) so pills can never overlap the text/CTAs above them,
+            regardless of headline/button text length or viewport height. */}
+        <div className="flex w-full flex-col items-center">
           <motion.div
-            className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.16em] text-calma-cream backdrop-blur-md"
-            style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
-            initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
+            className="pointer-events-auto max-w-[760px]"
+            initial={reduceMotion ? undefined : { opacity: 0, y: 24 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
-            {t.heroEyebrow}
-          </motion.div>
-          <h1
-            className="mb-6 text-balance font-fraunces text-[clamp(44px,5.6vw,80px)] font-normal italic leading-[1.05] tracking-[-0.01em] text-calma-cream"
-            style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
-          >
-            {t.heroTitle}{" "}
-            <span className="not-italic text-calma-terracotta-soft">{t.heroTitleEm}</span>
-          </h1>
-          <p
-            className="mx-auto max-w-[500px] text-pretty font-hanken text-[18px] font-normal leading-[1.75] text-white/80"
-            style={{ textShadow: "0 1px 14px rgba(0,0,0,.4)" }}
-          >
-            {t.heroSub}
-          </p>
-
-          <motion.div
-            className="mt-6 flex flex-wrap items-center justify-center gap-3.5"
-            initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
-            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          >
-            <Link
-              href="/explore"
-              className="group inline-flex items-center gap-2 rounded-full bg-calma-terracotta px-7 py-3.5 font-hanken text-[15px] font-semibold text-calma-ink no-underline shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)]"
+            <motion.div
+              className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.16em] text-calma-cream backdrop-blur-md"
+              style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
+              initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
             >
-              {t.heroCta1}
-              <ArrowRight
-                size={17}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
-            </Link>
-            <Link
-              href="/services"
-              className="inline-flex items-center gap-2 rounded-full border border-white/35 px-7 py-3.5 font-hanken text-[15px] font-semibold text-calma-cream no-underline backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10"
+              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
+              {t.heroEyebrow}
+            </motion.div>
+            <h1
+              className="mb-6 text-balance font-fraunces text-[clamp(44px,5.6vw,80px)] font-normal italic leading-[1.05] tracking-[-0.01em] text-calma-cream"
+              style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
             >
-              {t.heroCta2}
-            </Link>
-          </motion.div>
-        </motion.div>
+              {t.heroTitle}{" "}
+              <span className="not-italic text-calma-terracotta-soft">{t.heroTitleEm}</span>
+            </h1>
+            <p
+              className="mx-auto max-w-[500px] text-pretty font-hanken text-[18px] font-normal leading-[1.75] text-white/80"
+              style={{ textShadow: "0 1px 14px rgba(0,0,0,.4)" }}
+            >
+              {t.heroSub}
+            </p>
 
-        <div className="pointer-events-auto absolute inset-x-0 bottom-[152px] overflow-x-auto px-4 [scrollbar-width:none] sm:flex sm:justify-center sm:overflow-visible [&::-webkit-scrollbar]:hidden">
-          <div
-            ref={rowRef}
-            className="flex w-max items-end gap-4 will-change-transform sm:w-auto sm:gap-6"
-          >
-            {CATEGORY_ICONS.map((Icon, i) => {
-              const w = WAVE[i];
-              return (
-                <motion.div
-                  key={CATEGORY_SLUGS[i]}
-                  className="flex-none"
-                  style={reduceMotion ? undefined : { rotate: w.rotate }}
-                  animate={reduceMotion ? undefined : { y: [w.y - 6, w.y + 6, w.y - 6] }}
-                  transition={
-                    reduceMotion
-                      ? undefined
-                      : { duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }
-                  }
-                  whileHover={{
-                    rotate: 0,
-                    y: -14,
-                    scale: 1.1,
-                    transition: { type: "spring", stiffness: 320, damping: 20 },
-                  }}
-                >
-                  <Link
-                    href={`/explore?category=${CATEGORY_SLUGS[i]}`}
-                    style={{ width: CARD_SIZE }}
-                    className="group flex flex-col items-center gap-2.5 rounded-2xl border border-white/[.16] bg-white/[.10] p-3.5 no-underline shadow-[0_20px_40px_-16px_rgba(10,8,6,.6)] backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/[.18]"
+            <motion.div
+              className="mt-6 flex flex-wrap items-center justify-center gap-3.5"
+              initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <Link
+                href="/explore"
+                className="group inline-flex items-center gap-2 rounded-full bg-calma-terracotta px-7 py-3.5 font-hanken text-[15px] font-semibold text-calma-ink no-underline shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)]"
+              >
+                {t.heroCta1}
+                <ArrowRight
+                  size={17}
+                  className="transition-transform duration-300 group-hover:translate-x-1"
+                />
+              </Link>
+              <Link
+                href="/services"
+                className="inline-flex items-center gap-2 rounded-full border border-white/35 px-7 py-3.5 font-hanken text-[15px] font-semibold text-calma-cream no-underline backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10"
+              >
+                {t.heroCta2}
+              </Link>
+            </motion.div>
+          </motion.div>
+
+          <div className="pointer-events-auto mt-10 w-full overflow-x-auto px-4 [scrollbar-width:none] sm:flex sm:justify-center sm:overflow-visible [&::-webkit-scrollbar]:hidden">
+            <div
+              ref={rowRef}
+              className="mx-auto flex w-max items-end gap-4 will-change-transform sm:w-auto sm:gap-6"
+            >
+              {CATEGORY_ICONS.map((Icon, i) => {
+                const w = WAVE[i];
+                return (
+                  <motion.div
+                    key={CATEGORY_SLUGS[i]}
+                    className="flex-none"
+                    style={reduceMotion ? undefined : { rotate: w.rotate }}
+                    animate={reduceMotion ? undefined : { y: [w.y - 6, w.y + 6, w.y - 6] }}
+                    transition={
+                      reduceMotion
+                        ? undefined
+                        : { duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 }
+                    }
+                    whileHover={{
+                      rotate: 0,
+                      y: -14,
+                      scale: 1.1,
+                      transition: { type: "spring", stiffness: 320, damping: 20 },
+                    }}
                   >
-                    <span className="grid h-10 w-10 place-items-center rounded-full bg-white/[.14] transition-colors duration-300 group-hover:bg-calma-terracotta/70">
-                      <Icon size={18} stroke="#F8F5F0" />
-                    </span>
-                    <span className="text-center text-[11px] font-semibold leading-tight text-white sm:text-[11.5px]">
-                      {CATEGORY_LABELS[i](t)}
-                    </span>
-                  </Link>
-                </motion.div>
-              );
-            })}
+                    <Link
+                      href={`/explore?category=${CATEGORY_SLUGS[i]}`}
+                      style={{ width: CARD_SIZE }}
+                      className="group flex flex-col items-center gap-2.5 rounded-2xl border border-white/[.16] bg-white/[.10] p-3.5 no-underline shadow-[0_20px_40px_-16px_rgba(10,8,6,.6)] backdrop-blur-md transition-all duration-300 hover:border-white/30 hover:bg-white/[.18]"
+                    >
+                      <span className="grid h-10 w-10 place-items-center rounded-full bg-white/[.14] transition-colors duration-300 group-hover:bg-calma-terracotta/70">
+                        <Icon size={18} stroke="#F8F5F0" />
+                      </span>
+                      <span className="text-center text-[11px] font-semibold leading-tight text-white sm:text-[11.5px]">
+                        {CATEGORY_LABELS[i](t)}
+                      </span>
+                    </Link>
+                  </motion.div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
