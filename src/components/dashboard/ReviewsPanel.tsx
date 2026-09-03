@@ -73,7 +73,7 @@ export function ReviewsPanel({
                   </div>
                   <button
                     onClick={() => onReview(b)}
-                    className="rounded-xl bg-calma-terracotta px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-calma-terracotta-deep"
+                    className="rounded-xl bg-calma-terracotta px-4 py-2 text-sm font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep"
                   >
                     {t.dash.leaveReviewBtn}
                   </button>

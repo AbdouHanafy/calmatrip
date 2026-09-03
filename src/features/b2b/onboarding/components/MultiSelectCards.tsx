@@ -34,7 +34,7 @@ export function MultiSelectCards({ options, selected, onToggle }: MultiSelectCar
             <span
               className={`flex h-5 w-5 items-center justify-center rounded-full border transition-colors ${
                 isSelected
-                  ? "border-calma-terracotta bg-calma-terracotta text-white"
+                  ? "border-calma-terracotta bg-calma-terracotta text-calma-ink"
                   : "border-calma-olive/30 bg-white"
               }`}
             >

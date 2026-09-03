@@ -44,7 +44,7 @@ export function ServiceSelector({ services, loading, serviceId, onSelect }: Serv
                   <div
                     className={`p-2 rounded-xl ${
                       serviceId === s.id
-                        ? "bg-calma-terracotta text-white"
+                        ? "bg-calma-terracotta text-calma-ink"
                         : "bg-gray-100 text-gray-500"
                     }`}
                   >

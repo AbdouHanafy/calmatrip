@@ -103,7 +103,7 @@ function OrdersContent() {
               >
                 <ShoppingCart className="w-5 h-5 text-gray-700" />
                 {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-white">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-calma-ink">
                     {cartCount}
                   </span>
                 )}

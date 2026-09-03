@@ -106,7 +106,7 @@ export function TripHeroCard({
             </span>
             <button
               onClick={onDetails}
-              className="inline-flex items-center gap-2 rounded-xl bg-calma-terracotta px-6 py-3.5 text-sm font-bold text-white shadow-[0_10px_24px_-8px_rgba(210,179,139,.6)] transition-all hover:-translate-y-0.5 hover:bg-calma-terracotta-deep hover:shadow-[0_14px_28px_-8px_rgba(210,179,139,.7)]"
+              className="inline-flex items-center gap-2 rounded-xl bg-calma-terracotta px-6 py-3.5 text-sm font-bold text-calma-ink shadow-[0_10px_24px_-8px_rgba(210,179,139,.6)] transition-all hover:-translate-y-0.5 hover:bg-calma-terracotta-deep hover:shadow-[0_14px_28px_-8px_rgba(210,179,139,.7)]"
             >
               {t.dash.viewTrip}
               <ArrowRight className="h-4 w-4" />

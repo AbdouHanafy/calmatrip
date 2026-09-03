@@ -201,7 +201,7 @@ export default function CheckoutPage() {
               <button
                 type="submit"
                 disabled={submitting}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
               >
                 {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
                 Confirmer la commande

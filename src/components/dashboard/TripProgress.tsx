@@ -43,7 +43,7 @@ export function TripProgress({ booking }: { booking: Booking }) {
             <div
               className={`flex h-6 w-6 items-center justify-center rounded-full border-2 transition-colors ${
                 i < active
-                  ? "border-calma-terracotta bg-calma-terracotta text-white"
+                  ? "border-calma-terracotta bg-calma-terracotta text-calma-ink"
                   : i === active
                     ? "border-calma-terracotta bg-white text-calma-terracotta"
                     : "border-calma-border bg-white text-calma-taupe/40"

@@ -122,7 +122,7 @@ export default function B2BProfile() {
         <button
           onClick={save}
           disabled={saving}
-          className="w-full rounded-xl bg-calma-terracotta py-2.5 text-sm font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
+          className="w-full rounded-xl bg-calma-terracotta py-2.5 text-sm font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
         >
           {saving ? "Enregistrement..." : "Enregistrer"}
         </button>

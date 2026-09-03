@@ -102,7 +102,7 @@ export function ProfilePanel() {
           <button
             type="submit"
             disabled={saving}
-            className="rounded-xl bg-calma-terracotta px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
+            className="rounded-xl bg-calma-terracotta px-5 py-2.5 text-sm font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
           >
             {t.dash.profileSaveBtn}
           </button>

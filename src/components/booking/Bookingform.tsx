@@ -113,7 +113,7 @@ export function BookingForm() {
           !form.date ||
           (!form.useManualTime ? !form.time : !form.manualTime)
         }
-        className="group relative w-full overflow-hidden rounded-2xl bg-calma-terracotta py-4 text-lg font-bold text-white transition-colors duration-300 hover:bg-calma-terracotta-deep disabled:cursor-not-allowed disabled:opacity-50"
+        className="group relative w-full overflow-hidden rounded-2xl bg-calma-terracotta py-4 text-lg font-bold text-calma-ink transition-colors duration-300 hover:bg-calma-terracotta-deep disabled:cursor-not-allowed disabled:opacity-50"
       >
         <span className="relative z-10 flex items-center justify-center gap-3">
           {form.submitting ? (

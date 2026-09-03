@@ -58,7 +58,9 @@ export function PartnerTypeStep({ t, value, onSelect, loading }: PartnerTypeStep
             >
               <span
                 className={`flex h-11 w-11 items-center justify-center rounded-xl ${
-                  isSelected ? "bg-calma-terracotta text-white" : "bg-calma-sand text-calma-olive"
+                  isSelected
+                    ? "bg-calma-terracotta text-calma-ink"
+                    : "bg-calma-sand text-calma-olive"
                 }`}
               >
                 {isBusy ? <Loader2 size={20} className="animate-spin" /> : <card.icon size={20} />}

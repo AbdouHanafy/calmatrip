@@ -83,7 +83,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
               >
                 <Heart className="w-5 h-5 text-calma-ink" />
                 {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-calma-terracotta text-white text-[10px] font-bold flex items-center justify-center">
+                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-calma-terracotta text-calma-ink text-[10px] font-bold flex items-center justify-center">
                     {wishlist.length}
                   </span>
                 )}

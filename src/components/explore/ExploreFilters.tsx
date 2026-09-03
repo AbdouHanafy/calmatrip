@@ -110,7 +110,7 @@ export function ExploreFilters({
                   key={b}
                   onClick={() => onBudgetChange(b)}
                   className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-extrabold transition-all
-                    ${budgetLimit === b ? "bg-calma-terracotta text-white shadow-sm" : "bg-calma-sand text-calma-taupe hover:text-calma-ink"}
+                    ${budgetLimit === b ? "bg-calma-terracotta text-calma-ink shadow-sm" : "bg-calma-sand text-calma-taupe hover:text-calma-ink"}
                   `}
                 >
                   {"$".repeat(b)}
@@ -155,7 +155,7 @@ export function ExploreFilters({
                 <button
                   key={filter.id}
                   onClick={filter.onClear}
-                  className="px-3 py-1.5 bg-calma-terracotta/10 text-calma-terracotta text-[11px] font-bold rounded-full border border-calma-terracotta/20 flex items-center gap-2 hover:bg-calma-terracotta hover:text-white transition-all group"
+                  className="px-3 py-1.5 bg-calma-terracotta/10 text-calma-terracotta text-[11px] font-bold rounded-full border border-calma-terracotta/20 flex items-center gap-2 hover:bg-calma-terracotta hover:text-calma-ink transition-all group"
                 >
                   {filter.label}
                   <span className="text-lg leading-none opacity-50 group-hover:opacity-100">

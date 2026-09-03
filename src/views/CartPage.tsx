@@ -21,7 +21,7 @@ export default function CartPage() {
           <p className="text-sm text-gray-500 mb-6">Découvre nos produits et ajoute-les ici</p>
           <Link
             href="/marketplace"
-            className="rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-white hover:bg-calma-terracotta-deep"
+            className="rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-calma-ink hover:bg-calma-terracotta-deep"
           >
             Voir la marketplace
           </Link>
@@ -66,7 +66,7 @@ export default function CartPage() {
               >
                 <ShoppingCart className="w-5 h-5 text-gray-700" />
                 {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-white">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-calma-ink">
                     {cartCount}
                   </span>
                 )}

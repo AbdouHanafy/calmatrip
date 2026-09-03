@@ -55,7 +55,7 @@ export function OnboardingProgress({ t, step, skipAccountStep, dir }: Onboarding
                     isDone
                       ? "bg-calma-success text-white"
                       : isCurrent
-                        ? "bg-calma-terracotta text-white shadow-[0_6px_16px_-6px_rgba(210,179,139,.7)]"
+                        ? "bg-calma-terracotta text-calma-ink shadow-[0_6px_16px_-6px_rgba(210,179,139,.7)]"
                         : "bg-calma-olive/10 text-calma-taupe"
                   }`}
                 >

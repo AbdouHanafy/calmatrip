@@ -66,7 +66,7 @@ export default function CalmaShopPreview({ products }: { products: Product[] }) 
                 <span className="font-fraunces text-[24px] font-semibold text-calma-olive">
                   {product.price} TND
                 </span>
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-white">
+                <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-calma-ink">
                   →
                 </span>
               </div>

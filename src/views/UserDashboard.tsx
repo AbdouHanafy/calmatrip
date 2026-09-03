@@ -263,7 +263,7 @@ function UserDashboardInner() {
                   <p className="mb-4 text-calma-taupe">{t.dash.emptySub}</p>
                   <button
                     onClick={() => changeTab("new")}
-                    className="rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-white transition-all duration-300 hover:shadow-lg"
+                    className="rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-calma-ink transition-all duration-300 hover:shadow-lg"
                   >
                     {t.dash.createBooking}
                   </button>
@@ -395,7 +395,7 @@ function UserDashboardInner() {
                   href="https://wa.me/21621622972"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 rounded-xl bg-calma-terracotta px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-calma-terracotta-deep"
+                  className="flex items-center gap-1.5 rounded-xl bg-calma-terracotta px-4 py-2 text-sm font-medium text-calma-ink transition-colors hover:bg-calma-terracotta-deep"
                 >
                   <MessageCircle className="h-3.5 w-3.5" />
                   {t.dash.whatsappBtn}

@@ -41,7 +41,7 @@ export function ProductCard({ product }: { product: Product }) {
             </div>
           )}
           {lowStock && !outOfStock && (
-            <span className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-calma-terracotta text-white">
+            <span className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-calma-terracotta text-calma-ink">
               Plus que {product.stock}
             </span>
           )}

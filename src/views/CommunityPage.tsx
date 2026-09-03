@@ -151,7 +151,7 @@ function CommunityPageContent() {
                 <span>Connectez-vous pour partager votre expérience.</span>
                 <Link
                   href="/login?callbackUrl=/community"
-                  className="rounded-full bg-calma-terracotta px-5 py-2.5 font-semibold text-white no-underline"
+                  className="rounded-full bg-calma-terracotta px-5 py-2.5 font-semibold text-calma-ink no-underline"
                 >
                   Se connecter
                 </Link>

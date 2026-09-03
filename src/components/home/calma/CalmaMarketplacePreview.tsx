@@ -122,7 +122,7 @@ export default function CalmaMarketplacePreview({
                         </span>
                       )}
                     </div>
-                    <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-white">
+                    <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-calma-ink">
                       →
                     </span>
                   </div>
@@ -202,7 +202,7 @@ export default function CalmaMarketplacePreview({
                     </span>
                     <span className="text-xs text-calma-taupe"> {t.expPer}</span>
                   </div>
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-white">
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-calma-ink">
                     →
                   </span>
                 </div>

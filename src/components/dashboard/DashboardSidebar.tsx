@@ -68,7 +68,7 @@ export function DashboardSidebar({
       <aside className="hidden lg:block lg:w-72 lg:flex-shrink-0 lg:p-4">
         <div className="rounded-3xl border border-calma-border bg-calma-cream p-5 shadow-sm lg:sticky lg:top-4">
           <div className="flex items-center gap-3.5 pb-5">
-            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-lg font-bold text-white">
+            <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-lg font-bold text-calma-ink">
               {userInitials}
             </div>
             <div className="min-w-0">
@@ -132,7 +132,7 @@ export function DashboardSidebar({
 
       {/* Mobile — a compact, horizontally scrollable icon row, never a panel that covers the page */}
       <nav className="calma-scrollbar-hide sticky top-0 z-30 flex items-center gap-1 overflow-x-auto border-b border-calma-border bg-calma-cream px-3 py-2 lg:hidden">
-        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-xs font-bold text-white">
+        <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-xs font-bold text-calma-ink">
           {userInitials}
         </div>
         <div className="mx-1 h-6 w-px flex-shrink-0 bg-calma-border" />
@@ -150,7 +150,7 @@ export function DashboardSidebar({
           >
             <item.icon className="h-[18px] w-[18px]" strokeWidth={1.75} />
             {item.caption && (
-              <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-calma-terracotta text-[9px] font-bold text-white">
+              <span className="absolute -right-0.5 -top-0.5 flex h-4 w-4 items-center justify-center rounded-full bg-calma-terracotta text-[9px] font-bold text-calma-ink">
                 {item.key === "bookings"
                   ? upcomingCount
                   : item.key === "payments"

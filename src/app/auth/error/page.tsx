@@ -53,7 +53,7 @@ export default async function AuthErrorPage({
 
           <Link
             href="/login"
-            className="flex w-full items-center justify-center gap-2 rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-white transition-colors hover:bg-calma-terracotta-deep"
+            className="flex w-full items-center justify-center gap-2 rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep"
           >
             Try Again
           </Link>

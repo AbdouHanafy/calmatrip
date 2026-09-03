@@ -148,7 +148,7 @@ export default function ProductDetailPage() {
               >
                 <ShoppingCart className="w-5 h-5 text-gray-700" />
                 {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-white">
+                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-calma-ink">
                     {cartCount}
                   </span>
                 )}
@@ -281,7 +281,7 @@ export default function ProductDetailPage() {
                 <button
                   onClick={handleAdd}
                   disabled={outOfStock}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-white transition-colors hover:bg-calma-terracotta-deep disabled:cursor-not-allowed disabled:opacity-40"
+                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {added ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
                   {added ? "Ajouté !" : "Ajouter au panier"}

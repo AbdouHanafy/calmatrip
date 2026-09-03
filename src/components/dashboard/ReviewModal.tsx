@@ -92,7 +92,7 @@ export function ReviewModal({
         <button
           onClick={handleSubmit}
           disabled={saving}
-          className="mt-4 w-full rounded-xl bg-calma-terracotta py-3 font-semibold text-white transition-shadow hover:shadow-lg disabled:opacity-60"
+          className="mt-4 w-full rounded-xl bg-calma-terracotta py-3 font-semibold text-calma-ink transition-shadow hover:shadow-lg disabled:opacity-60"
         >
           {saving ? "Envoi..." : "Envoyer mon avis"}
         </button>
