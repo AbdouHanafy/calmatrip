@@ -31,7 +31,7 @@ export function PlacesGrid({
         <p className="text-calma-taupe max-w-md mx-auto mb-10 leading-relaxed">{t.exp.emptySub}</p>
         <button
           onClick={onResetFilters}
-          className="px-10 py-4 bg-[#4A667D] text-white rounded-2xl font-bold hover:bg-[#F2994A] transition-all shadow-2xl"
+          className="px-10 py-4 bg-[#4C7A92] text-white rounded-2xl font-bold hover:bg-[#D2B38B] transition-all shadow-2xl"
         >
           {t.exp.resetFilters}
         </button>

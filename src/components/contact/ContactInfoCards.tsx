@@ -44,27 +44,27 @@ export function ContactInfoCards() {
   ];
 
   return (
-    <section className="bg-[#F1EBE1] pb-4 pt-16 sm:pt-20">
+    <section className="bg-[#F0E2CE] pb-4 pt-16 sm:pt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
           {contactInfo.map((info, index) => (
             <Reveal key={index} delay={index * 0.08}>
-              <div className="group h-full rounded-[20px] border border-[#2D2926]/[.06] bg-white p-7 shadow-[0_2px_16px_-8px_rgba(42,38,34,.12)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_44px_-20px_rgba(42,38,34,.28)]">
-                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#F2994A]/20 bg-[#F2994A]/[.08] text-[#F2994A] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#F2994A] group-hover:text-white">
+              <div className="group h-full rounded-[20px] border border-[#15242E]/[.06] bg-white p-7 shadow-[0_2px_16px_-8px_rgba(21,36,46,.12)] transition-all duration-300 hover:-translate-y-1.5 hover:shadow-[0_24px_44px_-20px_rgba(21,36,46,.28)]">
+                <div className="mb-5 flex h-12 w-12 items-center justify-center rounded-full border border-[#D2B38B]/20 bg-[#D2B38B]/[.08] text-[#D2B38B] transition-all duration-300 group-hover:scale-110 group-hover:bg-[#D2B38B] group-hover:text-white">
                   <info.icon className="h-5 w-5" strokeWidth={1.75} />
                 </div>
-                <h3 className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#726C64]">
+                <h3 className="text-[0.7rem] font-bold uppercase tracking-[0.18em] text-[#5E7480]">
                   {info.title}
                 </h3>
                 {info.details.map((detail, idx) => (
                   <p
                     key={idx}
-                    className="mt-1.5 font-fraunces text-[17px] leading-snug text-[#2D2926]"
+                    className="mt-1.5 font-fraunces text-[17px] leading-snug text-[#15242E]"
                   >
                     {detail}
                   </p>
                 ))}
-                <p className="mt-2 text-[12.5px] text-[#F2994A]">{info.description}</p>
+                <p className="mt-2 text-[12.5px] text-[#D2B38B]">{info.description}</p>
               </div>
             </Reveal>
           ))}

@@ -55,7 +55,7 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
           <div
             className="absolute inset-0"
             style={{
-              background: "rgba(42,38,34,.66)",
+              background: "rgba(21,36,46,.66)",
             }}
           />
           {/* subtle sand-ripple texture, replaces literal decorative shapes */}

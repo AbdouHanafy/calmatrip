@@ -50,7 +50,7 @@ function ExplorePageContent({ events, museums, listings }: ExplorePageContentPro
           <div
             className="absolute inset-0"
             style={{
-              background: "rgba(42,38,34,.64)",
+              background: "rgba(21,36,46,.64)",
             }}
           />
           <div

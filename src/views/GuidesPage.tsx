@@ -36,7 +36,7 @@ function GuidesPageContent({ guides }: { guides: Guide[] }) {
           <div
             className="absolute inset-0"
             style={{
-              background: "rgba(42,38,34,.66)",
+              background: "rgba(21,36,46,.66)",
             }}
           />
           <div className="relative z-[2] mx-auto max-w-[640px]">
@@ -65,7 +65,7 @@ function GuidesPageContent({ guides }: { guides: Guide[] }) {
                 <Link
                   key={guide.id}
                   href={`/guides/${guide.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-3xl border border-calma-olive/[.1] bg-white no-underline shadow-[0_8px_24px_-16px_rgba(42,38,34,.3)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_-24px_rgba(42,38,34,.4)]"
+                  className="group flex flex-col overflow-hidden rounded-3xl border border-calma-olive/[.1] bg-white no-underline shadow-[0_8px_24px_-16px_rgba(21,36,46,.3)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_-24px_rgba(21,36,46,.4)]"
                 >
                   {guide.image ? (
                     <div className="relative h-40 w-full overflow-hidden">

@@ -58,7 +58,7 @@ export function AuthBackground({ reduceMotion }: { reduceMotion: boolean | null 
       {/* Warm atmospheric glow */}
       <div
         className="pointer-events-none absolute -right-[10%] -top-[10%] h-[55%] w-[50%] rounded-full opacity-[.25] blur-[120px]"
-        style={{ backgroundColor: "#F2994A" }}
+        style={{ backgroundColor: "#D2B38B" }}
       />
 
       {/* Slow floating dust particles */}

@@ -10,7 +10,7 @@ export default function PartnerAgencyPage() {
       eyebrow="Espace agence"
       title="Publiez vos activités et hébergements sur Explore"
       subtitle="Comme sur GetYourGuide ou TripAdvisor, exposez vos excursions, activités et hôtels à des voyageurs qui explorent la Tunisie sur Calma Trip Explore."
-      accent="#4A667D"
+      accent="#4C7A92"
       benefits={[
         {
           icon: MapPin,

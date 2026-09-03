@@ -47,7 +47,7 @@ export function CalmaFieldSelect({
       </button>
 
       {open && (
-        <div className="absolute left-0 top-full z-30 mt-2 max-h-64 w-max min-w-[170px] overflow-auto rounded-2xl border border-calma-olive/10 bg-calma-cream p-1.5 shadow-[0_22px_50px_-22px_rgba(42,38,34,.5)]">
+        <div className="absolute left-0 top-full z-30 mt-2 max-h-64 w-max min-w-[170px] overflow-auto rounded-2xl border border-calma-olive/10 bg-calma-cream p-1.5 shadow-[0_22px_50px_-22px_rgba(21,36,46,.5)]">
           {options.map((opt) => (
             <button
               key={opt.value}

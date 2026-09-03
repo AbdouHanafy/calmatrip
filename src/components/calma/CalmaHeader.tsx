@@ -141,7 +141,7 @@ export default function CalmaHeader({ variant = "solid", withTicker = false }: C
             <DropdownMenu.Content
               align="end"
               sideOffset={12}
-              className="z-50 min-w-[200px] rounded-2xl border border-calma-olive/10 bg-calma-cream p-1.5 font-hanken shadow-[0_22px_50px_-22px_rgba(42,38,34,.5)]"
+              className="z-50 min-w-[200px] rounded-2xl border border-calma-olive/10 bg-calma-cream p-1.5 font-hanken shadow-[0_22px_50px_-22px_rgba(21,36,46,.5)]"
             >
               {status === "authenticated" && session?.user ? (
                 <>

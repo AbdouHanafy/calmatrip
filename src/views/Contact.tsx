@@ -21,7 +21,7 @@ function ContactContent({ faqs }: { faqs: FaqItem[] }) {
   return (
     <>
       <CalmaHeader active="contact" />
-      <div className="min-h-screen bg-[#F1EBE1]">
+      <div className="min-h-screen bg-[#F0E2CE]">
         {/* ── Hero — cinematic, photo-backed, breadcrumb + welcoming intro ── */}
         <section className="relative flex min-h-[340px] items-center justify-center overflow-hidden px-6 py-20 text-center sm:px-10">
           <Image
@@ -35,7 +35,7 @@ function ContactContent({ faqs }: { faqs: FaqItem[] }) {
           <div
             className="absolute inset-0"
             style={{
-              background: "rgba(42,38,34,.66)",
+              background: "rgba(21,36,46,.66)",
             }}
           />
           <div
@@ -57,11 +57,11 @@ function ContactContent({ faqs }: { faqs: FaqItem[] }) {
               <span className="text-white/85">{t.navContact}</span>
             </nav>
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-[#F8F5F0] backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-[#F2994A]" />
+              <span className="h-1.5 w-1.5 rounded-full bg-[#D2B38B]" />
               {t.cnt.eyebrow}
             </div>
             <h1 className="mb-4 text-balance font-fraunces text-[clamp(34px,4.8vw,48px)] font-normal leading-[1.08] tracking-[-0.02em] text-[#F8F5F0]">
-              {t.cnt.heroTitle1} <em className="not-italic text-[#F7B77E]">{t.cnt.heroTitleEm}</em>
+              {t.cnt.heroTitle1} <em className="not-italic text-[#E3CBAA]">{t.cnt.heroTitleEm}</em>
             </h1>
             <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.7] text-white/80">
               {t.cnt.heroSub}

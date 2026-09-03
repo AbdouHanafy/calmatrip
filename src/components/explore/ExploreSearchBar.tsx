@@ -10,7 +10,7 @@ export function ExploreSearchBar({ value, onChange }: ExploreSearchBarProps) {
   const { t } = useCalmaLang();
   return (
     <section className="max-w-2xl mx-auto px-6 -mt-16 relative z-20 mb-10">
-      <div className="relative group" style={{ boxShadow: "0 24px 56px -24px rgba(42,38,34,.5)" }}>
+      <div className="relative group" style={{ boxShadow: "0 24px 56px -24px rgba(21,36,46,.5)" }}>
         <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-calma-taupe group-focus-within:text-calma-terracotta transition-colors" />
         <input
           type="text"

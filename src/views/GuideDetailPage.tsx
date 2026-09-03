@@ -88,7 +88,7 @@ function GuideDetailContent() {
           <div
             className="absolute inset-0"
             style={{
-              background: "rgba(42,38,34,.66)",
+              background: "rgba(21,36,46,.66)",
             }}
           />
           <div className="relative z-[2] mx-auto max-w-[640px]">

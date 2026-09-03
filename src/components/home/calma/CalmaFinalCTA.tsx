@@ -11,11 +11,11 @@ export default function CalmaFinalCTA() {
       <div className="relative overflow-hidden rounded-calma-block bg-calma-olive p-[72px_clamp(28px,6vw,72px)] text-center text-calma-cream">
         <div
           className="pointer-events-none absolute -right-1/4 -top-1/3 h-[520px] w-[520px] rounded-full opacity-20 blur-[90px]"
-          style={{ backgroundColor: "#F2994A" }}
+          style={{ backgroundColor: "#D2B38B" }}
         />
         <div
           className="pointer-events-none absolute -bottom-1/3 -left-1/4 h-[420px] w-[420px] rounded-full opacity-[.12] blur-[90px]"
-          style={{ backgroundColor: "#F1EBE1" }}
+          style={{ backgroundColor: "#F0E2CE" }}
         />
         <div className="relative mx-auto max-w-[640px]">
           <div className="mb-4 inline-flex items-center gap-2 text-[11.5px] font-bold uppercase tracking-[.18em] text-calma-terracotta-soft">

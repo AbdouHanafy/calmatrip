@@ -70,8 +70,8 @@ export function NotFound() {
 
       <Link
         href="/"
-        className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white no-underline shadow-[0_8px_20px_-6px_rgba(242,153,74,.65)]"
-        style={{ backgroundColor: "#F2994A" }}
+        className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold text-white no-underline shadow-[0_8px_20px_-6px_rgba(210,179,139,.65)]"
+        style={{ backgroundColor: "#D2B38B" }}
       >
         <Home className="h-4 w-4" />
         Retour à l&apos;accueil

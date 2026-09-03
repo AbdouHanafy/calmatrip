@@ -18,8 +18,8 @@ export function passwordStrength(pw: string) {
   const levels = [
     { label: "Très faible", color: "#C0392B" },
     { label: "Faible", color: "#C46B4A" },
-    { label: "Moyen", color: "#D9A441" },
-    { label: "Fort", color: "#4A667D" },
+    { label: "Moyen", color: "#B98D52" },
+    { label: "Fort", color: "#4C7A92" },
     { label: "Excellent", color: "#5E8B63" },
   ];
   return { score, ...levels[score] };

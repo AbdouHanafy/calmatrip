@@ -121,7 +121,7 @@ function CommunityPageContent() {
             href={FACEBOOK_GROUP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-4 rounded-calma-block border border-calma-olive/10 bg-white p-5 no-underline shadow-[0_18px_40px_-20px_rgba(42,38,34,.35)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_50px_-20px_rgba(42,38,34,.45)] sm:p-6"
+            className="flex items-center gap-4 rounded-calma-block border border-calma-olive/10 bg-white p-5 no-underline shadow-[0_18px_40px_-20px_rgba(21,36,46,.35)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_50px_-20px_rgba(21,36,46,.45)] sm:p-6"
           >
             <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#1877F2]/10 text-[#1877F2]">
               <Facebook size={22} />
@@ -144,7 +144,7 @@ function CommunityPageContent() {
         <section className="mx-auto max-w-[720px] px-6 pt-10 sm:px-10">
           <div
             className="rounded-calma-block border border-calma-olive/10 bg-white p-6 sm:p-8"
-            style={{ boxShadow: "0 22px 50px -22px rgba(42,38,34,.25)" }}
+            style={{ boxShadow: "0 22px 50px -22px rgba(21,36,46,.25)" }}
           >
             {status !== "authenticated" ? (
               <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-calma-taupe">
@@ -187,9 +187,9 @@ function CommunityPageContent() {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="group flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
+                  className="group flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
                   style={{
-                    backgroundColor: "#F2994A",
+                    backgroundColor: "#D2B38B",
                   }}
                 >
                   {submitting ? (
@@ -228,7 +228,7 @@ function CommunityPageContent() {
                 <article
                   key={post.id}
                   className="rounded-calma-block border border-calma-olive/10 bg-white p-6"
-                  style={{ boxShadow: "0 14px 36px -22px rgba(42,38,34,.3)" }}
+                  style={{ boxShadow: "0 14px 36px -22px rgba(21,36,46,.3)" }}
                 >
                   <div className="mb-3 flex items-center justify-between gap-3">
                     <div className="flex items-center gap-3">

@@ -61,7 +61,7 @@ export function ExploreFilters({
     <section className="max-w-7xl mx-auto px-6 relative z-20">
       <div
         className="flex flex-col gap-6 rounded-[28px] border border-calma-olive/10 bg-calma-cream/95 p-4 backdrop-blur-2xl md:p-6"
-        style={{ boxShadow: "0 20px 50px -24px rgba(42,38,34,.3)" }}
+        style={{ boxShadow: "0 20px 50px -24px rgba(21,36,46,.3)" }}
       >
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           {/* Category Scroll — sliding pill */}

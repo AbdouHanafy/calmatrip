@@ -32,9 +32,9 @@ export function TripDetailsFields({
           </label>
           <div
             onClick={onOpenPickupModal}
-            className="flex items-center gap-3 bg-black/20 border border-white/10 rounded-xl px-4 py-3 cursor-pointer hover:border-[#D4A373]/50 transition-colors"
+            className="flex items-center gap-3 bg-black/20 border border-white/10 rounded-xl px-4 py-3 cursor-pointer hover:border-[#D2B38B]/50 transition-colors"
           >
-            <MapPin className="w-4 h-4 text-[#D4A373] shrink-0" />
+            <MapPin className="w-4 h-4 text-[#D2B38B] shrink-0" />
             <span className="font-sans-clean text-sm text-white flex-1">
               {pickupLocation.address || "Choose a location"}
             </span>

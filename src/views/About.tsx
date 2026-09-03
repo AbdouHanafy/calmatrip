@@ -92,7 +92,7 @@ function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[]
           <div
             className="absolute inset-0"
             style={{
-              background: "rgba(42,38,34,.66)",
+              background: "rgba(21,36,46,.66)",
             }}
           />
           <div
@@ -230,7 +230,7 @@ function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[]
                 {team.map((member) => (
                   <div
                     key={member.id}
-                    className="group rounded-calma-card border border-calma-olive/10 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(42,38,34,.3)]"
+                    className="group rounded-calma-card border border-calma-olive/10 bg-white p-6 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_20px_40px_-20px_rgba(21,36,46,.3)]"
                   >
                     <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-calma-terracotta/10 text-3xl transition-transform duration-300 group-hover:scale-110">
                       {member.icon}
@@ -298,7 +298,7 @@ function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[]
               <ZelligePattern id="about-cta-zellige" opacity={0.08} />
               <div
                 className="pointer-events-none absolute -right-1/4 -top-1/3 h-[480px] w-[480px] rounded-full opacity-20 blur-[90px]"
-                style={{ backgroundColor: "#F2994A" }}
+                style={{ backgroundColor: "#D2B38B" }}
               />
               <div className="relative">
                 <h2 className="mb-4 font-fraunces text-3xl font-normal md:text-4xl">
@@ -308,9 +308,9 @@ function AboutContent({ team, reviews }: { team: TeamMember[]; reviews: Review[]
                 <p className="mx-auto mb-8 max-w-2xl text-lg text-calma-cream/75">{t.abt.ctaSub}</p>
                 <Link
                   href="/services"
-                  className="group inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)]"
+                  className="group inline-flex items-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)]"
                   style={{
-                    backgroundColor: "#F2994A",
+                    backgroundColor: "#D2B38B",
                   }}
                 >
                   <span>{t.abt.ctaBtn}</span>

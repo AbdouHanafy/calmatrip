@@ -48,20 +48,20 @@ export function mapService(s: DBService): MappedService {
   const title = s.title.toLowerCase();
 
   let icon: React.ElementType = Car;
-  let color = "#F2994A";
+  let color = "#D2B38B";
 
   if (category === "transport" || category === "transfer") {
     icon = title.includes("airport") ? Plane : Car;
-    color = "#4A667D";
+    color = "#4C7A92";
   } else if (category === "excursion") {
     icon = MapPin;
-    color = "#F2994A";
+    color = "#D2B38B";
   } else if (category === "group") {
     icon = Users;
-    color = "#F7B77E";
+    color = "#E3CBAA";
   } else if (category === "activity") {
     icon = Compass;
-    color = "#F7B77E";
+    color = "#E3CBAA";
   }
 
   let features: string[] = [];

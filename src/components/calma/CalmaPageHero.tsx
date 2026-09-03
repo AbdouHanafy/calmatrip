@@ -10,11 +10,11 @@ export default function CalmaPageHero({ kicker, title, subtitle }: CalmaPageHero
   return (
     <section
       className="relative overflow-hidden px-6 pb-[84px] pt-14 text-center font-hanken sm:px-10"
-      style={{ backgroundColor: "#4A667D" }}
+      style={{ backgroundColor: "#4C7A92" }}
     >
       <div
         className="absolute left-1/2 top-[8%] h-[78px] w-[78px] -translate-x-1/2 rounded-full motion-safe:animate-[calma-sunpulse_6s_ease-in-out_infinite]"
-        style={{ backgroundColor: "#F2994A" }}
+        style={{ backgroundColor: "#D2B38B" }}
       />
       <div
         className="absolute -bottom-[4%] -left-[15%] -right-[15%] h-[46%] bg-calma-olive-deep"

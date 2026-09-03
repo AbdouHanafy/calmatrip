@@ -23,7 +23,7 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="group relative bg-calma-cream rounded-calma-card border border-calma-olive/10 shadow-sm hover:shadow-[0_28px_50px_-24px_rgba(42,38,34,.35)] transition-all duration-300 overflow-hidden">
+    <div className="group relative bg-calma-cream rounded-calma-card border border-calma-olive/10 shadow-sm hover:shadow-[0_28px_50px_-24px_rgba(21,36,46,.35)] transition-all duration-300 overflow-hidden">
       <Link href={`/marketplace/${product.id}`} className="block">
         <div className="relative aspect-square bg-calma-sand overflow-hidden">
           <Image
@@ -77,7 +77,7 @@ export function ProductCard({ product }: { product: Product }) {
             disabled={outOfStock}
             aria-label="Ajouter au panier"
             className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-            style={{ backgroundColor: "#F2994A" }}
+            style={{ backgroundColor: "#D2B38B" }}
           >
             <ShoppingCart className="w-4 h-4 text-white" />
           </button>

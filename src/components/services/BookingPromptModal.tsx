@@ -15,7 +15,7 @@ export function BookingPromptModal({ onClose }: { onClose: () => void }) {
         onClick={(e) => e.stopPropagation()}
       >
         <div className="text-center mb-6">
-          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#4A667D] flex items-center justify-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-[#4C7A92] flex items-center justify-center">
             <Check className="w-8 h-8 text-white" />
           </div>
           <h3 className="text-xl font-extrabold text-gray-900 mb-2">{t.svc.modalTitle}</h3>
@@ -24,7 +24,7 @@ export function BookingPromptModal({ onClose }: { onClose: () => void }) {
         <div className="flex gap-3">
           <Link
             href="/dashboard"
-            className="flex-1 py-3 bg-[#4A667D] text-white rounded-2xl font-semibold text-sm text-center hover:bg-[#3A5164] transition-colors"
+            className="flex-1 py-3 bg-[#4C7A92] text-white rounded-2xl font-semibold text-sm text-center hover:bg-[#3A5F70] transition-colors"
           >
             {t.svc.modalLogin}
           </Link>

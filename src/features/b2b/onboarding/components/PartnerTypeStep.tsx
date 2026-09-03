@@ -52,8 +52,8 @@ export function PartnerTypeStep({ t, value, onSelect, loading }: PartnerTypeStep
               onClick={() => onSelect(card.type)}
               className={`relative flex flex-col items-start gap-3 rounded-2xl border p-5 text-left transition-all duration-300 disabled:cursor-not-allowed ${
                 isSelected
-                  ? "border-calma-terracotta bg-calma-terracotta/[.06] shadow-[0_16px_40px_-18px_rgba(242,153,74,.6)]"
-                  : "border-calma-olive/15 bg-white/70 hover:border-calma-olive/35 hover:shadow-[0_16px_40px_-20px_rgba(45,41,38,.25)]"
+                  ? "border-calma-terracotta bg-calma-terracotta/[.06] shadow-[0_16px_40px_-18px_rgba(210,179,139,.6)]"
+                  : "border-calma-olive/15 bg-white/70 hover:border-calma-olive/35 hover:shadow-[0_16px_40px_-20px_rgba(21,36,46,.25)]"
               }`}
             >
               <span

@@ -27,9 +27,9 @@ export function BookingForm() {
     >
       {/* Header */}
       <div className="text-center pb-6 border-b border-gray-100">
-        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#D4A373]/10 rounded-full mb-3">
-          <Sparkles className="w-4 h-4 text-[#D4A373]" />
-          <span className="text-[10px] font-bold uppercase tracking-widest text-[#D4A373]">
+        <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-[#D2B38B]/10 rounded-full mb-3">
+          <Sparkles className="w-4 h-4 text-[#D2B38B]" />
+          <span className="text-[10px] font-bold uppercase tracking-widest text-[#D2B38B]">
             Book Your Trip
           </span>
         </div>

@@ -51,10 +51,10 @@ export function DesktopPublicNavigation({
   const lang = useOptionalCalmaLang()?.lang ?? locale;
   const base = light
     ? "rounded-full px-4 py-2 text-white/75 no-underline outline-none transition-colors hover:bg-white/[.06] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60"
-    : "border-b-2 border-transparent px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.14em] text-[#6b6353] outline-none transition-colors hover:border-[#D4A373]/50 hover:text-[#1c2430] focus-visible:ring-2 focus-visible:ring-[#D4A373]";
+    : "border-b-2 border-transparent px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.14em] text-[#5e7480] outline-none transition-colors hover:border-[#D2B38B]/50 hover:text-[#15242e] focus-visible:ring-2 focus-visible:ring-[#D2B38B]";
   const active = light
     ? "bg-white/[.12] font-semibold text-white"
-    : "border-[#D4A373] text-[#1c2430]";
+    : "border-[#D2B38B] text-[#15242e]";
   return (
     <nav aria-label="Main navigation" className={className}>
       {items.map((item) => {

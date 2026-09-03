@@ -28,7 +28,7 @@ export function OrganizationStep({
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const inputBoxClass =
-    "flex h-12 items-center gap-2.5 rounded-xl border border-calma-olive/15 bg-white/80 px-3.5 transition-all duration-300 focus-within:border-calma-terracotta focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(242,153,74,.12)]";
+    "flex h-12 items-center gap-2.5 rounded-xl border border-calma-olive/15 bg-white/80 px-3.5 transition-all duration-300 focus-within:border-calma-terracotta focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(210,179,139,.12)]";
   const inputFieldClass =
     "w-full border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/55";
   const labelClass = "mb-1.5 block text-[13px] font-semibold text-calma-ink";

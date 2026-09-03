@@ -63,8 +63,8 @@ function PartnerTypeDetailContent({
             </p>
             <Link
               href={ctaHref}
-              className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-calma-cream no-underline shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)]"
-              style={{ backgroundColor: "#F2994A" }}
+              className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-calma-cream no-underline shadow-[0_16px_32px_-12px_rgba(210,179,139,.65)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-12px_rgba(210,179,139,.8)]"
+              style={{ backgroundColor: "#D2B38B" }}
             >
               {ctaLabel}
               <ArrowRight
@@ -85,7 +85,7 @@ function PartnerTypeDetailContent({
               <div
                 key={b.title}
                 className="rounded-calma-block border border-calma-olive/10 bg-white p-6"
-                style={{ boxShadow: "0 14px 36px -24px rgba(42,38,34,.3)" }}
+                style={{ boxShadow: "0 14px 36px -24px rgba(21,36,46,.3)" }}
               >
                 <div
                   className="mb-4 flex h-11 w-11 items-center justify-center rounded-2xl"
@@ -128,7 +128,7 @@ function PartnerTypeDetailContent({
         <section className="mx-auto max-w-[720px] px-6 py-16 text-center sm:px-10">
           <div
             className="rounded-calma-block border border-calma-olive/10 bg-calma-sand p-10"
-            style={{ boxShadow: "0 22px 50px -22px rgba(42,38,34,.25)" }}
+            style={{ boxShadow: "0 22px 50px -22px rgba(21,36,46,.25)" }}
           >
             <div className="mb-4 flex justify-center gap-1.5 text-calma-success">
               <Check size={16} />
@@ -138,8 +138,8 @@ function PartnerTypeDetailContent({
             </div>
             <Link
               href={ctaHref}
-              className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-calma-cream no-underline shadow-[0_16px_32px_-12px_rgba(242,153,74,.65)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.8)]"
-              style={{ backgroundColor: "#F2994A" }}
+              className="group inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-[15px] font-bold text-calma-cream no-underline shadow-[0_16px_32px_-12px_rgba(210,179,139,.65)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_40px_-12px_rgba(210,179,139,.8)]"
+              style={{ backgroundColor: "#D2B38B" }}
             >
               {ctaLabel}
               <ArrowRight

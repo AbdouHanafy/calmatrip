@@ -43,11 +43,11 @@ export default async function OGImage() {
             width: "8px",
             height: "8px",
             borderRadius: "50%",
-            background: "#F2994A",
+            background: "#D2B38B",
           }}
         />
         <span
-          style={{ color: "#F2994A", fontSize: "13px", fontWeight: 700, letterSpacing: "0.15em" }}
+          style={{ color: "#D2B38B", fontSize: "13px", fontWeight: 700, letterSpacing: "0.15em" }}
         >
           STRESS-FREE TRAVEL IN TUNISIA
         </span>
@@ -61,7 +61,7 @@ export default async function OGImage() {
         <div
           style={{
             fontSize: "28px",
-            color: "#F1EBE1",
+            color: "#F0E2CE",
             fontWeight: 400,
             maxWidth: "700px",
             lineHeight: 1.4,
@@ -79,7 +79,7 @@ export default async function OGImage() {
           left: "0",
           right: "0",
           height: "4px",
-          background: "#F2994A",
+          background: "#D2B38B",
         }}
       />
     </div>,

@@ -5,19 +5,31 @@
   --color-background: var(--background);
   --color-foreground: var(--foreground);
 
-  /* Calma Trip design tokens — Primary (cream) / Secondary (orange) / Tertiary (blue-grey) / Neutral (charcoal) */
-  --color-calma-olive: #4a667d;
-  --color-calma-olive-deep: #3a5164;
-  --color-calma-olive-deeper: #24333f;
-  --color-calma-terracotta: #f2994a;
-  --color-calma-terracotta-soft: #f7b77e;
-  --color-calma-terracotta-deep: #c97a34;
-  --color-calma-gold: #d9a441;
-  --color-calma-sand: #f1ebe1;
-  --color-calma-cream: #f8f5f0;
-  --color-calma-ink: #2d2926;
-  --color-calma-taupe: #726c64;
-  --color-calma-border: #ded7c9;
+  /* Official Calma Trip brand palette (Charte Graphique) — the five source
+     colors. Every calma-* token below resolves onto these; add new
+     components against these names directly rather than the legacy aliases. */
+  --color-heritage-blue: #15242e;
+  --color-sand-stone: #d2b38b;
+  --color-supporting-blue: #4c7a92;
+  --color-soft-blue: #bfd4de;
+  --color-light-sand: #f0e2ce;
+
+  /* Calma Trip design tokens — aliased onto the brand palette above so every
+     existing bg-calma-X / text-calma-X usage sitewide repaints without
+     per-component edits. Names are legacy (e.g. "terracotta" now holds a
+     sandstone hex) — kept to avoid a large, purely-cosmetic rename. */
+  --color-calma-olive: var(--color-supporting-blue);
+  --color-calma-olive-deep: #3a5f70;
+  --color-calma-olive-deeper: var(--color-heritage-blue);
+  --color-calma-terracotta: var(--color-sand-stone);
+  --color-calma-terracotta-soft: #e3cbaa;
+  --color-calma-terracotta-deep: #b08f63;
+  --color-calma-gold: #b98d52;
+  --color-calma-sand: var(--color-light-sand);
+  --color-calma-cream: #f7f1e7;
+  --color-calma-ink: var(--color-heritage-blue);
+  --color-calma-taupe: #5e7480;
+  --color-calma-border: var(--color-soft-blue);
   --color-calma-success: #5e8b63;
 
   /* Admin backoffice tokens — deliberately distinct from the client-facing
@@ -44,14 +56,18 @@
   --color-b2b-copper-soft: #d9b393;
   --color-b2b-copper-deep: #7c5236;
 
-  --radius-calma-card: 18px;
-  --radius-calma-block: 26px;
+  --radius-calma-card: 10px;
+  --radius-calma-block: 20px;
   --radius-calma-pill: 999px;
 
-  --font-fraunces: var(--font-fraunces), serif;
-  --font-poppins: var(--font-poppins), sans-serif;
-  --font-hanken: var(--font-hanken), sans-serif;
-  --font-space: var(--font-space), sans-serif;
+  /* Cormorant Garamond (editorial) / Raleway (UI) — loaded in src/app/layout.tsx.
+     Legacy var names kept as aliases so every existing font-fraunces /
+     font-hanken / font-poppins / font-space class picks up the new
+     typefaces without touching each call site. */
+  --font-fraunces: var(--font-cormorant), serif;
+  --font-poppins: var(--font-raleway), sans-serif;
+  --font-hanken: var(--font-raleway), sans-serif;
+  --font-space: var(--font-raleway), sans-serif;
 }
 
 @layer components {
@@ -94,10 +110,10 @@
   @keyframes calma-sunpulse {
     0%,
     100% {
-      box-shadow: 0 0 60px 8px rgba(156, 83, 62, 0.32);
+      box-shadow: 0 0 60px 8px rgba(178, 143, 99, 0.32);
     }
     50% {
-      box-shadow: 0 0 96px 20px rgba(156, 83, 62, 0.5);
+      box-shadow: 0 0 96px 20px rgba(178, 143, 99, 0.5);
     }
   }
 
@@ -144,13 +160,13 @@
   }
 
   ::selection {
-    background: rgba(242, 153, 74, 0.25);
-    color: #2d2926;
+    background: rgba(210, 179, 139, 0.3);
+    color: #15242e;
   }
 
   /* Focus clavier visible et cohérent avec la charte */
   :focus-visible {
-    outline: 2px solid #d4a373;
+    outline: 2px solid #4c7a92;
     outline-offset: 2px;
   }
 }
@@ -175,12 +191,12 @@
   font-weight: 700;
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: #f8f5f0;
+  color: #f0e2ce;
   opacity: 0.92;
 }
 
 .ticker-dot {
-  color: #f2994a;
+  color: #d2b38b;
   font-size: 8px;
 }
 

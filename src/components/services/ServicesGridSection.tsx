@@ -31,10 +31,10 @@ export function ServicesGridSection({
         {/* Section header + category filter */}
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
           <div>
-            <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#F2994A]">
+            <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#D2B38B]">
               {t.svc.offerKicker}
             </p>
-            <h2 className="font-fraunces text-3xl font-normal leading-tight text-[#2D2926] lg:text-4xl">
+            <h2 className="font-fraunces text-3xl font-normal leading-tight text-[#15242E] lg:text-4xl">
               {t.svc.offerTitle1}
               <br />
               {t.svc.offerTitle2}
@@ -67,16 +67,16 @@ export function ServicesGridSection({
 
         {/* Bandeau de recherche active */}
         {q && (
-          <div className="mb-8 flex flex-wrap items-center gap-3 rounded-2xl border border-[#F1EBE1] bg-white px-5 py-3.5">
-            <p className="text-sm text-[#726C64]">
+          <div className="mb-8 flex flex-wrap items-center gap-3 rounded-2xl border border-[#F0E2CE] bg-white px-5 py-3.5">
+            <p className="text-sm text-[#5E7480]">
               {filtered.length > 0 ? (
                 <>
                   {filtered.length} {filtered.length > 1 ? t.svc.resultsWord : t.svc.resultWord}{" "}
-                  {t.svc.forWord} <b className="font-fraunces text-[#2D2926]">“{q}”</b>
+                  {t.svc.forWord} <b className="font-fraunces text-[#15242E]">“{q}”</b>
                 </>
               ) : (
                 <>
-                  {t.svc.noResultsFor} <b className="font-fraunces text-[#2D2926]">“{q}”</b>{" "}
+                  {t.svc.noResultsFor} <b className="font-fraunces text-[#15242E]">“{q}”</b>{" "}
                   {t.svc.noResultsHint}
                 </>
               )}
@@ -84,7 +84,7 @@ export function ServicesGridSection({
             <button
               type="button"
               onClick={onClearQuery}
-              className="ml-auto rounded-full border border-[#F1EBE1] px-4 py-1.5 text-xs uppercase tracking-[0.12em] text-[#726C64] transition-colors hover:border-[#F2994A] hover:text-[#2D2926]"
+              className="ml-auto rounded-full border border-[#F0E2CE] px-4 py-1.5 text-xs uppercase tracking-[0.12em] text-[#5E7480] transition-colors hover:border-[#D2B38B] hover:text-[#15242E]"
             >
               {t.svc.clearSearch}
             </button>

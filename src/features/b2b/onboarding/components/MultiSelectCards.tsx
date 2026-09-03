@@ -27,7 +27,7 @@ export function MultiSelectCards({ options, selected, onToggle }: MultiSelectCar
             onClick={() => onToggle(opt.value)}
             className={`relative flex flex-col items-start gap-1 rounded-2xl border px-4 py-4 text-left transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-calma-terracotta ${
               isSelected
-                ? "border-calma-terracotta bg-calma-terracotta/10 shadow-[0_10px_25px_-12px_rgba(242,153,74,.5)]"
+                ? "border-calma-terracotta bg-calma-terracotta/10 shadow-[0_10px_25px_-12px_rgba(210,179,139,.5)]"
                 : "border-calma-olive/15 bg-white/70 hover:border-calma-olive/35"
             }`}
           >

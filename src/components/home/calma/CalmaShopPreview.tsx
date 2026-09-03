@@ -41,7 +41,7 @@ export default function CalmaShopPreview({ products }: { products: Product[] }) 
           <Link
             key={product.id}
             href={`/marketplace/${product.id}`}
-            className="group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(42,38,34,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(42,38,34,.45)] sm:w-auto sm:shrink sm:snap-none"
+            className="group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(21,36,46,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(21,36,46,.45)] sm:w-auto sm:shrink sm:snap-none"
           >
             <div className="relative h-[260px] overflow-hidden bg-calma-olive-deep">
               {product.image && (

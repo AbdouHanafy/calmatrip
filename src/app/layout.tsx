@@ -6,38 +6,27 @@ import PublicUtilities from "@/components/layouts/PublicUtilities";
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { SITE, organizationSchema } from "@/lib/seo";
-import { Fraunces, Poppins, Hanken_Grotesk, Space_Grotesk } from "next/font/google";
+import { Cormorant_Garamond, Raleway } from "next/font/google";
 import { getPublishedNavigations } from "@/features/cms/services/navigation";
 import { NavigationProvider } from "@/features/cms/components/navigation/NavigationProvider";
 import { getSiteSettings } from "@/features/cms/services/settings";
 import { SiteSettingsProvider } from "@/features/cms/components/settings/SiteSettingsProvider";
 
-const fraunces = Fraunces({
+// Editorial serif — headings, quotes, prices, atmospheric titles.
+const cormorantGaramond = Cormorant_Garamond({
   subsets: ["latin"],
-  weight: ["400", "600"],
+  weight: ["400", "500", "600"],
   style: ["normal", "italic"],
-  variable: "--font-fraunces",
+  variable: "--font-cormorant",
   display: "swap",
 });
 
-const spaceGrotesk = Space_Grotesk({
+// UI sans — nav, buttons, labels, body copy. Aliased onto every legacy
+// font-hanken/font-poppins/font-space class in src/styles/index.css.
+const raleway = Raleway({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
-  variable: "--font-space",
-  display: "swap",
-});
-
-const poppins = Poppins({
-  subsets: ["latin"],
-  weight: ["700"],
-  variable: "--font-poppins",
-  display: "swap",
-});
-
-const hankenGrotesk = Hanken_Grotesk({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  variable: "--font-hanken",
+  variable: "--font-raleway",
   display: "swap",
 });
 
@@ -99,7 +88,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
     <html
       lang="fr"
       suppressHydrationWarning
-      className={`${fraunces.variable} ${poppins.variable} ${hankenGrotesk.variable} ${spaceGrotesk.variable}`}
+      className={`${cormorantGaramond.variable} ${raleway.variable}`}
     >
       <head>
         {/* Preconnect */}

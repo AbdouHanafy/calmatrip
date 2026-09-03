@@ -9,7 +9,7 @@ export const SITE = {
   url: "https://www.calmatrip.com",
   locale: "en_US",
   twitterHandle: "@calmatrip",
-  themeColor: "#0C1F14",
+  themeColor: "#15242E",
 
   // Default OG image — served by the dynamic generator at src/app/opengraph-image.tsx
   // (no static file needed; Next.js renders and serves it at this route).

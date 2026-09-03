@@ -68,7 +68,7 @@ function NewsletterForm() {
         type="submit"
         disabled={status === "loading"}
         aria-label={t.newsletterCta}
-        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-white transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
+        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
       >
         <Send className="h-4 w-4" />
       </button>
@@ -85,7 +85,7 @@ export default function CalmaFooter() {
   })).filter((item) => item.href);
 
   return (
-    <footer className="mt-20 bg-[#221F1D] font-hanken text-calma-cream">
+    <footer className="mt-20 bg-calma-olive-deeper font-hanken text-calma-cream">
       <div className="mx-auto flex max-w-[1240px] flex-wrap justify-between gap-8 px-6 pb-14 pt-[52px] sm:px-10">
         <div className="max-w-[280px]">
           <Link href="/" className="mb-4 flex items-center no-underline">

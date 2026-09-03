@@ -1,4 +1,4 @@
-'use client';
+"use client";
 
 import { signIn } from "next-auth/react";
 import { useState } from "react";
@@ -36,12 +36,15 @@ export function GoogleAuthButton({
       onClick={handleSignIn}
       disabled={loading}
       id="google-auth-button"
-      className="group flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-calma-olive/15 bg-white px-6 font-semibold text-calma-ink shadow-[0_2px_10px_-4px_rgba(42,38,34,.12)] transition-all duration-300 hover:-translate-y-0.5 hover:border-calma-olive/25 hover:shadow-[0_14px_28px_-10px_rgba(42,38,34,.22)] disabled:opacity-60 disabled:hover:translate-y-0"
+      className="group flex h-11 w-full items-center justify-center gap-3 rounded-xl border border-calma-olive/15 bg-white px-6 font-semibold text-calma-ink shadow-[0_2px_10px_-4px_rgba(21,36,46,.12)] transition-all duration-300 hover:-translate-y-0.5 hover:border-calma-olive/25 hover:shadow-[0_14px_28px_-10px_rgba(21,36,46,.22)] disabled:opacity-60 disabled:hover:translate-y-0"
     >
       {loading ? (
         <Loader2 className="h-5 w-5 animate-spin text-calma-terracotta" />
       ) : (
-        <svg className="h-5 w-5 shrink-0 transition-transform duration-300 group-hover:scale-110" viewBox="0 0 24 24">
+        <svg
+          className="h-5 w-5 shrink-0 transition-transform duration-300 group-hover:scale-110"
+          viewBox="0 0 24 24"
+        >
           <path
             fill="#4285F4"
             d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"

@@ -65,7 +65,7 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
     return (
       <div
         className="rounded-calma-block border border-calma-olive/10 bg-calma-cream p-10 text-center font-hanken"
-        style={{ boxShadow: "0 22px 50px -22px rgba(42,38,34,.3)" }}
+        style={{ boxShadow: "0 22px 50px -22px rgba(21,36,46,.3)" }}
       >
         <div className="text-4xl mb-3">🎉</div>
         <h3 className="font-fraunces text-2xl font-normal text-calma-olive mb-2">
@@ -79,7 +79,7 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
   return (
     <div
       className="rounded-calma-block border border-calma-olive/10 bg-calma-cream p-8 sm:p-10 font-hanken"
-      style={{ boxShadow: "0 28px 60px -28px rgba(42,38,34,.35)" }}
+      style={{ boxShadow: "0 28px 60px -28px rgba(21,36,46,.35)" }}
     >
       {!session && (
         <div className="bg-calma-terracotta/10 border border-calma-terracotta/25 rounded-2xl p-4 mb-6 text-sm text-calma-terracotta">
@@ -160,8 +160,7 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
         <button
           onClick={handleSubmit}
           disabled={loading || !session}
-          className="group flex w-full items-center justify-center gap-2 rounded-full px-6 py-4 text-[15px] font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(242,153,74,.75)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
-          style={{ backgroundColor: "#F2994A" }}
+          className="group flex w-full items-center justify-center gap-2 rounded-full bg-calma-terracotta px-6 py-4 text-[15px] font-semibold text-calma-ink shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
         >
           {loading ? (
             "Envoi en cours..."

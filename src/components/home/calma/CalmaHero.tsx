@@ -136,7 +136,7 @@ export default function CalmaHero() {
     <section
       ref={heroRef}
       className="relative h-auto overflow-hidden md:h-[84vh] md:min-h-[640px] md:max-h-[840px]"
-      style={{ backgroundColor: "#3A5164" }}
+      style={{ backgroundColor: "#15242E" }}
     >
       <motion.div className="absolute inset-0" style={{ y: parallaxY, opacity: parallaxOpacity }}>
         {/* Slow cinematic Ken Burns zoom — separate layer from the mouse-parallax translate below */}
@@ -169,38 +169,38 @@ export default function CalmaHero() {
       <div
         className="pointer-events-none absolute inset-0 hidden md:block"
         style={{
-          background: "rgba(36,51,63,.48)",
+          background: "rgba(21,36,46,.48)",
         }}
       />
       {/* Soft blue-grey radial scrim behind the text block — just enough for AA contrast, not a wall of black */}
       <div
         className="pointer-events-none absolute inset-0 hidden md:block"
         style={{
-          background: "rgba(28,40,50,.12)",
+          background: "rgba(21,36,46,.12)",
         }}
       />
       {/* Mobile-only scrim — lighter than desktop so the landscape reads clearly, plus a soft edge vignette */}
       <div
         className="pointer-events-none absolute inset-0 md:hidden"
         style={{
-          background: "rgba(36,51,63,.34)",
+          background: "rgba(21,36,46,.34)",
         }}
       />
       <div
         className="pointer-events-none absolute inset-0 md:hidden"
         style={{
-          background: "rgba(20,18,16,.12)",
+          background: "rgba(21,36,46,.12)",
         }}
       />
       {/* Atmospheric golden-hour glow, upper right — adds depth without darkening the frame */}
       <div
         className="pointer-events-none absolute -right-[10%] -top-[15%] h-[60%] w-[55%] rounded-full opacity-[.22] blur-[120px]"
-        style={{ backgroundColor: "#E8B978" }}
+        style={{ backgroundColor: "#D2B38B" }}
       />
       {/* Cool ambient falloff, lower left — balances the warm glow and deepens the frame */}
       <div
         className="pointer-events-none absolute -bottom-[20%] -left-[10%] h-[55%] w-[50%] rounded-full opacity-[.16] blur-[110px]"
-        style={{ backgroundColor: "#24333F" }}
+        style={{ backgroundColor: "#4C7A92" }}
       />
 
       {particles && (
@@ -214,7 +214,7 @@ export default function CalmaHero() {
                 bottom: `${p.bottom}%`,
                 width: p.size,
                 height: p.size,
-                background: p.accent ? "rgba(242,153,74,.5)" : "rgba(255,255,255,.55)",
+                background: p.accent ? "rgba(210,179,139,.6)" : "rgba(255,255,255,.55)",
                 animation: `calma-dust ${p.duration}s linear ${p.delay}s infinite`,
               }}
             />
@@ -230,7 +230,7 @@ export default function CalmaHero() {
         preserveAspectRatio="none"
         aria-hidden="true"
       >
-        <path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#F1EBE1" />
+        <path d="M0,56 C360,0 1080,0 1440,56 L1440,56 L0,56 Z" fill="#F0E2CE" />
       </svg>
 
       <CalmaPromoTicker />

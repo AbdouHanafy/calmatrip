@@ -38,7 +38,7 @@ function MarketplaceContent({ products, categories }: MarketplaceContentProps) {
           <div
             className="absolute inset-0"
             style={{
-              background: "rgba(42,38,34,.66)",
+              background: "rgba(21,36,46,.66)",
             }}
           />
           <div

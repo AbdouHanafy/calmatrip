@@ -43,7 +43,7 @@ export default function FloatingWhatsApp() {
       {open && (
         <div
           className="w-72 rounded-calma-card border border-calma-olive/10 bg-calma-cream p-5 animate-in fade-in zoom-in duration-200"
-          style={{ boxShadow: "0 28px 60px -24px rgba(42,38,34,.4)" }}
+          style={{ boxShadow: "0 28px 60px -24px rgba(21,36,46,.4)" }}
         >
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2.5">
@@ -83,7 +83,7 @@ export default function FloatingWhatsApp() {
       <button
         onClick={() => setOpen(!open)}
         aria-label="Ouvrir le chat WhatsApp"
-        className="flex h-16 w-16 items-center justify-center rounded-full bg-calma-olive text-calma-cream shadow-[0_18px_36px_-14px_rgba(42,38,34,.5)] transition-transform duration-300 hover:scale-105"
+        className="flex h-16 w-16 items-center justify-center rounded-full bg-calma-olive text-calma-cream shadow-[0_18px_36px_-14px_rgba(21,36,46,.5)] transition-transform duration-300 hover:scale-105"
       >
         <WhatsAppIcon className="h-8 w-8" />
       </button>

@@ -135,7 +135,7 @@ export default function LocationPickerModal({
               value={searchValue}
               onChange={(e) => setSearchValue(e.target.value)}
               placeholder="Search for an address..."
-              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D4A373] focus:border-transparent mb-4"
+              className="w-full px-4 py-2 border border-gray-200 rounded-xl focus:ring-2 focus:ring-[#D2B38B] focus:border-transparent mb-4"
             />
           </Autocomplete>
           <GoogleMap
@@ -148,7 +148,7 @@ export default function LocationPickerModal({
           </GoogleMap>
           <div className="mt-4 p-3 bg-gray-50 rounded-xl">
             <p className="text-sm text-gray-600 flex items-start gap-2">
-              <MapPin className="w-4 h-4 mt-0.5 text-[#D4A373]" />
+              <MapPin className="w-4 h-4 mt-0.5 text-[#D2B38B]" />
               <span>{address || "Click on the map or search for an address"}</span>
             </p>
           </div>

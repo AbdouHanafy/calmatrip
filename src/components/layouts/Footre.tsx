@@ -5,7 +5,7 @@ import { FooterPublicNavigation } from "@/features/cms/components/navigation/Pub
 
 export const Footer = () => {
   return (
-    <footer className="relative overflow-hidden bg-[#143f5f] pb-10 pt-20 text-white">
+    <footer className="relative overflow-hidden bg-[#15242e] pb-10 pt-20 text-white">
       {/* Motif zellige en filigrane */}
       <svg className="absolute inset-0 h-full w-full opacity-[0.06]" aria-hidden="true">
         <defs>
@@ -28,7 +28,7 @@ export const Footer = () => {
           <div className="space-y-6">
             <Link href="/" className="flex-shrink-0">
               <span className="font-serif text-2xl tracking-tight text-white">
-                Calma <em className="italic text-[#D4A373]">Trip</em>
+                Calma <em className="italic text-[#D2B38B]">Trip</em>
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-white/60">
@@ -40,7 +40,7 @@ export const Footer = () => {
                 <a
                   key={i}
                   href="https://www.facebook.com/profile.php?id=61590996770536"
-                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/60 transition-all duration-300 hover:border-[#D4A373] hover:bg-[#D4A373] hover:text-[#143f5f]"
+                  className="flex h-10 w-10 items-center justify-center rounded-full border border-white/15 text-white/60 transition-all duration-300 hover:border-[#D2B38B] hover:bg-[#D2B38B] hover:text-[#15242e]"
                 >
                   <Icon className="h-4 w-4" />
                 </a>
@@ -50,7 +50,7 @@ export const Footer = () => {
 
           {/* Liens rapides */}
           <div>
-            <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D4A373]">
+            <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D2B38B]">
               Quick Links
             </h3>
             <FooterPublicNavigation menuKey="footer-company" locale="en" />
@@ -58,7 +58,7 @@ export const Footer = () => {
 
           {/* Services */}
           <div>
-            <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D4A373]">
+            <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D2B38B]">
               Our Services
             </h3>
             <FooterPublicNavigation menuKey="footer-explore" locale="en" />
@@ -66,20 +66,20 @@ export const Footer = () => {
 
           {/* Contact */}
           <div>
-            <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D4A373]">
+            <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D2B38B]">
               Contact Us
             </h3>
             <ul className="space-y-4">
               <li className="flex items-start gap-3 text-sm text-white/60">
-                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[#D4A373]" />
+                <MapPin className="mt-0.5 h-5 w-5 shrink-0 text-[#D2B38B]" />
                 <span>Hammamet, Tunisia</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-white/60">
-                <Phone className="h-5 w-5 shrink-0 text-[#D4A373]" />
+                <Phone className="h-5 w-5 shrink-0 text-[#D2B38B]" />
                 <span>+216 21 622 972</span>
               </li>
               <li className="flex items-center gap-3 text-sm text-white/60">
-                <Mail className="h-5 w-5 shrink-0 text-[#D4A373]" />
+                <Mail className="h-5 w-5 shrink-0 text-[#D2B38B]" />
                 <span>contact@calmatrip.com</span>
               </li>
             </ul>
@@ -92,10 +92,10 @@ export const Footer = () => {
             © {new Date().getFullYear()} Calma Trip. All rights reserved.
           </p>
           <div className="flex gap-6 text-sm">
-            <Link href="/privacy" className="text-white/40 transition-colors hover:text-[#D4A373]">
+            <Link href="/privacy" className="text-white/40 transition-colors hover:text-[#D2B38B]">
               Privacy Policy
             </Link>
-            <Link href="/terms" className="text-white/40 transition-colors hover:text-[#D4A373]">
+            <Link href="/terms" className="text-white/40 transition-colors hover:text-[#D2B38B]">
               Terms of Service
             </Link>
           </div>

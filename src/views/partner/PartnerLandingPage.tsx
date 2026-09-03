@@ -22,7 +22,7 @@ const PROFILES = [
   {
     href: "/partner/agency",
     icon: Compass,
-    accent: "#4A667D",
+    accent: "#4C7A92",
     label: "Agence",
     desc: "Publiez vos activités, excursions et hébergements sur Explore, comme sur GetYourGuide ou TripAdvisor.",
     points: ["Visibilité sur Explore", "Suivi de commission clair", "Publication rapide"],
@@ -55,7 +55,7 @@ function PartnerLandingContent() {
               <div
                 key={p.href}
                 className="flex flex-col rounded-calma-block border border-calma-olive/10 bg-white p-8"
-                style={{ boxShadow: "0 22px 50px -22px rgba(42,38,34,.3)" }}
+                style={{ boxShadow: "0 22px 50px -22px rgba(21,36,46,.3)" }}
               >
                 <div
                   className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"

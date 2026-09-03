@@ -61,7 +61,7 @@ export function SearchableSelect({
         aria-expanded={open}
         className={`flex h-12 w-full items-center justify-between rounded-xl border bg-white/80 px-4 text-[15px] transition-all duration-300 disabled:cursor-not-allowed disabled:opacity-50 ${
           error ? "border-red-300" : "border-calma-olive/15 focus:border-calma-terracotta"
-        } ${open ? "border-calma-terracotta shadow-[0_0_0_4px_rgba(242,153,74,.12)]" : ""}`}
+        } ${open ? "border-calma-terracotta shadow-[0_0_0_4px_rgba(210,179,139,.12)]" : ""}`}
       >
         <span className={selected ? "text-calma-ink" : "text-calma-taupe/60"}>
           {selected ? selected.label : placeholder}

@@ -5,7 +5,7 @@ import { useCalmaLang } from "@/lib/calma/i18n";
 import { Reveal } from "./Reveal";
 
 const inputClass =
-  "h-14 w-full rounded-2xl border border-[#F1EBE1] bg-[#FBF8F1] px-5 text-base text-[#2D2926] outline-none transition-all duration-300 placeholder:text-[#726C64]/60 focus:border-[#F2994A] focus:bg-white focus:ring-4 focus:ring-[#F2994A]/[.12]";
+  "h-14 w-full rounded-2xl border border-[#F0E2CE] bg-[#F7F1E7] px-5 text-base text-[#15242E] outline-none transition-all duration-300 placeholder:text-[#5E7480]/60 focus:border-[#D2B38B] focus:bg-white focus:ring-4 focus:ring-[#D2B38B]/[.12]";
 
 export function ContactForm() {
   const { t } = useCalmaLang();
@@ -44,21 +44,21 @@ export function ContactForm() {
 
   return (
     <Reveal>
-      <div className="rounded-[28px] border border-[#2D2926]/[.06] bg-white p-8 shadow-[0_30px_70px_-32px_rgba(42,38,34,.22)] sm:p-10">
+      <div className="rounded-[28px] border border-[#15242E]/[.06] bg-white p-8 shadow-[0_30px_70px_-32px_rgba(21,36,46,.22)] sm:p-10">
         <div className="mb-8">
-          <h2 className="font-fraunces text-[28px] font-normal leading-tight text-[#2D2926] sm:text-[32px]">
+          <h2 className="font-fraunces text-[28px] font-normal leading-tight text-[#15242E] sm:text-[32px]">
             {t.cnt.formTitle}
           </h2>
-          <p className="mt-2 text-[15px] leading-relaxed text-[#726C64]">{t.cnt.formSub}</p>
+          <p className="mt-2 text-[15px] leading-relaxed text-[#5E7480]">{t.cnt.formSub}</p>
         </div>
 
         {submitted ? (
-          <div className="animate-scale-in rounded-2xl border border-[#F2994A]/40 bg-[#FBF8F1] p-10 text-center">
-            <CheckCircle className="mx-auto mb-5 h-12 w-12 text-[#4A667D]" />
-            <h3 className="mb-2 font-fraunces text-2xl font-normal text-[#2D2926]">
+          <div className="animate-scale-in rounded-2xl border border-[#D2B38B]/40 bg-[#F7F1E7] p-10 text-center">
+            <CheckCircle className="mx-auto mb-5 h-12 w-12 text-[#4C7A92]" />
+            <h3 className="mb-2 font-fraunces text-2xl font-normal text-[#15242E]">
               {t.cnt.sentTitle}
             </h3>
-            <p className="text-[#726C64]">{t.cnt.sentSub}</p>
+            <p className="text-[#5E7480]">{t.cnt.sentSub}</p>
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="space-y-6">
@@ -74,8 +74,8 @@ export function ContactForm() {
             />
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
-                  {t.cnt.labelName} <span className="text-[#F2994A]">*</span>
+                <label className="mb-2 block text-[13px] font-semibold text-[#15242E]">
+                  {t.cnt.labelName} <span className="text-[#D2B38B]">*</span>
                 </label>
                 <input
                   type="text"
@@ -87,8 +87,8 @@ export function ContactForm() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
-                  {t.cnt.labelEmail} <span className="text-[#F2994A]">*</span>
+                <label className="mb-2 block text-[13px] font-semibold text-[#15242E]">
+                  {t.cnt.labelEmail} <span className="text-[#D2B38B]">*</span>
                 </label>
                 <input
                   type="email"
@@ -103,7 +103,7 @@ export function ContactForm() {
 
             <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
+                <label className="mb-2 block text-[13px] font-semibold text-[#15242E]">
                   {t.cnt.labelPhone}
                 </label>
                 <input
@@ -115,8 +115,8 @@ export function ContactForm() {
                 />
               </div>
               <div>
-                <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
-                  {t.cnt.labelSubject} <span className="text-[#F2994A]">*</span>
+                <label className="mb-2 block text-[13px] font-semibold text-[#15242E]">
+                  {t.cnt.labelSubject} <span className="text-[#D2B38B]">*</span>
                 </label>
                 <select
                   required
@@ -135,23 +135,23 @@ export function ContactForm() {
             </div>
 
             <div>
-              <label className="mb-2 block text-[13px] font-semibold text-[#2D2926]">
-                {t.cnt.labelMessage} <span className="text-[#F2994A]">*</span>
+              <label className="mb-2 block text-[13px] font-semibold text-[#15242E]">
+                {t.cnt.labelMessage} <span className="text-[#D2B38B]">*</span>
               </label>
               <textarea
                 required
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
                 rows={6}
-                className="w-full resize-none rounded-2xl border border-[#F1EBE1] bg-[#FBF8F1] px-5 py-4 text-[15px] leading-relaxed text-[#2D2926] outline-none transition-all duration-300 placeholder:text-[#726C64]/60 focus:border-[#F2994A] focus:bg-white focus:ring-4 focus:ring-[#F2994A]/[.12]"
+                className="w-full resize-none rounded-2xl border border-[#F0E2CE] bg-[#F7F1E7] px-5 py-4 text-[15px] leading-relaxed text-[#15242E] outline-none transition-all duration-300 placeholder:text-[#5E7480]/60 focus:border-[#D2B38B] focus:bg-white focus:ring-4 focus:ring-[#D2B38B]/[.12]"
                 placeholder={t.cnt.phMessage}
               />
             </div>
 
             <button
               type="submit"
-              className="group flex w-full items-center justify-center gap-2.5 rounded-2xl px-8 py-[18px] text-[15px] font-bold text-white shadow-[0_16px_32px_-12px_rgba(242,153,74,.6)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_40px_-12px_rgba(242,153,74,.75)] active:translate-y-0"
-              style={{ backgroundColor: "#F2994A" }}
+              className="group flex w-full items-center justify-center gap-2.5 rounded-2xl px-8 py-[18px] text-[15px] font-bold text-white shadow-[0_16px_32px_-12px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_22px_40px_-12px_rgba(210,179,139,.75)] active:translate-y-0"
+              style={{ backgroundColor: "#D2B38B" }}
             >
               <Send className="h-[18px] w-[18px] transition-transform duration-300 group-hover:-translate-y-0.5 group-hover:translate-x-1" />
               {t.cnt.sendBtn}
