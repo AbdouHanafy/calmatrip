@@ -97,6 +97,6 @@ Vitest, `environment: "node"`, `include: ["src/**/*.test.ts"]` — tests sit bes
 ### Other conventions
 
 - Path alias: `@/*` → `src/*`.
-- Images are hosted on Cloudinary (`res.cloudinary.com` is the only allowed remote image host; uploads via `src/app/api/admin/upload` / `src/lib/cloudinaryUpload.ts`).
+- Uploaded images are stored on the server's own local disk under `public/uploads/` (this app runs on a persistent VPS, not a read-only serverless platform) and served as ordinary same-origin `/uploads/...` paths — no remote image host is needed for real uploads. All uploads (admin, B2B, community, forms, CMS media) go through the single shared module `src/lib/mediaStorage.ts` (validation: allowed MIME types, size limits, magic-byte signature check, extension match; storage: random hex-named files under `public/uploads/media/`, path-traversal-safe key resolution). `images.unsplash.com` stays allowlisted in `next.config.ts` only for seeded demo product images.
 - `next.config.ts` also sets security headers and a non-www → www redirect.
 - User-facing strings and many code comments are French; comments are a mix of French and English and either is acceptable.

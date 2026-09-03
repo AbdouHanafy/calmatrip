@@ -4,7 +4,7 @@
 
 import { NextRequest, NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { uploadImages, UploadValidationError } from "@/lib/cloudinaryUpload";
+import { uploadImages, UploadValidationError } from "@/lib/mediaStorage";
 
 export async function POST(req: NextRequest) {
   const session = await auth();

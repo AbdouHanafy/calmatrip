@@ -33,3 +33,7 @@ scripts/.mysql-portable.log
 
 # local Claude Code tooling config
 .claude/
+
+# runtime media uploaded to local disk storage (src/lib/mediaStorage.ts) —
+# real user content, not source; back this up separately on the VPS.
+public/uploads/media/

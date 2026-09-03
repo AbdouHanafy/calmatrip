@@ -1,7 +1,7 @@
 import { Prisma } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { deleteMediaAsset, uploadMediaAssets, UploadValidationError } from "@/lib/cloudinaryUpload";
+import { deleteMediaAsset, uploadMediaAssets, UploadValidationError } from "@/lib/mediaStorage";
 import { auditCmsAction, requireCmsPermission } from "@/features/cms/services/server";
 
 export async function GET(request: NextRequest) {
@@ -94,6 +94,13 @@ export async function POST(request: NextRequest) {
       await Promise.allSettled(uploaded.map((asset) => deleteMediaAsset(asset.publicId)));
     if (error instanceof UploadValidationError)
       return NextResponse.json({ error: error.message }, { status: 400 });
-    throw error;
+    // Never claim success on an infrastructure failure (e.g. the storage
+    // provider is unreachable or misconfigured) — surface it as a clear,
+    // safe-to-display error instead of an opaque 500 with no body.
+    console.error("Media upload failed:", error);
+    return NextResponse.json(
+      { error: "The media storage service is unavailable. Please try again shortly." },
+      { status: 502 },
+    );
   }
 }

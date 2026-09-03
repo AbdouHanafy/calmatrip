@@ -4,7 +4,7 @@ import { prisma } from "@/lib/prisma";
 import { mediaMetadataSchema } from "@/features/cms/schemas/mediaSchemas";
 import { findMediaUsages } from "@/features/cms/services/mediaUsage";
 import { auditCmsAction, requireCmsPermission } from "@/features/cms/services/server";
-import { deleteMediaAsset } from "@/lib/cloudinaryUpload";
+import { deleteMediaAsset } from "@/lib/mediaStorage";
 
 export async function GET(_: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   if (!(await requireCmsPermission("cms.read")))

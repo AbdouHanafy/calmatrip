@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { uploadImages, UploadValidationError } from "@/lib/cloudinaryUpload";
+import { uploadImages, UploadValidationError } from "@/lib/mediaStorage";
 
 export async function POST(
   request: NextRequest,

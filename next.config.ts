@@ -16,11 +16,9 @@ export default withPWANext({
     formats: ["image/avif", "image/webp"],
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "res.cloudinary.com",
-      },
-      {
-        // seeded demo product images only — real uploads go through Cloudinary
+        // seeded demo product images only — real uploads are stored on the
+        // server's own local disk (see src/lib/mediaStorage.ts) and served
+        // as ordinary same-origin /uploads/... paths, no remote host needed.
         protocol: "https",
         hostname: "images.unsplash.com",
       },

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { replaceMediaAsset, UploadValidationError } from "@/lib/cloudinaryUpload";
+import { replaceMediaAsset, UploadValidationError } from "@/lib/mediaStorage";
 import { auditCmsAction, requireCmsPermission } from "@/features/cms/services/server";
 export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const user = await requireCmsPermission("media.manage");
@@ -48,6 +48,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   } catch (error) {
     if (error instanceof UploadValidationError)
       return NextResponse.json({ error: error.message }, { status: 400 });
-    throw error;
+    console.error("Media replacement failed:", error);
+    return NextResponse.json(
+      { error: "The media storage service is unavailable. Please try again shortly." },
+      { status: 502 },
+    );
   }
 }
