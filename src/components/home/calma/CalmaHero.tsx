@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { motion, useReducedMotion, useScroll, useTransform } from "motion/react";
+import { ArrowRight } from "lucide-react";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaPromoTicker from "@/components/home/calma/CalmaPromoTicker";
 import { useCalmaLang, type CalmaDict } from "@/lib/calma/i18n";
@@ -254,7 +255,7 @@ export default function CalmaHero() {
             {t.heroEyebrow}
           </motion.div>
           <h1
-            className="mb-8 text-balance font-space text-[clamp(48px,5.6vw,80px)] font-extrabold leading-[1.03] tracking-[-0.03em] text-calma-cream"
+            className="mb-8 text-balance font-fraunces text-[clamp(52px,6.4vw,92px)] font-normal italic leading-[1.05] tracking-[-0.01em] text-calma-cream"
             style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
           >
             {t.heroTitle}{" "}
@@ -266,6 +267,30 @@ export default function CalmaHero() {
           >
             {t.heroSub}
           </p>
+
+          <motion.div
+            className="mt-9 flex flex-wrap items-center justify-center gap-3.5"
+            initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+            animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+          >
+            <Link
+              href="/explore"
+              className="group inline-flex items-center gap-2 rounded-full bg-calma-terracotta px-7 py-3.5 font-hanken text-[15px] font-semibold text-calma-ink no-underline shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)]"
+            >
+              {t.heroCta1}
+              <ArrowRight
+                size={17}
+                className="transition-transform duration-300 group-hover:translate-x-1"
+              />
+            </Link>
+            <Link
+              href="/services"
+              className="inline-flex items-center gap-2 rounded-full border border-white/35 px-7 py-3.5 font-hanken text-[15px] font-semibold text-calma-cream no-underline backdrop-blur-md transition-all duration-300 hover:-translate-y-0.5 hover:border-white/60 hover:bg-white/10"
+            >
+              {t.heroCta2}
+            </Link>
+          </motion.div>
         </motion.div>
 
         <div className="pointer-events-auto absolute inset-x-0 bottom-[152px] overflow-x-auto px-4 [scrollbar-width:none] sm:flex sm:justify-center sm:overflow-visible [&::-webkit-scrollbar]:hidden">
@@ -326,7 +351,7 @@ export default function CalmaHero() {
         </motion.div>
 
         <motion.h1
-          className="mb-4 w-full text-balance font-space text-[clamp(28px,8vw,38px)] font-extrabold leading-[1.12] tracking-[-0.02em] text-calma-cream"
+          className="mb-4 w-full text-balance font-fraunces text-[clamp(32px,10vw,44px)] font-normal italic leading-[1.1] tracking-[-0.01em] text-calma-cream"
           style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
           initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
           animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
@@ -345,6 +370,27 @@ export default function CalmaHero() {
         >
           {t.heroSub}
         </motion.p>
+
+        <motion.div
+          className="mb-6 flex w-full flex-wrap items-center justify-center gap-2.5"
+          initial={reduceMotion ? undefined : { opacity: 0, y: 14 }}
+          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.7, delay: 0.12, ease: [0.16, 1, 0.3, 1] }}
+        >
+          <Link
+            href="/explore"
+            className="inline-flex items-center gap-1.5 rounded-full bg-calma-terracotta px-5 py-2.5 font-hanken text-[13.5px] font-semibold text-calma-ink no-underline shadow-[0_10px_20px_-8px_rgba(210,179,139,.6)]"
+          >
+            {t.heroCta1}
+            <ArrowRight size={15} />
+          </Link>
+          <Link
+            href="/services"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/35 px-5 py-2.5 font-hanken text-[13.5px] font-semibold text-calma-cream no-underline backdrop-blur-md"
+          >
+            {t.heroCta2}
+          </Link>
+        </motion.div>
 
         <motion.div
           className="flex w-full justify-start gap-2.5 overflow-x-auto px-1 pb-1 [scrollbar-width:none] snap-x snap-mandatory sm:justify-center [&::-webkit-scrollbar]:hidden"

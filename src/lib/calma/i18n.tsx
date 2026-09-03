@@ -38,6 +38,14 @@ export interface CalmaWhyItem {
   desc: string;
 }
 
+export interface CalmaJourney {
+  title: string;
+  region: string;
+  duration: string;
+  desc: string;
+  ph: string;
+}
+
 export interface CalmaOfferItem {
   num: string;
   title: string;
@@ -472,6 +480,8 @@ export interface CalmaDict {
   heroTitle: string;
   heroTitleEm: string;
   heroSub: string;
+  heroCta1: string;
+  heroCta2: string;
 
   searchDestL: string;
   searchDest: string;
@@ -493,12 +503,21 @@ export interface CalmaDict {
   catsKicker: string;
   catsHeading: string;
   catsSub: string;
+  catsViewAll: string;
 
   expKicker: string;
   expHeading: string;
   expViewAll: string;
   expFrom: string;
   expPer: string;
+
+  journeysKicker: string;
+  journeysHeading: string;
+  journeysSub: string;
+
+  storyKicker: string;
+  storyHeading: string;
+  storyText: string;
 
   shopKicker: string;
   shopHeading: string;
@@ -523,6 +542,10 @@ export interface CalmaDict {
 
   testiHeading: string;
 
+  reviewKicker: string;
+  reviewHeading: string;
+  reviewSub: string;
+
   newsKicker: string;
   newsTitle: string;
   newsSub: string;
@@ -544,6 +567,7 @@ export interface CalmaDict {
   exps: CalmaExperience[];
   whys: CalmaWhy[];
   testis: CalmaTestimonial[];
+  journeys: CalmaJourney[];
 
   svc: CalmaServicesDict;
   mkt: CalmaMarketDict;
@@ -571,6 +595,8 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     heroTitleEm: "vit",
     heroSub:
       "Pas qui se visite. Des activités menées par des locaux — de la médina de Tunis aux dunes de Tozeur, réservées en direct.",
+    heroCta1: "Planifier mon échappée",
+    heroCta2: "Voir les expériences",
 
     searchDestL: "Destination",
     searchDest: "Commencez à taper ou choisissez…",
@@ -592,12 +618,22 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     catsKicker: "Par type d’activité",
     catsHeading: "Choisissez votre Tunisie",
     catsSub: "De la médina au désert, de la mer à la table.",
+    catsViewAll: "Toutes les destinations",
 
     expKicker: "Explorer",
     expHeading: "Expériences à la une",
     expViewAll: "Tout voir",
     expFrom: "dès",
     expPer: "/pers.",
+
+    journeysKicker: "Voyages suggérés",
+    journeysHeading: "Des itinéraires pensés pour vous inspirer",
+    journeysSub: "Trois façons de vivre la Tunisie, du sud saharien à la côte méditerranéenne.",
+
+    storyKicker: "L’âme du pays",
+    storyHeading: "Un pays de contrastes.",
+    storyText:
+      "La mer et le désert. Les médinas anciennes et la vie moderne. La tradition et la découverte. La Tunisie ne se résume pas — elle se ressent, une ruelle et une dune à la fois.",
 
     shopKicker: "Marketplace",
     shopHeading: "L’artisanat tunisien, livré chez vous",
@@ -624,6 +660,10 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       "Nos spécialistes locaux dessinent chaque étape de votre séjour. De la médina aux dunes, nous créons des souvenirs qui durent.",
 
     testiHeading: "Ce que disent nos voyageurs",
+
+    reviewKicker: "Votre avis",
+    reviewHeading: "Partagez votre expérience",
+    reviewSub: "Votre avis compte pour nous et pour les autres voyageurs.",
 
     newsKicker: "Commencez l’aventure",
     newsTitle: "Prêt à explorer la Tunisie ?",
@@ -698,6 +738,29 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       { n: "02", title: "Sans intermédiaire", desc: "Vous réservez en direct, au juste prix." },
       { n: "03", title: "Petits groupes", desc: "Des expériences intimes, jamais en masse." },
       { n: "04", title: "Annulation souple", desc: "Remboursé jusqu’à 24 h avant." },
+    ],
+    journeys: [
+      {
+        title: "Dunes et oasis du Sud",
+        region: "Sud tunisien",
+        duration: "3 jours",
+        desc: "Des dunes dorées de Douz aux palmeraies secrètes de Chebika, en petit groupe.",
+        ph: "PHOTO — SAHARA",
+      },
+      {
+        title: "La côte, autrement",
+        region: "Sidi Bou Saïd · Carthage",
+        duration: "2 jours",
+        desc: "Ruelles bleu et blanc, ports antiques et couchers de soleil sur la Méditerranée.",
+        ph: "PHOTO — CÔTE",
+      },
+      {
+        title: "Sur les traces de l’Histoire",
+        region: "Kairouan · El Jem",
+        duration: "1 jour",
+        desc: "Médinas millénaires, mosquées sacrées et l’amphithéâtre romain le mieux conservé d’Afrique.",
+        ph: "PHOTO — PATRIMOINE",
+      },
     ],
     testis: [
       {
@@ -1211,6 +1274,8 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     heroTitleEm: "live",
     heroSub:
       "Not just visit. Activities led by locals — from the Tunis medina to the dunes of Tozeur, booked direct.",
+    heroCta1: "Plan your escape",
+    heroCta2: "View experiences",
 
     searchDestL: "Destination",
     searchDest: "Start typing or select below…",
@@ -1232,12 +1297,23 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     catsKicker: "By type of activity",
     catsHeading: "Choose your Tunisia",
     catsSub: "From the medina to the desert, from the sea to the table.",
+    catsViewAll: "All destinations",
 
     expKicker: "Explore",
     expHeading: "Featured experiences",
     expViewAll: "View all",
     expFrom: "from",
     expPer: "/person",
+
+    journeysKicker: "Suggested journeys",
+    journeysHeading: "Itineraries designed to inspire you",
+    journeysSub:
+      "Three ways to experience Tunisia, from the Saharan south to the Mediterranean coast.",
+
+    storyKicker: "The soul of the country",
+    storyHeading: "A country of contrasts.",
+    storyText:
+      "Sea and desert. Ancient medinas and modern life. Tradition and discovery. Tunisia isn't summed up — it's felt, one alley and one dune at a time.",
 
     shopKicker: "Marketplace",
     shopHeading: "Tunisian craftsmanship, delivered to you",
@@ -1264,6 +1340,10 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       "Our local specialists shape every step of your stay. From the medina to the dunes, we craft memories that last.",
 
     testiHeading: "What our travelers say",
+
+    reviewKicker: "Your voice",
+    reviewHeading: "Share your experience",
+    reviewSub: "Your review matters to us and to other travelers.",
 
     newsKicker: "Start the adventure",
     newsTitle: "Ready to explore Tunisia?",
@@ -1337,6 +1417,29 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       { n: "02", title: "No middleman", desc: "Book direct, at a fair price." },
       { n: "03", title: "Small groups", desc: "Intimate experiences, never crowds." },
       { n: "04", title: "Flexible cancellation", desc: "Refunded up to 24 h before." },
+    ],
+    journeys: [
+      {
+        title: "Dunes and oases of the South",
+        region: "Southern Tunisia",
+        duration: "3 days",
+        desc: "From the golden dunes of Douz to the hidden palm groves of Chebika, in a small group.",
+        ph: "PHOTO — SAHARA",
+      },
+      {
+        title: "The coast, differently",
+        region: "Sidi Bou Said · Carthage",
+        duration: "2 days",
+        desc: "Blue-and-white alleys, ancient ports, and sunsets over the Mediterranean.",
+        ph: "PHOTO — COAST",
+      },
+      {
+        title: "On the trail of history",
+        region: "Kairouan · El Jem",
+        duration: "1 day",
+        desc: "Centuries-old medinas, sacred mosques, and Africa's best-preserved Roman amphitheater.",
+        ph: "PHOTO — HERITAGE",
+      },
     ],
     testis: [
       {
@@ -1840,6 +1943,8 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     heroTitle: "تونس تُعاش",
     heroTitleEm: "لا تُزار فقط",
     heroSub: "أنشطة يقودها أهل البلاد — من مدينة تونس العتيقة إلى كثبان توزر، تُحجز مباشرة.",
+    heroCta1: "خطّط لهروبك",
+    heroCta2: "شاهد التجارب",
 
     searchDestL: "الوجهة",
     searchDest: "ابدأ الكتابة أو اختر…",
@@ -1861,12 +1966,22 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
     catsKicker: "حسب نوع النشاط",
     catsHeading: "اختر تونسك",
     catsSub: "من المدينة العتيقة إلى الصحراء، ومن البحر إلى المائدة.",
+    catsViewAll: "كل الوجهات",
 
     expKicker: "استكشف",
     expHeading: "تجارب مميزة",
     expViewAll: "عرض الكل",
     expFrom: "ابتداءً من",
     expPer: "/للشخص",
+
+    journeysKicker: "رحلات مقترحة",
+    journeysHeading: "مسارات صُممت لإلهامك",
+    journeysSub: "ثلاث طرق لعيش تونس، من صحراء الجنوب إلى ساحل المتوسط.",
+
+    storyKicker: "روح البلاد",
+    storyHeading: "بلد التناقضات.",
+    storyText:
+      "البحر والصحراء. المدن العتيقة والحياة العصرية. التقاليد والاكتشاف. تونس لا تُختصر — بل تُعاش، زقاقًا وكثيبًا في كل مرة.",
 
     shopKicker: "السوق",
     shopHeading: "الحرف التونسية، تصلك أينما كنت",
@@ -1891,6 +2006,10 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       "يصمم خبراؤنا المحليون كل تفصيل في إقامتكم. من المدينة العتيقة إلى الكثبان، نصنع ذكريات تدوم.",
 
     testiHeading: "ماذا يقول مسافرونا",
+
+    reviewKicker: "رأيك",
+    reviewHeading: "شاركنا تجربتك",
+    reviewSub: "رأيك يهمنا ويهم بقية المسافرين.",
 
     newsKicker: "ابدأ المغامرة",
     newsTitle: "مستعد لاستكشاف تونس؟",
@@ -1958,6 +2077,29 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       { n: "02", title: "بدون وسيط", desc: "احجز مباشرة، بالسعر العادل." },
       { n: "03", title: "مجموعات صغيرة", desc: "تجارب حميمية، بدون ازدحام." },
       { n: "04", title: "إلغاء مرن", desc: "استرداد كامل حتى 24 ساعة قبل الموعد." },
+    ],
+    journeys: [
+      {
+        title: "كثبان وواحات الجنوب",
+        region: "جنوب تونس",
+        duration: "3 أيام",
+        desc: "من كثبان دوز الذهبية إلى واحات شبيكة المخفية، في مجموعة صغيرة.",
+        ph: "PHOTO — SAHARA",
+      },
+      {
+        title: "الساحل، بنظرة مختلفة",
+        region: "سيدي بوسعيد · قرطاج",
+        duration: "يومان",
+        desc: "أزقة زرقاء وبيضاء، موانئ عتيقة، وغروب الشمس على البحر المتوسط.",
+        ph: "PHOTO — COAST",
+      },
+      {
+        title: "على خطى التاريخ",
+        region: "القيروان · الجم",
+        duration: "يوم واحد",
+        desc: "مدن عتيقة عمرها قرون، مساجد مقدسة، ومدرج روماني هو الأفضل حفظًا في أفريقيا.",
+        ph: "PHOTO — HERITAGE",
+      },
     ],
     testis: [
       {

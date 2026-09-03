@@ -1,13 +1,14 @@
 "use client";
 import React from "react";
-import Image from "next/image";
-import { CalmaLangProvider } from "@/lib/calma/i18n";
+import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHero from "@/components/home/calma/CalmaHero";
 import CalmaSearchBar from "@/components/home/calma/CalmaSearchBar";
 import CalmaCategories from "@/components/home/calma/CalmaCategories";
 import CalmaMarketplacePreview, {
   type FeaturedExperience,
 } from "@/components/home/calma/CalmaMarketplacePreview";
+import CalmaFeaturedJourneys from "@/components/home/calma/CalmaFeaturedJourneys";
+import CalmaTunisianStory from "@/components/home/calma/CalmaTunisianStory";
 import CalmaShopPreview from "@/components/home/calma/CalmaShopPreview";
 import CalmaWhyBanner from "@/components/home/calma/CalmaWhyBanner";
 import CalmaCustomTrip from "@/components/home/calma/CalmaCustomTrip";
@@ -40,10 +41,36 @@ interface HomeProps {
   experiences: FeaturedExperience[];
 }
 
+// "Share your experience" — kept as its own small section (real, user-submitted
+// reviews only feed ReviewsSection above it) but its copy now comes from the
+// dict like every other section, instead of being hardcoded French.
+function ShareExperienceSection() {
+  const { t } = useCalmaLang();
+  return (
+    <section className="bg-calma-cream py-24">
+      <div className="mx-auto max-w-[720px] px-6 text-center sm:px-10">
+        <div className="mb-3 text-xs font-bold uppercase tracking-[.16em] text-calma-terracotta">
+          {t.reviewKicker}
+        </div>
+        <h2 className="mb-3 font-fraunces text-[clamp(28px,3.2vw,38px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-ink">
+          {t.reviewHeading}
+        </h2>
+        <p className="mx-auto mb-10 max-w-[420px] leading-relaxed text-calma-taupe">
+          {t.reviewSub}
+        </p>
+        <div className="mx-auto max-w-[520px] text-left">
+          <ReviewForm />
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default function Home({ shopProducts, reviews, experiences }: HomeProps) {
   return (
     <CalmaLangProvider>
-      {/* Alternating section rhythm — white / ivory / sand / olive — so the page never sits on one flat beige field */}
+      {/* Narrative rhythm: Arrival (hero) -> Discovery (destinations) -> Experience
+          (experiences/journeys/story) -> Connection (why us/tailored/reviews) -> Escape (CTA). */}
       <div className="min-h-screen bg-calma-cream font-hanken">
         <CalmaHero />
         <CalmaSearchBar />
@@ -57,7 +84,11 @@ export default function Home({ shopProducts, reviews, experiences }: HomeProps) 
         </div>
 
         <div className="bg-calma-sand">
-          <CalmaShopPreview products={shopProducts} />
+          <CalmaFeaturedJourneys />
+        </div>
+
+        <div className="bg-white">
+          <CalmaTunisianStory />
         </div>
 
         <div className="bg-calma-cream">
@@ -68,47 +99,16 @@ export default function Home({ shopProducts, reviews, experiences }: HomeProps) 
           <CalmaCustomTrip review={reviews[0] ?? null} />
         </div>
 
+        <div className="bg-calma-cream">
+          <CalmaShopPreview products={shopProducts} />
+        </div>
+
         {/* Real traveler reviews only — only a client who actually booked a service can
             leave one, which is exactly what makes this credible. No decorative/fabricated
             testimonials here. Section hides itself entirely until someone has submitted one. */}
         <ReviewsSection reviews={reviews} />
 
-        <section className="bg-calma-cream py-28">
-          <div className="mx-auto max-w-[1100px] px-6 sm:px-10">
-            <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-[0.85fr_1fr]">
-              <div className="relative hidden h-[520px] overflow-hidden rounded-calma-block lg:block">
-                <Image
-                  src="/images/explore/sidi_bou_said.png"
-                  alt="Voyageurs à Sidi Bou Saïd"
-                  fill
-                  sizes="500px"
-                  className="object-cover"
-                />
-                <div className="absolute inset-0 bg-black/30" />
-                <div className="absolute bottom-7 left-7 right-7">
-                  <p className="font-fraunces text-[22px] italic leading-snug text-white">
-                    &ldquo;Votre voix aide le prochain voyageur à choisir en confiance.&rdquo;
-                  </p>
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-8">
-                  <div className="mb-3 text-xs font-bold uppercase tracking-[.16em] text-calma-terracotta">
-                    Votre avis
-                  </div>
-                  <h2 className="font-fraunces text-[clamp(28px,3.2vw,38px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-ink">
-                    Partagez votre expérience
-                  </h2>
-                  <p className="mt-3 max-w-[420px] text-calma-taupe leading-relaxed">
-                    Votre avis compte pour nous et pour les autres voyageurs.
-                  </p>
-                </div>
-                <ReviewForm />
-              </div>
-            </div>
-          </div>
-        </section>
+        <ShareExperienceSection />
 
         <div className="bg-calma-cream">
           <CalmaFinalCTA />

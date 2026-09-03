@@ -65,22 +65,25 @@ export default function CalmaMarketplacePreview({
           </Link>
         </div>
 
-        <div className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-2 calma-scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
-          {items.map((exp) => {
+        <div className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-2 calma-scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-[1.5fr_1fr] lg:grid-rows-2">
+          {items.map((exp, i) => {
             const numericPrice = parsePrice(exp.price);
             const duration = exp.duration ?? exp.openingHours;
+            const featured = i === 0;
             return (
               <Link
                 key={exp.id}
                 href="/explore"
-                className="group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(21,36,46,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(21,36,46,.45)] sm:w-auto sm:shrink sm:snap-none"
+                className={`group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(21,36,46,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(21,36,46,.45)] sm:w-auto sm:shrink sm:snap-none ${featured ? "lg:row-span-2" : ""}`}
               >
-                <div className="relative h-[260px] overflow-hidden bg-calma-olive-deep">
+                <div
+                  className={`relative overflow-hidden bg-calma-olive-deep ${featured ? "h-[260px] lg:h-full lg:min-h-[420px]" : "h-[260px] lg:h-[200px]"}`}
+                >
                   <Image
                     src={exp.image || FALLBACK_IMAGE}
                     alt={exp.title}
                     fill
-                    sizes="(min-width: 1024px) 33vw, 100vw"
+                    sizes="(min-width: 1024px) 40vw, 100vw"
                     className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   />
                   <div className="absolute inset-0 bg-black/25" />
@@ -98,7 +101,9 @@ export default function CalmaMarketplacePreview({
                   <div className="mb-2 text-[12.5px] font-semibold text-calma-terracotta">
                     ◦ {exp.city}
                   </div>
-                  <h3 className="mb-4 min-h-[46px] font-fraunces text-[19px] font-normal leading-[1.25] text-calma-ink">
+                  <h3
+                    className={`mb-4 font-fraunces font-normal leading-[1.25] text-calma-ink ${featured ? "min-h-[58px] text-[24px]" : "min-h-[46px] text-[19px]"}`}
+                  >
                     {exp.title}
                   </h3>
                   <div className="flex items-baseline justify-between border-t border-calma-olive/[.12] pt-4">
@@ -149,55 +154,62 @@ export default function CalmaMarketplacePreview({
         </Link>
       </div>
 
-      <div className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-2 calma-scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-3">
-        {t.exps.map((exp, i) => (
-          <Link
-            key={exp.title}
-            href="/explore"
-            className="group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(21,36,46,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(21,36,46,.45)] sm:w-auto sm:shrink sm:snap-none"
-          >
-            <div className="relative h-[260px] overflow-hidden bg-calma-olive-deep">
-              <Image
-                src={IMAGES[i]}
-                alt={exp.title}
-                fill
-                sizes="(min-width: 1024px) 33vw, 100vw"
-                className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-              />
-              <div className="absolute inset-0 bg-black/25" />
-              <div className="absolute left-3.5 top-3.5 rounded-full border border-white/25 bg-black/25 px-3 py-[6px] text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-md">
-                {EXTRA[i].category}
-              </div>
-              <div className="absolute right-3.5 top-3.5 rounded-full bg-calma-cream px-2.5 py-[5px] text-xs font-bold text-calma-olive shadow-sm">
-                <span className="text-calma-gold">★</span> {exp.rating}
-              </div>
-              <div className="absolute bottom-3.5 left-3.5 flex items-center gap-1.5 rounded-full border border-white/25 bg-black/25 px-3 py-[6px] text-[11px] font-semibold text-white backdrop-blur-md">
-                <Clock size={12} />
-                {EXTRA[i].duration}
-              </div>
-            </div>
-            <div className="p-[22px] pb-6">
-              <div className="mb-2 text-[12.5px] font-semibold text-calma-terracotta">
-                ◦ {exp.place}
-              </div>
-              <h3 className="mb-4 min-h-[46px] font-fraunces text-[19px] font-normal leading-[1.25] text-calma-ink">
-                {exp.title}
-              </h3>
-              <div className="flex items-baseline justify-between border-t border-calma-olive/[.12] pt-4">
-                <div>
-                  <span className="text-xs text-calma-taupe">{t.expFrom} </span>
-                  <span className="font-fraunces text-[24px] font-semibold text-calma-olive">
-                    {exp.price} TND
-                  </span>
-                  <span className="text-xs text-calma-taupe"> {t.expPer}</span>
+      <div className="-mx-6 flex snap-x snap-mandatory gap-5 overflow-x-auto px-6 pb-2 calma-scrollbar-hide sm:mx-0 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:px-0 sm:pb-0 lg:grid-cols-[1.5fr_1fr] lg:grid-rows-2">
+        {t.exps.map((exp, i) => {
+          const featured = i === 0;
+          return (
+            <Link
+              key={exp.title}
+              href="/explore"
+              className={`group block w-[80%] shrink-0 snap-start overflow-hidden rounded-[26px] border border-calma-olive/[.1] bg-calma-cream no-underline shadow-[0_8px_24px_-16px_rgba(21,36,46,.3)] transition-all duration-400 hover:-translate-y-1.5 hover:shadow-[0_36px_64px_-28px_rgba(21,36,46,.45)] sm:w-auto sm:shrink sm:snap-none ${featured ? "lg:row-span-2" : ""}`}
+            >
+              <div
+                className={`relative overflow-hidden bg-calma-olive-deep ${featured ? "h-[260px] lg:h-full lg:min-h-[420px]" : "h-[260px] lg:h-[200px]"}`}
+              >
+                <Image
+                  src={IMAGES[i]}
+                  alt={exp.title}
+                  fill
+                  sizes="(min-width: 1024px) 40vw, 100vw"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                />
+                <div className="absolute inset-0 bg-black/25" />
+                <div className="absolute left-3.5 top-3.5 rounded-full border border-white/25 bg-black/25 px-3 py-[6px] text-[11px] font-bold uppercase tracking-wide text-white backdrop-blur-md">
+                  {EXTRA[i].category}
                 </div>
-                <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-white">
-                  →
-                </span>
+                <div className="absolute right-3.5 top-3.5 rounded-full bg-calma-cream px-2.5 py-[5px] text-xs font-bold text-calma-olive shadow-sm">
+                  <span className="text-calma-gold">★</span> {exp.rating}
+                </div>
+                <div className="absolute bottom-3.5 left-3.5 flex items-center gap-1.5 rounded-full border border-white/25 bg-black/25 px-3 py-[6px] text-[11px] font-semibold text-white backdrop-blur-md">
+                  <Clock size={12} />
+                  {EXTRA[i].duration}
+                </div>
               </div>
-            </div>
-          </Link>
-        ))}
+              <div className="p-[22px] pb-6">
+                <div className="mb-2 text-[12.5px] font-semibold text-calma-terracotta">
+                  ◦ {exp.place}
+                </div>
+                <h3
+                  className={`mb-4 font-fraunces font-normal leading-[1.25] text-calma-ink ${featured ? "min-h-[58px] text-[24px]" : "min-h-[46px] text-[19px]"}`}
+                >
+                  {exp.title}
+                </h3>
+                <div className="flex items-baseline justify-between border-t border-calma-olive/[.12] pt-4">
+                  <div>
+                    <span className="text-xs text-calma-taupe">{t.expFrom} </span>
+                    <span className="font-fraunces text-[24px] font-semibold text-calma-olive">
+                      {exp.price} TND
+                    </span>
+                    <span className="text-xs text-calma-taupe"> {t.expPer}</span>
+                  </div>
+                  <span className="grid h-9 w-9 place-items-center rounded-full bg-calma-terracotta/10 text-lg text-calma-terracotta transition-colors group-hover:bg-calma-terracotta group-hover:text-white">
+                    →
+                  </span>
+                </div>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

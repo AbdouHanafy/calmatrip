@@ -18,12 +18,14 @@ function DestinationTile({
   slug,
   className,
   compact = false,
+  exploreLabel,
 }: {
   cat: { title: string; desc: string; count: string };
   image: string;
   slug: string;
   className?: string;
   compact?: boolean;
+  exploreLabel: string;
 }) {
   return (
     <Link
@@ -48,11 +50,16 @@ function DestinationTile({
       </div>
       <div className="absolute bottom-5 left-5 right-5 transition-transform duration-500 group-hover:-translate-y-1">
         <h3
-          className={`mb-1 font-fraunces font-normal leading-[1.15] text-white ${compact ? "text-[18px]" : "text-[23px]"}`}
+          className={`mb-1 font-fraunces font-normal leading-[1.15] text-white ${compact ? "text-[18px]" : "text-[26px]"}`}
         >
           {cat.title}
         </h3>
         <p className="m-0 text-[12.5px] leading-[1.45] text-white/[.78]">{cat.desc}</p>
+        <div className="mt-0 max-h-0 overflow-hidden opacity-0 transition-all duration-500 group-hover:mt-2.5 group-hover:max-h-8 group-hover:opacity-100">
+          <span className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold text-calma-terracotta-soft">
+            {exploreLabel} →
+          </span>
+        </div>
       </div>
     </Link>
   );
@@ -73,9 +80,17 @@ export default function CalmaCategories() {
             {t.catsHeading}
           </h2>
         </div>
-        <p className="m-0 max-w-[340px] text-[15.5px] leading-[1.55] text-calma-taupe">
-          {t.catsSub}
-        </p>
+        <div className="flex flex-col items-end gap-3">
+          <p className="m-0 max-w-[340px] text-[15.5px] leading-[1.55] text-calma-taupe">
+            {t.catsSub}
+          </p>
+          <Link
+            href="/explore"
+            className="hidden text-[14.5px] font-semibold text-calma-terracotta no-underline transition-colors hover:text-calma-olive lg:inline-block"
+          >
+            {t.catsViewAll} →
+          </Link>
+        </div>
       </div>
 
       {/* Mobile/tablet — swipeable carousel */}
@@ -86,6 +101,7 @@ export default function CalmaCategories() {
             cat={cat}
             image={IMAGES[i]}
             slug={SLUGS[i]}
+            exploreLabel={t.expKicker}
             className="h-[340px] w-[78%] shrink-0 snap-start sm:w-[340px]"
           />
         ))}
@@ -93,7 +109,13 @@ export default function CalmaCategories() {
 
       {/* Desktop — asymmetric grid: one large destination card + a stacked column of smaller ones */}
       <div className="hidden gap-4 lg:grid lg:grid-cols-[1.4fr_1fr]">
-        <DestinationTile cat={main} image={IMAGES[0]} slug={SLUGS[0]} className="h-[624px]" />
+        <DestinationTile
+          cat={main}
+          image={IMAGES[0]}
+          slug={SLUGS[0]}
+          exploreLabel={t.expKicker}
+          className="h-[624px]"
+        />
         <div className="grid grid-cols-1 gap-4">
           {rest.map((cat, i) => (
             <DestinationTile
@@ -101,11 +123,21 @@ export default function CalmaCategories() {
               cat={cat}
               image={IMAGES[i + 1]}
               slug={SLUGS[i + 1]}
+              exploreLabel={t.expKicker}
               compact
               className="h-[202.67px]"
             />
           ))}
         </div>
+      </div>
+
+      <div className="mt-8 text-center lg:hidden">
+        <Link
+          href="/explore"
+          className="text-[14.5px] font-semibold text-calma-terracotta no-underline transition-colors hover:text-calma-olive"
+        >
+          {t.catsViewAll} →
+        </Link>
       </div>
     </section>
   );

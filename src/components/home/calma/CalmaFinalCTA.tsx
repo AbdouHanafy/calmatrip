@@ -1,5 +1,6 @@
 "use client";
 import React from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { useCalmaLang } from "@/lib/calma/i18n";
 
@@ -8,7 +9,18 @@ export default function CalmaFinalCTA() {
 
   return (
     <section className="mx-auto mb-8 mt-28 max-w-[1240px] px-6">
-      <div className="relative overflow-hidden rounded-calma-block bg-calma-olive p-[72px_clamp(28px,6vw,72px)] text-center text-calma-cream">
+      <div className="relative overflow-hidden rounded-calma-block p-[72px_clamp(28px,6vw,72px)] text-center text-calma-cream">
+        <Image
+          src="/images/hero/sea.png"
+          alt=""
+          fill
+          sizes="(min-width: 1240px) 1240px, 100vw"
+          className="object-cover"
+        />
+        <div
+          className="pointer-events-none absolute inset-0"
+          style={{ background: "rgba(21,36,46,.78)" }}
+        />
         <div
           className="pointer-events-none absolute -right-1/4 -top-1/3 h-[520px] w-[520px] rounded-full opacity-20 blur-[90px]"
           style={{ backgroundColor: "#D2B38B" }}

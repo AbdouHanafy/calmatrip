@@ -2,7 +2,6 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Compass, Users } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 
 export default function CalmaWhyBanner() {
@@ -49,25 +48,18 @@ export default function CalmaWhyBanner() {
           </h2>
           <p className="mb-8 max-w-[440px] text-base leading-[1.65] text-calma-taupe">{t.whySub}</p>
 
-          <div className="mb-9 flex flex-wrap gap-8">
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-calma-terracotta/[.1] text-calma-terracotta">
-                <Users size={20} strokeWidth={1.75} />
-              </span>
-              <div>
-                <div className="font-fraunces text-xl leading-none text-calma-ink">500+</div>
-                <div className="mt-1 text-[12.5px] text-calma-taupe">Voyageurs satisfaits</div>
+          <div className="mb-9 grid grid-cols-1 gap-x-8 gap-y-6 sm:grid-cols-2">
+            {t.whys.map((why) => (
+              <div key={why.n} className="flex items-start gap-4">
+                <span className="font-fraunces text-[26px] font-normal leading-none text-calma-terracotta">
+                  {why.n}
+                </span>
+                <div>
+                  <div className="mb-1 text-[14.5px] font-semibold text-calma-ink">{why.title}</div>
+                  <div className="text-[13px] leading-[1.5] text-calma-taupe">{why.desc}</div>
+                </div>
               </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-full bg-calma-olive/[.1] text-calma-olive">
-                <Compass size={20} strokeWidth={1.75} />
-              </span>
-              <div>
-                <div className="font-fraunces text-xl leading-none text-calma-ink">98%</div>
-                <div className="mt-1 text-[12.5px] text-calma-taupe">Taux de satisfaction</div>
-              </div>
-            </div>
+            ))}
           </div>
 
           <Link
