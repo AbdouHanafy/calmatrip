@@ -1,6 +1,7 @@
 "use client";
 import { Phone, Mail, MapPin, Clock, type LucideIcon } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
+import { useSiteSettings } from "@/features/cms/components/settings/SiteSettingsProvider";
 import { Reveal } from "./Reveal";
 
 interface ContactInfo {
@@ -12,24 +13,26 @@ interface ContactInfo {
 
 export function ContactInfoCards() {
   const { t } = useCalmaLang();
+  const settings = useSiteSettings();
+  const contact = settings?.contact;
 
   const contactInfo: ContactInfo[] = [
     {
       icon: Phone,
       title: t.cnt.infoPhoneTitle,
-      details: ["+216 21 622 972"],
+      details: [contact?.phone ?? "+216 21 622 972"],
       description: t.cnt.infoPhoneDesc,
     },
     {
       icon: Mail,
       title: t.cnt.infoEmailTitle,
-      details: ["contact@calmatrip.com"],
+      details: [contact?.email ?? "contact@calmatrip.com"],
       description: t.cnt.infoEmailDesc,
     },
     {
       icon: MapPin,
       title: t.cnt.infoAddressTitle,
-      details: ["Avenue Habib Bourguiba", "Hammamet, Tunisie"],
+      details: (contact?.address ?? "Avenue Habib Bourguiba, Hammamet, Tunisie").split(", "),
       description: t.cnt.infoAddressDesc,
     },
     {

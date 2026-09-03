@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { X } from "lucide-react";
+import { useSiteSettings } from "@/features/cms/components/settings/SiteSettingsProvider";
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -14,6 +15,8 @@ function WhatsAppIcon({ className }: { className?: string }) {
 export default function FloatingWhatsApp() {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const settings = useSiteSettings();
+  const whatsapp = settings?.contact.whatsapp;
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -26,6 +29,11 @@ export default function FloatingWhatsApp() {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Settings resolved (provider present) but the admin explicitly cleared the
+  // WhatsApp number — hide the widget rather than showing a dead link.
+  if (settings && !whatsapp) return null;
+  const digits = (whatsapp ?? "+21621622972").replace(/[^\d]/g, "");
 
   return (
     <div
@@ -61,7 +69,7 @@ export default function FloatingWhatsApp() {
           </p>
 
           <a
-            href="https://wa.me/21621622972?text=Bonjour%20!"
+            href={`https://wa.me/${digits}?text=Bonjour%20!`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-2 rounded-full bg-calma-olive px-5 py-3 text-[14.5px] font-semibold text-calma-cream transition-all duration-300 hover:-translate-y-0.5 hover:bg-calma-olive-deep"

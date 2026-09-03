@@ -9,6 +9,8 @@ import { SITE, organizationSchema } from "@/lib/seo";
 import { Fraunces, Poppins, Hanken_Grotesk, Space_Grotesk } from "next/font/google";
 import { getPublishedNavigations } from "@/features/cms/services/navigation";
 import { NavigationProvider } from "@/features/cms/components/navigation/NavigationProvider";
+import { getSiteSettings } from "@/features/cms/services/settings";
+import { SiteSettingsProvider } from "@/features/cms/components/settings/SiteSettingsProvider";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -39,44 +41,49 @@ const hankenGrotesk = Hanken_Grotesk({
   display: "swap",
 });
 
-export const metadata: Metadata = {
-  title: {
-    template: `%s | ${SITE.name}`,
-    default: `${SITE.name} — Stress-Free Travel in Tunisia`,
-  },
-  description: SITE.description,
-  keywords: SITE.keywords.join(", "),
-  authors: [{ name: SITE.name, url: SITE.url }],
-  creator: SITE.name,
-  publisher: SITE.name,
-  metadataBase: new URL(SITE.url),
-  openGraph: {
-    type: "website",
-    siteName: SITE.name,
-    locale: "en_US",
-    alternateLocale: ["fr_FR", "ar_TN"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: SITE.twitterHandle,
-  },
-  manifest: "/site.webmanifest",
-  icons: {
-    icon: [
-      { url: "/icons/favicon.svg", type: "image/svg+xml" },
-      { url: "/icons/favicon-96x96.png", sizes: "96x96", type: "image/png" },
-    ],
-    apple: "/icons/apple-touch-icon.png",
-    shortcut: "/icons/favicon.ico",
-  },
-  ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
-    ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
-    : {}),
-  category: "travel",
-  classification: "Travel & Tourism",
-  referrer: "origin-when-cross-origin",
-  formatDetection: { telephone: true, email: true, address: true },
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const { general, branding } = await getSiteSettings();
+  return {
+    title: {
+      template: `%s | ${general.siteName}`,
+      default: `${general.siteName} — Stress-Free Travel in Tunisia`,
+    },
+    description: general.siteDescription,
+    keywords: SITE.keywords.join(", "),
+    authors: [{ name: general.siteName, url: SITE.url }],
+    creator: general.siteName,
+    publisher: general.siteName,
+    metadataBase: new URL(SITE.url),
+    openGraph: {
+      type: "website",
+      siteName: general.siteName,
+      locale: "en_US",
+      alternateLocale: ["fr_FR", "ar_TN"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      site: SITE.twitterHandle,
+    },
+    manifest: "/site.webmanifest",
+    icons: {
+      icon: [
+        ...(branding.faviconUrl && branding.faviconUrl !== "/icons/favicon.svg"
+          ? [{ url: branding.faviconUrl }]
+          : [{ url: "/icons/favicon.svg", type: "image/svg+xml" }]),
+        { url: "/icons/favicon-96x96.png", sizes: "96x96", type: "image/png" },
+      ],
+      apple: "/icons/apple-touch-icon.png",
+      shortcut: "/icons/favicon.ico",
+    },
+    ...(process.env.NEXT_PUBLIC_GSC_VERIFICATION
+      ? { verification: { google: process.env.NEXT_PUBLIC_GSC_VERIFICATION } }
+      : {}),
+    category: "travel",
+    classification: "Travel & Tourism",
+    referrer: "origin-when-cross-origin",
+    formatDetection: { telephone: true, email: true, address: true },
+  };
+}
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -87,6 +94,7 @@ export const viewport: Viewport = {
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const navigations = await getPublishedNavigations(["main", "footer-explore", "footer-company"]);
+  const settings = await getSiteSettings();
   return (
     <html
       lang="fr"
@@ -111,7 +119,20 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
-            __html: JSON.stringify(organizationSchema()),
+            __html: JSON.stringify(
+              organizationSchema({
+                name: settings.general.siteName,
+                description: settings.general.siteDescription,
+                phone: settings.contact.phone,
+                email: settings.contact.email,
+                sameAs: [
+                  settings.social.facebook,
+                  settings.social.instagram,
+                  settings.social.tiktok,
+                  settings.social.youtube,
+                ].filter((url): url is string => !!url),
+              }),
+            ),
           }}
         />
       </head>
@@ -122,12 +143,14 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <ServiceWorkerRegister />
           <div className="min-h-screen flex flex-col bg-gray-50">
             <main className="flex-1 w-full relative">
-              <NavigationProvider navigations={navigations}>
-                <MarketplaceProvider>
-                  {children}
-                  <PublicUtilities />
-                </MarketplaceProvider>
-              </NavigationProvider>
+              <SiteSettingsProvider settings={settings}>
+                <NavigationProvider navigations={navigations}>
+                  <MarketplaceProvider>
+                    {children}
+                    <PublicUtilities />
+                  </MarketplaceProvider>
+                </NavigationProvider>
+              </SiteSettingsProvider>
             </main>
           </div>
         </AuthProvider>

@@ -2,9 +2,25 @@
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Send, Check } from "lucide-react";
+import { Send, Check, Facebook, Instagram, Youtube } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { FooterPublicNavigation } from "@/features/cms/components/navigation/PublicNavigation";
+import { useSiteSettings } from "@/features/cms/components/settings/SiteSettingsProvider";
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
+      <path d="M16.6 5.82c-.9-.98-1.4-2.26-1.4-3.62h-3.14v14.02c0 1.55-1.26 2.8-2.8 2.8a2.8 2.8 0 1 1 0-5.6c.29 0 .57.04.83.13V10.4a6.1 6.1 0 0 0-.83-.06c-3.28 0-5.94 2.66-5.94 5.94S6.02 22.2 9.3 22.2s5.94-2.66 5.94-5.94V9.01a8.3 8.3 0 0 0 4.86 1.56V7.43a4.85 4.85 0 0 1-3.5-1.61Z" />
+    </svg>
+  );
+}
+
+const SOCIAL_ICONS = [
+  { key: "facebook" as const, icon: Facebook, label: "Facebook" },
+  { key: "instagram" as const, icon: Instagram, label: "Instagram" },
+  { key: "tiktok" as const, icon: TikTokIcon, label: "TikTok" },
+  { key: "youtube" as const, icon: Youtube, label: "YouTube" },
+];
 
 function NewsletterForm() {
   const { t } = useCalmaLang();
@@ -62,6 +78,11 @@ function NewsletterForm() {
 
 export default function CalmaFooter() {
   const { t } = useCalmaLang();
+  const settings = useSiteSettings();
+  const socialLinks = SOCIAL_ICONS.map((item) => ({
+    ...item,
+    href: settings?.social[item.key] ?? null,
+  })).filter((item) => item.href);
 
   return (
     <footer className="mt-20 bg-[#221F1D] font-hanken text-calma-cream">
@@ -69,14 +90,32 @@ export default function CalmaFooter() {
         <div className="max-w-[280px]">
           <Link href="/" className="mb-4 flex items-center no-underline">
             <Image
-              src="/images/logo-cream.png"
-              alt="Calma Trip"
+              src={settings?.branding.logoUrl || "/images/logo-cream.png"}
+              alt={settings?.general.siteName ?? "Calma Trip"}
               width={252}
               height={78}
               className="h-8 w-auto"
             />
           </Link>
-          <p className="m-0 text-[13.5px] leading-[1.55] text-calma-cream/[.68]">{t.footTag}</p>
+          <p className="m-0 text-[13.5px] leading-[1.55] text-calma-cream/[.68]">
+            {settings?.footer.description || t.footTag}
+          </p>
+          {socialLinks.length > 0 && (
+            <div className="mt-4 flex items-center gap-3">
+              {socialLinks.map((item) => (
+                <a
+                  key={item.key}
+                  href={item.href!}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.label}
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-calma-cream/20 text-calma-cream/80 transition-colors hover:border-calma-cream/40 hover:text-calma-cream"
+                >
+                  <item.icon className="h-4 w-4" />
+                </a>
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex flex-wrap gap-14">
@@ -106,7 +145,9 @@ export default function CalmaFooter() {
       </div>
       <div className="border-t border-calma-cream/[.14]">
         <div className="mx-auto flex max-w-[1240px] flex-wrap justify-between gap-2.5 px-6 py-[18px] text-[12.5px] text-calma-cream/60 sm:px-10">
-          <span>© {new Date().getFullYear()} Calma Trip · Tunisie</span>
+          <span>
+            © {new Date().getFullYear()} {settings?.footer.copyrightText || "Calma Trip · Tunisie"}
+          </span>
           <span>Paiement sécurisé · Support 24/7</span>
         </div>
       </div>

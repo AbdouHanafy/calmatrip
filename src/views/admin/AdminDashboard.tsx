@@ -26,6 +26,7 @@ import {
   Handshake,
   Images,
   PanelTop,
+  Settings,
 } from "lucide-react";
 import { useState } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
@@ -65,6 +66,9 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
           : []),
         ...(hasPermission(role, "navigation.manage")
           ? [{ path: "/admin/cms/navigation", label: "Navigation", icon: PanelTop }]
+          : []),
+        ...(hasPermission(role, "settings.manage")
+          ? [{ path: "/admin/cms/settings", label: "Site Settings", icon: Settings }]
           : []),
         ...(managesLegacyOperations
           ? [

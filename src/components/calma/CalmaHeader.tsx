@@ -8,6 +8,7 @@ import { useSession, signOut } from "next-auth/react";
 import { User, LogIn, UserPlus, LayoutDashboard, LogOut, Briefcase, Menu, X } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { isAdminWorkspaceRole } from "@/lib/access";
+import { useSiteSettings } from "@/features/cms/components/settings/SiteSettingsProvider";
 import {
   DesktopPublicNavigation,
   MobilePublicNavigation,
@@ -34,6 +35,7 @@ function spaceHomeFor(role?: string | null): { href: string; label: string } {
 export default function CalmaHeader({ variant = "solid", withTicker = false }: CalmaHeaderProps) {
   const { lang, setLang } = useCalmaLang();
   const { data: session, status } = useSession();
+  const settings = useSiteSettings();
   // Two independent booleans, not one combined state: `scrolled` governs contrast
   // (glass opacity), `condensed` governs density (pill width/padding). Decoupling
   // them avoids a fragile if/else ladder every time a new scroll threshold is needed.
@@ -79,8 +81,8 @@ export default function CalmaHeader({ variant = "solid", withTicker = false }: C
         className="flex flex-shrink-0 items-center transition-opacity hover:opacity-90"
       >
         <Image
-          src="/images/logo-cream.png"
-          alt="Calma Trip"
+          src={settings?.branding.logoUrl || "/images/logo-cream.png"}
+          alt={settings?.general.siteName ?? "Calma Trip"}
           width={252}
           height={78}
           className="h-8 w-auto sm:h-10"

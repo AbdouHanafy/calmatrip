@@ -161,15 +161,21 @@ export function buildMetadata({
 // ─── JSON-LD helpers ───────────────────────────────────────────────────────────
 
 /** Organization schema — add to root layout */
-export function organizationSchema() {
+export function organizationSchema(overrides?: {
+  name?: string;
+  description?: string;
+  phone?: string | null;
+  email?: string | null;
+  sameAs?: string[];
+}) {
   return {
     "@context": "https://schema.org",
     "@type": "TravelAgency",
-    name: SITE.name,
+    name: overrides?.name ?? SITE.name,
     url: SITE.url,
     logo: `${SITE.url}/images/logo-calma-trip.jpg`,
     image: `${SITE.url}${SITE.defaultOgImage}`,
-    description: SITE.description,
+    description: overrides?.description ?? SITE.description,
     foundingDate: "2026",
     foundingLocation: {
       "@type": "Place",
@@ -183,18 +189,18 @@ export function organizationSchema() {
     contactPoint: [
       {
         "@type": "ContactPoint",
-        telephone: "+216-21-622-972",
+        telephone: overrides?.phone ?? "+216-21-622-972",
         contactType: "customer support",
         availableLanguage: ["English", "French", "Arabic"],
         hoursAvailable: "Mo-Su 00:00-23:59",
       },
       {
         "@type": "ContactPoint",
-        email: "contact@calmatrip.com",
+        email: overrides?.email ?? "contact@calmatrip.com",
         contactType: "customer service",
       },
     ],
-    sameAs: [
+    sameAs: overrides?.sameAs ?? [
       "https://www.instagram.com/calmatrip",
       "https://www.facebook.com/calmatrip",
       "https://www.tiktok.com/@calmatrip",
