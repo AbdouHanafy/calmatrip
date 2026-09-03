@@ -1,6 +1,7 @@
-import React from 'react';
-import Link from 'next/link';
-import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Linkedin } from 'lucide-react';
+import React from "react";
+import Link from "next/link";
+import { Mail, Phone, MapPin, Facebook, Instagram, Twitter, Linkedin } from "lucide-react";
+import { FooterPublicNavigation } from "@/features/cms/components/navigation/PublicNavigation";
 
 export const Footer = () => {
   return (
@@ -31,8 +32,8 @@ export const Footer = () => {
               </span>
             </Link>
             <p className="text-sm leading-relaxed text-white/60">
-              Your trusted partner to discover the beauty and cultural richness
-              of Tunisia. Premium transport and excursion services.
+              Your trusted partner to discover the beauty and cultural richness of Tunisia. Premium
+              transport and excursion services.
             </p>
             <div className="flex space-x-4">
               {[Facebook, Instagram, Twitter, Linkedin].map((Icon, i) => (
@@ -52,24 +53,7 @@ export const Footer = () => {
             <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D4A373]">
               Quick Links
             </h3>
-            <ul className="space-y-4">
-              {[
-                { name: 'About Calma', path: '/about' },
-                { name: 'Our Services', path: '/services' },
-                { name: 'Marketplace', path: '/marketplace' },
-                { name: 'Contact', path: '/contact' },
-              ].map((link) => (
-                <li key={link.name}>
-                  <Link
-                    href={link.path}
-                    className="group flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
-                  >
-                    <span className="h-px w-4 bg-[#D4A373]/50 transition-all group-hover:w-6 group-hover:bg-[#D4A373]" />
-                    {link.name}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <FooterPublicNavigation menuKey="footer-company" locale="en" />
           </div>
 
           {/* Services */}
@@ -77,25 +61,7 @@ export const Footer = () => {
             <h3 className="mb-6 text-[0.72rem] uppercase tracking-[0.22em] text-[#D4A373]">
               Our Services
             </h3>
-            <ul className="space-y-4">
-              {[
-                'Airport Transfers',
-                'Private Excursions',
-                'Corporate Transport',
-                'Desert Safari',
-                'Local Market Products',
-              ].map((service) => (
-                <li key={service}>
-                  <Link
-                    href="/services"
-                    className="group flex items-center gap-2 text-sm text-white/60 transition-colors hover:text-white"
-                  >
-                    <span className="h-px w-4 bg-[#D4A373]/50 transition-all group-hover:w-6 group-hover:bg-[#D4A373]" />
-                    {service}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <FooterPublicNavigation menuKey="footer-explore" locale="en" />
           </div>
 
           {/* Contact */}

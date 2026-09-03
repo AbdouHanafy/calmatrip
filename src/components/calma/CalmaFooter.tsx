@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { Send, Check } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
+import { FooterPublicNavigation } from "@/features/cms/components/navigation/PublicNavigation";
 
 function NewsletterForm() {
   const { t } = useCalmaLang();
@@ -62,8 +63,6 @@ function NewsletterForm() {
 export default function CalmaFooter() {
   const { t } = useCalmaLang();
 
-  const exploreLinks = [t.cats[0].title, t.cats[1].title, t.cats[2].title, t.cats[3].title];
-
   return (
     <footer className="mt-20 bg-[#221F1D] font-hanken text-calma-cream">
       <div className="mx-auto flex max-w-[1240px] flex-wrap justify-between gap-8 px-6 pb-14 pt-[52px] sm:px-10">
@@ -85,54 +84,13 @@ export default function CalmaFooter() {
             <div className="mb-3.5 text-xs font-bold uppercase tracking-[.12em] text-calma-terracotta-soft">
               {t.footExplore}
             </div>
-            <div className="flex flex-col gap-2.5 text-sm">
-              {exploreLinks.map((label) => (
-                <Link
-                  key={label}
-                  href="/explore"
-                  className="text-calma-cream/[.82] no-underline hover:text-calma-cream"
-                >
-                  {label}
-                </Link>
-              ))}
-              <Link
-                href="/guides"
-                className="text-calma-cream/[.82] no-underline hover:text-calma-cream"
-              >
-                {t.guidesHeroTitle}
-              </Link>
-              <Link
-                href="/favorites"
-                className="text-calma-cream/[.82] no-underline hover:text-calma-cream"
-              >
-                Mes favoris
-              </Link>
-            </div>
+            <FooterPublicNavigation menuKey="footer-explore" />
           </div>
           <div>
             <div className="mb-3.5 text-xs font-bold uppercase tracking-[.12em] text-calma-terracotta-soft">
               {t.footCompany}
             </div>
-            <div className="flex flex-col gap-2.5 text-sm">
-              <Link
-                href="/about"
-                className="text-calma-cream/[.82] no-underline hover:text-calma-cream"
-              >
-                {t.navAbout}
-              </Link>
-              <Link
-                href="/services"
-                className="text-calma-cream/[.82] no-underline hover:text-calma-cream"
-              >
-                {t.navServices}
-              </Link>
-              <Link
-                href="/contact"
-                className="text-calma-cream/[.82] no-underline hover:text-calma-cream"
-              >
-                {t.navContact}
-              </Link>
-            </div>
+            <FooterPublicNavigation menuKey="footer-company" />
           </div>
         </div>
 

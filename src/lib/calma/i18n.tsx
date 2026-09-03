@@ -2489,3 +2489,7 @@ export function useCalmaLang() {
   if (!ctx) throw new Error("useCalmaLang must be used within a CalmaLangProvider");
   return ctx;
 }
+
+export function useOptionalCalmaLang() {
+  return useContext(CalmaLangContext);
+}

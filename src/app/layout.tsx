@@ -7,6 +7,8 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { SITE, organizationSchema } from "@/lib/seo";
 import { Fraunces, Poppins, Hanken_Grotesk, Space_Grotesk } from "next/font/google";
+import { getPublishedNavigations } from "@/features/cms/services/navigation";
+import { NavigationProvider } from "@/features/cms/components/navigation/NavigationProvider";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -83,7 +85,8 @@ export const viewport: Viewport = {
   themeColor: SITE.themeColor,
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const navigations = await getPublishedNavigations(["main", "footer-explore", "footer-company"]);
   return (
     <html
       lang="fr"
@@ -119,10 +122,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <ServiceWorkerRegister />
           <div className="min-h-screen flex flex-col bg-gray-50">
             <main className="flex-1 w-full relative">
-              <MarketplaceProvider>
-                {children}
-                <PublicUtilities />
-              </MarketplaceProvider>
+              <NavigationProvider navigations={navigations}>
+                <MarketplaceProvider>
+                  {children}
+                  <PublicUtilities />
+                </MarketplaceProvider>
+              </NavigationProvider>
             </main>
           </div>
         </AuthProvider>

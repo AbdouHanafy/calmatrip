@@ -1,16 +1,19 @@
 "use client";
 import React, { useState } from "react";
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import * as Dialog from "@radix-ui/react-dialog";
 import { useSession, signOut } from "next-auth/react";
 import { Menu, X, User, LogOut, Search } from "lucide-react";
+import {
+  DesktopPublicNavigation,
+  MobilePublicNavigation,
+} from "@/features/cms/components/navigation/PublicNavigation";
 
 export const Navbar = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const pathname = usePathname();
   const router = useRouter();
 
   const submitSearch = (e: React.FormEvent) => {
@@ -24,15 +27,6 @@ export const Navbar = () => {
   const isAuthenticated = status === "authenticated";
   const isAdmin = session?.user?.role === "ADMIN";
 
-  const navLinks = [
-    { path: "/", label: "Home" },
-    { path: "/services", label: "Services" },
-    { path: "/marketplace", label: "Marketplace" },
-    { path: "/explore", label: "Explore" },
-    { path: "/about", label: "About Us" },
-    { path: "/contact", label: "Contact" },
-  ];
-
   return (
     <nav className="sticky top-0 z-50 border-b border-[#e6ddcd] bg-[#faf6ef]/95 backdrop-blur-sm">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -45,21 +39,11 @@ export const Navbar = () => {
           </Link>
 
           {/* Liens desktop — petites capitales espacées, soulignement sable */}
-          <div className="hidden items-center gap-1 lg:flex">
-            {navLinks.map((link) => (
-              <Link
-                key={link.path}
-                href={link.path}
-                className={`border-b-2 px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.14em] transition-colors ${
-                  pathname === link.path
-                    ? "border-[#D4A373] text-[#1c2430]"
-                    : "border-transparent text-[#6b6353] hover:border-[#D4A373]/50 hover:text-[#1c2430]"
-                }`}
-              >
-                {link.label}
-              </Link>
-            ))}
-          </div>
+          <DesktopPublicNavigation
+            light={false}
+            locale="en"
+            className="hidden items-center gap-1 lg:flex"
+          />
 
           {/* Droite : recherche + auth */}
           <div className="hidden items-center gap-3 lg:flex">
@@ -172,20 +156,7 @@ export const Navbar = () => {
                     />
                   </form>
 
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.path}
-                      href={link.path}
-                      onClick={() => setMobileMenuOpen(false)}
-                      className={`rounded-lg px-4 py-3 text-[0.78rem] uppercase tracking-[0.14em] transition-colors ${
-                        pathname === link.path
-                          ? "bg-[#1E6091]/5 font-semibold text-[#1E6091]"
-                          : "text-[#6b6353] hover:bg-[#e6ddcd]/40"
-                      }`}
-                    >
-                      {link.label}
-                    </Link>
-                  ))}
+                  <MobilePublicNavigation locale="en" onNavigate={() => setMobileMenuOpen(false)} />
 
                   <div className="my-2 h-px bg-[#e6ddcd]" />
 

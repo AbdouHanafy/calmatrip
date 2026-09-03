@@ -579,19 +579,20 @@ model ContentEntry {
 }
 
 model CmsPage {
-  id          String         @id @default(cuid())
-  title       String
-  slug        String
-  locale      String         @default("fr")
-  status      String         @default("DRAFT")
-  seo         Json?
-  createdBy   String?
-  updatedBy   String?
-  publishedBy String?
-  publishedAt DateTime?
-  createdAt   DateTime       @default(now())
-  updatedAt   DateTime       @updatedAt
-  blocks      CmsPageBlock[]
+  id              String              @id @default(cuid())
+  title           String
+  slug            String
+  locale          String              @default("fr")
+  status          String              @default("DRAFT")
+  seo             Json?
+  createdBy       String?
+  updatedBy       String?
+  publishedBy     String?
+  publishedAt     DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+  blocks          CmsPageBlock[]
+  navigationItems CmsNavigationItem[]
 
   @@unique([slug, locale])
   @@index([status, locale, updatedAt])
@@ -719,12 +720,16 @@ model CmsMediaFolder {
 }
 
 model CmsNavigation {
-  id        String              @id @default(cuid())
-  name      String
-  key       String              @unique
-  createdAt DateTime            @default(now())
-  updatedAt DateTime            @updatedAt
-  items     CmsNavigationItem[]
+  id          String              @id @default(cuid())
+  name        String
+  key         String              @unique
+  status      String              @default("DRAFT")
+  createdBy   String?
+  updatedBy   String?
+  publishedAt DateTime?
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+  items       CmsNavigationItem[]
 
   @@map("cms_navigations")
 }
@@ -736,6 +741,8 @@ model CmsNavigationItem {
   parentId     String?
   parent       CmsNavigationItem?  @relation("NavigationTree", fields: [parentId], references: [id], onDelete: Cascade)
   children     CmsNavigationItem[] @relation("NavigationTree")
+  pageId       String?
+  page         CmsPage?            @relation(fields: [pageId], references: [id], onDelete: SetNull)
   label        Json
   url          String
   type         String              @default("INTERNAL")
@@ -744,6 +751,7 @@ model CmsNavigationItem {
   position     Int                 @default(0)
 
   @@index([navigationId, parentId, position])
+  @@index([pageId])
   @@map("cms_navigation_items")
 }
 

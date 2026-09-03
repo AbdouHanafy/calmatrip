@@ -25,6 +25,7 @@ import {
   ShoppingBag,
   Handshake,
   Images,
+  PanelTop,
 } from "lucide-react";
 import { useState } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
@@ -61,6 +62,9 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
           : []),
         ...(hasPermission(role, "media.manage")
           ? [{ path: "/admin/cms/media", label: "Media Library", icon: Images }]
+          : []),
+        ...(hasPermission(role, "navigation.manage")
+          ? [{ path: "/admin/cms/navigation", label: "Navigation", icon: PanelTop }]
           : []),
         ...(managesLegacyOperations
           ? [
