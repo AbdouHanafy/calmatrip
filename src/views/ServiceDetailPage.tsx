@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Check, Clock, MapPin } from "lucide-react";
+import { ArrowLeft, Check, Clock, MapPin, Star, ShieldCheck, Zap, Headset } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
@@ -11,6 +11,15 @@ import { Breadcrumbs } from "@/components/calma/Breadcrumbs";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { BookingPromptModal } from "@/components/services/BookingPromptModal";
 import { mapService, type DBService } from "@/lib/services/mapService";
+
+interface ServiceReview {
+  id: number;
+  name: string;
+  rating: number;
+  comment: string;
+  service: string | null;
+  createdAt: string;
+}
 
 function ServiceDetailContent() {
   const { t } = useCalmaLang();
@@ -21,6 +30,7 @@ function ServiceDetailContent() {
   const [data, setData] = useState<{ service: DBService; related: DBService[] } | null | undefined>(
     undefined,
   );
+  const [reviews, setReviews] = useState<ServiceReview[]>([]);
   const [showBooking, setShowBooking] = useState(false);
 
   useEffect(() => {
@@ -30,6 +40,13 @@ function ServiceDetailContent() {
       .then((json) => setData(json))
       .catch(() => setData(null));
   }, [id]);
+
+  useEffect(() => {
+    fetch("/api/reviews")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((json) => setReviews(Array.isArray(json) ? json : []))
+      .catch(() => setReviews([]));
+  }, []);
 
   if (data === undefined) {
     return (
@@ -64,6 +81,11 @@ function ServiceDetailContent() {
   const service = mapService(data.service);
   const related = data.related.map(mapService);
   const c = service.color;
+  const serviceReviews = reviews.filter((r) => r.service === service.title);
+  const avgRating =
+    serviceReviews.length > 0
+      ? serviceReviews.reduce((sum, r) => sum + r.rating, 0) / serviceReviews.length
+      : null;
 
   return (
     <>
@@ -96,11 +118,21 @@ function ServiceDetailContent() {
             <h1 className="text-balance font-fraunces text-[clamp(30px,4.2vw,46px)] font-normal leading-[1.08] tracking-[-0.02em] text-calma-cream">
               {service.title}
             </h1>
-            <div className="mt-4 flex items-center justify-center gap-4 text-sm text-white/80">
+            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-white/80">
               <span className="flex items-center gap-1.5">
                 <Clock className="h-4 w-4" />
                 {service.duration}
               </span>
+              {avgRating !== null && (
+                <span className="flex items-center gap-1.5 font-semibold text-white">
+                  <Star className="h-4 w-4 fill-calma-terracotta text-calma-terracotta" />
+                  {avgRating.toFixed(1)}
+                  <span className="font-normal text-white/70">
+                    ({serviceReviews.length}{" "}
+                    {serviceReviews.length > 1 ? t.svc.reviewsWord : t.svc.reviewWord})
+                  </span>
+                </span>
+              )}
             </div>
           </div>
         </section>
@@ -147,6 +179,45 @@ function ServiceDetailContent() {
                   </div>
                 </div>
               )}
+
+              {serviceReviews.length > 0 && (
+                <div className="mt-8 border-t border-calma-border pt-8">
+                  <h2 className="mb-5 flex items-center gap-2.5 font-fraunces text-lg font-normal text-calma-ink">
+                    {t.svc.reviewsTitle}
+                    {avgRating !== null && (
+                      <span className="flex items-center gap-1 text-sm font-semibold text-calma-ink">
+                        <Star className="h-4 w-4 fill-calma-terracotta text-calma-terracotta" />
+                        {avgRating.toFixed(1)}
+                        <span className="font-normal text-calma-taupe">
+                          ({serviceReviews.length})
+                        </span>
+                      </span>
+                    )}
+                  </h2>
+                  <div className="space-y-5">
+                    {serviceReviews.map((r) => (
+                      <div key={r.id} className="rounded-2xl bg-calma-sand/50 p-5">
+                        <div className="mb-2 flex items-center justify-between">
+                          <span className="text-sm font-semibold text-calma-ink">{r.name}</span>
+                          <div className="flex items-center gap-0.5">
+                            {Array.from({ length: 5 }).map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-3.5 w-3.5 ${
+                                  i < r.rating
+                                    ? "fill-calma-terracotta text-calma-terracotta"
+                                    : "text-calma-border"
+                                }`}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                        <p className="text-sm leading-relaxed text-calma-taupe">{r.comment}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
             <aside className="h-fit rounded-3xl border border-calma-olive/[.1] bg-white p-6 sm:sticky sm:top-24">
@@ -169,6 +240,21 @@ function ServiceDetailContent() {
               >
                 {t.svc.bookThis}
               </button>
+
+              <div className="mt-5 space-y-2.5 border-t border-calma-border pt-5">
+                <div className="flex items-center gap-2.5 text-xs text-calma-taupe">
+                  <ShieldCheck className="h-4 w-4 flex-shrink-0" style={{ color: c }} />
+                  {t.svc.trustSecure}
+                </div>
+                <div className="flex items-center gap-2.5 text-xs text-calma-taupe">
+                  <Zap className="h-4 w-4 flex-shrink-0" style={{ color: c }} />
+                  {t.svc.trustConfirm}
+                </div>
+                <div className="flex items-center gap-2.5 text-xs text-calma-taupe">
+                  <Headset className="h-4 w-4 flex-shrink-0" style={{ color: c }} />
+                  {t.svc.trustSupport}
+                </div>
+              </div>
             </aside>
           </div>
 

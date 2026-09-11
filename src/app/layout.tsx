@@ -87,6 +87,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html
       lang="fr"
+      dir="ltr"
       suppressHydrationWarning
       className={`${cormorantGaramond.variable} ${raleway.variable}`}
     >

@@ -144,10 +144,30 @@ export default function CalmaFooter() {
         </div>
       </div>
       <div className="border-t border-calma-cream/[.14]">
-        <div className="mx-auto flex max-w-[1240px] flex-wrap justify-between gap-2.5 px-6 py-[18px] text-[12.5px] text-calma-cream/60 sm:px-10">
+        <div className="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-x-6 gap-y-2.5 px-6 py-[18px] text-[12.5px] text-calma-cream/60 sm:px-10">
           <span>
             © {new Date().getFullYear()} {settings?.footer.copyrightText || "Calma Trip · Tunisie"}
           </span>
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+            <Link
+              href="/confidentialite"
+              className="text-calma-cream/60 no-underline hover:text-calma-cream"
+            >
+              Confidentialité
+            </Link>
+            <Link
+              href="/conditions-generales-de-vente"
+              className="text-calma-cream/60 no-underline hover:text-calma-cream"
+            >
+              CGV
+            </Link>
+            <Link
+              href="/mentions-legales"
+              className="text-calma-cream/60 no-underline hover:text-calma-cream"
+            >
+              Mentions légales
+            </Link>
+          </div>
           <span>Paiement sécurisé · Support 24/7</span>
         </div>
       </div>

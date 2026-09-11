@@ -248,16 +248,6 @@ export default function CalmaHero() {
             animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
             transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           >
-            <motion.div
-              className="mb-6 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.16em] text-calma-cream backdrop-blur-md"
-              style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
-              initial={reduceMotion ? undefined : { opacity: 0, y: 12 }}
-              animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-            >
-              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
-              {t.heroEyebrow}
-            </motion.div>
             <h1
               className="mb-6 text-balance font-fraunces text-[clamp(44px,5.6vw,80px)] font-normal italic leading-[1.05] tracking-[-0.01em] text-calma-cream"
               style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
@@ -285,7 +275,7 @@ export default function CalmaHero() {
                 {t.heroCta1}
                 <ArrowRight
                   size={17}
-                  className="transition-transform duration-300 group-hover:translate-x-1"
+                  className="rtl:rotate-180 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
                 />
               </Link>
               <Link
@@ -344,17 +334,6 @@ export default function CalmaHero() {
 
       {/* Mobile-only hero content — compact, single-viewport layout. Desktop/tablet block above (md:flex) is untouched. */}
       <div className="relative z-10 flex flex-col items-center px-5 pb-10 pt-[92px] text-center md:hidden">
-        <motion.div
-          className="mb-3 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-3.5 py-1.5 text-[10px] font-bold uppercase tracking-[.14em] text-calma-cream backdrop-blur-md"
-          style={{ textShadow: "0 1px 8px rgba(0,0,0,.4)" }}
-          initial={reduceMotion ? undefined : { opacity: 0, y: 10 }}
-          animate={reduceMotion ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-        >
-          <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
-          {t.heroEyebrow}
-        </motion.div>
-
         <motion.h1
           className="mb-4 w-full text-balance font-fraunces text-[clamp(32px,10vw,44px)] font-normal italic leading-[1.1] tracking-[-0.01em] text-calma-cream"
           style={{ textShadow: "0 6px 44px rgba(0,0,0,.4)" }}
@@ -387,7 +366,7 @@ export default function CalmaHero() {
             className="inline-flex items-center gap-1.5 rounded-full bg-calma-terracotta px-5 py-2.5 font-hanken text-[13.5px] font-semibold text-calma-ink no-underline shadow-[0_10px_20px_-8px_rgba(210,179,139,.6)]"
           >
             {t.heroCta1}
-            <ArrowRight size={15} />
+            <ArrowRight size={15} className="rtl:rotate-180" />
           </Link>
           <Link
             href="/services"

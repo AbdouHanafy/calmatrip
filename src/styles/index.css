@@ -151,12 +151,16 @@
 @layer base {
   html {
     -webkit-tap-highlight-color: transparent;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   body {
     @apply bg-calma-cream text-calma-ink;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    max-width: 100%;
+    overflow-x: hidden;
   }
 
   ::selection {

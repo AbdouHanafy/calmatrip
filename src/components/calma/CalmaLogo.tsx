@@ -81,7 +81,10 @@ export function CalmaLogoOrCustom({
   iconSize?: number;
 }) {
   if (customUrl) {
-    return <Image src={customUrl} alt={alt} width={252} height={78} className={imgClassName} />;
+    // Intrinsic size must match the uploaded asset's real aspect ratio — Next/Image uses
+    // width/height to derive the box's aspect-ratio CSS, and a mismatch here stretches the
+    // rendered logo non-uniformly even though imgClassName only constrains one dimension.
+    return <Image src={customUrl} alt={alt} width={2036} height={586} className={imgClassName} />;
   }
   return <CalmaLogo tone={tone} iconSize={iconSize} />;
 }

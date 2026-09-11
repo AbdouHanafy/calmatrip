@@ -82,6 +82,12 @@ export interface CalmaServicesDict {
   moreIncluded: string;
   viewDetails: string;
   detailFeaturesTitle: string;
+  reviewsTitle: string;
+  reviewWord: string;
+  reviewsWord: string;
+  trustSecure: string;
+  trustConfirm: string;
+  trustSupport: string;
   relatedTitle: string;
   notFoundTitle: string;
   notFoundHint: string;
@@ -813,6 +819,12 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       moreIncluded: "inclus en plus",
       viewDetails: "Voir les détails",
       detailFeaturesTitle: "Ce qui est inclus",
+      reviewsTitle: "Avis clients",
+      reviewWord: "avis",
+      reviewsWord: "avis",
+      trustSecure: "Paiement à la livraison",
+      trustConfirm: "Confirmation sous 30 min",
+      trustSupport: "Support 24/7",
       relatedTitle: "Autres services qui pourraient vous plaire",
       notFoundTitle: "Service introuvable",
       notFoundHint: "Ce service n'est plus disponible.",
@@ -1491,6 +1503,12 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       moreIncluded: "more included",
       viewDetails: "View details",
       detailFeaturesTitle: "What's included",
+      reviewsTitle: "Customer reviews",
+      reviewWord: "review",
+      reviewsWord: "reviews",
+      trustSecure: "Pay on arrival",
+      trustConfirm: "Confirmation within 30 min",
+      trustSupport: "24/7 support",
       relatedTitle: "Other services you might like",
       notFoundTitle: "Service not found",
       notFoundHint: "This service is no longer available.",
@@ -2152,6 +2170,12 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       moreIncluded: "إضافية مشمولة",
       viewDetails: "عرض التفاصيل",
       detailFeaturesTitle: "ما هو مشمول",
+      reviewsTitle: "آراء العملاء",
+      reviewWord: "تقييم",
+      reviewsWord: "تقييمات",
+      trustSecure: "الدفع عند الوصول",
+      trustConfirm: "تأكيد خلال 30 دقيقة",
+      trustSupport: "دعم على مدار الساعة",
       relatedTitle: "خدمات أخرى قد تعجبك",
       notFoundTitle: "الخدمة غير موجودة",
       notFoundHint: "هذه الخدمة لم تعد متوفرة.",

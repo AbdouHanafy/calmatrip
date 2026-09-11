@@ -60,6 +60,12 @@ export function PlaceCard({ place, index, isFavorited, onToggleFavorite }: Place
       </div>
 
       <div className="p-8">
+        <h3 className="mb-2 font-fraunces text-xl font-semibold leading-tight text-calma-ink">
+          {place.title}
+        </h3>
+        <p className="mb-5 line-clamp-2 text-sm leading-relaxed text-calma-taupe">
+          {place.description}
+        </p>
         <div className="flex items-center justify-between mb-5">
           {place.rating !== undefined ? (
             <div className="flex items-center gap-1.5 bg-calma-sand px-3 py-1.5 rounded-full">

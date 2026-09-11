@@ -50,7 +50,7 @@ export default function CalmaSearchBar() {
         >
           <label className="flex min-h-[46px] items-center gap-2.5 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3.5 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
             <MapPin size={18} className="shrink-0 text-calma-terracotta" />
-            <div className="min-w-0 flex-1 text-left">
+            <div className="min-w-0 flex-1 text-start">
               <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
                 {t.searchDestL}
               </div>
@@ -66,7 +66,7 @@ export default function CalmaSearchBar() {
           <div className="grid grid-cols-2 gap-2">
             <label className="flex min-h-[46px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
               <Calendar size={16} className="shrink-0 text-calma-terracotta" />
-              <div className="min-w-0 flex-1 text-left">
+              <div className="min-w-0 flex-1 text-start">
                 <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
                   {t.searchDateL}
                 </div>
@@ -82,7 +82,7 @@ export default function CalmaSearchBar() {
 
             <label className="flex min-h-[46px] items-center gap-2 rounded-2xl border border-calma-border/50 bg-calma-sand/40 px-3 py-1.5 transition-colors focus-within:border-calma-terracotta/50 focus-within:bg-calma-terracotta/[.06]">
               <Compass size={16} className="shrink-0 text-calma-terracotta" />
-              <div className="min-w-0 flex-1 text-left">
+              <div className="min-w-0 flex-1 text-start">
                 <div className="text-[9px] font-bold uppercase tracking-[.06em] text-calma-taupe">
                   {t.searchCatL}
                 </div>
@@ -101,7 +101,7 @@ export default function CalmaSearchBar() {
             className="mt-0.5 flex h-[48px] w-full items-center justify-center gap-2 rounded-full bg-calma-terracotta font-hanken text-[15px] font-bold text-calma-ink shadow-[0_14px_28px_-8px_rgba(210,179,139,.65)] transition-transform active:scale-[.97]"
           >
             {t.browse}
-            <ArrowRight size={17} />
+            <ArrowRight size={17} className="rtl:rotate-180" />
           </button>
         </motion.form>
       </div>
@@ -173,7 +173,7 @@ export default function CalmaSearchBar() {
             {t.browse}
             <ArrowRight
               size={15}
-              className="transition-transform duration-300 group-hover:translate-x-1"
+              className="rtl:rotate-180 transition-transform duration-300 group-hover:translate-x-1 rtl:group-hover:-translate-x-1"
             />
           </button>
         </motion.form>

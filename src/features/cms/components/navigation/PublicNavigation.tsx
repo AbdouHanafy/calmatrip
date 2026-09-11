@@ -8,6 +8,12 @@ import { useState } from "react";
 import { useOptionalCalmaLang, type CalmaLang } from "@/lib/calma/i18n";
 import { navigationLabel, usePublicNavigation } from "./NavigationProvider";
 import type { PublicNavigationItem } from "@/features/cms/services/navigation";
+import { NavMegaMenu } from "@/components/calma/NavMegaMenu";
+
+const MEGA_MENU_HREFS: Record<string, "services" | "marketplace"> = {
+  "/services": "services",
+  "/marketplace": "marketplace",
+};
 
 function ExternalAwareLink({
   item,
@@ -38,29 +44,57 @@ function ExternalAwareLink({
 export function DesktopPublicNavigation({
   menuKey = "main",
   light = true,
-  className = "hidden items-center gap-1 md:flex",
+  className,
   locale = "fr",
+  /** Tighter item padding/gap between md and xl, easing back to full padding at xl+ — used by the
+   *  homepage overlay header, which also has to fit a language switcher/partner pill/account
+   *  icon cluster in that same range. Other headers (full-width, no competing cluster) keep the
+   *  regular padding untouched. */
+  compact = false,
 }: {
   menuKey?: string;
   light?: boolean;
   className?: string;
   locale?: CalmaLang;
+  compact?: boolean;
 }) {
   const items = usePublicNavigation(menuKey);
   const pathname = usePathname();
   const lang = useOptionalCalmaLang()?.lang ?? locale;
+  // Stays tight for the whole range it's visible in — it used to relax back to full padding
+  // at the same breakpoint it first appears at, which meant the tighter padding never actually
+  // applied and the overlay pill overflowed again on common 1280-1366px laptop screens.
+  const itemPadding = compact ? "px-2.5 py-2" : "px-4 py-2";
+  const navClassName =
+    className ??
+    (compact ? "hidden items-center gap-0.5 md:flex" : "hidden items-center gap-1 md:flex");
   const base = light
-    ? "rounded-full px-4 py-2 text-white/75 no-underline outline-none transition-colors hover:bg-white/[.06] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60"
-    : "border-b-2 border-transparent px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.14em] text-[#5e7480] outline-none transition-colors hover:border-[#D2B38B]/50 hover:text-[#15242e] focus-visible:ring-2 focus-visible:ring-[#D2B38B]";
+    ? `whitespace-nowrap rounded-full ${itemPadding} text-white/75 no-underline outline-none transition-colors hover:bg-white/[.06] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60`
+    : "whitespace-nowrap border-b-2 border-transparent px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.14em] text-[#5e7480] outline-none transition-colors hover:border-[#D2B38B]/50 hover:text-[#15242e] focus-visible:ring-2 focus-visible:ring-[#D2B38B]";
   const active = light
     ? "bg-white/[.12] font-semibold text-white"
     : "border-[#D2B38B] text-[#15242e]";
   return (
-    <nav aria-label="Main navigation" className={className}>
+    <nav aria-label="Main navigation" className={navClassName}>
       {items.map((item) => {
         const isActive =
           !!item.href &&
           (pathname === item.href || (item.href !== "/" && pathname.startsWith(`${item.href}/`)));
+        // "Services" and "Marketplace" get a real hover mega-menu (live services / product
+        // categories) instead of a plain link — Calma-branded (light) nav only, so the
+        // secondary English navbar and CMS-authored dropdown items are unaffected.
+        const megaKind = light && item.href ? MEGA_MENU_HREFS[item.href] : undefined;
+        if (megaKind)
+          return (
+            <NavMegaMenu
+              key={item.id}
+              href={item.href!}
+              label={navigationLabel(item.label, lang)}
+              kind={megaKind}
+              baseClassName={base}
+              isActive={isActive}
+            />
+          );
         if (!item.children.length)
           return (
             <ExternalAwareLink

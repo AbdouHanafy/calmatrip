@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import CalmaLogo from "@/components/calma/CalmaLogo";
-import { useCalmaLang } from "@/lib/calma/i18n";
+import { useOptionalCalmaLang, CALMA_DICT } from "@/lib/calma/i18n";
 import {
   Eye,
   EyeOff,
@@ -51,7 +51,9 @@ export function AuthPage({
   initialPartnerType = null,
 }: AuthPageProps) {
   const reduceMotion = useReducedMotion();
-  const { t } = useCalmaLang();
+  // AuthPage is rendered on some routes (e.g. /partner/login) without a CalmaLangProvider
+  // ancestor, so it can't assume one exists — fall back to the default French dictionary.
+  const t = useOptionalCalmaLang()?.t ?? CALMA_DICT.fr;
   const form = useAuthForm({ mode, audience, callbackUrl, initialPartnerType });
   const { isLogin, isPartner } = form;
 
