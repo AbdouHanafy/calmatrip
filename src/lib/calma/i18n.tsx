@@ -126,6 +126,17 @@ export interface CalmaMarketDict {
   sortNameAz: string;
   emptyTitle: string;
   emptySub: string;
+  searchPh: string;
+  clearSearch: string;
+  allLabel: string;
+  myOrders: string;
+  wishlistLabel: string;
+  cartLabel: string;
+  outOfStock: string;
+  lowStock: string; // "Plus que {n}" — {n} is replaced at render time
+  addToWishlist: string;
+  removeFromWishlist: string;
+  addToCart: string;
 }
 
 export interface CalmaExploreDict {
@@ -471,6 +482,43 @@ export interface CalmaPartnerOnboardingDict {
   platformOther: string;
 }
 
+export interface CalmaCommunityDict {
+  eyebrow: string;
+  heroTitle: string;
+  heroSub: string;
+  fbTitle: string;
+  fbDesc: string;
+  fbJoin: string;
+  loginPrompt: string;
+  loginCta: string;
+  placeholder: string;
+  charCount: string; // "{n} / 2000 caractères" — {n} is replaced at render time
+  photoLabel: string;
+  errorMin: string;
+  successMsg: string;
+  shareCta: string;
+  sharing: string;
+  emptyTitle: string;
+  deleteLabel: string;
+  deleteConfirm: string;
+  today: string;
+  yesterday: string;
+  daysAgo: string; // "Il y a {n} jours" — {n} is replaced at render time
+}
+
+export interface CalmaPartnerLandingDict {
+  eyebrow: string;
+  heroTitle: string;
+  heroSub: string;
+  artisanLabel: string;
+  artisanDesc: string;
+  artisanPoints: [string, string, string];
+  agencyLabel: string;
+  agencyDesc: string;
+  agencyPoints: [string, string, string];
+  learnMore: string;
+}
+
 export interface CalmaDict {
   navHome: string;
   navServices: string;
@@ -583,6 +631,9 @@ export interface CalmaDict {
   cnt: CalmaContactDict;
   dash: CalmaDashboardDict;
   pnr: CalmaPartnerOnboardingDict;
+  community: CalmaCommunityDict;
+  pln: CalmaPartnerLandingDict;
+  tickerMessages: string[];
 }
 
 export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
@@ -883,6 +934,17 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       sortNameAz: "Nom A-Z",
       emptyTitle: "Aucun produit trouvé",
       emptySub: "Essayez une autre recherche ou catégorie",
+      searchPh: "Rechercher un produit...",
+      clearSearch: "Effacer la recherche",
+      allLabel: "Tout",
+      myOrders: "Mes commandes",
+      wishlistLabel: "Favoris",
+      cartLabel: "Panier",
+      outOfStock: "Rupture de stock",
+      lowStock: "Plus que {n}",
+      addToWishlist: "Ajouter aux favoris",
+      removeFromWishlist: "Retirer des favoris",
+      addToCart: "Ajouter au panier",
     },
 
     exp: {
@@ -1271,6 +1333,57 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       platformLinkedin: "LinkedIn",
       platformOther: "Autre",
     },
+
+    community: {
+      eyebrow: "Communauté",
+      heroTitle: "Partagez votre expérience Calma Trip",
+      heroSub:
+        "Racontez votre voyage, donnez votre avis, échangez avec d'autres voyageurs — et rejoignez notre groupe Facebook pour ne rien manquer.",
+      fbTitle: "Rejoignez notre groupe Facebook",
+      fbDesc: "Discutez avec la communauté Calma Trip, posez vos questions, partagez vos photos.",
+      fbJoin: "Rejoindre",
+      loginPrompt: "Connectez-vous pour partager votre expérience.",
+      loginCta: "Se connecter",
+      placeholder: "Racontez votre expérience avec Calma Trip...",
+      charCount: "{n} / 2000 caractères",
+      photoLabel: "Photo",
+      errorMin: "Votre message doit contenir au moins 10 caractères.",
+      successMsg: "Merci ! Votre partage sera publié après validation par notre équipe.",
+      shareCta: "Partager",
+      sharing: "Publication…",
+      emptyTitle: "Aucun partage pour le moment. Soyez le premier !",
+      deleteLabel: "Supprimer",
+      deleteConfirm: "Supprimer ce partage ?",
+      today: "Aujourd'hui",
+      yesterday: "Hier",
+      daysAgo: "Il y a {n} jours",
+    },
+    pln: {
+      eyebrow: "Devenir partenaire",
+      heroTitle: "Faites vivre la Tunisie avec Calma Trip",
+      heroSub:
+        "Que vous soyez artisan ou agence, choisissez le profil qui vous correspond pour découvrir comment rejoindre notre réseau de partenaires.",
+      artisanLabel: "Artisan",
+      artisanDesc:
+        "Vendez vos créations — poterie, textile, bijoux, produits locaux — sur la Marketplace Calma Trip.",
+      artisanPoints: [
+        "Commission simple et transparente",
+        "Visibilité auprès des voyageurs",
+        "Gestion en quelques clics",
+      ],
+      agencyLabel: "Agence",
+      agencyDesc:
+        "Publiez vos activités, excursions et hébergements sur Explore, comme sur GetYourGuide ou TripAdvisor.",
+      agencyPoints: ["Visibilité sur Explore", "Suivi de commission clair", "Publication rapide"],
+      learnMore: "En savoir plus",
+    },
+    tickerMessages: [
+      "☀️ ÉTÉ 2026 — RÉSERVEZ MAINTENANT",
+      "RÉPONSE GARANTIE SOUS 30 MINUTES",
+      "−15% SUR LES RÉSERVATIONS ANTICIPÉES",
+      "GUIDES LOCAUX · PRIX JUSTES · ZÉRO STRESS",
+      "SUPPORT 24/7 EN FRANÇAIS, ANGLAIS & ARABE",
+    ],
   },
   en: {
     navHome: "Home",
@@ -1564,6 +1677,17 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       sortNameAz: "Name A-Z",
       emptyTitle: "No products found",
       emptySub: "Try a different search or category",
+      searchPh: "Search for a product...",
+      clearSearch: "Clear search",
+      allLabel: "All",
+      myOrders: "My orders",
+      wishlistLabel: "Wishlist",
+      cartLabel: "Cart",
+      outOfStock: "Out of stock",
+      lowStock: "Only {n} left",
+      addToWishlist: "Add to wishlist",
+      removeFromWishlist: "Remove from wishlist",
+      addToCart: "Add to cart",
     },
 
     exp: {
@@ -1948,6 +2072,57 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       platformLinkedin: "LinkedIn",
       platformOther: "Other",
     },
+
+    community: {
+      eyebrow: "Community",
+      heroTitle: "Share your Calma Trip experience",
+      heroSub:
+        "Tell us about your trip, leave your feedback, chat with other travelers — and join our Facebook group so you never miss a thing.",
+      fbTitle: "Join our Facebook group",
+      fbDesc: "Chat with the Calma Trip community, ask your questions, share your photos.",
+      fbJoin: "Join",
+      loginPrompt: "Sign in to share your experience.",
+      loginCta: "Sign in",
+      placeholder: "Tell us about your experience with Calma Trip...",
+      charCount: "{n} / 2000 characters",
+      photoLabel: "Photo",
+      errorMin: "Your message must be at least 10 characters long.",
+      successMsg: "Thank you! Your post will be published after review by our team.",
+      shareCta: "Share",
+      sharing: "Posting…",
+      emptyTitle: "No posts yet. Be the first!",
+      deleteLabel: "Delete",
+      deleteConfirm: "Delete this post?",
+      today: "Today",
+      yesterday: "Yesterday",
+      daysAgo: "{n} days ago",
+    },
+    pln: {
+      eyebrow: "Become a partner",
+      heroTitle: "Bring Tunisia to life with Calma Trip",
+      heroSub:
+        "Whether you're an artisan or an agency, choose the profile that fits you to see how to join our partner network.",
+      artisanLabel: "Artisan",
+      artisanDesc:
+        "Sell your creations — pottery, textiles, jewelry, local products — on the Calma Trip Marketplace.",
+      artisanPoints: [
+        "Simple, transparent commission",
+        "Visibility to travelers",
+        "Manage everything in a few clicks",
+      ],
+      agencyLabel: "Agency",
+      agencyDesc:
+        "List your activities, excursions and stays on Explore, just like on GetYourGuide or TripAdvisor.",
+      agencyPoints: ["Visibility on Explore", "Clear commission tracking", "Fast publishing"],
+      learnMore: "Learn more",
+    },
+    tickerMessages: [
+      "☀️ SUMMER 2026 — BOOK NOW",
+      "GUARANTEED REPLY WITHIN 30 MINUTES",
+      "−15% ON EARLY BOOKINGS",
+      "LOCAL GUIDES · FAIR PRICES · ZERO STRESS",
+      "24/7 SUPPORT IN FRENCH, ENGLISH & ARABIC",
+    ],
   },
   ar: {
     navHome: "الرئيسية",
@@ -2228,6 +2403,17 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       sortNameAz: "الاسم أ-ي",
       emptyTitle: "لم يتم العثور على منتجات",
       emptySub: "جرّب بحثًا أو فئة مختلفة",
+      searchPh: "البحث عن منتج...",
+      clearSearch: "مسح البحث",
+      allLabel: "الكل",
+      myOrders: "طلباتي",
+      wishlistLabel: "المفضلة",
+      cartLabel: "السلة",
+      outOfStock: "غير متوفر",
+      lowStock: "متبقٍ {n} فقط",
+      addToWishlist: "إضافة إلى المفضلة",
+      removeFromWishlist: "إزالة من المفضلة",
+      addToCart: "أضف إلى السلة",
     },
 
     exp: {
@@ -2603,6 +2789,52 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       platformLinkedin: "لينكد إن",
       platformOther: "أخرى",
     },
+
+    community: {
+      eyebrow: "المجتمع",
+      heroTitle: "شارك تجربتك مع Calma Trip",
+      heroSub:
+        "أخبرنا عن رحلتك، شاركنا رأيك، وتواصل مع مسافرين آخرين — وانضم إلى مجموعتنا على فيسبوك حتى لا يفوتك شيء.",
+      fbTitle: "انضم إلى مجموعتنا على فيسبوك",
+      fbDesc: "تحدث مع مجتمع Calma Trip، اطرح أسئلتك، وشارك صورك.",
+      fbJoin: "انضم",
+      loginPrompt: "سجّل الدخول لمشاركة تجربتك.",
+      loginCta: "تسجيل الدخول",
+      placeholder: "أخبرنا عن تجربتك مع Calma Trip...",
+      charCount: "{n} / 2000 حرف",
+      photoLabel: "صورة",
+      errorMin: "يجب أن تحتوي رسالتك على 10 أحرف على الأقل.",
+      successMsg: "شكرًا لك! سيتم نشر مشاركتك بعد مراجعة فريقنا.",
+      shareCta: "نشر",
+      sharing: "جارٍ النشر…",
+      emptyTitle: "لا توجد مشاركات حتى الآن. كن أول من يشارك!",
+      deleteLabel: "حذف",
+      deleteConfirm: "حذف هذه المشاركة؟",
+      today: "اليوم",
+      yesterday: "أمس",
+      daysAgo: "منذ {n} أيام",
+    },
+    pln: {
+      eyebrow: "كن شريكًا",
+      heroTitle: "أحيِ تونس مع Calma Trip",
+      heroSub:
+        "سواء كنت حرفيًا أو وكالة، اختر الملف المناسب لك لمعرفة كيفية الانضمام إلى شبكة شركائنا.",
+      artisanLabel: "حرفي",
+      artisanDesc: "بيع إبداعاتك — الفخار، النسيج، الحلي، المنتجات المحلية — على متجر Calma Trip.",
+      artisanPoints: ["عمولة بسيطة وشفافة", "ظهور أمام المسافرين", "إدارة بنقرات قليلة"],
+      agencyLabel: "وكالة",
+      agencyDesc:
+        "نشر أنشطتك ورحلاتك وإقاماتك على Explore، تمامًا كما في GetYourGuide أو TripAdvisor.",
+      agencyPoints: ["ظهور على Explore", "تتبع واضح للعمولة", "نشر سريع"],
+      learnMore: "المزيد",
+    },
+    tickerMessages: [
+      "☀️ صيف 2026 — احجز الآن",
+      "رد مضمون في أقل من 30 دقيقة",
+      "خصم 15% على الحجوزات المبكرة",
+      "مرشدون محليون · أسعار عادلة · بدون توتر",
+      "دعم على مدار الساعة بالفرنسية والإنجليزية والعربية",
+    ],
   },
 };
 

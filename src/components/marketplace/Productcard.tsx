@@ -3,8 +3,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { Heart, ShoppingCart } from "lucide-react";
 import { Product, useMarketplace } from "@/components/marketplace/Marketplacecontext";
+import { CALMA_DICT, useOptionalCalmaLang } from "@/lib/calma/i18n";
 
 export function ProductCard({ product }: { product: Product }) {
+  // ProductCard is also rendered from pages without a CalmaLangProvider (ProductDetailPage,
+  // WishlistPage) — fall back to French rather than crash.
+  const t = useOptionalCalmaLang()?.t ?? CALMA_DICT.fr;
   const { addToCart, toggleWishlist, isWishlisted } = useMarketplace();
   const wishlisted = isWishlisted(product.id);
   const outOfStock = product.stock <= 0;
@@ -36,13 +40,13 @@ export function ProductCard({ product }: { product: Product }) {
           {outOfStock && (
             <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
               <span className="text-white text-sm font-semibold px-3 py-1 rounded-full bg-red-500/90">
-                Rupture de stock
+                {t.mkt.outOfStock}
               </span>
             </div>
           )}
           {lowStock && !outOfStock && (
             <span className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-calma-terracotta text-calma-ink">
-              Plus que {product.stock}
+              {t.mkt.lowStock.replace("{n}", String(product.stock))}
             </span>
           )}
         </div>
@@ -53,7 +57,7 @@ export function ProductCard({ product }: { product: Product }) {
           e.preventDefault();
           toggleWishlist(product.id);
         }}
-        aria-label={wishlisted ? "Retirer des favoris" : "Ajouter aux favoris"}
+        aria-label={wishlisted ? t.mkt.removeFromWishlist : t.mkt.addToWishlist}
         className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-transform hover:scale-110"
       >
         <Heart
@@ -75,7 +79,7 @@ export function ProductCard({ product }: { product: Product }) {
           <button
             onClick={() => addToCart(product, 1)}
             disabled={outOfStock}
-            aria-label="Ajouter au panier"
+            aria-label={t.mkt.addToCart}
             className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
             style={{ backgroundColor: "#D2B38B" }}
           >

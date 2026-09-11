@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
 import { Facebook, Heart, Loader2, Send, Trash2, Users } from "lucide-react";
-import { CalmaLangProvider } from "@/lib/calma/i18n";
+import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
 import { SingleImageUpload } from "@/components/admin/SingleImageUpload";
@@ -23,20 +23,8 @@ interface CommunityPost {
   createdAt: string;
 }
 
-function timeAgo(dateStr: string) {
-  const diffMs = Date.now() - new Date(dateStr).getTime();
-  const days = Math.floor(diffMs / 86400000);
-  if (days === 0) return "Aujourd'hui";
-  if (days === 1) return "Hier";
-  if (days < 30) return `Il y a ${days} jours`;
-  return new Date(dateStr).toLocaleDateString("fr-FR", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
-}
-
 function CommunityPageContent() {
+  const { t, lang } = useCalmaLang();
   const { data: session, status } = useSession();
   const [posts, setPosts] = useState<CommunityPost[]>([]);
   const [loading, setLoading] = useState(true);
@@ -45,6 +33,20 @@ function CommunityPageContent() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [submitted, setSubmitted] = useState(false);
+
+  const timeAgo = (dateStr: string) => {
+    const diffMs = Date.now() - new Date(dateStr).getTime();
+    const days = Math.floor(diffMs / 86400000);
+    if (days === 0) return t.community.today;
+    if (days === 1) return t.community.yesterday;
+    if (days < 30) return t.community.daysAgo.replace("{n}", String(days));
+    const locale = lang === "en" ? "en-US" : lang === "ar" ? "ar-TN" : "fr-FR";
+    return new Date(dateStr).toLocaleDateString(locale, {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
+  };
 
   const load = () => {
     setLoading(true);
@@ -62,7 +64,7 @@ function CommunityPageContent() {
   const handleSubmit = async () => {
     setError(null);
     if (content.trim().length < 10) {
-      setError("Votre message doit contenir au moins 10 caractères.");
+      setError(t.community.errorMin);
       return;
     }
 
@@ -75,21 +77,21 @@ function CommunityPageContent() {
       });
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
-        throw new Error(data.error ?? "Une erreur est survenue.");
+        throw new Error(data.error ?? t.community.errorMin);
       }
       setContent("");
       setImage("");
       setSubmitted(true);
       setTimeout(() => setSubmitted(false), 4000);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Une erreur est survenue.");
+      setError(err instanceof Error ? err.message : t.community.errorMin);
     } finally {
       setSubmitting(false);
     }
   };
 
   const handleDelete = async (id: number) => {
-    if (!confirm("Supprimer ce partage ?")) return;
+    if (!confirm(t.community.deleteConfirm)) return;
     await fetch(`/api/community/${id}`, { method: "DELETE" });
     setPosts((prev) => prev.filter((p) => p.id !== id));
   };
@@ -98,19 +100,27 @@ function CommunityPageContent() {
     <>
       <CalmaHeader active="community" />
       <main className="min-h-screen bg-calma-cream font-hanken">
-        {/* Hero */}
-        <section className="bg-calma-olive px-6 pb-16 pt-20 text-center sm:px-10">
-          <div className="mx-auto max-w-[640px]">
+        {/* Hero — photo-backed, matches Services/Explore/Marketplace */}
+        <section className="relative flex min-h-[300px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
+          <Image
+            src="/images/hero/sea.png"
+            alt=""
+            fill
+            priority
+            sizes="100vw"
+            className="object-cover"
+          />
+          <div className="absolute inset-0" style={{ background: "rgba(21,36,46,.66)" }} />
+          <div className="relative z-[2] mx-auto max-w-[640px]">
             <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
               <Users size={13} />
-              Communauté
+              {t.community.eyebrow}
             </div>
             <h1 className="mb-4 text-balance font-fraunces text-[clamp(30px,4vw,44px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-cream">
-              Partagez votre expérience Calma Trip
+              {t.community.heroTitle}
             </h1>
             <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
-              Racontez votre voyage, donnez votre avis, échangez avec d&apos;autres voyageurs — et
-              rejoignez notre groupe Facebook pour ne rien manquer.
+              {t.community.heroSub}
             </p>
           </div>
         </section>
@@ -128,14 +138,12 @@ function CommunityPageContent() {
             </div>
             <div className="flex-1">
               <p className="font-fraunces text-lg font-normal text-calma-ink">
-                Rejoignez notre groupe Facebook
+                {t.community.fbTitle}
               </p>
-              <p className="text-sm text-calma-taupe">
-                Discutez avec la communauté Calma Trip, posez vos questions, partagez vos photos.
-              </p>
+              <p className="text-sm text-calma-taupe">{t.community.fbDesc}</p>
             </div>
             <span className="hidden shrink-0 rounded-full bg-[#1877F2] px-4 py-2 text-sm font-semibold text-white sm:inline-block">
-              Rejoindre →
+              {t.community.fbJoin} →
             </span>
           </a>
         </section>
@@ -148,12 +156,12 @@ function CommunityPageContent() {
           >
             {status !== "authenticated" ? (
               <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-calma-taupe">
-                <span>Connectez-vous pour partager votre expérience.</span>
+                <span>{t.community.loginPrompt}</span>
                 <Link
                   href="/login?callbackUrl=/community"
                   className="rounded-full bg-calma-terracotta px-5 py-2.5 font-semibold text-calma-ink no-underline"
                 >
-                  Se connecter
+                  {t.community.loginCta}
                 </Link>
               </div>
             ) : (
@@ -163,15 +171,17 @@ function CommunityPageContent() {
                   onChange={(e) => setContent(e.target.value)}
                   rows={4}
                   maxLength={2000}
-                  placeholder="Racontez votre expérience avec Calma Trip..."
+                  placeholder={t.community.placeholder}
                   className="w-full resize-none rounded-2xl border border-calma-olive/15 bg-calma-cream px-5 py-4 text-[15px] text-calma-ink outline-none transition-colors focus:border-calma-terracotta"
                 />
-                <p className="-mt-2 text-xs text-calma-taupe">{content.length} / 2000 caractères</p>
+                <p className="-mt-2 text-xs text-calma-taupe">
+                  {t.community.charCount.replace("{n}", String(content.length))}
+                </p>
 
                 <SingleImageUpload
                   value={image}
                   onChange={setImage}
-                  label="Photo"
+                  label={t.community.photoLabel}
                   endpoint="/api/community/upload"
                 />
 
@@ -180,7 +190,7 @@ function CommunityPageContent() {
                 )}
                 {submitted && (
                   <p className="rounded-2xl bg-calma-success/10 px-4 py-3 text-sm text-calma-success">
-                    Merci ! Votre partage sera publié après validation par notre équipe.
+                    {t.community.successMsg}
                   </p>
                 )}
 
@@ -196,7 +206,7 @@ function CommunityPageContent() {
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
                     <>
-                      Partager
+                      {t.community.shareCta}
                       <Send
                         size={16}
                         className="transition-transform duration-300 group-hover:translate-x-1"
@@ -220,7 +230,7 @@ function CommunityPageContent() {
           ) : posts.length === 0 ? (
             <div className="rounded-calma-block border border-dashed border-calma-olive/20 py-16 text-center text-calma-taupe">
               <Heart className="mx-auto mb-3 h-9 w-9 opacity-30" />
-              <p>Aucun partage pour le moment. Soyez le premier !</p>
+              <p>{t.community.emptyTitle}</p>
             </div>
           ) : (
             <div className="space-y-5">
@@ -253,7 +263,7 @@ function CommunityPageContent() {
                     {session?.user?.id === post.authorId && (
                       <button
                         onClick={() => handleDelete(post.id)}
-                        aria-label="Supprimer"
+                        aria-label={t.community.deleteLabel}
                         className="rounded-lg p-2 text-calma-taupe transition-colors hover:bg-red-50 hover:text-red-500"
                       >
                         <Trash2 size={16} />

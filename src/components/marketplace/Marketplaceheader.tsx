@@ -5,8 +5,10 @@ import { Search, ShoppingCart, Heart, X } from "lucide-react";
 import { motion } from "motion/react";
 import { useEffect, useState, useCallback } from "react";
 import { useMarketplace } from "@/components/marketplace/Marketplacecontext";
+import { useCalmaLang } from "@/lib/calma/i18n";
 
 export function MarketplaceHeader({ categories }: { categories: string[] }) {
+  const { t } = useCalmaLang();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { cartCount, wishlist } = useMarketplace();
@@ -59,13 +61,13 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              placeholder="Rechercher un produit..."
+              placeholder={t.mkt.searchPh}
               className="w-full pl-11 pr-9 py-2.5 rounded-full bg-white border border-calma-olive/15 text-base text-calma-ink outline-none focus:border-calma-terracotta transition-colors sm:text-sm"
             />
             {search && (
               <button
                 onClick={() => setSearch("")}
-                aria-label="Effacer la recherche"
+                aria-label={t.mkt.clearSearch}
                 className="absolute right-3.5 top-1/2 -translate-y-1/2 text-calma-taupe hover:text-calma-ink"
               >
                 <X className="w-4 h-4" />
@@ -78,7 +80,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
             <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-1 order-2 sm:order-1">
               <Link
                 href="/marketplace/wishlist"
-                aria-label="Favoris"
+                aria-label={t.mkt.wishlistLabel}
                 className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-full hover:bg-calma-olive/5 flex items-center justify-center transition-colors"
               >
                 <Heart className="w-5 h-5 text-calma-ink" />
@@ -91,7 +93,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
 
               <Link
                 href="/marketplace/cart"
-                aria-label="Panier"
+                aria-label={t.mkt.cartLabel}
                 className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-full hover:bg-calma-olive/5 flex items-center justify-center transition-colors"
               >
                 <ShoppingCart className="w-5 h-5 text-calma-ink" />
@@ -106,7 +108,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
                 href="/marketplace/orders"
                 className="flex-1 sm:flex-none w-full sm:w-auto text-center text-sm font-medium text-calma-taupe hover:text-calma-terracotta px-3 py-2 rounded-full transition-colors"
               >
-                Mes commandes
+                {t.mkt.myOrders}
               </Link>
             </div>
           </div>
@@ -128,7 +130,7 @@ export function MarketplaceHeader({ categories }: { categories: string[] }) {
                   transition={{ type: "spring", stiffness: 400, damping: 32 }}
                 />
               )}
-              <span className="relative z-[1]">{cat === "all" ? "Tout" : cat}</span>
+              <span className="relative z-[1]">{cat === "all" ? t.mkt.allLabel : cat}</span>
             </button>
           ))}
         </div>
