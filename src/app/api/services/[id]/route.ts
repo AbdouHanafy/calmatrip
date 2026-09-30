@@ -6,6 +6,7 @@ import {
   deleteService,
   getPublicServiceById,
   getRelatedServices,
+  parseDestinationIds,
   updateService,
 } from "@/repositories/serviceRepository";
 
@@ -52,6 +53,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     if (json.active !== undefined) data.active = json.active;
     if (json.popular !== undefined) data.popular = json.popular;
     if (json.order !== undefined) data.order = json.order;
+    const destinationIds = parseDestinationIds(json.destinationIds);
+    if (destinationIds) data.destinations = { set: destinationIds.map((d) => ({ id: d })) };
 
     const service = await updateService(id, data);
     return NextResponse.json(service);

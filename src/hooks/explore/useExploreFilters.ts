@@ -73,9 +73,11 @@ export function useExploreFilters(
 
   const filteredPlaces = places
     .filter((place) => {
+      const needle = searchQuery.toLowerCase();
       const matchesSearch =
-        place.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        place.description.toLowerCase().includes(searchQuery.toLowerCase());
+        place.title.toLowerCase().includes(needle) ||
+        place.description.toLowerCase().includes(needle) ||
+        place.city.toLowerCase().includes(needle);
       const matchesCategory = selectedCategory === "all" || place.category === selectedCategory;
       const matchesCity = selectedCity === "All Cities" || place.city === selectedCity;
       const matchesBudget = place.budget <= budgetLimit;

@@ -112,7 +112,23 @@ export const footerSettingsSchema = z.object({
 });
 export type FooterSettings = z.infer<typeof footerSettingsSchema>;
 
-export const SETTINGS_GROUPS = ["general", "branding", "contact", "social", "footer"] as const;
+// Public search bar (homepage + /search). Destinations and services are
+// managed in their own admin screens; these are the bar's own knobs.
+export const searchSettingsSchema = z.object({
+  maxParticipants: z.coerce.number().int().min(1).max(99),
+  showDate: z.boolean(),
+  showParticipants: z.boolean(),
+});
+export type SearchSettings = z.infer<typeof searchSettingsSchema>;
+
+export const SETTINGS_GROUPS = [
+  "general",
+  "branding",
+  "contact",
+  "social",
+  "footer",
+  "search",
+] as const;
 export type SettingsGroup = (typeof SETTINGS_GROUPS)[number];
 
 export const settingsSchemaByGroup = {
@@ -121,6 +137,7 @@ export const settingsSchemaByGroup = {
   contact: contactSettingsSchema,
   social: socialSettingsSchema,
   footer: footerSettingsSchema,
+  search: searchSettingsSchema,
 } satisfies Record<SettingsGroup, z.ZodTypeAny>;
 
 export function isSettingsGroup(value: unknown): value is SettingsGroup {

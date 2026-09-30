@@ -5,6 +5,7 @@ import {
   contactSettingsSchema,
   socialSettingsSchema,
   footerSettingsSchema,
+  searchSettingsSchema,
   isSettingsGroup,
 } from "./settingsSchemas";
 
@@ -161,9 +162,30 @@ describe("footerSettingsSchema", () => {
   });
 });
 
+describe("searchSettingsSchema", () => {
+  const valid = { maxParticipants: 20, showDate: true, showParticipants: true };
+
+  it("accepts valid search settings", () => {
+    expect(searchSettingsSchema.safeParse(valid).success).toBe(true);
+  });
+
+  it("coerces a numeric string from the form input", () => {
+    const result = searchSettingsSchema.safeParse({ ...valid, maxParticipants: "12" });
+    expect(result.success && result.data.maxParticipants).toBe(12);
+  });
+
+  it("rejects zero participants", () => {
+    expect(searchSettingsSchema.safeParse({ ...valid, maxParticipants: 0 }).success).toBe(false);
+  });
+
+  it("rejects more than 99 participants", () => {
+    expect(searchSettingsSchema.safeParse({ ...valid, maxParticipants: 100 }).success).toBe(false);
+  });
+});
+
 describe("isSettingsGroup", () => {
   it("accepts each known group", () => {
-    for (const group of ["general", "branding", "contact", "social", "footer"]) {
+    for (const group of ["general", "branding", "contact", "social", "footer", "search"]) {
       expect(isSettingsGroup(group)).toBe(true);
     }
   });

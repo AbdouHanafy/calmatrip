@@ -136,26 +136,27 @@ model VerificationToken {
 }
 
 model Service {
-  id               Int      @id @default(autoincrement())
+  id               Int           @id @default(autoincrement())
   title            String
   subtitle         String?
-  description      String   @db.Text
+  description      String        @db.Text
   price            String
-  icon             String   @default("Car")
+  icon             String        @default("Car")
   color            String?
   category         String?
   features         Json?
   duration         String?
-  image            String?  @db.Text
-  active           Boolean  @default(true)
-  popular          Boolean  @default(false)
-  order            Int      @default(0)
+  image            String?       @db.Text
+  active           Boolean       @default(true)
+  popular          Boolean       @default(false)
+  order            Int           @default(0)
   ownerId          String?
-  owner            User?    @relation(fields: [ownerId], references: [id], onDelete: SetNull)
-  submissionStatus String   @default("approved")
-  rejectionReason  String?  @db.Text
-  createdAt        DateTime @default(now())
-  updatedAt        DateTime @updatedAt
+  owner            User?         @relation(fields: [ownerId], references: [id], onDelete: SetNull)
+  submissionStatus String        @default("approved")
+  rejectionReason  String?       @db.Text
+  destinations     Destination[]
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
 
   @@index([ownerId])
   @@map("services")
@@ -280,11 +281,16 @@ model TeamMember {
 }
 
 model Destination {
-  id          Int    @id @default(autoincrement())
+  id          Int       @id @default(autoincrement())
   name        String
-  emoji       String
+  emoji       String    @default("")
   description String
-  order       Int    @default(0)
+  order       Int       @default(0)
+  // Only active destinations are offered in the public search bar.
+  active      Boolean   @default(true)
+  // Services explicitly tied to this destination. A service with no
+  // destination at all is treated as available everywhere.
+  services    Service[]
 
   @@map("destinations")
 }

@@ -5,7 +5,23 @@ export async function getPublicServices() {
   return prisma.service.findMany({
     where: { submissionStatus: "approved" },
     orderBy: { order: "asc" },
+    include: { destinations: { select: { id: true, name: true } } },
   });
+}
+
+// Minimal shape for the search bar's service dropdown.
+export async function getSearchableServices() {
+  return prisma.service.findMany({
+    where: { submissionStatus: "approved", active: true },
+    orderBy: [{ popular: "desc" }, { order: "asc" }],
+    select: { id: true, title: true, destinations: { select: { id: true } } },
+  });
+}
+
+// Accepts only an array of positive integers; anything else means "not provided".
+export function parseDestinationIds(raw: unknown): number[] | undefined {
+  if (!Array.isArray(raw)) return undefined;
+  return raw.filter((v): v is number => Number.isInteger(v) && v > 0);
 }
 
 export async function getPublicServiceById(id: number) {
@@ -42,6 +58,7 @@ interface CreateServiceInput {
   popular?: boolean;
   ownerId?: string;
   submissionStatus?: string;
+  destinationIds?: number[];
 }
 
 export async function createService(input: CreateServiceInput) {
@@ -64,6 +81,9 @@ export async function createService(input: CreateServiceInput) {
       order: (maxOrder._max.order ?? 0) + 1,
       ownerId: input.ownerId,
       ...(input.submissionStatus && { submissionStatus: input.submissionStatus }),
+      ...(input.destinationIds?.length && {
+        destinations: { connect: input.destinationIds.map((id) => ({ id })) },
+      }),
     },
   });
 }

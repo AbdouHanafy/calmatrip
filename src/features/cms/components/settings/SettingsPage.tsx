@@ -17,6 +17,11 @@ const TABS: { key: SettingsGroup; label: string; description: string }[] = [
     label: "Footer",
     description: "Global footer text (navigation is managed separately).",
   },
+  {
+    key: "search",
+    label: "Search",
+    description: "The search bar on the homepage and results page.",
+  },
 ];
 
 type SaveState = "idle" | "saving" | "saved" | "error";
@@ -56,6 +61,7 @@ export default function SettingsPage() {
     contact: "idle",
     social: "idle",
     footer: "idle",
+    search: "idle",
   });
   const [saveError, setSaveError] = useState<Record<SettingsGroup, string | null>>({
     general: null,
@@ -63,6 +69,7 @@ export default function SettingsPage() {
     contact: null,
     social: null,
     footer: null,
+    search: null,
   });
 
   useEffect(() => {
@@ -196,6 +203,14 @@ export default function SettingsPage() {
           saveState={saveState.footer}
           error={saveError.footer}
           onSave={(data) => save("footer", data)}
+        />
+      )}
+      {activeTab === "search" && (
+        <SearchForm
+          value={settings.search}
+          saveState={saveState.search}
+          error={saveError.search}
+          onSave={(data) => save("search", data)}
         />
       )}
     </div>
@@ -521,6 +536,82 @@ function FooterForm({
         </Link>
         .
       </p>
+      <SaveButton state={saveState} />
+    </form>
+  );
+}
+
+function SearchForm({
+  value,
+  saveState,
+  error,
+  onSave,
+}: {
+  value: SiteSettings["search"];
+  saveState: SaveState;
+  error: string | null;
+  onSave: (data: SiteSettings["search"]) => void;
+}) {
+  const [form, setForm] = useState(value);
+  useEffect(() => setForm(value), [value]);
+
+  const toggle = (key: "showDate" | "showParticipants", label: string, hint: string) => (
+    <label className="flex cursor-pointer items-start gap-3 rounded-lg border border-slate-200 p-3">
+      <input
+        type="checkbox"
+        checked={form[key]}
+        onChange={(e) => setForm({ ...form, [key]: e.target.checked })}
+        className="mt-0.5 h-4 w-4"
+      />
+      <span>
+        <span className="block text-sm font-semibold text-slate-800">{label}</span>
+        <span className="block text-xs text-slate-500">{hint}</span>
+      </span>
+    </label>
+  );
+
+  return (
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        onSave(form);
+      }}
+      className="max-w-xl space-y-4 rounded-xl border border-slate-200 bg-white p-5"
+    >
+      <ErrorBanner message={error} />
+      <p className="text-sm text-slate-600">
+        Destinations offered in the bar are managed in{" "}
+        <Link href="/admin/destinations" className="font-semibold underline">
+          Destinations
+        </Link>
+        ; the service list comes from{" "}
+        <Link href="/admin/services" className="font-semibold underline">
+          Experiences &amp; services
+        </Link>{" "}
+        (active services only).
+      </p>
+      {toggle("showDate", "Show the date field", "Lets visitors pick a day, or leave it flexible.")}
+      {toggle(
+        "showParticipants",
+        "Show the participants field",
+        "Lets visitors say how many people are coming.",
+      )}
+      <Field
+        label="Maximum participants"
+        hint="Upper limit of the participants counter (1–99). Larger groups are sent to the quote form."
+        htmlFor="maxParticipants"
+      >
+        <input
+          id="maxParticipants"
+          type="number"
+          min={1}
+          max={99}
+          required
+          className={inputClass}
+          value={form.maxParticipants}
+          onChange={(e) => setForm({ ...form, maxParticipants: Number(e.target.value) })}
+        />
+      </Field>
       <SaveButton state={saveState} />
     </form>
   );

@@ -519,6 +519,96 @@ export interface CalmaPartnerLandingDict {
   learnMore: string;
 }
 
+// Homepage (src/views/Home.tsx + src/components/home/*).
+export interface CalmaHomeDict {
+  heroTitle: string;
+  heroSub: string;
+  heroCaption: string;
+  searchLabel: string;
+  searchPlaceholder: string;
+  searchBtn: string;
+  chipsLabel: string;
+  chips: {
+    tours: string;
+    sights: string;
+    activities: string;
+    food: string;
+    hiddenGems: string;
+    museums: string;
+    events: string;
+  };
+  trust: { title: string; desc: string }[];
+  toursHeading: string;
+  localHeading: string;
+  destinationsHeading: string;
+  destinations: [string, string, string, string, string, string];
+  shopHeading: string;
+  reviewsHeading: string;
+  reviewsCount: string; // "{n} avis" — {n} is replaced at render time
+  seeAll: string;
+  prev: string;
+  next: string;
+  from: string;
+  priceOnRequest: string;
+  plannerHeading: string;
+  plannerSub: string;
+  plannerContact: string;
+}
+
+// Shared header/footer chrome (CalmaHeader, CalmaFooter).
+export interface CalmaLayoutDict {
+  login: string;
+  register: string;
+  logout: string;
+  account: string;
+  language: string;
+  openMenu: string;
+  closeMenu: string;
+  menu: string;
+  mySpace: string;
+  adminSpace: string;
+  partnerSpace: string;
+  footContact: string;
+  footNewsletter: string;
+  privacy: string;
+  terms: string;
+  legalNotice: string;
+  footBottomNote: string;
+}
+
+// Search bar (SearchBar, DatePanel, ParticipantsPanel) + /search results page.
+export interface CalmaSearchDict {
+  destinationLabel: string;
+  serviceLabel: string;
+  allServices: string;
+  dateLabel: string;
+  dateFlexible: string;
+  clearDate: string;
+  participantsLabel: string;
+  participantOne: string;
+  participantMany: string; // "{n}"
+  adults: string;
+  adultsHint: string;
+  children: string;
+  childrenHint: string;
+  fewer: string; // "{who}"
+  more: string; // "{who}"
+  today: string;
+  tomorrow: string;
+  nextWeekend: string;
+  prevMonth: string;
+  nextMonth: string;
+  groupHint: string; // "{n}" — shown under the counter at the max
+  groupHintLink: string;
+  resultsIn: string; // "{d}"
+  resultsTitle: string; // "{q}"
+  resultsCount: string; // "{n}"
+  noResultsTitle: string;
+  noResultsSub: string;
+  emptyTitle: string;
+  emptySub: string;
+}
+
 export interface CalmaDict {
   navHome: string;
   navServices: string;
@@ -633,6 +723,9 @@ export interface CalmaDict {
   pnr: CalmaPartnerOnboardingDict;
   community: CalmaCommunityDict;
   pln: CalmaPartnerLandingDict;
+  home: CalmaHomeDict;
+  layout: CalmaLayoutDict;
+  search: CalmaSearchDict;
   tickerMessages: string[];
 }
 
@@ -1377,6 +1470,97 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       agencyPoints: ["Visibilité sur Explore", "Suivi de commission clair", "Publication rapide"],
       learnMore: "En savoir plus",
     },
+    home: {
+      heroTitle: "Excursions, transferts et activités en Tunisie",
+      heroSub: "Réservés en direct auprès d’une équipe locale installée à Hammamet.",
+      heroCaption: "Vieux port de Bizerte",
+      searchLabel: "Rechercher une destination ou une activité",
+      searchPlaceholder: "Où allez-vous ? Djerba, désert, Sidi Bou Saïd…",
+      searchBtn: "Rechercher",
+      chipsLabel: "Catégories",
+      chips: {
+        tours: "Excursions & transferts",
+        sights: "Sites & monuments",
+        activities: "Activités",
+        food: "Cafés & cuisine",
+        hiddenGems: "Pépites cachées",
+        museums: "Musées",
+        events: "Événements",
+      },
+      trust: [
+        { title: "Annulation gratuite", desc: "Remboursé jusqu’à 24 h avant le départ" },
+        { title: "Prix locaux", desc: "Vous réservez en direct, sans intermédiaire" },
+        { title: "Guides locaux", desc: "Des habitants qui connaissent chaque ruelle" },
+        { title: "Support 24/7", desc: "En français, anglais et arabe" },
+      ],
+      toursHeading: "Excursions et transferts",
+      localHeading: "Proposé par nos partenaires locaux",
+      destinationsHeading: "Où aller en Tunisie",
+      destinations: ["Sidi Bou Saïd", "Carthage", "Kairouan", "El Jem", "Tozeur", "Douz"],
+      shopHeading: "Artisanat tunisien",
+      reviewsHeading: "Ce qu’en disent nos voyageurs",
+      reviewsCount: "{n} avis",
+      seeAll: "Tout voir",
+      prev: "Précédent",
+      next: "Suivant",
+      from: "À partir de",
+      priceOnRequest: "Sur devis",
+      plannerHeading: "Un groupe, un événement ou un circuit sur mesure ?",
+      plannerSub:
+        "Dites-nous ce que vous avez en tête : on prépare le programme, les transferts et les réservations avec vous.",
+      plannerContact: "Demander un devis",
+    },
+    layout: {
+      login: "Connexion",
+      register: "Inscription",
+      logout: "Déconnexion",
+      account: "Compte",
+      language: "Langue",
+      openMenu: "Ouvrir le menu",
+      closeMenu: "Fermer le menu",
+      menu: "Menu",
+      mySpace: "Mon espace",
+      adminSpace: "Espace admin",
+      partnerSpace: "Espace partenaire",
+      footContact: "Nous contacter",
+      footNewsletter: "Newsletter",
+      privacy: "Confidentialité",
+      terms: "CGV",
+      legalNotice: "Mentions légales",
+      footBottomNote: "Paiement sécurisé · Support 24/7",
+    },
+    search: {
+      destinationLabel: "Destination",
+      serviceLabel: "Service",
+      allServices: "Tous les services",
+      dateLabel: "Date",
+      dateFlexible: "Date flexible",
+      clearDate: "Effacer la date",
+      participantsLabel: "Participants",
+      participantOne: "1 participant",
+      participantMany: "{n} participants",
+      adults: "Adultes",
+      adultsHint: "18 ans et plus",
+      children: "Enfants",
+      childrenHint: "De 0 à 17 ans",
+      fewer: "Retirer : {who}",
+      more: "Ajouter : {who}",
+      today: "Aujourd’hui",
+      tomorrow: "Demain",
+      nextWeekend: "Le week-end prochain",
+      prevMonth: "Mois précédent",
+      nextMonth: "Mois suivant",
+      groupHint: "Plus de {n} personnes ?",
+      groupHintLink: "Demandez un devis",
+      resultsIn: "Activités à {d}",
+      resultsTitle: "Résultats pour « {q} »",
+      resultsCount: "{n} résultat(s)",
+      noResultsTitle: "Aucune activité ne correspond pour l’instant",
+      noResultsSub:
+        "Essayez « Tous les services », ou contactez-nous : on organise aussi des sorties sur mesure.",
+      emptyTitle: "Où allez-vous ?",
+      emptySub: "Choisissez une destination et un service pour voir nos activités.",
+    },
     tickerMessages: [
       "☀️ ÉTÉ 2026 — RÉSERVEZ MAINTENANT",
       "RÉPONSE GARANTIE SOUS 30 MINUTES",
@@ -2116,6 +2300,96 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       agencyPoints: ["Visibility on Explore", "Clear commission tracking", "Fast publishing"],
       learnMore: "Learn more",
     },
+    home: {
+      heroTitle: "Tours, transfers and things to do in Tunisia",
+      heroSub: "Booked directly with a local team based in Hammamet.",
+      heroCaption: "Old port, Bizerte",
+      searchLabel: "Search for a destination or activity",
+      searchPlaceholder: "Where to? Djerba, the desert, Sidi Bou Said…",
+      searchBtn: "Search",
+      chipsLabel: "Categories",
+      chips: {
+        tours: "Tours & transfers",
+        sights: "Sights & landmarks",
+        activities: "Activities",
+        food: "Cafés & food",
+        hiddenGems: "Hidden gems",
+        museums: "Museums",
+        events: "Events",
+      },
+      trust: [
+        { title: "Free cancellation", desc: "Full refund up to 24 hours before" },
+        { title: "Local prices", desc: "Book directly, no middleman" },
+        { title: "Local guides", desc: "People who know every alley" },
+        { title: "24/7 support", desc: "In English, French and Arabic" },
+      ],
+      toursHeading: "Tours and transfers",
+      localHeading: "From our local partners",
+      destinationsHeading: "Where to go in Tunisia",
+      destinations: ["Sidi Bou Said", "Carthage", "Kairouan", "El Jem", "Tozeur", "Douz"],
+      shopHeading: "Tunisian craft",
+      reviewsHeading: "What travellers say",
+      reviewsCount: "{n} reviews",
+      seeAll: "See all",
+      prev: "Previous",
+      next: "Next",
+      from: "From",
+      priceOnRequest: "Price on request",
+      plannerHeading: "Travelling as a group, or want a custom itinerary?",
+      plannerSub:
+        "Tell us what you have in mind — we’ll plan the days, the transfers and the bookings with you.",
+      plannerContact: "Request a quote",
+    },
+    layout: {
+      login: "Log in",
+      register: "Sign up",
+      logout: "Log out",
+      account: "Account",
+      language: "Language",
+      openMenu: "Open menu",
+      closeMenu: "Close menu",
+      menu: "Menu",
+      mySpace: "My account",
+      adminSpace: "Admin space",
+      partnerSpace: "Partner space",
+      footContact: "Contact us",
+      footNewsletter: "Newsletter",
+      privacy: "Privacy",
+      terms: "Terms of sale",
+      legalNotice: "Legal notice",
+      footBottomNote: "Secure payment · 24/7 support",
+    },
+    search: {
+      destinationLabel: "Destination",
+      serviceLabel: "Service",
+      allServices: "All services",
+      dateLabel: "Date",
+      dateFlexible: "Flexible date",
+      clearDate: "Clear date",
+      participantsLabel: "Participants",
+      participantOne: "1 participant",
+      participantMany: "{n} participants",
+      adults: "Adults",
+      adultsHint: "18 and over",
+      children: "Children",
+      childrenHint: "Ages 0 to 17",
+      fewer: "Remove: {who}",
+      more: "Add: {who}",
+      today: "Today",
+      tomorrow: "Tomorrow",
+      nextWeekend: "Next weekend",
+      prevMonth: "Previous month",
+      nextMonth: "Next month",
+      groupHint: "More than {n} people?",
+      groupHintLink: "Request a quote",
+      resultsIn: "Things to do in {d}",
+      resultsTitle: "Results for “{q}”",
+      resultsCount: "{n} result(s)",
+      noResultsTitle: "Nothing matches yet",
+      noResultsSub: "Try “All services”, or get in touch — we also put together custom outings.",
+      emptyTitle: "Where are you going?",
+      emptySub: "Pick a destination and a service to see what we offer.",
+    },
     tickerMessages: [
       "☀️ SUMMER 2026 — BOOK NOW",
       "GUARANTEED REPLY WITHIN 30 MINUTES",
@@ -2827,6 +3101,95 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
         "نشر أنشطتك ورحلاتك وإقاماتك على Explore، تمامًا كما في GetYourGuide أو TripAdvisor.",
       agencyPoints: ["ظهور على Explore", "تتبع واضح للعمولة", "نشر سريع"],
       learnMore: "المزيد",
+    },
+    home: {
+      heroTitle: "رحلات وتنقلات وأنشطة في تونس",
+      heroSub: "احجز مباشرة مع فريق محلي مقيم في الحمامات.",
+      heroCaption: "الميناء القديم، بنزرت",
+      searchLabel: "ابحث عن وجهة أو نشاط",
+      searchPlaceholder: "إلى أين؟ جربة، الصحراء، سيدي بوسعيد…",
+      searchBtn: "بحث",
+      chipsLabel: "الفئات",
+      chips: {
+        tours: "رحلات وتنقلات",
+        sights: "معالم ومواقع",
+        activities: "أنشطة",
+        food: "مقاهٍ ومأكولات",
+        hiddenGems: "أماكن خفية",
+        museums: "متاحف",
+        events: "فعاليات",
+      },
+      trust: [
+        { title: "إلغاء مجاني", desc: "استرداد كامل حتى 24 ساعة قبل الموعد" },
+        { title: "أسعار محلية", desc: "احجز مباشرة، بلا وسيط" },
+        { title: "مرشدون محليون", desc: "أناس يعرفون كل زقاق" },
+        { title: "دعم على مدار الساعة", desc: "بالعربية والفرنسية والإنجليزية" },
+      ],
+      toursHeading: "رحلات وتنقلات",
+      localHeading: "من شركائنا المحليين",
+      destinationsHeading: "إلى أين تذهب في تونس",
+      destinations: ["سيدي بوسعيد", "قرطاج", "القيروان", "الجم", "توزر", "دوز"],
+      shopHeading: "الصناعات التقليدية التونسية",
+      reviewsHeading: "ماذا يقول المسافرون",
+      reviewsCount: "{n} تقييم",
+      seeAll: "عرض الكل",
+      prev: "السابق",
+      next: "التالي",
+      from: "ابتداءً من",
+      priceOnRequest: "السعر عند الطلب",
+      plannerHeading: "مجموعة، مناسبة أو رحلة حسب الطلب؟",
+      plannerSub: "أخبرنا بما تفكر فيه، وسنخطط معك البرنامج والتنقلات والحجوزات.",
+      plannerContact: "اطلب عرض سعر",
+    },
+    layout: {
+      login: "تسجيل الدخول",
+      register: "إنشاء حساب",
+      logout: "تسجيل الخروج",
+      account: "الحساب",
+      language: "اللغة",
+      openMenu: "فتح القائمة",
+      closeMenu: "إغلاق القائمة",
+      menu: "القائمة",
+      mySpace: "حسابي",
+      adminSpace: "فضاء الإدارة",
+      partnerSpace: "فضاء الشريك",
+      footContact: "اتصل بنا",
+      footNewsletter: "النشرة الإخبارية",
+      privacy: "الخصوصية",
+      terms: "شروط البيع",
+      legalNotice: "البيانات القانونية",
+      footBottomNote: "دفع آمن · دعم على مدار الساعة",
+    },
+    search: {
+      destinationLabel: "الوجهة",
+      serviceLabel: "الخدمة",
+      allServices: "كل الخدمات",
+      dateLabel: "التاريخ",
+      dateFlexible: "تاريخ مرن",
+      clearDate: "مسح التاريخ",
+      participantsLabel: "المشاركون",
+      participantOne: "مشارك واحد",
+      participantMany: "{n} مشاركين",
+      adults: "البالغون",
+      adultsHint: "18 سنة فما فوق",
+      children: "الأطفال",
+      childrenHint: "من 0 إلى 17 سنة",
+      fewer: "إنقاص: {who}",
+      more: "إضافة: {who}",
+      today: "اليوم",
+      tomorrow: "غدًا",
+      nextWeekend: "عطلة نهاية الأسبوع القادمة",
+      prevMonth: "الشهر السابق",
+      nextMonth: "الشهر التالي",
+      groupHint: "أكثر من {n} أشخاص؟",
+      groupHintLink: "اطلب عرض سعر",
+      resultsIn: "أنشطة في {d}",
+      resultsTitle: "نتائج «{q}»",
+      resultsCount: "{n} نتيجة",
+      noResultsTitle: "لا يوجد ما يطابق بحثك حاليًا",
+      noResultsSub: "جرّب «كل الخدمات»، أو تواصل معنا: ننظّم أيضًا رحلات حسب الطلب.",
+      emptyTitle: "إلى أين تذهب؟",
+      emptySub: "اختر وجهة وخدمة لرؤية أنشطتنا.",
     },
     tickerMessages: [
       "☀️ صيف 2026 — احجز الآن",

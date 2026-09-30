@@ -13,6 +13,7 @@ export type Service = {
   popular: boolean;
   image?: string | null;
   features?: unknown;
+  destinations?: { id: number; name: string }[];
 };
 
 export type ServiceFormData = {
@@ -25,6 +26,8 @@ export type ServiceFormData = {
   active: boolean;
   popular: boolean;
   features: string[];
+  /** Empty = offered in every destination. */
+  destinationIds: number[];
 };
 
 export const emptyServiceForm: ServiceFormData = {
@@ -37,6 +40,7 @@ export const emptyServiceForm: ServiceFormData = {
   active: true,
   popular: false,
   features: [],
+  destinationIds: [],
 };
 
 // Matches the categories mapService.ts actually branches on (src/lib/services/mapService.ts) —

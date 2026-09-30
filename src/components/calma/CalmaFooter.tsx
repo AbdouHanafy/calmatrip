@@ -1,7 +1,16 @@
 "use client";
 import React, { useState } from "react";
 import Link from "next/link";
-import { Send, Check, Facebook, Instagram, Youtube } from "lucide-react";
+import {
+  Check,
+  Facebook,
+  Instagram,
+  Mail,
+  MapPin,
+  MessageCircle,
+  Phone,
+  Youtube,
+} from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { FooterPublicNavigation } from "@/features/cms/components/navigation/PublicNavigation";
 import { useSiteSettings } from "@/features/cms/components/settings/SiteSettingsProvider";
@@ -21,6 +30,9 @@ const SOCIAL_ICONS = [
   { key: "tiktok" as const, icon: TikTokIcon, label: "TikTok" },
   { key: "youtube" as const, icon: Youtube, label: "YouTube" },
 ];
+
+const headingClass = "mb-3 text-[15px] font-bold text-calma-ink";
+const linkClass = "text-calma-ink/75 no-underline hover:text-calma-ink hover:underline";
 
 function NewsletterForm() {
   const { t } = useCalmaLang();
@@ -47,7 +59,7 @@ function NewsletterForm() {
 
   if (status === "done") {
     return (
-      <p className="flex items-center gap-2 text-sm font-medium text-calma-terracotta-soft">
+      <p className="flex items-center gap-2 text-sm font-medium text-calma-success">
         <Check className="h-4 w-4" />
         {t.newsletterSuccess}
       </p>
@@ -55,22 +67,25 @@ function NewsletterForm() {
   }
 
   return (
-    <form onSubmit={submit} className="flex max-w-[320px] items-center gap-2">
+    <form onSubmit={submit} className="flex max-w-[340px] gap-2">
+      <label htmlFor="footer-newsletter" className="sr-only">
+        {t.newsletterPlaceholder}
+      </label>
       <input
+        id="footer-newsletter"
         type="email"
         required
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder={t.newsletterPlaceholder}
-        className="min-w-0 flex-1 rounded-full border border-calma-cream/20 bg-calma-cream/[.06] px-4 py-2.5 text-sm text-calma-cream placeholder:text-calma-cream/40 outline-none focus:border-calma-terracotta-soft"
+        className="min-w-0 flex-1 rounded-full border border-calma-ink/20 bg-white px-4 py-2.5 text-sm text-calma-ink outline-none placeholder:text-calma-taupe focus:border-calma-ink/60"
       />
       <button
         type="submit"
         disabled={status === "loading"}
-        aria-label={t.newsletterCta}
-        className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
+        className="shrink-0 rounded-full bg-calma-ink px-4 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-calma-olive disabled:opacity-60"
       >
-        <Send className="h-4 w-4" />
+        {t.newsletterCta}
       </button>
     </form>
   );
@@ -78,30 +93,33 @@ function NewsletterForm() {
 
 export default function CalmaFooter() {
   const { t } = useCalmaLang();
+  const l = t.layout;
   const settings = useSiteSettings();
+  const contact = settings?.contact;
   const socialLinks = SOCIAL_ICONS.map((item) => ({
     ...item,
     href: settings?.social[item.key] ?? null,
   })).filter((item) => item.href);
 
   return (
-    <footer className="mt-20 bg-calma-olive-deeper font-hanken text-calma-cream">
-      <div className="mx-auto flex max-w-[1240px] flex-wrap justify-between gap-8 px-6 pb-14 pt-[52px] sm:px-10">
-        <div className="max-w-[280px]">
-          <Link href="/" className="mb-4 flex items-center no-underline">
+    <footer className="border-t border-calma-ink/10 bg-calma-cream font-hanken text-calma-ink">
+      <div className="mx-auto grid max-w-[1240px] grid-cols-2 gap-x-6 gap-y-10 px-4 pb-10 pt-12 sm:px-6 lg:grid-cols-[1.3fr_1fr_1fr_1.2fr_1.4fr] lg:px-8">
+        <div className="col-span-2 lg:col-span-1">
+          <Link href="/" className="mb-3 inline-flex items-center no-underline">
             <CalmaLogoOrCustom
               customUrl={settings?.branding.logoUrl}
               alt={settings?.general.siteName ?? "Calma Trip"}
-              tone="cream"
-              imgClassName="h-8 w-auto"
-              iconSize={32}
+              tone="navy"
+              imgClassName="h-10 w-auto"
+              iconSize={38}
+              textSize={19}
             />
           </Link>
-          <p className="m-0 text-[13.5px] leading-[1.55] text-calma-cream/[.68]">
+          <p className="m-0 max-w-[280px] text-[14px] leading-relaxed text-calma-ink/70">
             {settings?.footer.description || t.footTag}
           </p>
           {socialLinks.length > 0 && (
-            <div className="mt-4 flex items-center gap-3">
+            <div className="mt-4 flex items-center gap-2">
               {socialLinks.map((item) => (
                 <a
                   key={item.key}
@@ -109,7 +127,7 @@ export default function CalmaFooter() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={item.label}
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-calma-cream/20 text-calma-cream/80 transition-colors hover:border-calma-cream/40 hover:text-calma-cream"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-calma-ink/15 bg-white text-calma-ink/80 transition-colors hover:border-calma-ink/40 hover:text-calma-ink"
                 >
                   <item.icon className="h-4 w-4" />
                 </a>
@@ -118,57 +136,89 @@ export default function CalmaFooter() {
           )}
         </div>
 
-        <div className="flex flex-wrap gap-14">
-          <div>
-            <div className="mb-3.5 text-xs font-bold uppercase tracking-[.12em] text-calma-terracotta-soft">
-              {t.footExplore}
-            </div>
-            <FooterPublicNavigation menuKey="footer-explore" />
-          </div>
-          <div>
-            <div className="mb-3.5 text-xs font-bold uppercase tracking-[.12em] text-calma-terracotta-soft">
-              {t.footCompany}
-            </div>
-            <FooterPublicNavigation menuKey="footer-company" />
-          </div>
+        <div>
+          <div className={headingClass}>{t.footExplore}</div>
+          <FooterPublicNavigation menuKey="footer-explore" linkClassName={linkClass} />
         </div>
 
-        <div className="max-w-[300px]">
-          <div className="mb-3.5 text-xs font-bold uppercase tracking-[.12em] text-calma-terracotta-soft">
-            {t.newsletterTitle}
-          </div>
-          <p className="mb-3.5 text-[13px] leading-[1.5] text-calma-cream/[.68]">
+        <div>
+          <div className={headingClass}>{t.footCompany}</div>
+          <FooterPublicNavigation menuKey="footer-company" linkClassName={linkClass} />
+        </div>
+
+        <div className="col-span-2 lg:col-span-1">
+          <div className={headingClass}>{l.footContact}</div>
+          <ul className="m-0 flex list-none flex-col gap-2.5 p-0 text-sm">
+            {contact?.phone && (
+              <li>
+                <a
+                  href={`tel:${contact.phone.replace(/\s/g, "")}`}
+                  className={`inline-flex items-center gap-2 ${linkClass}`}
+                >
+                  <Phone size={15} className="shrink-0" />
+                  <span dir="ltr">{contact.phone}</span>
+                </a>
+              </li>
+            )}
+            {contact?.whatsapp && (
+              <li>
+                <a
+                  href={`https://wa.me/${contact.whatsapp.replace(/\D/g, "")}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`inline-flex items-center gap-2 ${linkClass}`}
+                >
+                  <MessageCircle size={15} className="shrink-0" />
+                  WhatsApp
+                </a>
+              </li>
+            )}
+            {contact?.email && (
+              <li>
+                <a
+                  href={`mailto:${contact.email}`}
+                  className={`inline-flex items-center gap-2 break-all ${linkClass}`}
+                >
+                  <Mail size={15} className="shrink-0" />
+                  {contact.email}
+                </a>
+              </li>
+            )}
+            {contact?.address && (
+              <li className="flex items-start gap-2 text-calma-ink/75">
+                <MapPin size={15} className="mt-0.5 shrink-0" />
+                {contact.address}
+              </li>
+            )}
+          </ul>
+        </div>
+
+        <div className="col-span-2 lg:col-span-1">
+          <div className={headingClass}>{l.footNewsletter}</div>
+          <p className="mb-3 mt-0 text-[14px] leading-relaxed text-calma-ink/70">
             {t.newsletterSub}
           </p>
           <NewsletterForm />
         </div>
       </div>
-      <div className="border-t border-calma-cream/[.14]">
-        <div className="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-x-6 gap-y-2.5 px-6 py-[18px] text-[12.5px] text-calma-cream/60 sm:px-10">
+
+      <div className="border-t border-calma-ink/10">
+        <div className="mx-auto flex max-w-[1240px] flex-wrap items-center justify-between gap-x-6 gap-y-2 px-4 py-5 text-[13px] text-calma-ink/65 sm:px-6 lg:px-8">
           <span>
             © {new Date().getFullYear()} {settings?.footer.copyrightText || "Calma Trip · Tunisie"}
           </span>
-          <div className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
-            <Link
-              href="/confidentialite"
-              className="text-calma-cream/60 no-underline hover:text-calma-cream"
-            >
-              Confidentialité
+          <nav aria-label={l.legalNotice} className="flex flex-wrap items-center gap-x-5 gap-y-1.5">
+            <Link href="/confidentialite" className={linkClass}>
+              {l.privacy}
             </Link>
-            <Link
-              href="/conditions-generales-de-vente"
-              className="text-calma-cream/60 no-underline hover:text-calma-cream"
-            >
-              CGV
+            <Link href="/conditions-generales-de-vente" className={linkClass}>
+              {l.terms}
             </Link>
-            <Link
-              href="/mentions-legales"
-              className="text-calma-cream/60 no-underline hover:text-calma-cream"
-            >
-              Mentions légales
+            <Link href="/mentions-legales" className={linkClass}>
+              {l.legalNotice}
             </Link>
-          </div>
-          <span>Paiement sécurisé · Support 24/7</span>
+          </nav>
+          <span>{l.footBottomNote}</span>
         </div>
       </div>
     </footer>

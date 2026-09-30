@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Plus, X, ImageIcon } from "lucide-react";
 import { RichTextEditor } from "@/components/admin/RichTextEditor";
 import { ImageUploadZone } from "@/components/admin/shared/ImageUploadZone";
@@ -30,6 +31,16 @@ export default function AdminServiceEditPage({ id }: { id?: string }) {
   const [initialized, setInitialized] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [allDestinations, setAllDestinations] = useState<
+    { id: number; name: string; active: boolean }[]
+  >([]);
+
+  useEffect(() => {
+    fetch("/api/admin/destinations")
+      .then((res) => (res.ok ? res.json() : []))
+      .then((data) => setAllDestinations(Array.isArray(data) ? data : []))
+      .catch(() => setAllDestinations([]));
+  }, []);
 
   useEffect(() => {
     if (initialized || loading) return;
@@ -45,6 +56,7 @@ export default function AdminServiceEditPage({ id }: { id?: string }) {
         active: editingService.active,
         popular: editingService.popular,
         features: parseFeatures(editingService.features),
+        destinationIds: (editingService.destinations ?? []).map((d) => d.id),
       });
       setImageEntries(
         parseImages(editingService.image).map((url) => ({ id: `existing-${url}`, url })),
@@ -210,6 +222,52 @@ export default function AdminServiceEditPage({ id }: { id?: string }) {
             </button>
           </div>
         </div>
+
+        <fieldset>
+          <legend className="mb-1 block text-sm font-medium text-calma-ink">Destinations</legend>
+          <p className="mb-2 mt-0 text-xs text-calma-taupe">
+            Where this service is offered in the public search. Leave all unticked to offer it in
+            every destination. Manage the list under{" "}
+            <Link href="/admin/destinations" className="underline">
+              Destinations
+            </Link>
+            .
+          </p>
+          <div className="flex flex-wrap gap-2">
+            {allDestinations.map((d) => {
+              const checked = formData.destinationIds.includes(d.id);
+              return (
+                <label
+                  key={d.id}
+                  className={`flex cursor-pointer items-center gap-2 rounded-full border px-3.5 py-2 text-sm transition-colors ${
+                    checked
+                      ? "border-admin-gold bg-admin-gold/10 text-calma-ink"
+                      : "border-calma-border text-calma-taupe hover:border-admin-gold/60"
+                  }`}
+                >
+                  <input
+                    type="checkbox"
+                    checked={checked}
+                    onChange={() =>
+                      setFormData((f) => ({
+                        ...f,
+                        destinationIds: checked
+                          ? f.destinationIds.filter((x) => x !== d.id)
+                          : [...f.destinationIds, d.id],
+                      }))
+                    }
+                    className="h-3.5 w-3.5 accent-calma-ink"
+                  />
+                  {d.name}
+                  {!d.active && <span className="text-xs text-calma-taupe">(hidden)</span>}
+                </label>
+              );
+            })}
+            {allDestinations.length === 0 && (
+              <span className="text-sm text-calma-taupe">No destinations yet.</span>
+            )}
+          </div>
+        </fieldset>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
           <div>
