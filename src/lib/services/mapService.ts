@@ -43,6 +43,19 @@ export function htmlTextLength(html: string): number {
   return html.replace(/<[^>]+>/g, "").trim().length;
 }
 
+// Prices are free text and often already read "From 35 TND"; the UI adds its own
+// "Dès" label, so drop a leading from/starting-at/dès/à partir de to avoid "Dès From 35 TND".
+export function cleanServicePrice(price: string): string {
+  return (
+    price
+      .replace(
+        /^s*(?:startings+at|starts?s+from|from|dès|des|às+partirs+de|as+partirs+de)s*:?s*/i,
+        "",
+      )
+      .trim() || price
+  );
+}
+
 export function mapService(s: DBService): MappedService {
   const category = (s.category ?? "").toLowerCase();
   const title = s.title.toLowerCase();
@@ -78,7 +91,7 @@ export function mapService(s: DBService): MappedService {
     title: s.title,
     subtitle: s.subtitle ?? category,
     description: s.description,
-    price: s.price,
+    price: cleanServicePrice(s.price),
     duration: s.duration ?? "Custom",
     badge: s.popular ? "Popular" : undefined,
     features,

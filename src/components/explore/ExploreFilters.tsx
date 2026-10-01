@@ -50,6 +50,7 @@ export function ExploreFilters({
       t.exp.catSights,
       t.exp.catActivities,
       t.exp.catHidden,
+      t.exp.catHotels,
       t.exp.catEvents,
       t.exp.catMuseums,
     ][i],

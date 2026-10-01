@@ -151,6 +151,7 @@ export interface CalmaExploreDict {
   catHidden: string;
   catEvents: string;
   catMuseums: string;
+  catHotels: string;
   allCities: string;
   budgetLabel: string;
   useLocation: string;
@@ -1054,6 +1055,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       catHidden: "Trésors cachés",
       catEvents: "Événements",
       catMuseums: "Musées",
+      catHotels: "Hébergements",
       allCities: "Toutes les villes",
       budgetLabel: "Budget",
       useLocation: "Utiliser ma position",
@@ -1889,6 +1891,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       catHidden: "Hidden Gems",
       catEvents: "Events",
       catMuseums: "Museums",
+      catHotels: "Stays",
       allCities: "All Cities",
       budgetLabel: "Budget",
       useLocation: "Use My Location",
@@ -2706,6 +2709,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       catHidden: "كنوز خفية",
       catEvents: "فعاليات",
       catMuseums: "متاحف",
+      catHotels: "إقامات",
       allCities: "كل المدن",
       budgetLabel: "الميزانية",
       useLocation: "استخدم موقعي",
