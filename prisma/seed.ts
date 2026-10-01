@@ -24,6 +24,7 @@ async function main() {
           "Personalized welcome, real-time flight tracking. Your driver waits for you right after baggage claim, no matter the hour.",
         price: "From 35 TND",
         icon: "Plane",
+        image: "/images/services/airport-transfer.jpg",
         color: "#D4A373",
         category: "Transport",
         duration: "30-60 min",
@@ -45,6 +46,7 @@ async function main() {
           "Explore Djerba, Tozeur, Carthage and beyond. Our passionate guides reveal the secrets of authentic Tunisia.",
         price: "From 80 TND",
         icon: "MapPin",
+        image: "/images/services/excursions-matmata.jpg",
         color: "#1E6091",
         category: "Excursion",
         duration: "4-8 hours",
@@ -86,60 +88,69 @@ async function main() {
   // Products
   await prisma.product.createMany({
     data: [
+      // Photos in public/images/products — see public/images/CREDITS.md
       {
-        name: "Calmatrip T-Shirt",
-        price: 25,
-        category: "Clothing",
-        image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=400&h=400&fit=crop",
-        description: "Cotton tee with embroidered Calmatrip logo.",
-      },
-      {
-        name: "Desert Cap",
-        price: 18,
-        category: "Accessories",
-        image: "https://images.unsplash.com/photo-1588850561407-ed78c282e89b?w=400&h=400&fit=crop",
-        description: "Adjustable cap with desert-inspired pattern.",
-      },
-      {
-        name: "Tunisia Hoodie",
+        name: "Hand-painted Nabeul Plate",
         price: 45,
-        category: "Clothing",
-        image: "https://images.unsplash.com/photo-1556821840-3a63f95609a7?w=400&h=400&fit=crop",
-        description: "Warm hoodie featuring traditional Tunisian motifs.",
+        category: "Ceramics",
+        image: "/images/products/nabeul-plate.jpg",
+        description:
+          "Glazed earthenware plate painted by hand in a Nabeul workshop with the town's traditional fish motif. About 25 cm across. Food-safe glaze; hand wash only.",
       },
       {
-        name: "Ceramic Mug",
-        price: 12,
-        category: "Home",
-        image: "https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?w=400&h=400&fit=crop",
-        description: "Handcrafted ceramic mug with Calmatrip print.",
+        name: "Mini Tajine Dish with Tray",
+        price: 35,
+        category: "Ceramics",
+        image: "/images/products/nabeul-tajine.jpg",
+        description:
+          "Small lidded pot on a matching square tray, painted in the blue-and-white Nabeul style. Used for olives, harissa or sugar. Each piece is painted by hand, so patterns vary slightly.",
       },
       {
-        name: "Leather Journal",
-        price: 22,
-        category: "Stationery",
-        image: "https://images.unsplash.com/photo-1544816155-12df9643f363?w=400&h=400&fit=crop",
-        description: "Genuine leather travel journal. 120 pages.",
+        name: "Nabeul Ceramic Cup",
+        price: 18,
+        category: "Ceramics",
+        image: "/images/products/nabeul-cup.jpg",
+        description:
+          "Wide cup for tea or coffee, wheel-thrown and hand-painted in green and black. Holds about 250 ml.",
       },
       {
-        name: "Sunrise Tote Bag",
-        price: 15,
+        name: "Hand-woven Cotton Fouta",
+        price: 30,
+        category: "Textiles",
+        image: "/images/products/fouta.jpg",
+        description:
+          "Flat-woven cotton fouta, the traditional Tunisian hammam towel. Light, quick-drying and good as a beach towel or throw. About 100 × 180 cm; colours vary by batch.",
+      },
+      {
+        name: "Kairouan Mergoum Rug (60 × 90 cm)",
+        price: 280,
+        category: "Textiles",
+        image: "/images/products/kairouan-carpet.jpg",
+        description:
+          "Small flat-woven mergoum rug from Kairouan, wool on a cotton warp, with geometric Berber-style patterns. Each rug is unique; the one you receive may differ from the photo.",
+      },
+      {
+        name: "Traditional Chechia",
+        price: 40,
         category: "Accessories",
-        image: "https://images.unsplash.com/photo-1597484661643-2f5fef640b91?w=400&h=400&fit=crop",
-        description: "Eco-friendly cotton tote bag with desert illustration.",
+        image: "/images/products/chechia.jpg",
+        description:
+          "The red felted-wool cap made in the Souk des Chaouachia in Tunis medina, knitted, felted and shaped by hand. Tell us your head size at checkout.",
       },
     ],
   });
 
   // Destinations
+  // Only Hammamet is offered in the search bar at launch; admins switch the
+  // others on from /admin/destinations.
   await prisma.destination.createMany({
     data: [
-      { name: "Djerba", emoji: "🏝️", description: "Enchanting island", order: 1 },
-      { name: "Tozeur", emoji: "🌴", description: "Gateway to Sahara", order: 2 },
-      { name: "Carthage", emoji: "🏛️", description: "Ancient city", order: 3 },
-      { name: "Sidi Bou Saïd", emoji: "🔵", description: "Blue village", order: 4 },
-      { name: "Douz", emoji: "🐪", description: "Endless desert", order: 5 },
-      { name: "Hammamet", emoji: "🌊", description: "Tunisian Riviera", order: 6 },
+      { name: "Djerba", emoji: "🏝️", description: "Enchanting island", order: 1, active: false },
+      { name: "Tozeur", emoji: "🌴", description: "Gateway to Sahara", order: 2, active: false },
+      { name: "Carthage", emoji: "🏛️", description: "Ancient city", order: 3, active: false },
+      { name: "Sidi Bou Saïd", emoji: "🔵", description: "Blue village", order: 4, active: false },
+      { name: "Douz", emoji: "🐪", description: "Endless desert", order: 5, active: false },
+      { name: "Hammamet", emoji: "🌊", description: "Tunisian Riviera", order: 0, active: true },
     ],
   });
 

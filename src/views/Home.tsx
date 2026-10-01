@@ -1,29 +1,20 @@
 "use client";
 import React from "react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
-import CalmaHero from "@/components/home/calma/CalmaHero";
-import CalmaSearchBar from "@/components/home/calma/CalmaSearchBar";
-import CalmaCategories from "@/components/home/calma/CalmaCategories";
-import CalmaMarketplacePreview, {
-  type FeaturedExperience,
-} from "@/components/home/calma/CalmaMarketplacePreview";
-import CalmaFeaturedJourneys from "@/components/home/calma/CalmaFeaturedJourneys";
-import CalmaTunisianStory from "@/components/home/calma/CalmaTunisianStory";
-import CalmaShopPreview from "@/components/home/calma/CalmaShopPreview";
-import CalmaWhyBanner from "@/components/home/calma/CalmaWhyBanner";
-import CalmaCustomTrip from "@/components/home/calma/CalmaCustomTrip";
-import CalmaFinalCTA from "@/components/home/calma/CalmaFinalCTA";
-import ReviewsSection from "@/components/home/ReviewsSection";
-import ReviewForm from "@/components/review/ReviewForm";
+import type { HomeProduct } from "@/lib/activities";
+import type { SearchOptions } from "@/lib/searchOptions";
+import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
-
-interface Product {
-  id: number;
-  name: string;
-  price: number;
-  category: string;
-  image: string | null;
-}
+import HomeHero from "@/components/home/HomeHero";
+import HomeCategoryChips from "@/components/home/HomeCategoryChips";
+import HomeTrustStrip from "@/components/home/HomeTrustStrip";
+import HomeCardRow from "@/components/home/HomeCardRow";
+import ActivityCard, { type HomeActivity } from "@/components/home/ActivityCard";
+import HomeDestinations from "@/components/home/HomeDestinations";
+import HomeReviews from "@/components/home/HomeReviews";
+import HomePlannerBanner from "@/components/home/HomePlannerBanner";
+import ProductCard from "@/components/home/ProductCard";
+import ReviewForm from "@/components/review/ReviewForm";
 
 interface Review {
   id: number;
@@ -36,84 +27,77 @@ interface Review {
 }
 
 interface HomeProps {
-  shopProducts: Product[];
+  activities: HomeActivity[];
+  shopProducts: HomeProduct[];
   reviews: Review[];
-  experiences: FeaturedExperience[];
+  searchOptions: SearchOptions;
 }
 
-// "Share your experience" — kept as its own small section (real, user-submitted
-// reviews only feed ReviewsSection above it) but its copy now comes from the
-// dict like every other section, instead of being hardcoded French.
+// Review form stays on the homepage — it's the only place travellers can leave one.
 function ShareExperienceSection() {
   const { t } = useCalmaLang();
   return (
-    <section className="bg-calma-cream py-24">
-      <div className="mx-auto max-w-[720px] px-6 text-center sm:px-10">
-        <div className="mb-3 text-xs font-bold uppercase tracking-[.16em] text-calma-terracotta">
-          {t.reviewKicker}
-        </div>
-        <h2 className="mb-3 font-fraunces text-[clamp(28px,3.2vw,38px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-ink">
+    <section className="mx-auto max-w-[1240px] px-4 py-10 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-[560px] rounded-2xl border border-calma-ink/10 bg-white p-6 sm:p-8">
+        <h2 className="m-0 text-[20px] font-bold text-calma-ink sm:text-[22px]">
           {t.reviewHeading}
         </h2>
-        <p className="mx-auto mb-10 max-w-[420px] leading-relaxed text-calma-taupe">
-          {t.reviewSub}
-        </p>
-        <div className="mx-auto max-w-[520px] text-left">
-          <ReviewForm />
-        </div>
+        <p className="mb-6 mt-2 text-[15px] leading-relaxed text-calma-taupe">{t.reviewSub}</p>
+        <ReviewForm />
       </div>
     </section>
   );
 }
 
-export default function Home({ shopProducts, reviews, experiences }: HomeProps) {
+function HomeContent({ activities, shopProducts, reviews, searchOptions }: HomeProps) {
+  const { t } = useCalmaLang();
+  const services = activities.filter((a) => a.kind === "service");
+  const listings = activities.filter((a) => a.kind === "listing");
+
+  return (
+    <main className="min-h-screen bg-white pb-12 font-hanken">
+      <HomeHero searchOptions={searchOptions} />
+      <HomeCategoryChips />
+      <HomeTrustStrip />
+
+      {services.length > 0 && (
+        <HomeCardRow title={t.home.toursHeading} seeAllHref="/services">
+          {services.map((a) => (
+            <ActivityCard key={a.key} activity={a} />
+          ))}
+        </HomeCardRow>
+      )}
+
+      <HomeDestinations />
+
+      {listings.length > 0 && (
+        <HomeCardRow title={t.home.localHeading} seeAllHref="/explore">
+          {listings.map((a) => (
+            <ActivityCard key={a.key} activity={a} />
+          ))}
+        </HomeCardRow>
+      )}
+
+      {shopProducts.length > 0 && (
+        <HomeCardRow title={t.home.shopHeading} seeAllHref="/marketplace">
+          {shopProducts.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </HomeCardRow>
+      )}
+
+      <HomeReviews reviews={reviews} />
+      <HomePlannerBanner />
+      <ShareExperienceSection />
+    </main>
+  );
+}
+
+export default function Home(props: HomeProps) {
   return (
     <CalmaLangProvider>
-      {/* Narrative rhythm: Arrival (hero) -> Discovery (destinations) -> Experience
-          (experiences/journeys/story) -> Connection (why us/tailored/reviews) -> Escape (CTA). */}
-      <div className="min-h-screen bg-calma-cream font-hanken">
-        <CalmaHero />
-        <CalmaSearchBar />
-
-        <div className="bg-white">
-          <CalmaCategories />
-        </div>
-
-        <div className="bg-calma-cream">
-          <CalmaMarketplacePreview experiences={experiences} />
-        </div>
-
-        <div className="bg-calma-sand">
-          <CalmaFeaturedJourneys />
-        </div>
-
-        <div className="bg-white">
-          <CalmaTunisianStory />
-        </div>
-
-        <div className="bg-calma-cream">
-          <CalmaWhyBanner />
-        </div>
-
-        <div className="bg-calma-sand">
-          <CalmaCustomTrip review={reviews[0] ?? null} />
-        </div>
-
-        <div className="bg-calma-cream">
-          <CalmaShopPreview products={shopProducts} />
-        </div>
-
-        {/* Real traveler reviews only — only a client who actually booked a service can
-            leave one, which is exactly what makes this credible. No decorative/fabricated
-            testimonials here. Section hides itself entirely until someone has submitted one. */}
-        <ReviewsSection reviews={reviews} />
-
-        <ShareExperienceSection />
-
-        <div className="bg-calma-cream">
-          <CalmaFinalCTA />
-        </div>
-      </div>
+      <CalmaHeader active="home" />
+      <HomeContent {...props} />
       <CalmaFooter />
     </CalmaLangProvider>
   );

@@ -28,6 +28,7 @@ import {
   Images,
   PanelTop,
   Settings,
+  MapPin,
 } from "lucide-react";
 import { useState } from "react";
 import NotificationBell from "@/components/ui/NotificationBell";
@@ -74,6 +75,7 @@ export default function AdminDashboard({ children }: { children?: React.ReactNod
         ...(managesLegacyOperations
           ? [
               { path: "/admin/services", label: "Experiences & services", icon: Package },
+              { path: "/admin/destinations", label: "Destinations", icon: MapPin },
               { path: "/admin/events", label: "Events", icon: CalendarDays },
               { path: "/admin/museums", label: "Museums", icon: Landmark },
               { path: "/admin/guides", label: "Blog & guides", icon: BookOpen },

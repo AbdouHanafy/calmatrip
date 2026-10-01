@@ -13,6 +13,7 @@ interface ServicePayload {
   active: boolean;
   popular: boolean;
   features: string[] | null;
+  destinationIds: number[];
 }
 
 export function useServices() {
@@ -90,6 +91,7 @@ export function useServices() {
       active: boolean;
       popular: boolean;
       features: string[];
+      destinationIds: number[];
     },
     imageEntries: ImageEntry[],
     setImageEntries: (updater: (prev: ImageEntry[]) => ImageEntry[]) => void,
@@ -118,6 +120,7 @@ export function useServices() {
         active: formData.active,
         popular: formData.popular,
         features: cleanedFeatures.length > 0 ? cleanedFeatures : null,
+        destinationIds: formData.destinationIds,
       };
 
       const url = editingServiceId ? `/api/services/${editingServiceId}` : "/api/services";

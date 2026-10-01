@@ -110,7 +110,7 @@ export function NavMegaMenu({
     >
       <Link
         href={href}
-        className={`${baseClassName} inline-flex items-center gap-1 ${isActive ? "bg-white/[.12] font-semibold text-white" : ""}`}
+        className={`${baseClassName} inline-flex items-center gap-1 ${isActive ? "bg-calma-ink/[.06] font-semibold text-calma-ink" : ""}`}
       >
         {label}
         <ChevronDown
@@ -122,36 +122,40 @@ export function NavMegaMenu({
         <div
           onMouseEnter={cancelClose}
           onMouseLeave={scheduleClose}
-          className="absolute start-0 top-full z-[60] mt-3 w-[340px] overflow-hidden rounded-2xl border border-white/10 bg-calma-olive-deeper/95 shadow-[0_24px_60px_-16px_rgba(8,12,20,.6)] backdrop-blur-xl"
+          className="absolute start-0 top-full z-[60] mt-2 w-[340px] overflow-hidden rounded-xl border border-calma-ink/10 bg-white shadow-[0_16px_40px_-12px_rgba(21,36,46,.25)]"
         >
           <div className="max-h-[420px] overflow-y-auto p-2">
-            {items === null && <div className="px-4 py-6 text-center text-sm text-white/50">…</div>}
+            {items === null && (
+              <div className="px-4 py-6 text-center text-sm text-calma-taupe">…</div>
+            )}
             {items?.length === 0 && (
-              <div className="px-4 py-6 text-center text-sm text-white/50">{t.mkt.emptyTitle}</div>
+              <div className="px-4 py-6 text-center text-sm text-calma-taupe">
+                {t.mkt.emptyTitle}
+              </div>
             )}
             {items?.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
-                className="flex items-center gap-3 rounded-xl p-2.5 no-underline transition-colors hover:bg-white/[.08]"
+                className="flex items-center gap-3 rounded-lg p-2.5 no-underline transition-colors hover:bg-calma-ink/[.04]"
               >
-                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-white/10">
+                <div className="relative h-14 w-14 shrink-0 overflow-hidden rounded-lg bg-calma-sand">
                   {item.image && (
                     <Image src={item.image} alt="" fill sizes="56px" className="object-cover" />
                   )}
                 </div>
                 <div className="min-w-0">
-                  <div className="truncate font-hanken text-[14px] font-semibold text-white">
+                  <div className="truncate font-hanken text-[14px] font-semibold text-calma-ink">
                     {item.title}
                   </div>
-                  <div className="truncate text-[12.5px] text-white/60">{item.description}</div>
+                  <div className="truncate text-[12.5px] text-calma-taupe">{item.description}</div>
                 </div>
               </Link>
             ))}
           </div>
           <Link
             href={href}
-            className="block border-t border-white/10 px-4 py-3 text-center text-[13px] font-semibold text-calma-terracotta-soft no-underline hover:text-white"
+            className="block border-t border-calma-ink/10 px-4 py-3 text-center text-[13.5px] font-semibold text-calma-ink no-underline hover:underline"
           >
             {label} →
           </Link>

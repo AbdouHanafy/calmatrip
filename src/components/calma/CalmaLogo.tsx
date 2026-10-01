@@ -16,28 +16,36 @@ export interface CalmaLogoProps {
   /** Show the "Your Tunisian Escape" tagline beneath the wordmark. */
   tagline?: boolean;
   className?: string;
+  /** Height of the pin in px. */
   iconSize?: number;
+  /** Wordmark font size in px. */
+  textSize?: number;
 }
+
+// logo-mark-trim.png is logo-mark.png with its transparent side margins cropped
+// (705×406 canvas → 280×383 pin), so iconSize is the pin's real height.
+const MARK_RATIO = 280 / 383;
 
 export default function CalmaLogo({
   tone = "cream",
   tagline = false,
   className = "",
   iconSize = 34,
+  textSize = 20,
 }: CalmaLogoProps) {
   const color = TONE[tone];
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+    <span className={`inline-flex items-center gap-2 ${className}`}>
       <span
         aria-hidden="true"
         style={{
           display: "inline-block",
           flexShrink: 0,
-          width: iconSize,
-          height: iconSize * 0.98,
+          width: Math.round(iconSize * MARK_RATIO),
+          height: iconSize,
           backgroundColor: color,
-          WebkitMaskImage: "url(/images/brand/logo-mark.png)",
-          maskImage: "url(/images/brand/logo-mark.png)",
+          WebkitMaskImage: "url(/images/brand/logo-mark-trim.png)",
+          maskImage: "url(/images/brand/logo-mark-trim.png)",
           WebkitMaskPosition: "center",
           maskPosition: "center",
           WebkitMaskSize: "contain",
@@ -47,7 +55,10 @@ export default function CalmaLogo({
         }}
       />
       <span className="flex flex-col leading-none">
-        <span className="font-hanken text-[22px] leading-none" style={{ color }}>
+        <span
+          className="whitespace-nowrap font-hanken leading-none tracking-[-0.01em]"
+          style={{ color, fontSize: textSize }}
+        >
           <span className="font-bold">Calma</span> <span className="font-light">Trip</span>
         </span>
         {tagline && (
@@ -73,12 +84,14 @@ export function CalmaLogoOrCustom({
   tone = "cream",
   imgClassName = "h-8 w-auto",
   iconSize = 30,
+  textSize,
 }: {
   customUrl?: string | null;
   alt: string;
   tone?: keyof typeof TONE;
   imgClassName?: string;
   iconSize?: number;
+  textSize?: number;
 }) {
   if (customUrl) {
     // Intrinsic size must match the uploaded asset's real aspect ratio — Next/Image uses
@@ -86,5 +99,5 @@ export function CalmaLogoOrCustom({
     // rendered logo non-uniformly even though imgClassName only constrains one dimension.
     return <Image src={customUrl} alt={alt} width={2036} height={586} className={imgClassName} />;
   }
-  return <CalmaLogo tone={tone} iconSize={iconSize} />;
+  return <CalmaLogo tone={tone} iconSize={iconSize} textSize={textSize} />;
 }

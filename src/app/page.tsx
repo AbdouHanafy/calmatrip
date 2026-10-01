@@ -5,6 +5,14 @@ import { buildMetadata, faqSchema, SITE } from "@/lib/seo";
 import { getPublicProducts } from "@/repositories/productRepository";
 import { getApprovedReviews } from "@/repositories/reviewRepository";
 import { getPublicExploreListings } from "@/repositories/exploreListingRepository";
+import { getPublicServices } from "@/repositories/serviceRepository";
+import { getSearchOptions } from "@/lib/searchOptions";
+import {
+  listingToActivity,
+  serviceToActivity,
+  toHomeProduct,
+  type HomeActivity,
+} from "@/lib/activities";
 
 // ✅ Single export metadata — uses buildMetadata + JSON-LD inline
 export const metadata: Metadata = {
@@ -65,17 +73,29 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [{ products }, reviews, exploreListings] = await Promise.all([
+  const [{ products }, reviews, exploreListings, services, searchOptions] = await Promise.all([
     getPublicProducts({ sort: "newest" }),
     getApprovedReviews(),
     getPublicExploreListings(),
+    getPublicServices(),
+    getSearchOptions(),
   ]);
+
+  // Services first (popular ones leading, then admin order), then partner listings.
+  const activities: HomeActivity[] = [
+    ...services
+      .filter((s) => s.active)
+      .sort((a, b) => Number(b.popular) - Number(a.popular) || a.order - b.order)
+      .map(serviceToActivity),
+    ...exploreListings.slice(0, 12).map(listingToActivity),
+  ];
 
   return (
     <HomeComponent
-      shopProducts={JSON.parse(JSON.stringify(products.slice(0, 3)))}
+      activities={activities}
+      shopProducts={products.slice(0, 8).map(toHomeProduct)}
       reviews={JSON.parse(JSON.stringify(reviews))}
-      experiences={JSON.parse(JSON.stringify(exploreListings.slice(0, 3)))}
+      searchOptions={searchOptions}
     />
   );
 }

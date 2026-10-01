@@ -9,6 +9,7 @@ import {
   type ContactSettings,
   type SocialSettings,
   type FooterSettings,
+  type SearchSettings,
 } from "../schemas/settingsSchemas";
 
 export type SiteSettings = {
@@ -17,6 +18,7 @@ export type SiteSettings = {
   contact: ContactSettings;
   social: SocialSettings;
   footer: FooterSettings;
+  search: SearchSettings;
 };
 
 // Real values already in production use (site metadata, contact cards, the
@@ -55,6 +57,11 @@ const DEFAULT_SETTINGS: SiteSettings = {
     copyrightText: "Calma Trip · Tunisie",
     description: null,
   },
+  search: {
+    maxParticipants: 20,
+    showDate: true,
+    showParticipants: true,
+  },
 };
 
 function mergeGroup<G extends SettingsGroup>(group: G, storedValue: unknown): SiteSettings[G] {
@@ -79,6 +86,7 @@ export async function loadSiteSettings(): Promise<SiteSettings> {
     contact: mergeGroup("contact", byKey.get("contact")),
     social: mergeGroup("social", byKey.get("social")),
     footer: mergeGroup("footer", byKey.get("footer")),
+    search: mergeGroup("search", byKey.get("search")),
   };
 }
 

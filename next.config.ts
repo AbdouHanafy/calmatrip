@@ -23,6 +23,12 @@ export default withPWANext({
         hostname: "images.unsplash.com",
       },
       {
+        // Legacy uploads — rows created before the switch to local disk still
+        // point at Cloudinary URLs; next/image throws without this entry.
+        protocol: "https",
+        hostname: "res.cloudinary.com",
+      },
+      {
         // Google OAuth profile pictures (session.user.image / review.avatar)
         protocol: "https",
         hostname: "lh3.googleusercontent.com",

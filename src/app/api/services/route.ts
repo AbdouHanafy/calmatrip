@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
 import { sanitizeHtml } from "@/lib/sanitize";
-import { createService, getPublicServices } from "@/repositories/serviceRepository";
+import {
+  createService,
+  getPublicServices,
+  parseDestinationIds,
+} from "@/repositories/serviceRepository";
 
 export async function GET() {
   try {
@@ -34,6 +38,8 @@ export async function POST(req: Request) {
       image: json.image,
       active: json.active,
       popular: json.popular,
+      features: Array.isArray(json.features) ? json.features : undefined,
+      destinationIds: parseDestinationIds(json.destinationIds),
     });
     return NextResponse.json(service, { status: 201 });
   } catch (error) {

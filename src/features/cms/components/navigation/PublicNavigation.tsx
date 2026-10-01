@@ -46,33 +46,22 @@ export function DesktopPublicNavigation({
   light = true,
   className,
   locale = "fr",
-  /** Tighter item padding/gap between md and xl, easing back to full padding at xl+ — used by the
-   *  homepage overlay header, which also has to fit a language switcher/partner pill/account
-   *  icon cluster in that same range. Other headers (full-width, no competing cluster) keep the
-   *  regular padding untouched. */
-  compact = false,
 }: {
   menuKey?: string;
+  /** true = Calma header (dark text on the white bar, mega-menus); false = legacy Navbar. */
   light?: boolean;
   className?: string;
   locale?: CalmaLang;
-  compact?: boolean;
 }) {
   const items = usePublicNavigation(menuKey);
   const pathname = usePathname();
   const lang = useOptionalCalmaLang()?.lang ?? locale;
-  // Stays tight for the whole range it's visible in — it used to relax back to full padding
-  // at the same breakpoint it first appears at, which meant the tighter padding never actually
-  // applied and the overlay pill overflowed again on common 1280-1366px laptop screens.
-  const itemPadding = compact ? "px-2.5 py-2" : "px-4 py-2";
-  const navClassName =
-    className ??
-    (compact ? "hidden items-center gap-0.5 md:flex" : "hidden items-center gap-1 md:flex");
+  const navClassName = className ?? "hidden items-center gap-0.5 md:flex";
   const base = light
-    ? `whitespace-nowrap rounded-full ${itemPadding} text-white/75 no-underline outline-none transition-colors hover:bg-white/[.06] hover:text-white focus-visible:ring-2 focus-visible:ring-white/60`
+    ? "whitespace-nowrap rounded-full px-3 py-2 text-[15px] font-medium 2xl:px-4 text-calma-ink/75 no-underline outline-none transition-colors hover:bg-calma-ink/[.05] hover:text-calma-ink focus-visible:ring-2 focus-visible:ring-calma-olive"
     : "whitespace-nowrap border-b-2 border-transparent px-3 py-1.5 text-[0.72rem] uppercase tracking-[0.14em] text-[#5e7480] outline-none transition-colors hover:border-[#D2B38B]/50 hover:text-[#15242e] focus-visible:ring-2 focus-visible:ring-[#D2B38B]";
   const active = light
-    ? "bg-white/[.12] font-semibold text-white"
+    ? "bg-calma-ink/[.06] font-semibold text-calma-ink"
     : "border-[#D2B38B] text-[#15242e]";
   return (
     <nav aria-label="Main navigation" className={navClassName}>
@@ -187,7 +176,7 @@ export function MobilePublicNavigation({
               item={item}
               locale={locale}
               onClick={onNavigate}
-              className={`flex-1 rounded-xl px-4 py-3 text-base no-underline outline-none focus-visible:ring-2 focus-visible:ring-calma-terracotta ${isActive ? "bg-calma-terracotta/10 font-semibold text-calma-ink" : "font-medium text-calma-ink/80 hover:bg-calma-olive/10"}`}
+              className={`flex-1 rounded-xl px-4 py-3 text-base no-underline outline-none focus-visible:ring-2 focus-visible:ring-calma-olive ${isActive ? "bg-calma-ink/[.06] font-semibold text-calma-ink" : "font-medium text-calma-ink/80 hover:bg-calma-ink/[.05]"}`}
             />
             {!!item.children.length && (
               <button
@@ -224,9 +213,12 @@ export function MobilePublicNavigation({
 export function FooterPublicNavigation({
   menuKey,
   locale = "fr",
+  linkClassName = "text-calma-cream/[.82] no-underline hover:text-calma-cream",
 }: {
   menuKey: string;
   locale?: CalmaLang;
+  /** Defaults to cream-on-dark (legacy footer); CalmaFooter passes dark-on-light. */
+  linkClassName?: string;
 }) {
   const items = usePublicNavigation(menuKey);
   const lang = useOptionalCalmaLang()?.lang ?? locale;
@@ -238,12 +230,12 @@ export function FooterPublicNavigation({
             href={item.href}
             target={item.target}
             rel={item.target === "_blank" ? "noopener noreferrer" : undefined}
-            className="text-calma-cream/[.82] no-underline hover:text-calma-cream"
+            className={linkClassName}
           >
             {navigationLabel(item.label, lang)}
           </Link>
         ) : (
-          <span className="font-semibold text-calma-cream/[.82]">
+          <span className={`font-semibold ${linkClassName}`}>
             {navigationLabel(item.label, lang)}
           </span>
         )}
