@@ -14,7 +14,6 @@ export function ProductCard({ product }: { product: Product }) {
   const outOfStock = product.stock <= 0;
   const lowStock = product.stock > 0 && product.stock <= 5;
 
-  // Add this helper at the top of the component
   const getImageSrc = (image: string | null) => {
     if (!image) return "/placeholder-product.png";
     try {
@@ -27,65 +26,66 @@ export function ProductCard({ product }: { product: Product }) {
   };
 
   return (
-    <div className="group relative bg-calma-cream rounded-calma-card border border-calma-olive/10 shadow-sm hover:shadow-[0_28px_50px_-24px_rgba(21,36,46,.35)] transition-all duration-300 overflow-hidden">
-      <Link href={`/marketplace/${product.id}`} className="block">
-        <div className="relative aspect-square bg-calma-sand overflow-hidden">
+    <div className="group relative">
+      <Link href={`/marketplace/${product.id}`} className="block no-underline">
+        <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-calma-sand">
           <Image
             src={getImageSrc(product.image)}
             alt={product.name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-500"
-            sizes="(max-width: 768px) 50vw, 25vw"
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+            sizes="(min-width: 1024px) 290px, (min-width: 640px) 45vw, 50vw"
           />
           {outOfStock && (
-            <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
-              <span className="text-white text-sm font-semibold px-3 py-1 rounded-full bg-red-500/90">
+            <div className="absolute inset-0 grid place-items-center bg-black/45">
+              <span className="rounded-full bg-white px-3 py-1 text-[13px] font-semibold text-calma-ink">
                 {t.mkt.outOfStock}
               </span>
             </div>
           )}
           {lowStock && !outOfStock && (
-            <span className="absolute top-3 left-3 text-xs font-semibold px-2.5 py-1 rounded-full bg-calma-terracotta text-calma-ink">
+            <span className="absolute start-2.5 top-2.5 rounded-md bg-white px-2 py-1 text-[11px] font-bold text-calma-ink shadow-sm">
               {t.mkt.lowStock.replace("{n}", String(product.stock))}
             </span>
           )}
         </div>
+
+        <div className="pt-3">
+          <div className="mb-1 text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+            {product.category}
+          </div>
+          <h3 className="m-0 line-clamp-2 text-[16px] font-bold leading-snug text-calma-ink group-hover:underline">
+            {product.name}
+          </h3>
+        </div>
       </Link>
 
       <button
+        type="button"
         onClick={(e) => {
           e.preventDefault();
           toggleWishlist(product.id);
         }}
         aria-label={wishlisted ? t.mkt.removeFromWishlist : t.mkt.addToWishlist}
-        className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 shadow-md flex items-center justify-center transition-transform hover:scale-110"
+        className="absolute end-2.5 top-2.5 grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm transition-transform hover:scale-105"
       >
         <Heart
-          className={`w-4 h-4 ${wishlisted ? "fill-calma-terracotta text-calma-terracotta" : "text-calma-taupe"}`}
+          size={17}
+          className={wishlisted ? "fill-calma-terracotta text-calma-terracotta" : "text-calma-ink"}
         />
       </button>
 
-      <div className="p-4">
-        <p className="text-xs text-calma-taupe uppercase tracking-wide mb-1">{product.category}</p>
-        <Link href={`/marketplace/${product.id}`}>
-          <h3 className="font-semibold text-calma-ink text-sm mb-2 line-clamp-1 transition-colors hover:text-calma-terracotta">
-            {product.name}
-          </h3>
-        </Link>
-        <div className="flex items-center justify-between">
-          <span className="font-fraunces text-lg font-semibold text-calma-ink">
-            {product.price.toFixed(2)} TND
-          </span>
-          <button
-            onClick={() => addToCart(product, 1)}
-            disabled={outOfStock}
-            aria-label={t.mkt.addToCart}
-            className="w-9 h-9 rounded-xl flex items-center justify-center disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-200 hover:-translate-y-0.5 hover:shadow-md"
-            style={{ backgroundColor: "#D2B38B" }}
-          >
-            <ShoppingCart className="w-4 h-4 text-white" />
-          </button>
-        </div>
+      <div className="mt-2 flex items-center justify-between gap-3">
+        <span className="text-[16px] font-bold text-calma-ink">{product.price.toFixed(2)} TND</span>
+        <button
+          type="button"
+          onClick={() => addToCart(product, 1)}
+          disabled={outOfStock}
+          aria-label={t.mkt.addToCart}
+          className="grid h-9 w-9 place-items-center rounded-full border border-calma-ink/25 text-calma-ink transition-colors hover:border-calma-ink hover:bg-calma-ink hover:text-white disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-calma-ink"
+        >
+          <ShoppingCart size={16} />
+        </button>
       </div>
     </div>
   );
