@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { ArrowLeft } from "lucide-react";
 import CalmaLogo from "@/components/calma/CalmaLogo";
 import { motion, useReducedMotion } from "motion/react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
@@ -36,6 +37,13 @@ function PartnerOnboardingContent() {
     <div className="relative min-h-screen bg-white font-hanken">
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8 sm:px-6">
         <div className="w-full max-w-[720px]">
+          <Link
+            href="/"
+            className="mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-calma-ink no-underline transition-colors hover:text-calma-olive"
+          >
+            <ArrowLeft size={16} className="rtl:rotate-180" />
+            {t.pnr.successBackBtn}
+          </Link>
           <motion.div
             className="mb-3 text-center"
             initial={reduceMotion ? undefined : { opacity: 0, y: -14 }}
@@ -61,20 +69,6 @@ function PartnerOnboardingContent() {
           >
             <PartnerOnboardingWizard />
           </motion.div>
-
-          <motion.p
-            className="mt-2.5 text-center"
-            initial={reduceMotion ? undefined : { opacity: 0 }}
-            animate={reduceMotion ? undefined : { opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            <Link
-              href="/"
-              className="text-[13px] text-calma-taupe no-underline transition-colors hover:text-calma-ink"
-            >
-              ← {t.pnr.successBackBtn}
-            </Link>
-          </motion.p>
         </div>
       </div>
     </div>

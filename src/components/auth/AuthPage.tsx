@@ -5,6 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from "motion/react";
 import CalmaLogo from "@/components/calma/CalmaLogo";
 import { useOptionalCalmaLang, CALMA_DICT } from "@/lib/calma/i18n";
 import {
+  ArrowLeft,
   Eye,
   EyeOff,
   ArrowRight,
@@ -66,6 +67,13 @@ export function AuthPage({
     <div className="relative min-h-screen bg-white font-hanken">
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8 sm:px-6">
         <div className="w-full max-w-[520px]">
+          <Link
+            href="/"
+            className="mb-4 inline-flex items-center gap-1.5 text-[14px] font-semibold text-calma-ink no-underline transition-colors hover:text-calma-olive"
+          >
+            <ArrowLeft size={16} className="rtl:rotate-180" />
+            Retour à l&apos;accueil
+          </Link>
           {/* Branding above the card */}
           <motion.div
             className="mb-3 text-center"
@@ -432,20 +440,6 @@ export function AuthPage({
               )}
             </div>
           </motion.div>
-
-          <motion.p
-            className="mt-2.5 text-center"
-            initial={reduceMotion ? undefined : { opacity: 0 }}
-            animate={reduceMotion ? undefined : { opacity: 1 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-          >
-            <Link
-              href="/"
-              className="text-[13px] text-calma-taupe no-underline transition-colors hover:text-calma-ink"
-            >
-              ← Retour à l&apos;accueil
-            </Link>
-          </motion.p>
         </div>
       </div>
     </div>
