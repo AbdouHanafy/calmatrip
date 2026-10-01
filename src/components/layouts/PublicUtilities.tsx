@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import InstallPWA from "@/components/ui/InstallPWA";
-import FloatingWhatsApp from "@/components/ui/FloatingWhatsApp";
 
 /** Public conversion utilities must never overlap operational workspaces. */
 export default function PublicUtilities() {
@@ -15,7 +14,6 @@ export default function PublicUtilities() {
   return (
     <>
       <InstallPWA />
-      <FloatingWhatsApp />
     </>
   );
 }
