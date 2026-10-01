@@ -3,12 +3,15 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import { ArrowLeft, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useMarketplace } from "@/components/marketplace/Marketplacecontext";
-import { Navbar } from "@/components/layouts/Navbar";
-import { Footer } from "@/components/layouts/Footre";
+import MarketplaceShell from "@/components/marketplace/MarketplaceShell";
 
 const DELIVERY_FEE = 7;
+
+const inputClass =
+  "w-full rounded-xl border border-calma-ink/20 bg-white px-4 py-3 text-[15px] text-calma-ink outline-none transition-colors placeholder:text-calma-taupe/70 focus:border-calma-ink";
+const labelClass = "mb-1.5 block text-[13.5px] font-semibold text-calma-ink";
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -43,16 +46,17 @@ export default function CheckoutPage() {
 
   if (cart.length === 0) {
     return (
-      <>
-        <Navbar />
-        <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
-          <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
-          <Link href="/marketplace" className="text-sm text-calma-terracotta underline">
+      <MarketplaceShell title="Finaliser la commande">
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <h2 className="m-0 mb-4 text-[20px] font-bold text-calma-ink">Ton panier est vide</h2>
+          <Link
+            href="/marketplace"
+            className="rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline hover:bg-calma-olive"
+          >
             Retour à la marketplace
           </Link>
         </div>
-        <Footer />
-      </>
+      </MarketplaceShell>
     );
   }
 
@@ -85,160 +89,137 @@ export default function CheckoutPage() {
   };
 
   return (
-    <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-50/50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-          <Link
-            href="/marketplace/cart"
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" /> Retour au panier
-          </Link>
-
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Finaliser la commande</h1>
-
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            <form
-              onSubmit={handleSubmit}
-              className="lg:col-span-2 space-y-5 bg-white p-6 rounded-2xl border border-gray-100 shadow-sm"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1.5">
-                    Nom complet
-                  </label>
-                  <input
-                    required
-                    value={form.customerName}
-                    onChange={(e) => setForm({ ...form, customerName: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
-                  />
-                </div>
-                <div>
-                  <label className="text-sm font-medium text-gray-700 block mb-1.5">
-                    Téléphone
-                  </label>
-                  <input
-                    type="tel"
-                    inputMode="tel"
-                    value={form.customerPhone}
-                    onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
-                    className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1.5">Email</label>
-                <input
-                  required
-                  type="email"
-                  value={form.customerEmail}
-                  onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1.5">
-                  Adresse de livraison
-                </label>
-                <textarea
-                  required
-                  rows={2}
-                  value={form.address}
-                  onChange={(e) => setForm({ ...form, address: e.target.value })}
-                  className="w-full resize-none rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1.5">Ville</label>
-                <input
-                  value={form.city}
-                  onChange={(e) => setForm({ ...form, city: e.target.value })}
-                  className="w-full rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
-                />
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-2">
-                  Mode de paiement
-                </label>
-                <div className="flex gap-3">
-                  {[{ value: "cod", label: "Paiement à la livraison" }].map((opt) => (
-                    <button
-                      type="button"
-                      key={opt.value}
-                      onClick={() => setForm({ ...form, paymentMethod: opt.value })}
-                      className={`flex-1 py-2.5 rounded-xl text-sm font-medium border transition-colors ${
-                        form.paymentMethod === opt.value
-                          ? "border-calma-terracotta bg-calma-terracotta/10 text-calma-terracotta"
-                          : "border-gray-200 text-gray-600 hover:bg-gray-50"
-                      }`}
-                    >
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <label className="text-sm font-medium text-gray-700 block mb-1.5">
-                  Note (optionnel)
-                </label>
-                <textarea
-                  rows={2}
-                  value={form.notes}
-                  onChange={(e) => setForm({ ...form, notes: e.target.value })}
-                  className="w-full resize-none rounded-xl border border-gray-200 px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-calma-terracotta/20"
-                />
-              </div>
-
-              {error && <p className="text-sm text-red-500">{error}</p>}
-
-              <button
-                type="submit"
-                disabled={submitting}
-                className="flex w-full items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:opacity-60"
-              >
-                {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
-                Confirmer la commande
-              </button>
-            </form>
-
-            <div className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm h-fit">
-              <h3 className="font-semibold text-gray-900 mb-4">Résumé</h3>
-              <div className="space-y-3 mb-4">
-                {cart.map((item) => (
-                  <div key={item.productId} className="flex items-center justify-between text-sm">
-                    <span className="text-gray-600 line-clamp-1 pr-2">
-                      {item.product.name} × {item.quantity}
-                    </span>
-                    <span className="font-medium text-gray-900 shrink-0">
-                      {(item.product.price * item.quantity).toFixed(2)} TND
-                    </span>
-                  </div>
-                ))}
-              </div>
-              <div className="space-y-3 mb-4 pt-3 border-t border-gray-50">
-                <div className="flex items-center justify-between text-sm">
-                  <span className="text-gray-600">Livraison</span>
-                  <span className="font-medium text-gray-900 shrink-0">
-                    {DELIVERY_FEE.toFixed(2)} TND
-                  </span>
-                </div>
-              </div>
-              <div className="border-t border-gray-100 pt-4 flex items-center justify-between">
-                <span className="font-semibold text-gray-900">Total</span>
-                <span className="font-bold text-lg text-gray-900">{orderTotal.toFixed(2)} TND</span>
-              </div>
+    <MarketplaceShell title="Finaliser la commande">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[1fr_300px]">
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-5 rounded-2xl border border-calma-ink/10 bg-white p-5 sm:p-6"
+        >
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label className={labelClass}>Nom complet</label>
+              <input
+                required
+                value={form.customerName}
+                onChange={(e) => setForm({ ...form, customerName: e.target.value })}
+                className={inputClass}
+              />
             </div>
+            <div>
+              <label className={labelClass}>Téléphone</label>
+              <input
+                type="tel"
+                inputMode="tel"
+                value={form.customerPhone}
+                onChange={(e) => setForm({ ...form, customerPhone: e.target.value })}
+                className={inputClass}
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className={labelClass}>Email</label>
+            <input
+              required
+              type="email"
+              value={form.customerEmail}
+              onChange={(e) => setForm({ ...form, customerEmail: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Adresse de livraison</label>
+            <textarea
+              required
+              rows={2}
+              value={form.address}
+              onChange={(e) => setForm({ ...form, address: e.target.value })}
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Ville</label>
+            <input
+              value={form.city}
+              onChange={(e) => setForm({ ...form, city: e.target.value })}
+              className={inputClass}
+            />
+          </div>
+
+          <div>
+            <label className={labelClass}>Mode de paiement</label>
+            <div className="flex gap-3">
+              {[{ value: "cod", label: "Paiement à la livraison" }].map((opt) => (
+                <button
+                  type="button"
+                  key={opt.value}
+                  onClick={() => setForm({ ...form, paymentMethod: opt.value })}
+                  aria-pressed={form.paymentMethod === opt.value}
+                  className={`flex-1 rounded-full border py-2.5 text-[14px] font-semibold transition-colors ${
+                    form.paymentMethod === opt.value
+                      ? "border-calma-ink bg-calma-ink text-white"
+                      : "border-calma-ink/20 text-calma-ink hover:border-calma-ink/50"
+                  }`}
+                >
+                  {opt.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div>
+            <label className={labelClass}>Note (optionnel)</label>
+            <textarea
+              rows={2}
+              value={form.notes}
+              onChange={(e) => setForm({ ...form, notes: e.target.value })}
+              className={`${inputClass} resize-none`}
+            />
+          </div>
+
+          {error && <p className="m-0 text-[14px] text-red-600">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={submitting}
+            className="flex w-full items-center justify-center gap-2 rounded-full bg-calma-ink px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive disabled:opacity-60"
+          >
+            {submitting && <Loader2 size={16} className="animate-spin" />}
+            Confirmer la commande
+          </button>
+        </form>
+
+        <div className="h-fit rounded-2xl bg-calma-sand p-5 sm:p-6">
+          <h3 className="m-0 mb-4 text-[17px] font-bold text-calma-ink">Résumé</h3>
+          <div className="mb-4 space-y-2.5">
+            {cart.map((item) => (
+              <div
+                key={`${item.productId}-${item.selectedSize ?? ""}`}
+                className="flex items-center justify-between gap-2 text-[14px]"
+              >
+                <span className="line-clamp-1 text-calma-ink/80">
+                  {item.product.name} × {item.quantity}
+                </span>
+                <span className="shrink-0 font-semibold text-calma-ink">
+                  {(item.product.price * item.quantity).toFixed(2)} TND
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="mb-4 flex items-center justify-between border-t border-calma-ink/10 pt-3 text-[14px]">
+            <span className="text-calma-ink/80">Livraison</span>
+            <span className="font-semibold text-calma-ink">{DELIVERY_FEE.toFixed(2)} TND</span>
+          </div>
+          <div className="flex items-center justify-between border-t border-calma-ink/10 pt-4">
+            <span className="text-[15px] font-bold text-calma-ink">Total</span>
+            <span className="text-[19px] font-bold text-calma-ink">
+              {orderTotal.toFixed(2)} TND
+            </span>
           </div>
         </div>
       </div>
-      <Footer />
-    </>
+    </MarketplaceShell>
   );
 }

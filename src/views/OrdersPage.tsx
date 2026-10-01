@@ -3,11 +3,8 @@
 import { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { useSession } from "next-auth/react";
-import Link from "next/link";
-import { ArrowLeft, CheckCircle2, Heart, Package, ShoppingCart } from "lucide-react";
-import { Navbar } from "@/components/layouts/Navbar";
-import { Footer } from "@/components/layouts/Footre";
-import { useMarketplace } from "@/components/marketplace/Marketplacecontext";
+import { CheckCircle2, Package } from "lucide-react";
+import MarketplaceShell from "@/components/marketplace/MarketplaceShell";
 
 interface OrderItem {
   id: number;
@@ -32,7 +29,7 @@ const STATUS_STYLE: Record<string, string> = {
   confirmed: "bg-blue-50 text-blue-700",
   shipped: "bg-blue-500/10 text-blue-600",
   delivered: "bg-emerald-50 text-emerald-700",
-  cancelled: "bg-red-500/10 text-red-500",
+  cancelled: "bg-red-500/10 text-red-600",
 };
 
 const STATUS_LABEL: Record<string, string> = {
@@ -48,7 +45,6 @@ function OrdersContent() {
   const success = searchParams?.get("success");
 
   const { data: session } = useSession();
-  const { cartCount, wishlist } = useMarketplace();
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(false);
 
@@ -67,137 +63,78 @@ function OrdersContent() {
   }, [session]);
 
   return (
-    <>
-      <Navbar />
-
-      <div className="min-h-screen bg-gray-50/50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 py-8">
-          <Link
-            href="/marketplace"
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-6"
-          >
-            <ArrowLeft className="w-4 h-4" /> Retour à la marketplace
-          </Link>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
-            {/* Actions (wishlist + cart + commandes) */}
-            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 order-2 sm:order-1">
-              {/* Wishlist */}
-              <Link
-                href="/marketplace/wishlist"
-                aria-label="Favoris"
-                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
-              >
-                <Heart className="w-5 h-5 text-gray-700" />
-                {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
-                    {wishlist.length}
-                  </span>
-                )}
-              </Link>
-
-              {/* Cart */}
-              <Link
-                href="/marketplace/cart"
-                aria-label="Panier"
-                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
-              >
-                <ShoppingCart className="w-5 h-5 text-gray-700" />
-                {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-calma-ink">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-
-              {/* Orders */}
-              <Link
-                href="/marketplace/orders"
-                className="w-full flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium text-gray-600 transition-colors hover:text-calma-terracotta sm:w-auto sm:flex-none"
-              >
-                Mes commandes
-              </Link>
-            </div>
-          </div>
-
-          {success && (
-            <div className="mb-6 flex items-center gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-700">
-              <CheckCircle2 className="w-5 h-5 shrink-0" />
-              <p className="text-sm font-medium">Commande #{success} confirmée !</p>
-            </div>
-          )}
-
-          <h1 className="text-2xl font-bold text-gray-900 mb-6">Mes commandes</h1>
-
-          {loading ? (
-            <div className="space-y-4">
-              {Array.from({ length: 2 }).map((_, i) => (
-                <div key={i} className="h-32 bg-gray-100 animate-pulse rounded-2xl" />
-              ))}
-            </div>
-          ) : orders.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 text-center">
-              <Package className="w-12 h-12 text-gray-300 mb-4" />
-              <p className="text-gray-500">Aucune commande trouvée</p>
-            </div>
-          ) : (
-            <div className="space-y-4">
-              {orders.map((order) => (
-                <div
-                  key={order.id}
-                  className="bg-white rounded-2xl border border-gray-100 shadow-sm p-5"
-                >
-                  <div className="flex items-center justify-between mb-3">
-                    <div>
-                      <p className="font-semibold text-gray-900">Commande #{order.id}</p>
-                      <p className="text-xs text-gray-400">
-                        {new Date(order.createdAt).toLocaleDateString("fr-FR", {
-                          day: "numeric",
-                          month: "long",
-                          year: "numeric",
-                        })}
-                      </p>
-                    </div>
-
-                    <span
-                      className={`px-3 py-1 rounded-lg text-xs font-medium ${STATUS_STYLE[order.status] || ""}`}
-                    >
-                      {STATUS_LABEL[order.status] || order.status}
-                    </span>
-                  </div>
-
-                  <div className="space-y-1 mb-3">
-                    {order.items.map((item) => (
-                      <div
-                        key={item.id}
-                        className="flex items-center justify-between text-sm text-gray-600"
-                      >
-                        <span>
-                          {item.productName} × {item.quantity}
-                        </span>
-                        <span>{(item.price * item.quantity).toFixed(2)} TND</span>
-                      </div>
-                    ))}
-                  </div>
-
-                  <div className="border-t border-gray-100 pt-3 flex items-center justify-between">
-                    <span className="text-sm text-gray-500">Total</span>
-                    <span className="font-bold text-gray-900">{order.total.toFixed(2)} TND</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
+    <MarketplaceShell title="Mes commandes">
+      {success && (
+        <div className="mb-5 flex items-center gap-3 rounded-xl border border-emerald-200 bg-emerald-50 p-4 text-emerald-700">
+          <CheckCircle2 size={20} className="shrink-0" />
+          <p className="m-0 text-[14.5px] font-semibold">Commande #{success} confirmée !</p>
         </div>
-      </div>
+      )}
 
-      <Footer />
-    </>
+      {loading ? (
+        <div className="space-y-3">
+          {Array.from({ length: 2 }).map((_, i) => (
+            <div key={i} className="h-32 animate-pulse rounded-xl bg-calma-sand" />
+          ))}
+        </div>
+      ) : orders.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <Package size={44} strokeWidth={1.4} className="mb-3 text-calma-ink/30" />
+          <p className="m-0 text-[15px] text-calma-taupe">Aucune commande trouvée</p>
+        </div>
+      ) : (
+        <div className="space-y-3">
+          {orders.map((order) => (
+            <div key={order.id} className="rounded-xl border border-calma-ink/10 p-5">
+              <div className="mb-3 flex items-center justify-between gap-3">
+                <div>
+                  <p className="m-0 text-[16px] font-bold text-calma-ink">Commande #{order.id}</p>
+                  <p className="m-0 text-[13px] text-calma-taupe">
+                    {new Date(order.createdAt).toLocaleDateString("fr-FR", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}
+                  </p>
+                </div>
+                <span
+                  className={`rounded-full px-3 py-1 text-[12.5px] font-semibold ${STATUS_STYLE[order.status] || ""}`}
+                >
+                  {STATUS_LABEL[order.status] || order.status}
+                </span>
+              </div>
+
+              <div className="mb-3 space-y-1">
+                {order.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className="flex items-center justify-between text-[14.5px] text-calma-ink/80"
+                  >
+                    <span>
+                      {item.productName} × {item.quantity}
+                    </span>
+                    <span>{(item.price * item.quantity).toFixed(2)} TND</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex items-center justify-between border-t border-calma-ink/10 pt-3">
+                <span className="text-[14px] text-calma-taupe">Total</span>
+                <span className="text-[17px] font-bold text-calma-ink">
+                  {order.total.toFixed(2)} TND
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </MarketplaceShell>
   );
 }
 
 export default function OrdersPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-gray-50/50" />}>
+    <Suspense fallback={<div className="min-h-screen bg-white" />}>
       <OrdersContent />
     </Suspense>
   );

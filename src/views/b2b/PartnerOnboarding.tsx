@@ -3,14 +3,13 @@
 import Link from "next/link";
 import CalmaLogo from "@/components/calma/CalmaLogo";
 import { motion, useReducedMotion } from "motion/react";
-import { AuthBackground } from "@/components/auth/AuthBackground";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import { PartnerOnboarding as PartnerOnboardingWizard } from "@/features/b2b/onboarding/PartnerOnboarding";
 
 function LangSwitcher() {
   const { lang, setLang } = useCalmaLang();
   return (
-    <div className="mx-auto flex w-fit overflow-hidden rounded-full border border-white/25 bg-white/10 text-[11px] font-semibold uppercase tracking-wide backdrop-blur">
+    <div className="mx-auto flex w-fit overflow-hidden rounded-full border border-calma-ink/20 bg-white text-[11px] font-semibold uppercase tracking-wide">
       {(["fr", "en", "ar"] as const).map((code) => (
         <button
           key={code}
@@ -18,8 +17,8 @@ function LangSwitcher() {
           onClick={() => setLang(code)}
           className={`px-3 py-1.5 transition-colors duration-200 ${
             lang === code
-              ? "bg-white/25 text-white"
-              : "bg-transparent text-white/65 hover:text-white/90"
+              ? "bg-calma-ink text-white"
+              : "bg-transparent text-calma-taupe hover:text-calma-ink"
           }`}
         >
           {code}
@@ -34,9 +33,7 @@ function PartnerOnboardingContent() {
   const { t } = useCalmaLang();
 
   return (
-    <div className="relative min-h-screen overflow-hidden font-hanken">
-      <AuthBackground reduceMotion={reduceMotion} />
-
+    <div className="relative min-h-screen bg-white font-hanken">
       <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8 sm:px-6">
         <div className="w-full max-w-[720px]">
           <motion.div
@@ -46,9 +43,9 @@ function PartnerOnboardingContent() {
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link href="/" className="inline-flex items-center justify-center">
-              <CalmaLogo tone="cream" iconSize={30} />
+              <CalmaLogo tone="navy" iconSize={30} />
             </Link>
-            <p className="mx-auto mt-1.5 max-w-[420px] text-pretty font-fraunces text-[13px] italic leading-[1.4] text-white/80">
+            <p className="mx-auto mt-1.5 max-w-[420px] text-pretty text-[14px] leading-[1.5] text-calma-taupe">
               {t.pnr.pageSub}
             </p>
             <div className="mt-3">
@@ -57,11 +54,7 @@ function PartnerOnboardingContent() {
           </motion.div>
 
           <motion.div
-            className="relative max-h-[88vh] overflow-y-auto rounded-[28px] border border-white/25 bg-calma-cream/95 p-6 backdrop-blur-2xl sm:p-8"
-            style={{
-              boxShadow:
-                "0 40px 90px -30px rgba(15,12,8,.65), 0 1px 0 0 rgba(255,255,255,.4) inset",
-            }}
+            className="relative rounded-2xl border border-calma-ink/10 bg-white p-6 shadow-[0_8px_30px_-12px_rgba(0,0,0,.18)] sm:p-8"
             initial={reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.98 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
@@ -75,7 +68,10 @@ function PartnerOnboardingContent() {
             animate={reduceMotion ? undefined : { opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            <Link href="/" className="text-xs text-white/70 transition-colors hover:text-white">
+            <Link
+              href="/"
+              className="text-[13px] text-calma-taupe no-underline transition-colors hover:text-calma-ink"
+            >
               ← {t.pnr.successBackBtn}
             </Link>
           </motion.p>

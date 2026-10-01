@@ -1,17 +1,21 @@
 "use client";
 import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingCart, ArrowLeft, Minus, Plus, Check } from "lucide-react";
+import { Heart, ShoppingCart, Minus, Plus, Check } from "lucide-react";
 import { useMarketplace, Product } from "@/components/marketplace/Marketplacecontext";
 import { ProductCard } from "@/components/marketplace/Productcard";
-import { Navbar } from "@/components/layouts/Navbar";
-import { Footer } from "@/components/layouts/Footre";
+import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
+import CalmaHeader from "@/components/calma/CalmaHeader";
+import CalmaFooter from "@/components/calma/CalmaFooter";
+import PageHeader from "@/components/calma/PageHeader";
 
-export default function ProductDetailPage() {
+const wrap = "mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8";
+
+function ProductDetailContent() {
+  const { t } = useCalmaLang();
   const params = useParams();
-  const router = useRouter();
   const { addToCart, toggleWishlist, isWishlisted } = useMarketplace();
 
   const [product, setProduct] = useState<Product | null>(null);
@@ -19,10 +23,8 @@ export default function ProductDetailPage() {
   const [loading, setLoading] = useState(true);
   const [qty, setQty] = useState(1);
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
-  const [sizeError, setSizeError] = useState(false);
   const [added, setAdded] = useState(false);
-  const [activeImg, setActiveImg] = useState(0); // ← moved here, before any early return
-  const { cartCount, wishlist } = useMarketplace();
+  const [activeImg, setActiveImg] = useState(0);
 
   useEffect(() => {
     fetch(`/api/products/${params?.id}`)
@@ -41,16 +43,18 @@ export default function ProductDetailPage() {
   if (loading) {
     return (
       <>
-        <Navbar />
-        <div className="max-w-5xl mx-auto px-4 py-12 grid grid-cols-1 md:grid-cols-2 gap-10">
-          <div className="aspect-square bg-gray-100 animate-pulse rounded-2xl" />
+        <CalmaHeader active="marketplace" />
+        <div
+          className={`${wrap} grid min-h-[60vh] grid-cols-1 gap-8 pt-10 font-hanken md:grid-cols-2`}
+        >
+          <div className="aspect-[4/3] animate-pulse rounded-2xl bg-calma-sand" />
           <div className="space-y-4">
-            <div className="h-6 w-1/3 bg-gray-100 animate-pulse rounded-lg" />
-            <div className="h-10 w-2/3 bg-gray-100 animate-pulse rounded-lg" />
-            <div className="h-24 bg-gray-100 animate-pulse rounded-lg" />
+            <div className="h-5 w-1/3 animate-pulse rounded-lg bg-calma-sand" />
+            <div className="h-9 w-2/3 animate-pulse rounded-lg bg-calma-sand" />
+            <div className="h-24 animate-pulse rounded-lg bg-calma-sand" />
           </div>
         </div>
-        <Footer />
+        <CalmaFooter />
       </>
     );
   }
@@ -58,14 +62,17 @@ export default function ProductDetailPage() {
   if (!product) {
     return (
       <>
-        <Navbar />
-        <div className="flex flex-col items-center justify-center h-[60vh] gap-3">
-          <p className="text-gray-500">Produit introuvable</p>
-          <Link href="/marketplace" className="text-sm text-calma-terracotta underline">
+        <CalmaHeader active="marketplace" />
+        <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 bg-white px-6 text-center font-hanken">
+          <p className="m-0 text-[18px] font-bold text-calma-ink">Produit introuvable</p>
+          <Link
+            href="/marketplace"
+            className="rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline hover:bg-calma-olive"
+          >
             Retour à la marketplace
           </Link>
         </div>
-        <Footer />
+        <CalmaFooter />
       </>
     );
   }
@@ -75,7 +82,7 @@ export default function ProductDetailPage() {
   const availableSizes = Array.isArray(product.sizes) ? product.sizes : [];
   const hasSizes = availableSizes.length > 0;
 
-  const images = (() => {
+  const images: string[] = (() => {
     if (!product.image) return ["/placeholder-product.png"];
     try {
       const parsed = JSON.parse(product.image);
@@ -87,155 +94,87 @@ export default function ProductDetailPage() {
   const handleAdd = () => {
     addToCart(product, qty, selectedSize ?? undefined);
     setAdded(true);
-    setSizeError(false);
     setTimeout(() => setAdded(false), 1500);
   };
 
   return (
     <>
-      <Navbar />
-      <div className="min-h-screen bg-gray-50/50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6">
-          <button
-            onClick={() => router.back()}
-            className="flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 mb-3 transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" /> Retour
-          </button>
-          <nav
-            aria-label="Fil d'Ariane"
-            className="mb-6 flex items-center gap-1.5 text-xs text-gray-400"
-          >
-            <Link href="/" className="hover:text-gray-700">
-              Accueil
-            </Link>
-            <span>/</span>
-            <Link href="/marketplace" className="hover:text-gray-700">
-              Marketplace
-            </Link>
-            <span>/</span>
-            <Link
-              href={`/marketplace?category=${encodeURIComponent(product.category)}`}
-              className="hover:text-gray-700"
-            >
-              {product.category}
-            </Link>
-            <span>/</span>
-            <span className="text-gray-600">{product.name}</span>
-          </nav>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
-            {/* Actions (wishlist + cart + commandes) */}
-            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 order-2 sm:order-1">
-              {/* Wishlist */}
-              <Link
-                href="/marketplace/wishlist"
-                aria-label="Favoris"
-                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
-              >
-                <Heart className="w-5 h-5 text-gray-700" />
-                {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
-                    {wishlist.length}
-                  </span>
-                )}
-              </Link>
+      <CalmaHeader active="marketplace" />
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title={product.name}
+          crumbs={[
+            { label: t.cnt.breadcrumbHome, href: "/" },
+            { label: t.navMarket, href: "/marketplace" },
+            {
+              label: product.category,
+              href: `/marketplace?category=${encodeURIComponent(product.category)}`,
+            },
+            { label: product.name },
+          ]}
+        />
 
-              {/* Cart */}
-              <Link
-                href="/marketplace/cart"
-                aria-label="Panier"
-                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
-              >
-                <ShoppingCart className="w-5 h-5 text-gray-700" />
-                {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-calma-ink">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-
-              {/* Orders */}
-              <Link
-                href="/marketplace/orders"
-                className="w-full flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium text-gray-600 transition-colors hover:text-calma-terracotta sm:w-auto sm:flex-none"
-              >
-                Mes commandes
-              </Link>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {/* Image gallery */}
+        <section className={wrap}>
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:gap-12">
             <div className="flex flex-col gap-3">
-              {/* Main image */}
-              <div className="relative aspect-square bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100">
+              <div className="relative aspect-[4/3] overflow-hidden rounded-2xl bg-calma-sand">
                 <Image
                   src={images[activeImg]}
                   alt={product.name}
                   fill
-                  className="object-cover transition-all duration-300"
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  priority
+                  className="object-cover"
+                  sizes="(min-width: 768px) 50vw, 100vw"
                 />
               </div>
-
-              {/* Thumbnails */}
               {images.length > 1 && (
-                <div className="flex gap-2 flex-wrap">
-                  {images.map((img: string, i: number) => (
+                <div className="flex flex-wrap gap-2">
+                  {images.map((img, i) => (
                     <button
                       key={i}
+                      type="button"
                       onClick={() => setActiveImg(i)}
-                      className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 transition-all ${
+                      aria-label={`${product.name} ${i + 1}`}
+                      aria-pressed={activeImg === i}
+                      className={`relative h-16 w-16 overflow-hidden rounded-lg border-2 transition-opacity ${
                         activeImg === i
-                          ? "border-calma-terracotta shadow-md"
-                          : "border-gray-200 opacity-60 hover:opacity-100"
+                          ? "border-calma-ink"
+                          : "border-transparent opacity-60 hover:opacity-100"
                       }`}
                     >
-                      <Image
-                        src={img}
-                        alt={`${product.name} ${i + 1}`}
-                        fill
-                        className="object-cover"
-                        sizes="64px"
-                      />
+                      <Image src={img} alt="" fill className="object-cover" sizes="64px" />
                     </button>
                   ))}
                 </div>
               )}
             </div>
 
-            {/* Product info */}
             <div>
-              <p className="text-xs text-gray-400 uppercase tracking-wide mb-2">
+              <div className="mb-1 text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
                 {product.category}
-              </p>
-              <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3">{product.name}</h1>
-              <p className="mb-4 text-2xl font-bold text-calma-terracotta">
+              </div>
+              <div className="mb-4 text-[28px] font-bold leading-tight text-calma-ink">
                 {product.price.toFixed(2)} TND
-              </p>
+              </div>
 
-              <p className="text-sm text-gray-600 leading-relaxed mb-6">{product.description}</p>
+              <p className="mb-6 mt-0 text-[15.5px] leading-relaxed text-calma-ink/80">
+                {product.description}
+              </p>
 
               {hasSizes && (
                 <div className="mb-6">
-                  <label className="text-sm font-medium text-gray-700 block mb-2">
-                    Taille{" "}
-                    {sizeError && (
-                      <span className="text-red-500 text-xs font-normal ml-1">
-                        (optionnel — choisis si tu en as une)
-                      </span>
-                    )}
-                  </label>
-                  <div className="flex gap-2 flex-wrap">
+                  <div className="mb-2 text-[14px] font-semibold text-calma-ink">Taille</div>
+                  <div className="flex flex-wrap gap-2">
                     {availableSizes.map((size) => (
                       <button
                         key={size}
                         type="button"
                         onClick={() => setSelectedSize(selectedSize === size ? null : size)}
-                        className={`px-4 py-2 rounded-xl border-2 text-sm font-semibold transition-all ${
+                        aria-pressed={selectedSize === size}
+                        className={`rounded-full border px-4 py-2 text-[14px] font-semibold transition-colors ${
                           selectedSize === size
-                            ? "border-calma-terracotta bg-calma-terracotta/10 text-calma-terracotta"
-                            : "border-gray-200 text-gray-500 hover:border-calma-terracotta/50"
+                            ? "border-calma-ink bg-calma-ink text-white"
+                            : "border-calma-ink/20 bg-white text-calma-ink hover:border-calma-ink/50"
                         }`}
                       >
                         {size}
@@ -245,54 +184,61 @@ export default function ProductDetailPage() {
                 </div>
               )}
 
-              <div className="mb-6">
+              <div className="mb-5 text-[14px] font-semibold">
                 {outOfStock ? (
-                  <span className="text-sm font-medium text-red-500">Rupture de stock</span>
+                  <span className="text-red-600">{t.mkt.outOfStock}</span>
                 ) : product.stock <= 5 ? (
-                  <span className="text-sm font-medium text-[#856B00]">
-                    Plus que {product.stock} en stock
+                  <span className="text-[#856B00]">
+                    {t.mkt.lowStock.replace("{n}", String(product.stock))}
                   </span>
                 ) : (
-                  <span className="text-sm font-medium text-emerald-700">En stock</span>
+                  <span className="text-calma-success">En stock</span>
                 )}
               </div>
 
               {!outOfStock && (
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="flex items-center border border-gray-200 rounded-xl">
-                    <button
-                      onClick={() => setQty((q) => Math.max(1, q - 1))}
-                      className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-l-xl"
-                    >
-                      <Minus className="w-4 h-4" />
-                    </button>
-                    <span className="w-10 text-center font-medium">{qty}</span>
-                    <button
-                      onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
-                      className="w-10 h-10 flex items-center justify-center text-gray-600 hover:bg-gray-50 rounded-r-xl"
-                    >
-                      <Plus className="w-4 h-4" />
-                    </button>
-                  </div>
+                <div className="mb-5 inline-flex items-center rounded-full border border-calma-ink/20">
+                  <button
+                    type="button"
+                    onClick={() => setQty((q) => Math.max(1, q - 1))}
+                    aria-label="-"
+                    className="grid h-11 w-11 place-items-center rounded-full text-calma-ink hover:bg-calma-sand"
+                  >
+                    <Minus size={16} />
+                  </button>
+                  <span className="w-10 text-center text-[15px] font-semibold">{qty}</span>
+                  <button
+                    type="button"
+                    onClick={() => setQty((q) => Math.min(product.stock, q + 1))}
+                    aria-label="+"
+                    className="grid h-11 w-11 place-items-center rounded-full text-calma-ink hover:bg-calma-sand"
+                  >
+                    <Plus size={16} />
+                  </button>
                 </div>
               )}
 
               <div className="flex items-center gap-3">
                 <button
+                  type="button"
                   onClick={handleAdd}
                   disabled={outOfStock}
-                  className="flex flex-1 items-center justify-center gap-2 rounded-xl bg-calma-terracotta py-3 font-semibold text-calma-ink transition-colors hover:bg-calma-terracotta-deep disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex flex-1 items-center justify-center gap-2 rounded-full bg-calma-ink px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive disabled:cursor-not-allowed disabled:opacity-40"
                 >
-                  {added ? <Check className="w-5 h-5" /> : <ShoppingCart className="w-5 h-5" />}
-                  {added ? "Ajouté !" : "Ajouter au panier"}
+                  {added ? <Check size={18} /> : <ShoppingCart size={18} />}
+                  {added ? "Ajouté !" : t.mkt.addToCart}
                 </button>
                 <button
+                  type="button"
                   onClick={() => toggleWishlist(product.id)}
-                  aria-label="Favoris"
-                  className="w-12 h-12 rounded-xl border border-gray-200 flex items-center justify-center hover:bg-gray-50 transition-colors"
+                  aria-label={wishlisted ? t.mkt.removeFromWishlist : t.mkt.addToWishlist}
+                  className="grid h-12 w-12 place-items-center rounded-full border border-calma-ink/20 transition-colors hover:border-calma-ink/50"
                 >
                   <Heart
-                    className={`w-5 h-5 ${wishlisted ? "fill-red-500 text-red-500" : "text-gray-400"}`}
+                    size={20}
+                    className={
+                      wishlisted ? "fill-calma-terracotta text-calma-terracotta" : "text-calma-ink"
+                    }
                   />
                 </button>
               </div>
@@ -300,18 +246,28 @@ export default function ProductDetailPage() {
           </div>
 
           {related.length > 0 && (
-            <div className="mt-16">
-              <h2 className="text-lg font-bold text-gray-900 mb-4">Produits similaires</h2>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-6">
+            <div className="mt-14">
+              <h2 className="m-0 mb-5 text-[22px] font-bold tracking-[-0.01em] text-calma-ink sm:text-[26px]">
+                Produits similaires
+              </h2>
+              <div className="grid grid-cols-2 gap-x-4 gap-y-7 sm:gap-x-5 lg:grid-cols-4">
                 {related.map((p) => (
                   <ProductCard key={p.id} product={p} />
                 ))}
               </div>
             </div>
           )}
-        </div>
-      </div>
-      <Footer />
+        </section>
+      </main>
+      <CalmaFooter />
     </>
+  );
+}
+
+export default function ProductDetailPage() {
+  return (
+    <CalmaLangProvider>
+      <ProductDetailContent />
+    </CalmaLangProvider>
   );
 }

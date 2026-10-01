@@ -2,174 +2,125 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { Trash2, Minus, Plus, ShoppingBag, ArrowLeft, ShoppingCart, Heart } from "lucide-react";
+import { Trash2, Minus, Plus, ShoppingBag } from "lucide-react";
 import { useMarketplace } from "@/components/marketplace/Marketplacecontext";
-import { Navbar } from "@/components/layouts/Navbar";
-import { Footer } from "@/components/layouts/Footre";
+import MarketplaceShell from "@/components/marketplace/MarketplaceShell";
 
 export default function CartPage() {
-  const { cart, updateCartQuantity, removeFromCart, cartTotal, cartCount, wishlist } =
-    useMarketplace();
+  const { cart, updateCartQuantity, removeFromCart, cartTotal } = useMarketplace();
 
   if (cart.length === 0) {
     return (
-      <>
-        <Navbar />
-        <div className="min-h-[calc(100vh-4rem)] bg-gray-50/50 flex flex-col items-center justify-center px-4 text-center">
-          <ShoppingBag className="w-14 h-14 text-gray-300 mb-4" />
-          <h1 className="text-xl font-bold text-gray-900 mb-2">Ton panier est vide</h1>
-          <p className="text-sm text-gray-500 mb-6">Découvre nos produits et ajoute-les ici</p>
+      <MarketplaceShell title="Mon panier">
+        <div className="flex flex-col items-center justify-center py-16 text-center">
+          <ShoppingBag size={44} strokeWidth={1.4} className="mb-3 text-calma-ink/30" />
+          <h2 className="m-0 mb-1 text-[20px] font-bold text-calma-ink">Ton panier est vide</h2>
+          <p className="mb-6 mt-0 text-[15px] text-calma-taupe">
+            Découvre nos produits et ajoute-les ici
+          </p>
           <Link
             href="/marketplace"
-            className="rounded-xl bg-calma-terracotta px-6 py-3 font-semibold text-calma-ink hover:bg-calma-terracotta-deep"
+            className="rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline hover:bg-calma-olive"
           >
             Voir la marketplace
           </Link>
         </div>
-        <Footer />
-      </>
+      </MarketplaceShell>
     );
   }
 
   return (
-    <>
-      <Navbar />
-
-      <div className="min-h-screen bg-gray-50/50">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8">
-          <Link href="/marketplace" className="flex items-center gap-2 text-sm text-gray-500 mb-6">
-            <ArrowLeft className="w-4 h-4" />
-            Continuer mes achats
-          </Link>
-          <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-end sm:gap-2">
-            {/* Actions (wishlist + cart + commandes) */}
-            <div className="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2 order-2 sm:order-1">
-              {/* Wishlist */}
-              <Link
-                href="/marketplace/wishlist"
-                aria-label="Favoris"
-                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
-              >
-                <Heart className="w-5 h-5 text-gray-700" />
-                {wishlist.length > 0 && (
-                  <span className="absolute -top-1 -right-1 w-5 h-5 rounded-full bg-red-500 text-white text-[10px] font-bold flex items-center justify-center">
-                    {wishlist.length}
-                  </span>
-                )}
-              </Link>
-
-              {/* Cart */}
-              <Link
-                href="/marketplace/cart"
-                aria-label="Panier"
-                className="relative flex-1 sm:flex-none w-full sm:w-10 h-10 rounded-xl hover:bg-gray-50 flex items-center justify-center transition-colors"
-              >
-                <ShoppingCart className="w-5 h-5 text-gray-700" />
-                {cartCount > 0 && (
-                  <span className="absolute -right-1 -top-1 flex h-5 w-5 items-center justify-center rounded-full bg-calma-terracotta text-[10px] font-bold text-calma-ink">
-                    {cartCount}
-                  </span>
-                )}
-              </Link>
-
-              {/* Orders */}
-              <Link
-                href="/marketplace/orders"
-                className="w-full flex-1 rounded-xl px-3 py-2 text-center text-sm font-medium text-gray-600 transition-colors hover:text-calma-terracotta sm:w-auto sm:flex-none"
-              >
-                Mes commandes
-              </Link>
-            </div>
-          </div>
-
-          <h1 className="text-2xl font-bold mb-6">Mon panier ({cart.length})</h1>
-
-          <div className="space-y-4">
-            {cart.map((item) => (
-              <div
-                key={`${item.productId}-${item.selectedSize ?? "no-size"}`}
-                className="flex items-center gap-4 bg-white p-4 rounded-2xl"
-              >
-                <div className="relative w-20 h-20 shrink-0">
-                  <Image
-                    src={item.product.image || "/placeholder-product.png"}
-                    alt={item.product.name}
-                    fill
-                    sizes="80px"
-                    className="object-cover rounded-xl"
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <Link href={`/marketplace/${item.productId}`} className="font-medium text-sm">
-                    {item.product.name}
-                  </Link>
-
-                  {item.selectedSize && (
-                    <p className="text-xs text-gray-500">Taille: {item.selectedSize}</p>
-                  )}
-
-                  <p className="text-sm text-gray-500">{item.product.price.toFixed(2)} TND</p>
-                </div>
-
-                {/* qty */}
-                <div className="flex items-center border rounded-xl">
-                  <button
-                    onClick={() =>
-                      updateCartQuantity(item.productId, item.quantity - 1, item.selectedSize)
-                    }
-                    aria-label="Diminuer la quantité"
-                    className="flex h-11 w-11 items-center justify-center"
-                  >
-                    <Minus className="w-3 h-3" />
-                  </button>
-
-                  <span className="w-8 text-center">{item.quantity}</span>
-
-                  <button
-                    onClick={() =>
-                      updateCartQuantity(item.productId, item.quantity + 1, item.selectedSize)
-                    }
-                    disabled={item.quantity >= item.product.stock}
-                    aria-label="Augmenter la quantité"
-                    className="flex h-11 w-11 items-center justify-center"
-                  >
-                    <Plus className="w-3 h-3" />
-                  </button>
-                </div>
-
-                <p className="w-20 text-right font-semibold">
-                  {(item.product.price * item.quantity).toFixed(2)} TND
-                </p>
-
-                <button
-                  onClick={() => removeFromCart(item.productId, item.selectedSize)}
-                  aria-label={`Retirer ${item.product.name} du panier`}
-                  className="flex h-11 w-11 items-center justify-center"
-                >
-                  <Trash2 className="w-4 h-4 text-red-500" />
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="mt-8 bg-white p-6 rounded-2xl">
-            <div className="flex justify-between mb-2">
-              <span>Sous-total</span>
-              <span>{cartTotal.toFixed(2)} TND</span>
+    <MarketplaceShell title={`Mon panier (${cart.length})`}>
+      <div className="space-y-3">
+        {cart.map((item) => (
+          <div
+            key={`${item.productId}-${item.selectedSize ?? "no-size"}`}
+            className="flex flex-wrap items-center gap-4 rounded-xl border border-calma-ink/10 p-4"
+          >
+            <div className="relative h-20 w-24 shrink-0 overflow-hidden rounded-lg bg-calma-sand">
+              <Image
+                src={item.product.image || "/placeholder-product.png"}
+                alt={item.product.name}
+                fill
+                sizes="96px"
+                className="object-cover"
+              />
             </div>
 
-            <Link
-              href="/marketplace/checkout"
-              className="block text-center mt-4 py-3 bg-black text-white rounded-xl"
+            <div className="min-w-[140px] flex-1">
+              <Link
+                href={`/marketplace/${item.productId}`}
+                className="text-[15px] font-bold text-calma-ink no-underline hover:underline"
+              >
+                {item.product.name}
+              </Link>
+              {item.selectedSize && (
+                <p className="m-0 text-[13px] text-calma-taupe">Taille : {item.selectedSize}</p>
+              )}
+              <p className="m-0 text-[14px] text-calma-taupe">
+                {item.product.price.toFixed(2)} TND
+              </p>
+            </div>
+
+            <div className="flex items-center rounded-full border border-calma-ink/20">
+              <button
+                type="button"
+                onClick={() =>
+                  updateCartQuantity(item.productId, item.quantity - 1, item.selectedSize)
+                }
+                aria-label="Diminuer la quantité"
+                className="grid h-10 w-10 place-items-center rounded-full hover:bg-calma-sand"
+              >
+                <Minus size={14} />
+              </button>
+              <span className="w-8 text-center text-[15px] font-semibold">{item.quantity}</span>
+              <button
+                type="button"
+                onClick={() =>
+                  updateCartQuantity(item.productId, item.quantity + 1, item.selectedSize)
+                }
+                disabled={item.quantity >= item.product.stock}
+                aria-label="Augmenter la quantité"
+                className="grid h-10 w-10 place-items-center rounded-full hover:bg-calma-sand disabled:opacity-40"
+              >
+                <Plus size={14} />
+              </button>
+            </div>
+
+            <p className="m-0 w-24 text-end text-[16px] font-bold text-calma-ink">
+              {(item.product.price * item.quantity).toFixed(2)} TND
+            </p>
+
+            <button
+              type="button"
+              onClick={() => removeFromCart(item.productId, item.selectedSize)}
+              aria-label={`Retirer ${item.product.name} du panier`}
+              className="grid h-10 w-10 place-items-center rounded-full text-calma-taupe hover:bg-red-50 hover:text-red-600"
             >
-              Passer la commande
-            </Link>
+              <Trash2 size={16} />
+            </button>
           </div>
-        </div>
+        ))}
       </div>
 
-      <Footer />
-    </>
+      <div className="mt-6 rounded-2xl bg-calma-sand p-5 sm:p-6">
+        <div className="flex items-center justify-between text-[16px]">
+          <span className="text-calma-ink/80">Sous-total</span>
+          <span className="text-[20px] font-bold text-calma-ink">{cartTotal.toFixed(2)} TND</span>
+        </div>
+        <Link
+          href="/marketplace/checkout"
+          className="mt-4 block rounded-full bg-calma-ink px-6 py-3.5 text-center text-[15px] font-semibold text-white no-underline transition-colors hover:bg-calma-olive"
+        >
+          Passer la commande
+        </Link>
+        <Link
+          href="/marketplace"
+          className="mt-3 block text-center text-[14px] font-semibold text-calma-ink underline underline-offset-4"
+        >
+          Continuer mes achats
+        </Link>
+      </div>
+    </MarketplaceShell>
   );
 }

@@ -18,7 +18,6 @@ import {
   Check,
 } from "lucide-react";
 import { GoogleAuthButton } from "@/components/auth/GoogleAuthButton";
-import { AuthBackground } from "@/components/auth/AuthBackground";
 import { PartnerTypeSelector } from "@/components/auth/PartnerTypeSelector";
 import { PasswordStrengthMeter } from "@/components/auth/PasswordStrengthMeter";
 import { useAuthForm, type PartnerType } from "@/hooks/auth/useAuthForm";
@@ -58,17 +57,14 @@ export function AuthPage({
   const { isLogin, isPartner } = form;
 
   const inputBoxClass =
-    "flex h-11 items-center gap-2.5 rounded-xl border border-calma-olive/15 bg-white/80 px-3.5 transition-all duration-300 focus-within:border-calma-terracotta focus-within:bg-white focus-within:shadow-[0_0_0_4px_rgba(210,179,139,.12)]";
+    "flex h-11 items-center gap-2.5 rounded-xl border border-calma-ink/20 bg-white px-3.5 transition-colors focus-within:border-calma-ink";
   const inputFieldClass =
     "w-full border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/55";
   const labelClass = "mb-1 block text-[12.5px] font-semibold text-calma-ink";
 
   return (
-    <div className="relative h-screen overflow-hidden font-hanken">
-      <AuthBackground reduceMotion={reduceMotion} />
-
-      {/* Content */}
-      <div className="relative z-10 flex h-full items-center justify-center px-4 py-3 sm:px-6">
+    <div className="relative min-h-screen bg-white font-hanken">
+      <div className="relative z-10 flex min-h-screen items-center justify-center px-4 py-8 sm:px-6">
         <div className="w-full max-w-[520px]">
           {/* Branding above the card */}
           <motion.div
@@ -78,9 +74,9 @@ export function AuthPage({
             transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
           >
             <Link href="/" className="inline-flex items-center justify-center">
-              <CalmaLogo tone="cream" iconSize={30} />
+              <CalmaLogo tone="navy" iconSize={30} />
             </Link>
-            <p className="mx-auto mt-1.5 max-w-[380px] text-pretty font-fraunces text-[13px] italic leading-[1.4] text-white/80">
+            <p className="mx-auto mt-1.5 max-w-[380px] text-pretty text-[14px] leading-[1.5] text-calma-taupe">
               {isPartner
                 ? "Rejoignez le réseau d'artisans et d'agences qui font vivre la Tunisie."
                 : "Découvrez la beauté de la Tunisie à travers des expériences inoubliables."}
@@ -89,11 +85,7 @@ export function AuthPage({
 
           {/* Card */}
           <motion.div
-            className="relative max-h-[90vh] overflow-y-auto rounded-[28px] border border-white/25 bg-calma-cream/95 p-6 backdrop-blur-2xl sm:p-8"
-            style={{
-              boxShadow:
-                "0 40px 90px -30px rgba(15,12,8,.65), 0 1px 0 0 rgba(255,255,255,.4) inset",
-            }}
+            className="relative rounded-2xl border border-calma-ink/10 bg-white p-6 shadow-[0_8px_30px_-12px_rgba(0,0,0,.18)] sm:p-8"
             initial={reduceMotion ? undefined : { opacity: 0, y: 28, scale: 0.98 }}
             animate={reduceMotion ? undefined : { opacity: 1, y: 0, scale: 1 }}
             transition={{ duration: 0.8, delay: 0.15, ease: [0.16, 1, 0.3, 1] }}
@@ -101,7 +93,7 @@ export function AuthPage({
             <AnimatePresence>
               {form.success && (
                 <motion.div
-                  className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-calma-cream/98 backdrop-blur-sm"
+                  className="absolute inset-0 z-20 flex flex-col items-center justify-center gap-4 bg-white"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -114,7 +106,7 @@ export function AuthPage({
                   >
                     <Check size={30} strokeWidth={2.5} />
                   </motion.div>
-                  <p className="font-fraunces text-lg text-calma-ink">
+                  <p className="text-lg font-bold text-calma-ink">
                     {isLogin ? "Connexion réussie" : "Compte créé avec succès"}
                   </p>
                 </motion.div>
@@ -122,7 +114,7 @@ export function AuthPage({
             </AnimatePresence>
 
             <div className="mb-4 text-center">
-              <h1 className="mb-1 text-balance font-fraunces text-[clamp(22px,3vw,28px)] font-normal leading-[1.1] text-calma-ink">
+              <h1 className="mb-1 text-balance text-[clamp(22px,3vw,28px)] font-bold leading-[1.1] tracking-[-0.01em] text-calma-ink">
                 {isPartner
                   ? isLogin
                     ? "Bon retour, partenaire"
@@ -170,14 +162,14 @@ export function AuthPage({
                 />
               )}
               {!isLogin && isPartner && form.partnerTypeLocked ? (
-                <div className="flex items-center justify-between rounded-xl border border-calma-terracotta/25 bg-calma-terracotta/10 px-3.5 py-2.5 text-sm text-calma-ink">
+                <div className="flex items-center justify-between rounded-xl border border-calma-ink/15 bg-calma-sand px-3.5 py-2.5 text-sm text-calma-ink">
                   <span>
                     Inscription en tant qu&apos;
                     <strong>{PARTNER_TYPE_LABEL[form.partnerType]}</strong>
                   </span>
                   <Link
                     href={form.partnerType === "artisan" ? "/partner/agency" : "/partner/artisan"}
-                    className="text-xs font-semibold text-calma-terracotta hover:text-calma-olive"
+                    className="text-xs font-semibold text-calma-olive hover:text-calma-olive"
                   >
                     Changer
                   </Link>
@@ -199,7 +191,7 @@ export function AuthPage({
                     Nom complet
                   </label>
                   <div className={inputBoxClass}>
-                    <UserIcon size={18} className="shrink-0 text-calma-terracotta" />
+                    <UserIcon size={18} className="shrink-0 text-calma-olive" />
                     <input
                       id="name"
                       type="text"
@@ -218,7 +210,7 @@ export function AuthPage({
                   Email
                 </label>
                 <div className={inputBoxClass}>
-                  <Mail size={18} className="shrink-0 text-calma-terracotta" />
+                  <Mail size={18} className="shrink-0 text-calma-olive" />
                   <input
                     id="email"
                     type="email"
@@ -237,7 +229,7 @@ export function AuthPage({
                     Numéro de téléphone
                   </label>
                   <div className={inputBoxClass}>
-                    <Phone size={18} className="shrink-0 text-calma-terracotta" />
+                    <Phone size={18} className="shrink-0 text-calma-olive" />
                     <input
                       id="phone"
                       type="tel"
@@ -256,7 +248,7 @@ export function AuthPage({
                   Mot de passe
                 </label>
                 <div className={inputBoxClass}>
-                  <Lock size={18} className="shrink-0 text-calma-terracotta" />
+                  <Lock size={18} className="shrink-0 text-calma-olive" />
                   <input
                     id="password"
                     type={form.showPassword ? "text" : "password"}
@@ -272,7 +264,7 @@ export function AuthPage({
                     aria-label={
                       form.showPassword ? "Masquer le mot de passe" : "Afficher le mot de passe"
                     }
-                    className="shrink-0 text-calma-taupe transition-colors hover:text-calma-terracotta"
+                    className="shrink-0 text-calma-taupe transition-colors hover:text-calma-olive"
                     whileTap={{ scale: 0.85 }}
                   >
                     <AnimatePresence mode="wait" initial={false}>
@@ -299,7 +291,7 @@ export function AuthPage({
                     Confirmer le mot de passe
                   </label>
                   <div className={inputBoxClass}>
-                    <Lock size={18} className="shrink-0 text-calma-terracotta" />
+                    <Lock size={18} className="shrink-0 text-calma-olive" />
                     <input
                       id="confirmPassword"
                       type={form.showPassword ? "text" : "password"}
@@ -320,13 +312,13 @@ export function AuthPage({
                       type="checkbox"
                       checked={form.rememberMe}
                       onChange={(e) => form.setRememberMe(e.target.checked)}
-                      className="h-4 w-4 rounded border-calma-olive/30 text-calma-terracotta accent-calma-terracotta focus:ring-calma-terracotta"
+                      className="h-4 w-4 rounded border-calma-olive/30 text-calma-olive accent-calma-ink focus:ring-calma-ink"
                     />
                     Se souvenir de moi
                   </label>
                   <Link
                     href="/contact"
-                    className="text-sm font-semibold text-calma-terracotta transition-colors hover:text-calma-olive"
+                    className="text-sm font-semibold text-calma-olive transition-colors hover:text-calma-olive"
                   >
                     Mot de passe oublié ?
                   </Link>
@@ -337,15 +329,15 @@ export function AuthPage({
                     type="checkbox"
                     checked={form.acceptTerms}
                     onChange={(e) => form.setAcceptTerms(e.target.checked)}
-                    className="mt-0.5 h-4 w-4 shrink-0 rounded border-calma-olive/30 text-calma-terracotta accent-calma-terracotta focus:ring-calma-terracotta"
+                    className="mt-0.5 h-4 w-4 shrink-0 rounded border-calma-olive/30 text-calma-olive accent-calma-ink focus:ring-calma-ink"
                   />
                   <span>
                     J&apos;accepte les{" "}
-                    <span className="font-semibold text-calma-terracotta">
+                    <span className="font-semibold text-calma-olive">
                       conditions d&apos;utilisation
                     </span>{" "}
                     et la{" "}
-                    <span className="font-semibold text-calma-terracotta">
+                    <span className="font-semibold text-calma-olive">
                       politique de confidentialité
                     </span>
                     .
@@ -369,11 +361,7 @@ export function AuthPage({
               <motion.button
                 type="submit"
                 disabled={form.loading}
-                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full px-6 py-3 text-[15px] font-bold text-calma-cream shadow-[0_16px_32px_-12px_rgba(210,179,139,.65)] transition-shadow duration-300 hover:shadow-[0_22px_40px_-12px_rgba(210,179,139,.8)] disabled:opacity-70"
-                style={{
-                  backgroundColor: "#D2B38B",
-                }}
-                whileHover={reduceMotion ? undefined : { y: -2 }}
+                className="group relative flex w-full items-center justify-center gap-2 overflow-hidden rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive disabled:opacity-70"
                 whileTap={{ scale: 0.98 }}
               >
                 {form.loading ? (
@@ -415,7 +403,7 @@ export function AuthPage({
                         ? `/register?callbackUrl=${encodeURIComponent(callbackUrl)}`
                         : `/login?callbackUrl=${encodeURIComponent(callbackUrl)}`
                   }
-                  className="font-semibold text-calma-terracotta transition-colors hover:text-calma-olive"
+                  className="font-semibold text-calma-olive transition-colors hover:text-calma-olive"
                 >
                   {isLogin ? "S'inscrire" : "Se connecter"}
                 </Link>
@@ -425,7 +413,7 @@ export function AuthPage({
                   Vous êtes artisan ou agence ?{" "}
                   <Link
                     href="/partner"
-                    className="font-semibold text-calma-terracotta transition-colors hover:text-calma-olive"
+                    className="font-semibold text-calma-olive transition-colors hover:text-calma-olive"
                   >
                     {t.navBecomePartner}
                   </Link>
@@ -436,7 +424,7 @@ export function AuthPage({
                   Vous êtes un voyageur ?{" "}
                   <Link
                     href="/register"
-                    className="font-semibold text-calma-terracotta transition-colors hover:text-calma-olive"
+                    className="font-semibold text-calma-olive transition-colors hover:text-calma-olive"
                   >
                     Créer un compte voyageur
                   </Link>
@@ -451,7 +439,10 @@ export function AuthPage({
             animate={reduceMotion ? undefined : { opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.5 }}
           >
-            <Link href="/" className="text-xs text-white/70 transition-colors hover:text-white">
+            <Link
+              href="/"
+              className="text-[13px] text-calma-taupe no-underline transition-colors hover:text-calma-ink"
+            >
               ← Retour à l&apos;accueil
             </Link>
           </motion.p>

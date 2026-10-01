@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Heart, Package, MapPin, CalendarDays, Landmark } from "lucide-react";
 import { CalmaLangProvider } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
+import PageHeader from "@/components/calma/PageHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
 import { useFavorites, type FavoriteType } from "@/hooks/useFavorites";
 
@@ -195,80 +196,77 @@ function FavoritesContent() {
   return (
     <>
       <CalmaHeader active="explore" />
-      <div className="min-h-screen bg-calma-sand font-hanken">
-        <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-12">
-          <h1 className="mb-2 font-fraunces text-3xl font-normal text-calma-ink">Mes favoris</h1>
-          <p className="mb-10 text-sm text-calma-taupe">
-            {cards.length} élément{cards.length !== 1 ? "s" : ""} enregistré
-            {cards.length !== 1 ? "s" : ""}
-          </p>
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title="Mes favoris"
+          subtitle={`${cards.length} élément${cards.length !== 1 ? "s" : ""} enregistré${cards.length !== 1 ? "s" : ""}`}
+          crumbs={[{ label: "Accueil", href: "/" }, { label: "Mes favoris" }]}
+        />
 
+        <section className="mx-auto max-w-[1240px] px-4 pt-2 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {Array.from({ length: 4 }).map((_, i) => (
-                <div key={i} className="aspect-[3/4] animate-pulse rounded-2xl bg-white" />
+                <div key={i} className="aspect-[4/3] animate-pulse rounded-xl bg-calma-sand" />
               ))}
             </div>
           ) : cards.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-24 text-center">
-              <Heart className="mb-4 h-12 w-12 text-calma-taupe/30" />
-              <h3 className="mb-1 text-lg font-semibold text-calma-ink">
+            <div className="flex flex-col items-center justify-center py-16 text-center">
+              <Heart size={44} strokeWidth={1.4} className="mb-3 text-calma-ink/30" />
+              <h3 className="m-0 mb-1 text-[20px] font-bold text-calma-ink">
                 Aucun favori pour le moment
               </h3>
-              <p className="text-sm text-calma-taupe">
+              <p className="m-0 max-w-[460px] text-[15px] text-calma-taupe">
                 Clique sur le cœur d&apos;un produit, d&apos;une activité, d&apos;un musée ou
                 d&apos;un événement pour l&apos;ajouter ici.
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {cards.map((card) => {
                 const Icon = typeIcon[card.type];
                 return (
-                  <div
-                    key={card.key}
-                    className="group relative overflow-hidden rounded-2xl border border-calma-olive/[.1] bg-white shadow-sm transition-shadow hover:shadow-md"
-                  >
+                  <div key={card.key} className="group relative">
                     <Link href={card.href ?? "#"} className="block no-underline">
-                      <div className="relative aspect-square bg-calma-sand">
+                      <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-calma-sand">
                         {card.image ? (
                           <Image
                             src={card.image}
                             alt={card.title}
                             fill
-                            className="object-cover"
-                            sizes="(max-width: 768px) 50vw, 25vw"
+                            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                            sizes="(min-width: 1024px) 290px, (min-width: 640px) 45vw, 90vw"
                           />
                         ) : (
-                          <div className="flex h-full w-full items-center justify-center">
-                            <Icon className="h-8 w-8 text-calma-taupe/40" />
+                          <div className="grid h-full place-items-center text-calma-ink/35">
+                            <Icon size={40} strokeWidth={1.4} />
                           </div>
                         )}
                       </div>
-                      <div className="p-4">
-                        <p className="mb-1 flex items-center gap-1 text-[10px] font-bold uppercase tracking-wide text-calma-taupe">
-                          <Icon className="h-3 w-3" /> {card.type}
-                        </p>
-                        <h3 className="mb-1 line-clamp-1 text-sm font-semibold text-calma-ink">
+                      <div className="pt-3">
+                        <div className="mb-1 flex items-center gap-1 text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+                          <Icon size={12} /> {card.type}
+                        </div>
+                        <h3 className="m-0 line-clamp-2 text-[16px] font-bold leading-snug text-calma-ink group-hover:underline">
                           {card.title}
                         </h3>
-                        <p className="text-xs text-calma-taupe">{card.subtitle}</p>
+                        <p className="mb-0 mt-1 text-[13.5px] text-calma-taupe">{card.subtitle}</p>
                       </div>
                     </Link>
                     <button
                       onClick={() => remove(card)}
                       aria-label="Retirer des favoris"
-                      className="absolute right-3 top-3 flex h-8 w-8 items-center justify-center rounded-full bg-white/95 shadow-md transition-transform hover:scale-110"
+                      className="absolute end-2.5 top-2.5 grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm transition-transform hover:scale-105"
                     >
-                      <Heart className="h-3.5 w-3.5 fill-calma-terracotta text-calma-terracotta" />
+                      <Heart size={17} className="fill-calma-terracotta text-calma-terracotta" />
                     </button>
                   </div>
                 );
               })}
             </div>
           )}
-        </div>
-      </div>
+        </section>
+      </main>
       <CalmaFooter />
     </>
   );

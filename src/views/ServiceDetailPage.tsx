@@ -3,11 +3,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Check, Clock, MapPin, Star, ShieldCheck, Zap, Headset } from "lucide-react";
+import { Check, Clock, MapPin, Star, ShieldCheck, Zap, Headset } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
-import { Breadcrumbs } from "@/components/calma/Breadcrumbs";
+import PageHeader from "@/components/calma/PageHeader";
 import { ServiceCard } from "@/components/services/ServiceCard";
 import { BookingPromptModal } from "@/components/services/BookingPromptModal";
 import { mapService, type DBService } from "@/lib/services/mapService";
@@ -20,6 +20,8 @@ interface ServiceReview {
   service: string | null;
   createdAt: string;
 }
+
+const wrap = "mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8";
 
 function ServiceDetailContent() {
   const { t } = useCalmaLang();
@@ -52,7 +54,7 @@ function ServiceDetailContent() {
     return (
       <>
         <CalmaHeader active="services" />
-        <div className="min-h-screen bg-calma-sand" />
+        <div className="min-h-screen bg-white" />
         <CalmaFooter />
       </>
     );
@@ -62,15 +64,15 @@ function ServiceDetailContent() {
     return (
       <>
         <CalmaHeader active="services" />
-        <div className="flex min-h-[70vh] flex-col items-center justify-center bg-calma-sand px-6 text-center">
-          <MapPin className="mb-4 h-12 w-12 text-calma-taupe/30" />
-          <h1 className="mb-2 font-fraunces text-2xl text-calma-ink">{t.svc.notFoundTitle}</h1>
-          <p className="mb-5 text-sm text-calma-taupe">{t.svc.notFoundHint}</p>
+        <div className="flex min-h-[70vh] flex-col items-center justify-center bg-white px-6 text-center font-hanken">
+          <MapPin size={40} strokeWidth={1.4} className="mb-3 text-calma-ink/30" />
+          <h1 className="m-0 mb-2 text-[22px] font-bold text-calma-ink">{t.svc.notFoundTitle}</h1>
+          <p className="mb-5 mt-0 text-[15px] text-calma-taupe">{t.svc.notFoundHint}</p>
           <Link
             href="/services"
-            className="text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"
+            className="rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline hover:bg-calma-olive"
           >
-            ← {t.servicesBack}
+            {t.servicesBack}
           </Link>
         </div>
         <CalmaFooter />
@@ -80,113 +82,102 @@ function ServiceDetailContent() {
 
   const service = mapService(data.service);
   const related = data.related.map(mapService);
-  const c = service.color;
   const serviceReviews = reviews.filter((r) => r.service === service.title);
   const avgRating =
     serviceReviews.length > 0
       ? serviceReviews.reduce((sum, r) => sum + r.rating, 0) / serviceReviews.length
       : null;
+  const [mainImage, ...otherImages] = service.images;
 
   return (
     <>
       <CalmaHeader active="services" />
-      <div className="min-h-screen bg-calma-sand font-hanken">
-        <section className="relative flex min-h-[300px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
-          {service.images.length > 0 ? (
-            <Image
-              src={service.images[0]}
-              alt={service.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0" style={{ background: c }} />
-          )}
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "rgba(21,36,46,.66)",
-            }}
-          />
-          <div className="relative z-[2] mx-auto max-w-[640px]">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title={service.title}
+          crumbs={[
+            { label: t.cnt.breadcrumbHome, href: "/" },
+            { label: t.navServices, href: "/services" },
+            { label: service.title },
+          ]}
+        >
+          <div className="mb-5 flex flex-wrap items-center gap-x-4 gap-y-2 text-[14px] text-calma-taupe">
+            <span className="text-[12px] font-semibold uppercase tracking-[.04em]">
               {service.subtitle}
-            </div>
-            <h1 className="text-balance font-fraunces text-[clamp(30px,4.2vw,46px)] font-normal leading-[1.08] tracking-[-0.02em] text-calma-cream">
-              {service.title}
-            </h1>
-            <div className="mt-4 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm text-white/80">
-              <span className="flex items-center gap-1.5">
-                <Clock className="h-4 w-4" />
-                {service.duration}
-              </span>
-              {avgRating !== null && (
-                <span className="flex items-center gap-1.5 font-semibold text-white">
-                  <Star className="h-4 w-4 fill-calma-terracotta text-calma-terracotta" />
-                  {avgRating.toFixed(1)}
-                  <span className="font-normal text-white/70">
-                    ({serviceReviews.length}{" "}
-                    {serviceReviews.length > 1 ? t.svc.reviewsWord : t.svc.reviewWord})
-                  </span>
+            </span>
+            <span className="inline-flex items-center gap-1.5">
+              <Clock size={15} /> {service.duration}
+            </span>
+            {avgRating !== null && (
+              <span className="inline-flex items-center gap-1.5 font-semibold text-calma-ink">
+                <Star size={15} className="fill-calma-gold text-calma-gold" />
+                {avgRating.toFixed(1)}
+                <span className="font-normal text-calma-taupe">
+                  ({serviceReviews.length}{" "}
+                  {serviceReviews.length > 1 ? t.svc.reviewsWord : t.svc.reviewWord})
                 </span>
+              </span>
+            )}
+          </div>
+        </PageHeader>
+
+        {mainImage && (
+          <section className={wrap}>
+            <div className={`grid gap-2 ${otherImages.length > 0 ? "lg:grid-cols-[2fr_1fr]" : ""}`}>
+              <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-calma-sand lg:aspect-auto lg:h-[420px]">
+                <Image
+                  src={mainImage}
+                  alt={service.title}
+                  fill
+                  priority
+                  sizes="(min-width: 1240px) 800px, 100vw"
+                  className="object-cover"
+                />
+              </div>
+              {otherImages.length > 0 && (
+                <div className="hidden gap-2 lg:grid lg:h-[420px] lg:grid-rows-2">
+                  {otherImages.slice(0, 2).map((src, i) => (
+                    <div key={i} className="relative overflow-hidden rounded-2xl bg-calma-sand">
+                      <Image src={src} alt="" fill sizes="400px" className="object-cover" />
+                    </div>
+                  ))}
+                </div>
               )}
             </div>
-          </div>
-        </section>
+          </section>
+        )}
 
-        <section className="mx-auto max-w-5xl px-6 py-14 lg:px-0">
-          <Breadcrumbs
-            items={[
-              { label: "Accueil", href: "/" },
-              { label: "Services", href: "/services" },
-              { label: service.title },
-            ]}
-          />
-          <Link
-            href="/services"
-            className="mb-8 inline-flex items-center gap-1.5 text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"
-          >
-            <ArrowLeft className="h-4 w-4" /> {t.servicesBack}
-          </Link>
-
-          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1.6fr_1fr]">
-            <div className="rounded-3xl border border-calma-olive/[.1] bg-white p-8 sm:p-10">
+        <section className={`${wrap} pt-8`}>
+          <div className="grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
+            <div>
               <div
-                className="text-[15px] leading-relaxed text-calma-ink [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_p]:mb-3 [&_strong]:font-semibold [&_a]:text-calma-terracotta"
+                className="text-[15.5px] leading-relaxed text-calma-ink [&_a]:text-calma-olive [&_li]:mb-1 [&_ol]:list-decimal [&_ol]:ps-5 [&_p]:mb-3 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:ps-5"
                 dangerouslySetInnerHTML={{ __html: service.description }}
               />
 
               {service.features.length > 0 && (
-                <div className="mt-8 border-t border-calma-border pt-8">
-                  <h2 className="mb-4 font-fraunces text-lg font-normal text-calma-ink">
+                <div className="mt-8 border-t border-calma-ink/10 pt-8">
+                  <h2 className="m-0 mb-4 text-[20px] font-bold text-calma-ink">
                     {t.svc.detailFeaturesTitle}
                   </h2>
-                  <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  <ul className="m-0 grid list-none grid-cols-1 gap-x-6 gap-y-3 p-0 sm:grid-cols-2">
                     {service.features.map((f, i) => (
-                      <div key={i} className="flex items-center gap-2.5">
-                        <div
-                          className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full"
-                          style={{ background: `${c}18` }}
-                        >
-                          <Check className="h-3 w-3" style={{ color: c }} />
-                        </div>
-                        <span className="text-sm text-calma-taupe">{f}</span>
-                      </div>
+                      <li key={i} className="flex items-start gap-2.5">
+                        <Check size={17} className="mt-0.5 shrink-0 text-calma-olive" />
+                        <span className="text-[14.5px] text-calma-ink">{f}</span>
+                      </li>
                     ))}
-                  </div>
+                  </ul>
                 </div>
               )}
 
               {serviceReviews.length > 0 && (
-                <div className="mt-8 border-t border-calma-border pt-8">
-                  <h2 className="mb-5 flex items-center gap-2.5 font-fraunces text-lg font-normal text-calma-ink">
+                <div className="mt-8 border-t border-calma-ink/10 pt-8">
+                  <h2 className="m-0 mb-4 flex items-center gap-3 text-[20px] font-bold text-calma-ink">
                     {t.svc.reviewsTitle}
                     {avgRating !== null && (
-                      <span className="flex items-center gap-1 text-sm font-semibold text-calma-ink">
-                        <Star className="h-4 w-4 fill-calma-terracotta text-calma-terracotta" />
+                      <span className="inline-flex items-center gap-1 text-[15px] font-semibold">
+                        <Star size={16} className="fill-calma-gold text-calma-gold" />
                         {avgRating.toFixed(1)}
                         <span className="font-normal text-calma-taupe">
                           ({serviceReviews.length})
@@ -194,25 +185,28 @@ function ServiceDetailContent() {
                       </span>
                     )}
                   </h2>
-                  <div className="space-y-5">
+                  <div className="space-y-3">
                     {serviceReviews.map((r) => (
-                      <div key={r.id} className="rounded-2xl bg-calma-sand/50 p-5">
-                        <div className="mb-2 flex items-center justify-between">
-                          <span className="text-sm font-semibold text-calma-ink">{r.name}</span>
-                          <div className="flex items-center gap-0.5">
+                      <div key={r.id} className="rounded-xl border border-calma-ink/10 p-4">
+                        <div className="mb-1.5 flex items-center justify-between">
+                          <span className="text-[14.5px] font-bold text-calma-ink">{r.name}</span>
+                          <div className="flex items-center gap-0.5" aria-hidden="true">
                             {Array.from({ length: 5 }).map((_, i) => (
                               <Star
                                 key={i}
-                                className={`h-3.5 w-3.5 ${
+                                size={14}
+                                className={
                                   i < r.rating
-                                    ? "fill-calma-terracotta text-calma-terracotta"
-                                    : "text-calma-border"
-                                }`}
+                                    ? "fill-calma-gold text-calma-gold"
+                                    : "text-calma-ink/15"
+                                }
                               />
                             ))}
                           </div>
                         </div>
-                        <p className="text-sm leading-relaxed text-calma-taupe">{r.comment}</p>
+                        <p className="m-0 text-[14.5px] leading-relaxed text-calma-taupe">
+                          {r.comment}
+                        </p>
                       </div>
                     ))}
                   </div>
@@ -220,50 +214,43 @@ function ServiceDetailContent() {
               )}
             </div>
 
-            <aside className="h-fit rounded-3xl border border-calma-olive/[.1] bg-white p-6 sm:sticky sm:top-24">
-              <div
-                className="mb-5 flex h-12 w-12 items-center justify-center rounded-2xl"
-                style={{ background: `${c}18` }}
-              >
-                <service.icon className="h-6 w-6" style={{ color: c }} />
-              </div>
-              <p className="mb-1 text-xs font-bold uppercase tracking-wider text-calma-taupe">
-                {t.svc.fromLabel}
-              </p>
-              <p className="mb-6 font-fraunces text-3xl font-semibold" style={{ color: c }}>
+            <aside className="h-fit rounded-2xl border border-calma-ink/15 bg-white p-5 shadow-[0_8px_24px_-12px_rgba(0,0,0,.18)] lg:sticky lg:top-24">
+              <div className="text-[13px] text-calma-taupe">{t.svc.fromLabel}</div>
+              <div className="mb-4 text-[28px] font-bold leading-tight text-calma-ink">
                 {service.price}
-              </p>
+              </div>
               <button
+                type="button"
                 onClick={() => setShowBooking(true)}
-                className="w-full rounded-2xl py-3.5 text-center text-sm font-bold text-white transition-all duration-300 hover:opacity-90 hover:shadow-lg"
-                style={{ background: c }}
+                className="w-full rounded-full bg-calma-ink px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive"
               >
                 {t.svc.bookThis}
               </button>
 
-              <div className="mt-5 space-y-2.5 border-t border-calma-border pt-5">
-                <div className="flex items-center gap-2.5 text-xs text-calma-taupe">
-                  <ShieldCheck className="h-4 w-4 flex-shrink-0" style={{ color: c }} />
-                  {t.svc.trustSecure}
-                </div>
-                <div className="flex items-center gap-2.5 text-xs text-calma-taupe">
-                  <Zap className="h-4 w-4 flex-shrink-0" style={{ color: c }} />
-                  {t.svc.trustConfirm}
-                </div>
-                <div className="flex items-center gap-2.5 text-xs text-calma-taupe">
-                  <Headset className="h-4 w-4 flex-shrink-0" style={{ color: c }} />
-                  {t.svc.trustSupport}
-                </div>
-              </div>
+              <ul className="m-0 mt-5 list-none space-y-3 border-t border-calma-ink/10 p-0 pt-5">
+                {[
+                  { icon: ShieldCheck, label: t.svc.trustSecure },
+                  { icon: Zap, label: t.svc.trustConfirm },
+                  { icon: Headset, label: t.svc.trustSupport },
+                ].map(({ icon: Icon, label }) => (
+                  <li
+                    key={label}
+                    className="flex items-center gap-2.5 text-[13.5px] text-calma-ink"
+                  >
+                    <Icon size={18} strokeWidth={1.7} className="shrink-0 text-calma-olive" />
+                    {label}
+                  </li>
+                ))}
+              </ul>
             </aside>
           </div>
 
           {related.length > 0 && (
-            <div className="mt-16">
-              <h2 className="mb-6 font-fraunces text-2xl font-normal text-calma-ink">
+            <div className="mt-14">
+              <h2 className="m-0 mb-5 text-[22px] font-bold tracking-[-0.01em] text-calma-ink sm:text-[26px]">
                 {t.svc.relatedTitle}
               </h2>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+              <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
                 {related.map((s) => (
                   <ServiceCard key={s.id} service={s} onBook={() => setShowBooking(true)} />
                 ))}
@@ -271,7 +258,7 @@ function ServiceDetailContent() {
             </div>
           )}
         </section>
-      </div>
+      </main>
       <CalmaFooter />
 
       {showBooking && <BookingPromptModal onClose={() => setShowBooking(false)} />}

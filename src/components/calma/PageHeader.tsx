@@ -17,6 +17,8 @@ interface PageHeaderProps {
   crumbs?: PageCrumb[];
   /** Rendered under the banner, e.g. a search bar that overlaps its bottom edge. */
   children?: React.ReactNode;
+  /** Drop the built-in column/padding when the parent already provides one. */
+  flush?: boolean;
 }
 
 // Compact sibling of HomeHero: same 1240px column, rounded photo, bold left-aligned
@@ -28,6 +30,7 @@ export default function PageHeader({
   imageAlt = "",
   crumbs,
   children,
+  flush = false,
 }: PageHeaderProps) {
   const crumbTone = image ? "text-white/80" : "text-calma-taupe";
 
@@ -60,7 +63,9 @@ export default function PageHeader({
   );
 
   return (
-    <section className="mx-auto max-w-[1240px] px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8">
+    <section
+      className={flush ? "pt-2" : "mx-auto max-w-[1240px] px-4 pt-4 sm:px-6 sm:pt-6 lg:px-8"}
+    >
       {image ? (
         <div className="relative h-[240px] overflow-hidden rounded-2xl sm:h-[280px] lg:h-[320px]">
           <Image

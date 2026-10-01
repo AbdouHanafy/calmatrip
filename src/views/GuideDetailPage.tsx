@@ -3,11 +3,11 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, BookOpen } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
-import { Breadcrumbs } from "@/components/calma/Breadcrumbs";
+import PageHeader from "@/components/calma/PageHeader";
 
 interface Guide {
   id: number;
@@ -43,7 +43,7 @@ function GuideDetailContent() {
     return (
       <>
         <CalmaHeader active="blog" />
-        <div className="min-h-screen bg-calma-sand" />
+        <div className="min-h-screen bg-white" />
         <CalmaFooter />
       </>
     );
@@ -53,14 +53,14 @@ function GuideDetailContent() {
     return (
       <>
         <CalmaHeader active="blog" />
-        <div className="flex min-h-[70vh] flex-col items-center justify-center bg-calma-sand px-6 text-center">
-          <BookOpen className="mb-4 h-12 w-12 text-calma-taupe/30" />
-          <h1 className="mb-2 font-fraunces text-2xl text-calma-ink">Guide introuvable</h1>
+        <div className="flex min-h-[70vh] flex-col items-center justify-center bg-white px-6 text-center font-hanken">
+          <BookOpen size={40} strokeWidth={1.4} className="mb-3 text-calma-ink/30" />
+          <h1 className="m-0 mb-4 text-[22px] font-bold text-calma-ink">Guide introuvable</h1>
           <Link
             href="/guides"
-            className="text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"
+            className="rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline hover:bg-calma-olive"
           >
-            ← {t.guidesBack}
+            {t.guidesBack}
           </Link>
         </div>
         <CalmaFooter />
@@ -71,63 +71,41 @@ function GuideDetailContent() {
   return (
     <>
       <CalmaHeader active="blog" />
-      <div className="min-h-screen bg-calma-sand font-hanken">
-        <section className="relative flex min-h-[260px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
-          {guide.image ? (
-            <Image
-              src={guide.image}
-              alt={guide.title}
-              fill
-              priority
-              sizes="100vw"
-              className="object-cover"
-            />
-          ) : (
-            <div className="absolute inset-0 bg-calma-olive" />
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title={guide.title}
+          subtitle={guide.summary}
+          crumbs={[
+            { label: t.cnt.breadcrumbHome, href: "/" },
+            { label: t.guidesEyebrow, href: "/guides" },
+            { label: guide.title },
+          ]}
+        />
+
+        <article className="mx-auto max-w-[760px] px-4 sm:px-6">
+          {guide.image && (
+            <div className="relative mb-8 aspect-[16/9] overflow-hidden rounded-2xl bg-calma-sand">
+              <Image
+                src={guide.image}
+                alt={guide.title}
+                fill
+                priority
+                sizes="(min-width: 800px) 760px, 100vw"
+                className="object-cover"
+              />
+            </div>
+          )}
+          {guide.category && (
+            <div className="mb-3 text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+              {guide.category}
+            </div>
           )}
           <div
-            className="absolute inset-0"
-            style={{
-              background: "rgba(21,36,46,.66)",
-            }}
+            className="text-[16px] leading-[1.75] text-calma-ink [&_a]:text-calma-olive [&_h2]:mb-2 [&_h2]:mt-8 [&_h2]:text-[22px] [&_h2]:font-bold [&_h3]:mb-2 [&_h3]:mt-6 [&_h3]:text-[18px] [&_h3]:font-bold [&_li]:mb-1 [&_ol]:list-decimal [&_ol]:ps-5 [&_p]:mb-4 [&_strong]:font-semibold [&_ul]:list-disc [&_ul]:ps-5"
+            dangerouslySetInnerHTML={{ __html: guide.content }}
           />
-          <div className="relative z-[2] mx-auto max-w-[640px]">
-            {guide.category && (
-              <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
-                <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
-                {guide.category}
-              </div>
-            )}
-            <h1 className="text-balance font-fraunces text-[clamp(28px,4vw,42px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-cream">
-              {guide.title}
-            </h1>
-          </div>
-        </section>
-
-        <section className="mx-auto max-w-3xl px-6 py-14 lg:px-0">
-          <Breadcrumbs
-            items={[
-              { label: "Accueil", href: "/" },
-              { label: "Guides pratiques", href: "/guides" },
-              { label: guide.title },
-            ]}
-          />
-          <Link
-            href="/guides"
-            className="mb-8 inline-flex items-center gap-1.5 text-sm font-semibold text-calma-terracotta no-underline hover:text-calma-olive"
-          >
-            <ArrowLeft className="h-4 w-4" /> {t.guidesBack}
-          </Link>
-
-          <div className="rounded-3xl border border-calma-olive/[.1] bg-white p-8 sm:p-10">
-            <p className="mb-6 text-[15px] leading-relaxed text-calma-taupe">{guide.summary}</p>
-            <div
-              className="prose max-w-none text-[15px] leading-relaxed text-calma-ink [&_h2]:font-fraunces [&_h2]:text-xl [&_h2]:font-normal [&_h2]:mt-6 [&_h2]:mb-2 [&_h3]:font-fraunces [&_h3]:text-lg [&_h3]:font-normal [&_h3]:mt-5 [&_h3]:mb-2 [&_p]:mb-3 [&_ul]:list-disc [&_ul]:pl-5 [&_ol]:list-decimal [&_ol]:pl-5 [&_li]:mb-1 [&_a]:text-calma-terracotta [&_strong]:font-semibold"
-              dangerouslySetInnerHTML={{ __html: guide.content }}
-            />
-          </div>
-        </section>
-      </div>
+        </article>
+      </main>
       <CalmaFooter />
     </>
   );

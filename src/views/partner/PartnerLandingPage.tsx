@@ -1,10 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Store, Compass, Check } from "lucide-react";
+import { Store, Compass, Check } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
+import PageHeader from "@/components/calma/PageHeader";
 
 function PartnerLandingContent() {
   const { t } = useCalmaLang();
@@ -31,57 +32,37 @@ function PartnerLandingContent() {
   return (
     <>
       <CalmaHeader active="contact" />
-      <main className="min-h-screen bg-calma-cream font-hanken">
-        <section className="bg-calma-olive px-6 pb-20 pt-20 text-center sm:px-10">
-          <div className="mx-auto max-w-[640px]">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
-              {t.pln.eyebrow}
-            </div>
-            <h1 className="mb-4 text-balance font-fraunces text-[clamp(30px,4vw,44px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-cream">
-              {t.pln.heroTitle}
-            </h1>
-            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
-              {t.pln.heroSub}
-            </p>
-          </div>
-        </section>
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title={t.pln.heroTitle}
+          subtitle={t.pln.heroSub}
+          image="/images/hero/sea.png"
+          crumbs={[{ label: t.cnt.breadcrumbHome, href: "/" }, { label: t.pln.eyebrow }]}
+        />
 
-        <section className="mx-auto -mt-10 max-w-[920px] px-6 pb-20 sm:px-10">
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2">
+        <section className="mx-auto max-w-[1000px] px-4 pt-8 sm:px-6">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
             {profiles.map((p) => (
               <div
                 key={p.href}
-                className="flex flex-col rounded-calma-block border border-calma-olive/10 bg-white p-8"
-                style={{ boxShadow: "0 22px 50px -22px rgba(21,36,46,.3)" }}
+                className="flex flex-col rounded-2xl border border-calma-ink/10 p-6 sm:p-7"
               >
-                <div
-                  className="mb-5 flex h-14 w-14 items-center justify-center rounded-2xl"
-                  style={{ background: `${p.accent}18`, color: p.accent }}
-                >
-                  <p.icon size={26} />
-                </div>
-                <h2 className="mb-2 font-fraunces text-2xl font-normal text-calma-ink">
-                  {p.label}
-                </h2>
-                <p className="mb-5 text-sm leading-relaxed text-calma-taupe">{p.desc}</p>
-                <ul className="mb-8 space-y-2.5">
+                <p.icon size={28} strokeWidth={1.6} className="mb-4" style={{ color: p.accent }} />
+                <h2 className="m-0 mb-2 text-[22px] font-bold text-calma-ink">{p.label}</h2>
+                <p className="mb-5 mt-0 text-[15px] leading-relaxed text-calma-taupe">{p.desc}</p>
+                <ul className="m-0 mb-7 list-none space-y-2.5 p-0">
                   {p.points.map((pt) => (
-                    <li key={pt} className="flex items-start gap-2 text-sm text-calma-ink">
-                      <Check size={16} className="mt-0.5 shrink-0" style={{ color: p.accent }} />
+                    <li key={pt} className="flex items-start gap-2 text-[14.5px] text-calma-ink">
+                      <Check size={16} className="mt-0.5 shrink-0 text-calma-olive" />
                       {pt}
                     </li>
                   ))}
                 </ul>
                 <Link
                   href={p.href}
-                  className="group mt-auto inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-[15px] font-semibold text-white no-underline transition-all duration-300 hover:-translate-y-0.5"
-                  style={{ background: p.accent }}
+                  className="mt-auto inline-flex items-center justify-center rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline transition-colors hover:bg-calma-olive"
                 >
                   {t.pln.learnMore}
-                  <ArrowRight
-                    size={16}
-                    className="transition-transform duration-300 group-hover:translate-x-1"
-                  />
                 </Link>
               </div>
             ))}
