@@ -40,6 +40,11 @@ Local MySQL now runs as a **portable, admin-free instance** instead:
 - `npm run dev`, `npm run build` and `npm run test` auto-start it via `predev`/`prebuild`/`pretest` hooks — you shouldn't need to think about this day to day.
 - Override paths/port with `MYSQL_PORTABLE_HOME`, `MYSQL_PORTABLE_DATA`, `MYSQL_PORTABLE_PORT` env vars if this ever moves to another machine.
 
+**Docker fallback (user `insol` machine):** if the portable binaries are missing, `db-start`/`db-stop` fall back to a Docker container named `calmatrip-mysql` (MySQL 9.3, port 3306, root with empty password, db `calmatrip`, volume `calmatrip-mysql-data`). Create it once with:
+`docker run -d --name calmatrip-mysql -p 3306:3306 -e MYSQL_ALLOW_EMPTY_PASSWORD=yes -e MYSQL_DATABASE=calmatrip -v calmatrip-mysql-data:/var/lib/mysql mysql:9.3`
+
+On this machine Windows Application Control blocks the native `@next/swc` binary, so Next falls back to the (slow) WASM compiler — the first `next dev` start takes ~5 min.
+
 After a fresh checkout on this machine: `npm run db:start` → `npx prisma migrate deploy` → `npm run db:seed`.
 
 ## Architecture

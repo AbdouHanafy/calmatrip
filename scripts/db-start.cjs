@@ -4,7 +4,7 @@
 // deleted (bin/ was empty) while the service registration survived, so local dev
 // now runs a self-contained MySQL under the user's home directory instead of a
 // Windows service — no admin rights required to start/stop it.
-const { spawn } = require("child_process");
+const { spawn, execSync } = require("child_process");
 const net = require("net");
 const fs = require("fs");
 const path = require("path");
@@ -49,6 +49,16 @@ async function main() {
 
   const mysqldPath = path.join(MYSQL_HOME, "bin", "mysqld.exe");
   if (!fs.existsSync(mysqldPath)) {
+    // Fallback: Docker container "calmatrip-mysql" (see CLAUDE.md).
+    try {
+      execSync("docker start calmatrip-mysql", { stdio: "ignore" });
+      console.log("[db-start] Started Docker container calmatrip-mysql.");
+      if (await waitForPort(PORT, 60000)) return;
+      console.error(`[db-start] Docker MySQL did not open port ${PORT} within 60s.`);
+      process.exit(1);
+    } catch {
+      // no docker / no container: fall through to the portable-install error
+    }
     console.error(`[db-start] mysqld.exe not found at ${mysqldPath}`);
     console.error("Set MYSQL_PORTABLE_HOME if the portable MySQL install lives elsewhere.");
     process.exit(1);

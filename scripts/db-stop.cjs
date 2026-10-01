@@ -7,6 +7,12 @@ const path = require("path");
 const PID_FILE = path.join(__dirname, ".mysql-portable.pid");
 
 if (!fs.existsSync(PID_FILE)) {
+  try {
+    execSync("docker stop calmatrip-mysql", { stdio: "inherit" });
+    process.exit(0);
+  } catch {
+    // no docker container either
+  }
   console.log("[db-stop] No pid file found — is MySQL running via db-start?");
   process.exit(0);
 }
