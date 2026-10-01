@@ -11,6 +11,10 @@ export default withPWANext({
   reactStrictMode: true,
 
   images: {
+    // Dev only: on machines where the native sharp/swc binaries are blocked (Windows
+    // Application Control) Next falls back to a WASM image codec that hangs for some
+    // widths and leaves photos blank. Production keeps full optimization.
+    unoptimized: process.env.NODE_ENV === "development",
     // AVIF first (smaller than WebP where supported), WebP fallback — Next
     // serves whichever the browser's Accept header supports.
     formats: ["image/avif", "image/webp"],

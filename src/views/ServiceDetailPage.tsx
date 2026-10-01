@@ -3,7 +3,18 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Check, Clock, MapPin, Star, ShieldCheck, Zap, Headset } from "lucide-react";
+import {
+  CalendarCheck,
+  Check,
+  Clock,
+  MapPin,
+  Star,
+  ShieldCheck,
+  Tag,
+  Users,
+  Zap,
+  Headset,
+} from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
@@ -92,7 +103,7 @@ function ServiceDetailContent() {
   return (
     <>
       <CalmaHeader active="services" />
-      <main className="min-h-screen bg-white pb-12 font-hanken">
+      <main className="min-h-screen bg-white pb-28 font-hanken lg:pb-12">
         <PageHeader
           title={service.title}
           crumbs={[
@@ -129,8 +140,7 @@ function ServiceDetailContent() {
                   src={mainImage}
                   alt={service.title}
                   fill
-                  priority
-                  sizes="(min-width: 1240px) 800px, 100vw"
+                  sizes="(min-width: 1240px) 1240px, 100vw"
                   className="object-cover"
                 />
               </div>
@@ -170,6 +180,35 @@ function ServiceDetailContent() {
                   </ul>
                 </div>
               )}
+
+              <div className="mt-8 border-t border-calma-ink/10 pt-8">
+                <h2 className="m-0 mb-4 text-[20px] font-bold text-calma-ink">
+                  {t.svc.goodToKnow}
+                </h2>
+                <ul className="m-0 grid list-none grid-cols-1 gap-3 p-0 sm:grid-cols-2">
+                  {t.home.trust.map((item, i) => {
+                    const Icon = [CalendarCheck, Tag, Users, Headset][i] ?? Check;
+                    return (
+                      <li
+                        key={item.title}
+                        className="flex items-start gap-3 rounded-xl border border-calma-ink/10 p-4"
+                      >
+                        <Icon
+                          size={20}
+                          strokeWidth={1.7}
+                          className="mt-0.5 shrink-0 text-calma-olive"
+                        />
+                        <div>
+                          <div className="text-[14.5px] font-bold text-calma-ink">{item.title}</div>
+                          <div className="text-[13.5px] leading-snug text-calma-taupe">
+                            {item.desc}
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
 
               {serviceReviews.length > 0 && (
                 <div className="mt-8 border-t border-calma-ink/10 pt-8">
@@ -260,6 +299,22 @@ function ServiceDetailContent() {
         </section>
       </main>
       <CalmaFooter />
+
+      <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-4 border-t border-calma-ink/10 bg-white/95 px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(0,0,0,.2)] backdrop-blur lg:hidden">
+        <div className="min-w-0">
+          <div className="text-[12px] text-calma-taupe">{t.svc.bookBarFrom}</div>
+          <div className="truncate text-[18px] font-bold leading-tight text-calma-ink">
+            {service.price}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => setShowBooking(true)}
+          className="shrink-0 rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive"
+        >
+          {t.svc.bookThis}
+        </button>
+      </div>
 
       {showBooking && <BookingPromptModal onClose={() => setShowBooking(false)} />}
     </>

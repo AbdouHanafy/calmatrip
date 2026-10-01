@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { Heart, ShoppingCart, Minus, Plus, Check } from "lucide-react";
+import { Heart, ShoppingCart, Minus, Plus, Check, Truck, Wallet, Hand } from "lucide-react";
 import { useMarketplace, Product } from "@/components/marketplace/Marketplacecontext";
 import { ProductCard } from "@/components/marketplace/Productcard";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
@@ -100,7 +100,7 @@ function ProductDetailContent() {
   return (
     <>
       <CalmaHeader active="marketplace" />
-      <main className="min-h-screen bg-white pb-12 font-hanken">
+      <main className="min-h-screen bg-white pb-28 font-hanken lg:pb-12">
         <PageHeader
           title={product.name}
           crumbs={[
@@ -122,7 +122,6 @@ function ProductDetailContent() {
                   src={images[activeImg]}
                   alt={product.name}
                   fill
-                  priority
                   className="object-cover"
                   sizes="(min-width: 768px) 50vw, 100vw"
                 />
@@ -242,6 +241,19 @@ function ProductDetailContent() {
                   />
                 </button>
               </div>
+
+              <ul className="m-0 mt-6 list-none space-y-3 border-t border-calma-ink/10 p-0 pt-5">
+                {[
+                  { icon: Truck, text: "Livraison partout en Tunisie — 7 TND" },
+                  { icon: Wallet, text: "Paiement à la livraison" },
+                  { icon: Hand, text: "Pièce d'artisanat tunisien, choisie avec soin" },
+                ].map(({ icon: Icon, text }) => (
+                  <li key={text} className="flex items-center gap-3 text-[14px] text-calma-ink">
+                    <Icon size={18} strokeWidth={1.7} className="shrink-0 text-calma-olive" />
+                    {text}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
 
@@ -259,6 +271,19 @@ function ProductDetailContent() {
           )}
         </section>
       </main>
+      {!outOfStock && (
+        <div className="fixed inset-x-0 bottom-0 z-30 flex items-center justify-between gap-4 border-t border-calma-ink/10 bg-white/95 px-4 py-3 shadow-[0_-8px_24px_-12px_rgba(0,0,0,.2)] backdrop-blur lg:hidden">
+          <div className="text-[18px] font-bold text-calma-ink">{product.price.toFixed(2)} TND</div>
+          <button
+            type="button"
+            onClick={handleAdd}
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive"
+          >
+            {added ? <Check size={18} /> : <ShoppingCart size={18} />}
+            {added ? "Ajouté !" : t.mkt.addToCart}
+          </button>
+        </div>
+      )}
       <CalmaFooter />
     </>
   );

@@ -89,7 +89,6 @@ function GuideDetailContent() {
                 src={guide.image}
                 alt={guide.title}
                 fill
-                priority
                 sizes="(min-width: 800px) 760px, 100vw"
                 className="object-cover"
               />

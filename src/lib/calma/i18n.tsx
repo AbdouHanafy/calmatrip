@@ -89,6 +89,8 @@ export interface CalmaServicesDict {
   trustConfirm: string;
   trustSupport: string;
   relatedTitle: string;
+  goodToKnow: string;
+  bookBarFrom: string;
   notFoundTitle: string;
   notFoundHint: string;
   whyKicker: string;
@@ -981,6 +983,8 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       trustConfirm: "Confirmation sous 30 min",
       trustSupport: "Support 24/7",
       relatedTitle: "Autres services qui pourraient vous plaire",
+      goodToKnow: "Bon à savoir",
+      bookBarFrom: "Dès",
       notFoundTitle: "Service introuvable",
       notFoundHint: "Ce service n'est plus disponible.",
       whyKicker: "Pourquoi Calma Trip",
@@ -1843,6 +1847,8 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       trustConfirm: "Confirmation within 30 min",
       trustSupport: "24/7 support",
       relatedTitle: "Other services you might like",
+      goodToKnow: "Good to know",
+      bookBarFrom: "From",
       notFoundTitle: "Service not found",
       notFoundHint: "This service is no longer available.",
       whyKicker: "Why Calma Trip",
@@ -2687,6 +2693,8 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       trustConfirm: "تأكيد خلال 30 دقيقة",
       trustSupport: "دعم على مدار الساعة",
       relatedTitle: "خدمات أخرى قد تعجبك",
+      goodToKnow: "معلومات مفيدة",
+      bookBarFrom: "ابتداءً من",
       notFoundTitle: "الخدمة غير موجودة",
       notFoundHint: "هذه الخدمة لم تعد متوفرة.",
       whyKicker: "لماذا كالما تريب",
