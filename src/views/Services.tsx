@@ -4,6 +4,7 @@ import { useSearchParams } from "next/navigation";
 import Image from "next/image";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
+import PageHeader from "@/components/calma/PageHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
 import { ServicesStatsStrip } from "@/components/services/ServicesStatsStrip";
 import { ServicesSearchBar } from "@/components/services/ServicesSearchBar";
@@ -41,46 +42,17 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
   return (
     <>
       <CalmaHeader active="services" />
-      <div className="min-h-screen bg-calma-sand font-hanken">
-        {/* ── Hero — luxury concierge, photo-backed, topographic texture ── */}
-        <section className="relative flex min-h-[300px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
-          <Image
-            src="/images/tunisia.jpeg"
-            alt="Sidi Bou Saïd, Tunisie"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "rgba(21,36,46,.66)",
-            }}
-          />
-          {/* subtle sand-ripple texture, replaces literal decorative shapes */}
-          <div
-            className="pointer-events-none absolute inset-0 opacity-[.07]"
-            style={{
-              backgroundImage: "transparent",
-            }}
-          />
-
-          <div className="relative z-[2] mx-auto max-w-[640px]">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
-              {t.svc.eyebrow}
-            </div>
-            <h1 className="mb-4 text-balance font-fraunces text-[clamp(32px,4.4vw,48px)] font-normal leading-[1.05] tracking-[-0.02em] text-calma-cream">
-              {t.svc.heroTitle}
-            </h1>
-            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
-              {t.svc.heroSub}
-            </p>
-          </div>
-        </section>
-
-        <ServicesSearchBar value={query} onChange={setQuery} />
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title={t.svc.heroTitle}
+          subtitle={t.svc.heroSub}
+          image="/images/tunisia.jpeg"
+          imageAlt="Sidi Bou Saïd, Tunisie"
+          crumbs={[{ label: t.cnt.breadcrumbHome, href: "/" }, { label: t.navServices }]}
+        />
+        <div className="mx-auto max-w-[1240px] px-4 sm:px-6 lg:px-8">
+          <ServicesSearchBar value={query} onChange={setQuery} />
+        </div>
 
         <ServicesStatsStrip />
 
@@ -99,7 +71,7 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
         <ServicesCtaSection />
 
         {selectedService && <BookingPromptModal onClose={() => setSelectedService(null)} />}
-      </div>
+      </main>
       <CalmaFooter />
     </>
   );
@@ -108,7 +80,7 @@ function ServicesContent({ services: dbServices }: { services: DBService[] }) {
 export default function Services({ services }: { services: DBService[] }) {
   return (
     <CalmaLangProvider>
-      <Suspense fallback={<div className="min-h-screen bg-calma-sand" />}>
+      <Suspense fallback={<div className="min-h-screen bg-white" />}>
         <ServicesContent services={services} />
       </Suspense>
     </CalmaLangProvider>

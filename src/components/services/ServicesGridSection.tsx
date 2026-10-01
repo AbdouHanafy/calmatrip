@@ -1,5 +1,4 @@
 import { MapPin } from "lucide-react";
-import { motion } from "motion/react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import { ServiceCard } from "./ServiceCard";
 import type { MappedService } from "@/lib/services/mapService";
@@ -26,87 +25,73 @@ export function ServicesGridSection({
   const { t } = useCalmaLang();
 
   return (
-    <section className="py-20 lg:py-28">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        {/* Section header + category filter */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-6 mb-12">
-          <div>
-            <p className="mb-2 text-xs uppercase tracking-[0.3em] text-[#D2B38B]">
-              {t.svc.offerKicker}
-            </p>
-            <h2 className="font-fraunces text-3xl font-normal leading-tight text-[#15242E] lg:text-4xl">
-              {t.svc.offerTitle1}
-              <br />
-              {t.svc.offerTitle2}
-            </h2>
-          </div>
+    <section className="mx-auto max-w-[1240px] px-4 pt-10 sm:px-6 lg:px-8">
+      <h2 className="m-0 text-[22px] font-bold tracking-[-0.01em] text-calma-ink sm:text-[26px]">
+        {t.svc.offerTitle1} {t.svc.offerTitle2}
+      </h2>
 
-          {/* Category pills */}
-          {categories.length > 1 && (
-            <div className="flex flex-wrap gap-1.5 rounded-full border border-calma-olive/10 bg-white p-1.5">
-              {categories.map((cat) => (
+      {categories.length > 1 && (
+        <ul className="-mx-4 mb-0 mt-4 flex list-none gap-2 overflow-x-auto px-4 pb-1 ps-4 calma-scrollbar-hide sm:-mx-6 sm:px-6 lg:mx-0 lg:px-0">
+          {categories.map((cat) => {
+            const active = activeCategory === cat;
+            return (
+              <li key={cat} className="shrink-0">
                 <button
-                  key={cat}
+                  type="button"
                   onClick={() => onCategoryChange(cat)}
-                  className="relative rounded-full px-4 py-2 text-sm font-semibold capitalize text-calma-taupe transition-colors duration-200 data-[active=true]:text-white"
-                  data-active={activeCategory === cat}
+                  aria-pressed={active}
+                  className={`whitespace-nowrap rounded-full border px-3.5 py-2.5 text-[14px] font-semibold capitalize transition-colors ${
+                    active
+                      ? "border-calma-ink bg-calma-ink text-white"
+                      : "border-calma-ink/15 bg-white text-calma-ink hover:border-calma-ink/45 hover:bg-calma-sand/40"
+                  }`}
                 >
-                  {activeCategory === cat && (
-                    <motion.span
-                      layoutId="services-cat-pill"
-                      className="absolute inset-0 rounded-full bg-calma-olive"
-                      transition={{ type: "spring", stiffness: 400, damping: 32 }}
-                    />
-                  )}
-                  <span className="relative z-[1]">{cat}</span>
+                  {cat}
                 </button>
-              ))}
-            </div>
-          )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {q && (
+        <div className="mt-5 flex flex-wrap items-center gap-3 rounded-xl border border-calma-ink/10 px-4 py-3">
+          <p className="m-0 text-[14px] text-calma-taupe">
+            {filtered.length > 0 ? (
+              <>
+                {filtered.length} {filtered.length > 1 ? t.svc.resultsWord : t.svc.resultWord}{" "}
+                {t.svc.forWord} <b className="text-calma-ink">“{q}”</b>
+              </>
+            ) : (
+              <>
+                {t.svc.noResultsFor} <b className="text-calma-ink">“{q}”</b> {t.svc.noResultsHint}
+              </>
+            )}
+          </p>
+          <button
+            type="button"
+            onClick={onClearQuery}
+            className="ms-auto rounded-full border border-calma-ink/20 px-4 py-1.5 text-[13px] font-semibold text-calma-ink transition-colors hover:border-calma-ink"
+          >
+            {t.svc.clearSearch}
+          </button>
         </div>
+      )}
 
-        {/* Bandeau de recherche active */}
-        {q && (
-          <div className="mb-8 flex flex-wrap items-center gap-3 rounded-2xl border border-[#F0E2CE] bg-white px-5 py-3.5">
-            <p className="text-sm text-[#5E7480]">
-              {filtered.length > 0 ? (
-                <>
-                  {filtered.length} {filtered.length > 1 ? t.svc.resultsWord : t.svc.resultWord}{" "}
-                  {t.svc.forWord} <b className="font-fraunces text-[#15242E]">“{q}”</b>
-                </>
-              ) : (
-                <>
-                  {t.svc.noResultsFor} <b className="font-fraunces text-[#15242E]">“{q}”</b>{" "}
-                  {t.svc.noResultsHint}
-                </>
-              )}
-            </p>
-            <button
-              type="button"
-              onClick={onClearQuery}
-              className="ml-auto rounded-full border border-[#F0E2CE] px-4 py-1.5 text-xs uppercase tracking-[0.12em] text-[#5E7480] transition-colors hover:border-[#D2B38B] hover:text-[#15242E]"
-            >
-              {t.svc.clearSearch}
-            </button>
-          </div>
-        )}
-
-        {/* Grid */}
-        {filtered.length === 0 ? (
-          <div className="text-center py-24">
-            <MapPin className="w-12 h-12 text-gray-200 mx-auto mb-4" />
-            <p className="text-gray-400 font-medium">
-              {q ? t.svc.emptySearch : t.svc.emptyCategory}
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {filtered.map((service) => (
-              <ServiceCard key={service.id} service={service} onBook={onBook} />
-            ))}
-          </div>
-        )}
-      </div>
+      {filtered.length === 0 ? (
+        <div className="py-20 text-center">
+          <MapPin size={40} strokeWidth={1.4} className="mx-auto mb-3 text-calma-ink/30" />
+          <p className="m-0 text-[15px] text-calma-taupe">
+            {q ? t.svc.emptySearch : t.svc.emptyCategory}
+          </p>
+        </div>
+      ) : (
+        <div className="mt-6 grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+          {filtered.map((service) => (
+            <ServiceCard key={service.id} service={service} onBook={onBook} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

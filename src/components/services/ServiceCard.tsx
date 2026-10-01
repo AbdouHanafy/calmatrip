@@ -1,15 +1,14 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { Clock, ArrowRight } from "lucide-react";
+import { Clock } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import type { MappedService } from "@/lib/services/mapService";
 
 /**
- * Portrait "visual menu" card — whole card links to the service's detail page,
- * where the full description/features live. The card itself only carries what
- * helps someone scan and choose: a photo, the category, the title, the duration
- * and the price. A small "Réserver" pill stays available without leaving the grid.
+ * Same card as the homepage's ActivityCard: 4:3 photo, category, title, duration,
+ * price. The whole card links to the detail page; a small "Réserver" pill lets
+ * people start a booking without leaving the grid.
  */
 export function ServiceCard({
   service,
@@ -21,83 +20,56 @@ export function ServiceCard({
   const { t } = useCalmaLang();
   const [imgError, setImgError] = useState(false);
   const hasImage = service.images.length > 0 && !imgError;
-  const c = service.color;
 
   return (
-    <Link
-      href={`/services/${service.id}`}
-      className="group relative block aspect-[3/4] overflow-hidden rounded-[22px] no-underline shadow-[0_24px_60px_-32px_rgba(42,16,8,.35)] transition-shadow duration-500 hover:shadow-[0_32px_70px_-28px_rgba(42,16,8,.5)]"
-    >
-      {hasImage ? (
-        <Image
-          src={service.images[0]}
-          alt={service.title}
-          fill
-          sizes="(max-width: 768px) 100vw, 33vw"
-          onError={() => setImgError(true)}
-          className="object-cover transition-transform duration-[800ms] ease-out group-hover:scale-[1.07]"
-        />
-      ) : (
-        <div
-          className="absolute inset-0 flex items-center justify-center"
-          style={{ backgroundColor: c }}
-        >
-          <service.icon className="h-14 w-14 text-white/25" />
-        </div>
-      )}
+    <Link href={`/services/${service.id}`} className="group block no-underline">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-calma-sand">
+        {hasImage ? (
+          <Image
+            src={service.images[0]}
+            alt={service.title}
+            fill
+            sizes="(min-width: 1024px) 290px, (min-width: 640px) 45vw, 90vw"
+            onError={() => setImgError(true)}
+            className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          />
+        ) : (
+          <div className="grid h-full place-items-center text-calma-ink/35">
+            <service.icon size={40} strokeWidth={1.4} />
+          </div>
+        )}
+        {service.badge && (
+          <span className="absolute start-2.5 top-2.5 rounded-md bg-white px-2 py-1 text-[11px] font-bold text-calma-ink shadow-sm">
+            {service.badge}
+          </span>
+        )}
+      </div>
 
-      {/* Asymmetric scrim — the photo stays readable up top, text stays legible at the bottom */}
-      <div
-        className="absolute inset-0"
-        style={{
-          background: "rgba(20,8,4,.38)",
-        }}
-      />
-
-      {service.badge && (
-        <div
-          className="absolute left-4 top-4 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider text-white shadow"
-          style={{ background: c }}
-        >
-          {service.badge}
-        </div>
-      )}
-
-      <div className="absolute inset-x-0 bottom-0 flex flex-col gap-2.5 p-5">
-        <p className="text-[11px] font-bold uppercase tracking-wider text-white/70">
+      <div className="pt-3">
+        <div className="mb-1 text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
           {service.subtitle}
-        </p>
-        <h3 className="font-fraunces text-[21px] font-normal leading-[1.15] text-white">
+        </div>
+        <h3 className="m-0 line-clamp-2 text-[16px] font-bold leading-snug text-calma-ink group-hover:underline">
           {service.title}
         </h3>
-        <div className="flex items-center gap-1.5 text-xs font-medium text-white/70">
-          <Clock className="h-3.5 w-3.5" />
-          {service.duration}
+        <div className="mt-1.5 inline-flex items-center gap-1 text-[13px] text-calma-taupe">
+          <Clock size={13} /> {service.duration}
         </div>
-
-        <div className="mt-1 flex items-center justify-between gap-3 border-t border-white/15 pt-3">
-          <div>
-            <p className="text-[10px] font-semibold uppercase tracking-wider text-white/60">
-              {t.svc.fromLabel}
-            </p>
-            <p className="font-fraunces text-lg font-semibold text-white">{service.price}</p>
+        <div className="mt-2 flex items-center justify-between gap-3">
+          <div className="text-[14px] text-calma-ink">
+            {t.svc.fromLabel} <span className="text-[16px] font-bold">{service.price}</span>
           </div>
-          <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                onBook(service.id);
-              }}
-              className="rounded-full bg-white/95 px-3.5 py-2 text-xs font-bold text-calma-ink transition-colors hover:bg-white"
-            >
-              {t.svc.bookShort}
-            </button>
-            <span className="grid h-8 w-8 flex-shrink-0 place-items-center rounded-full border border-white/30 text-white transition-colors group-hover:bg-white group-hover:text-calma-ink">
-              <ArrowRight className="h-3.5 w-3.5" />
-            </span>
-          </div>
+          <button
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onBook(service.id);
+            }}
+            className="rounded-full border border-calma-ink/25 px-3.5 py-1.5 text-[13px] font-semibold text-calma-ink transition-colors hover:border-calma-ink hover:bg-calma-ink hover:text-white"
+          >
+            {t.svc.bookShort}
+          </button>
         </div>
       </div>
     </Link>

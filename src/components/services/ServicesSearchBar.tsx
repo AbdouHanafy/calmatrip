@@ -9,27 +9,28 @@ interface ServicesSearchBarProps {
 export function ServicesSearchBar({ value, onChange }: ServicesSearchBarProps) {
   const { t } = useCalmaLang();
   return (
-    <section className="relative z-20 -mt-8 mb-2 mx-auto max-w-2xl px-6">
-      <div className="relative group" style={{ boxShadow: "0 24px 56px -24px rgba(21,36,46,.5)" }}>
-        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-calma-taupe transition-colors group-focus-within:text-calma-terracotta" />
-        <input
-          type="text"
-          placeholder={t.svc.searchPh}
-          className="w-full h-14 rounded-[28px] border border-white/50 bg-white/90 pl-14 pr-12 text-calma-ink outline-none backdrop-blur-xl transition-all placeholder:text-calma-taupe focus:ring-2 focus:ring-calma-terracotta/50"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        />
-        {value && (
-          <button
-            type="button"
-            aria-label={t.svc.clearSearch}
-            onClick={() => onChange("")}
-            className="absolute right-5 top-1/2 flex h-7 w-7 -translate-y-1/2 items-center justify-center rounded-full text-calma-taupe transition-colors hover:bg-calma-terracotta/10 hover:text-calma-terracotta"
-          >
-            <X className="h-4 w-4" />
-          </button>
-        )}
-      </div>
-    </section>
+    <div className="relative mt-5 max-w-[560px]">
+      <Search
+        size={18}
+        className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-calma-taupe"
+      />
+      <input
+        type="text"
+        placeholder={t.svc.searchPh}
+        className="h-12 w-full rounded-full border border-calma-ink/20 bg-white ps-11 pe-11 text-[15px] text-calma-ink outline-none transition-colors placeholder:text-calma-taupe focus:border-calma-ink"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+      {value && (
+        <button
+          type="button"
+          aria-label={t.svc.clearSearch}
+          onClick={() => onChange("")}
+          className="absolute end-3 top-1/2 grid h-7 w-7 -translate-y-1/2 place-items-center rounded-full text-calma-taupe transition-colors hover:bg-calma-sand hover:text-calma-ink"
+        >
+          <X size={16} />
+        </button>
+      )}
+    </div>
   );
 }

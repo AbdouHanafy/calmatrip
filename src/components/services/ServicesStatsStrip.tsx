@@ -14,22 +14,20 @@ export function ServicesStatsStrip() {
   }));
 
   return (
-    <section className="border-b border-calma-olive/10 bg-calma-cream py-12">
-      <div className="max-w-7xl mx-auto px-6 lg:px-12 grid grid-cols-2 sm:grid-cols-4 gap-8">
+    <section className="mx-auto max-w-[1240px] px-4 pt-8 sm:px-6 lg:px-8">
+      <ul className="m-0 grid list-none grid-cols-2 gap-x-8 gap-y-5 rounded-xl border border-calma-ink/10 p-5 sm:grid-cols-4 lg:px-6">
         {STATS.map((s, i) => (
-          <div key={i} className="flex items-center gap-4">
-            <div className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-xl bg-calma-terracotta/10">
-              <s.icon className="h-5 w-5 text-calma-terracotta" />
-            </div>
+          <li key={i} className="flex items-center gap-3">
+            <s.icon size={22} strokeWidth={1.7} className="shrink-0 text-calma-olive" />
             <div>
-              <p className="font-fraunces text-2xl font-semibold text-calma-ink">
+              <div className="text-[18px] font-bold leading-tight text-calma-ink">
                 <AnimatedStat value={s.value} />
-              </p>
-              <p className="text-xs font-medium text-calma-taupe">{s.label}</p>
+              </div>
+              <div className="text-[13px] text-calma-taupe">{s.label}</div>
             </div>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </section>
   );
 }

@@ -1,92 +1,64 @@
 import Link from "next/link";
-import { Check, Calendar, Mail, Phone, ArrowRight } from "lucide-react";
+import { Check, Mail, Phone } from "lucide-react";
 import { useCalmaLang } from "@/lib/calma/i18n";
 
+// Same sand banner as the homepage's planner block.
 export function ServicesContactStrip() {
   const { t } = useCalmaLang();
 
   return (
-    <section className="relative overflow-hidden bg-calma-olive py-20">
-      <div
-        className="pointer-events-none absolute -right-1/4 -top-1/3 h-[520px] w-[520px] rounded-full opacity-20 blur-[90px]"
-        style={{ backgroundColor: "#D2B38B" }}
-      />
-      <div className="relative mx-auto max-w-7xl px-6 lg:px-12">
-        <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-          <div>
-            <p className="mb-4 text-xs font-bold uppercase tracking-[.3em] text-calma-terracotta-soft">
-              {t.svc.contactKicker}
-            </p>
-            <h2 className="mb-6 font-fraunces text-3xl font-normal leading-tight text-calma-cream lg:text-4xl">
-              {t.svc.contactTitle1}
-              <br />
-              <em className="italic text-calma-terracotta-soft">{t.svc.contactTitle2}</em>
-            </h2>
-            <div className="mb-8 space-y-3">
-              {t.svc.contactFeatures.map((f, i) => (
-                <div key={i} className="flex items-center gap-3">
-                  <div className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-calma-terracotta-soft/20">
-                    <Check className="h-3 w-3 text-calma-terracotta-soft" />
-                  </div>
-                  <span className="text-sm text-calma-cream/75">{f}</span>
-                </div>
-              ))}
-            </div>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 rounded-full px-7 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)]"
-              style={{ backgroundColor: "#D2B38B" }}
-            >
-              {t.svc.contactCta} <ArrowRight className="h-4 w-4" />
-            </Link>
-          </div>
+    <section className="mx-auto max-w-[1240px] px-4 pt-12 sm:px-6 lg:px-8">
+      <div className="grid gap-8 rounded-2xl bg-calma-sand p-6 sm:p-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
+        <div>
+          <h2 className="m-0 text-[22px] font-bold leading-tight tracking-[-0.01em] text-calma-ink sm:text-[28px]">
+            {t.svc.contactTitle1} {t.svc.contactTitle2}
+          </h2>
+          <ul className="mb-6 mt-4 list-none space-y-2 p-0">
+            {t.svc.contactFeatures.map((f, i) => (
+              <li key={i} className="flex items-center gap-2.5 text-[15px] text-calma-ink/80">
+                <Check size={16} className="shrink-0 text-calma-olive" />
+                {f}
+              </li>
+            ))}
+          </ul>
+          <Link
+            href="/contact"
+            className="inline-block rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline transition-colors hover:bg-calma-olive"
+          >
+            {t.svc.contactCta}
+          </Link>
+        </div>
 
-          {/* Contact card */}
-          <div className="rounded-calma-block border border-white/10 bg-white/5 p-8 backdrop-blur-sm">
-            <div className="mb-8 flex items-center justify-between">
-              <div>
-                <p className="mb-1 text-xs font-semibold uppercase tracking-wider text-calma-cream/50">
-                  {t.svc.responseTime}
-                </p>
-                <p className="text-4xl font-extrabold text-calma-terracotta-soft">&lt; 30 min</p>
-              </div>
-              <Calendar className="h-14 w-14 text-white/20" />
-            </div>
-            <div className="space-y-4">
-              <a
-                href="mailto:contact@calmatrip.com"
-                className="group flex items-center gap-4 rounded-2xl bg-white/5 p-4 transition-colors hover:bg-white/10"
-              >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-calma-terracotta-soft/20">
-                  <Mail className="h-5 w-5 text-calma-terracotta-soft" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-calma-cream/50">
-                    {t.svc.emailLabel}
-                  </p>
-                  <p className="text-sm font-medium text-calma-cream transition-colors group-hover:text-calma-terracotta-soft">
-                    contact@calmatrip.com
-                  </p>
-                </div>
-              </a>
-              <a
-                href="tel:+21621622972"
-                className="group flex items-center gap-4 rounded-2xl bg-white/5 p-4 transition-colors hover:bg-white/10"
-              >
-                <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-calma-terracotta-soft/20">
-                  <Phone className="h-5 w-5 text-calma-terracotta-soft" />
-                </div>
-                <div>
-                  <p className="text-[11px] font-semibold uppercase tracking-wider text-calma-cream/50">
-                    {t.svc.phoneLabel}
-                  </p>
-                  <p className="text-sm font-medium text-calma-cream transition-colors group-hover:text-calma-terracotta-soft">
-                    +216 21 622 972
-                  </p>
-                </div>
-              </a>
-            </div>
+        <div className="space-y-3">
+          <div className="text-[13px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+            {t.svc.responseTime}: <span className="text-calma-ink">&lt; 30 min</span>
           </div>
+          <a
+            href="mailto:contact@calmatrip.com"
+            className="flex items-center gap-3 rounded-xl bg-white p-4 text-calma-ink no-underline"
+          >
+            <Mail size={20} className="shrink-0 text-calma-olive" />
+            <div>
+              <div className="text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+                {t.svc.emailLabel}
+              </div>
+              <div className="text-[15px] font-semibold">contact@calmatrip.com</div>
+            </div>
+          </a>
+          <a
+            href="tel:+21621622972"
+            className="flex items-center gap-3 rounded-xl bg-white p-4 text-calma-ink no-underline"
+          >
+            <Phone size={20} className="shrink-0 text-calma-olive" />
+            <div>
+              <div className="text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+                {t.svc.phoneLabel}
+              </div>
+              <div className="text-[15px] font-semibold" dir="ltr">
+                +216 21 622 972
+              </div>
+            </div>
+          </a>
         </div>
       </div>
     </section>

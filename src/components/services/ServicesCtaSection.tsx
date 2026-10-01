@@ -6,39 +6,27 @@ export function ServicesCtaSection() {
   const { t } = useCalmaLang();
 
   return (
-    <section className="bg-calma-sand py-20">
-      <div className="mx-auto max-w-4xl px-6 text-center lg:px-12">
-        <div className="relative overflow-hidden rounded-calma-block bg-calma-olive p-12">
-          <div
-            className="pointer-events-none absolute -bottom-1/3 -left-1/4 h-[420px] w-[420px] rounded-full opacity-[.15] blur-[90px]"
-            style={{ backgroundColor: "#D2B38B" }}
-          />
-          <div className="relative">
-            <p className="mb-4 text-xs font-bold uppercase tracking-[.3em] text-calma-terracotta-soft">
-              {t.svc.ctaKicker}
-            </p>
-            <h2 className="mb-4 font-fraunces text-3xl font-normal text-calma-cream md:text-4xl">
-              {t.svc.ctaTitle}
-            </h2>
-            <p className="mx-auto mb-8 max-w-lg text-calma-cream/70">{t.svc.ctaSub}</p>
-            <div className="flex flex-col justify-center gap-3 sm:flex-row">
-              <Link
-                href="/contact"
-                className="inline-flex items-center justify-center gap-2 rounded-full px-8 py-3.5 text-sm font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)]"
-                style={{
-                  backgroundColor: "#D2B38B",
-                }}
-              >
-                <Phone className="h-4 w-4" /> {t.svc.ctaBtn1}
-              </Link>
-              <Link
-                href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 rounded-full border border-white/15 bg-white/10 px-8 py-3.5 text-sm font-semibold text-calma-cream backdrop-blur-sm transition-colors hover:bg-white/15"
-              >
-                <Calendar className="h-4 w-4" /> {t.svc.ctaBtn2}
-              </Link>
-            </div>
-          </div>
+    <section className="mx-auto max-w-[1240px] px-4 pb-12 pt-10 sm:px-6 lg:px-8">
+      <div className="rounded-2xl border border-calma-ink/10 px-6 py-10 text-center sm:px-10">
+        <h2 className="m-0 text-[22px] font-bold tracking-[-0.01em] text-calma-ink sm:text-[28px]">
+          {t.svc.ctaTitle}
+        </h2>
+        <p className="mx-auto mb-6 mt-3 max-w-[480px] text-[15.5px] leading-relaxed text-calma-taupe">
+          {t.svc.ctaSub}
+        </p>
+        <div className="flex flex-col justify-center gap-3 sm:flex-row">
+          <Link
+            href="/contact"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white no-underline transition-colors hover:bg-calma-olive"
+          >
+            <Phone size={16} /> {t.svc.ctaBtn1}
+          </Link>
+          <Link
+            href="/dashboard"
+            className="inline-flex items-center justify-center gap-2 rounded-full border border-calma-ink/25 px-6 py-3 text-[15px] font-semibold text-calma-ink no-underline transition-colors hover:border-calma-ink/60"
+          >
+            <Calendar size={16} /> {t.svc.ctaBtn2}
+          </Link>
         </div>
       </div>
     </section>
