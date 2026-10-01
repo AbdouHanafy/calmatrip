@@ -85,7 +85,7 @@ export function AccountStep({ t, onCreated }: AccountStepProps) {
 
   return (
     <div>
-      <h2 className="mb-1 font-fraunces text-[22px] font-normal text-calma-ink">
+      <h2 className="mb-1 text-[22px] font-bold tracking-[-0.01em] text-calma-ink">
         {t.accountTitle}
       </h2>
       <p className="mb-5 text-[13.5px] text-calma-taupe">{t.accountSub}</p>

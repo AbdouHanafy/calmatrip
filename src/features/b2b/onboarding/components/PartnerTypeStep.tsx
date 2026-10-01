@@ -37,7 +37,9 @@ export function PartnerTypeStep({ t, value, onSelect, loading }: PartnerTypeStep
 
   return (
     <div>
-      <h2 className="mb-1 font-fraunces text-[22px] font-normal text-calma-ink">{t.typeTitle}</h2>
+      <h2 className="mb-1 text-[22px] font-bold tracking-[-0.01em] text-calma-ink">
+        {t.typeTitle}
+      </h2>
       <p className="mb-5 text-[13.5px] text-calma-taupe">{t.typeSub}</p>
 
       <div className="grid gap-4 sm:grid-cols-2">
@@ -69,9 +71,7 @@ export function PartnerTypeStep({ t, value, onSelect, loading }: PartnerTypeStep
                 <p className="text-[11px] font-bold uppercase tracking-[0.12em] text-calma-terracotta">
                   {card.tagline}
                 </p>
-                <p className="mt-0.5 font-fraunces text-[19px] font-normal text-calma-ink">
-                  {card.label}
-                </p>
+                <p className="mt-0.5 text-[18px] font-bold text-calma-ink">{card.label}</p>
                 <p className="mt-1 text-[13px] leading-relaxed text-calma-taupe">{card.desc}</p>
               </div>
             </button>

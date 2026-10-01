@@ -10,7 +10,7 @@ export function SuccessState({ t }: { t: CalmaPartnerOnboardingDict }) {
       <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-calma-success/15 text-calma-success">
         <CheckCircle2 size={32} strokeWidth={2} />
       </div>
-      <h2 className="mb-2 font-fraunces text-[24px] font-normal text-calma-ink">
+      <h2 className="mb-2 text-[24px] font-bold tracking-[-0.01em] text-calma-ink">
         {t.successTitle}
       </h2>
       <p className="mx-auto max-w-[380px] text-[14px] leading-relaxed text-calma-taupe">

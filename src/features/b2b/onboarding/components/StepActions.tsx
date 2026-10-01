@@ -37,8 +37,7 @@ export function StepActions({
         type="button"
         onClick={onContinue}
         disabled={disabled || loading}
-        className="group relative flex items-center justify-center gap-2 overflow-hidden rounded-full px-7 py-3 text-[15px] font-bold text-calma-cream shadow-[0_16px_32px_-12px_rgba(210,179,139,.65)] transition-shadow duration-300 hover:shadow-[0_22px_40px_-12px_rgba(210,179,139,.8)] disabled:cursor-not-allowed disabled:opacity-60"
-        style={{ backgroundColor: "#D2B38B" }}
+        className="group flex items-center justify-center gap-2 rounded-full bg-calma-ink px-7 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive disabled:cursor-not-allowed disabled:opacity-60"
       >
         {loading ? (
           <Loader2 size={18} className="animate-spin" />

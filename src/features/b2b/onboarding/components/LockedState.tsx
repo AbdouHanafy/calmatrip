@@ -61,7 +61,7 @@ export function LockedState({ t, profile }: LockedStateProps) {
       <div className={`mb-4 flex h-16 w-16 items-center justify-center rounded-full ${cfg.tone}`}>
         <Icon size={30} strokeWidth={2} />
       </div>
-      <h2 className="mb-2 font-fraunces text-[22px] font-normal text-calma-ink">
+      <h2 className="mb-2 text-[22px] font-bold tracking-[-0.01em] text-calma-ink">
         {t[cfg.titleKey]}
       </h2>
       <p className="mx-auto max-w-[380px] text-[14px] leading-relaxed text-calma-taupe">

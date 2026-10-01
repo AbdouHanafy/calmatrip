@@ -76,7 +76,7 @@ export function OrganizationStep({
 
   return (
     <div>
-      <h2 className="mb-1 font-fraunces text-[22px] font-normal text-calma-ink">{t.bizTitle}</h2>
+      <h2 className="mb-1 text-[22px] font-bold tracking-[-0.01em] text-calma-ink">{t.bizTitle}</h2>
       <p className="mb-5 text-[13.5px] text-calma-taupe">{t.bizSub}</p>
 
       <div className="space-y-3.5">

@@ -83,7 +83,9 @@ export function ReviewStep({
 
   return (
     <div>
-      <h2 className="mb-1 font-fraunces text-[22px] font-normal text-calma-ink">{t.reviewTitle}</h2>
+      <h2 className="mb-1 text-[22px] font-bold tracking-[-0.01em] text-calma-ink">
+        {t.reviewTitle}
+      </h2>
       <p className="mb-5 text-[13.5px] text-calma-taupe">{t.reviewSub}</p>
 
       <div className="space-y-3">
@@ -171,7 +173,7 @@ export function ReviewStep({
 
       <div className="mt-6 rounded-2xl border border-calma-terracotta/25 bg-calma-terracotta/[.06] p-5 text-center">
         <ShieldCheck size={24} className="mx-auto mb-2 text-calma-terracotta" />
-        <p className="font-fraunces text-[17px] font-normal text-calma-ink">{t.reviewReadyTitle}</p>
+        <p className="text-[16px] font-bold text-calma-ink">{t.reviewReadyTitle}</p>
         <p className="mx-auto mt-1 max-w-[420px] text-[13px] text-calma-taupe">
           {t.reviewReadySub}
         </p>
