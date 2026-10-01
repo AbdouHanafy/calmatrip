@@ -3,6 +3,7 @@ import React from "react";
 import Image from "next/image";
 import { useCalmaLang } from "@/lib/calma/i18n";
 import SearchBar from "@/components/search/SearchBar";
+import StickySearch from "@/components/search/StickySearch";
 import type { SearchOptions } from "@/lib/searchOptions";
 
 // One real photo, one headline, one search bar. No slideshow, no parallax.
@@ -41,7 +42,9 @@ export default function HomeHero({ searchOptions }: { searchOptions: SearchOptio
       </div>
 
       <div className="relative z-20 -mt-8 px-2 sm:px-6 lg:-mt-[112px] lg:px-10 lg:pb-11">
-        <SearchBar variant="hero" options={searchOptions} />
+        <StickySearch>
+          {(stuck) => <SearchBar variant={stuck ? "page" : "hero"} options={searchOptions} />}
+        </StickySearch>
       </div>
     </section>
   );
