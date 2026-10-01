@@ -5,6 +5,8 @@ import { buildMetadata, faqSchema, SITE } from "@/lib/seo";
 import { getPublicProducts } from "@/repositories/productRepository";
 import { getApprovedReviews } from "@/repositories/reviewRepository";
 import { getPublicExploreListings } from "@/repositories/exploreListingRepository";
+import { getPublicGuides } from "@/repositories/guideRepository";
+import { getPublicFaqs } from "@/repositories/faqRepository";
 import { getPublicServices } from "@/repositories/serviceRepository";
 import { getSearchOptions } from "@/lib/searchOptions";
 import {
@@ -73,13 +75,16 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const [{ products }, reviews, exploreListings, services, searchOptions] = await Promise.all([
-    getPublicProducts({ sort: "newest" }),
-    getApprovedReviews(),
-    getPublicExploreListings(),
-    getPublicServices(),
-    getSearchOptions(),
-  ]);
+  const [{ products }, reviews, exploreListings, services, searchOptions, guides, faqs] =
+    await Promise.all([
+      getPublicProducts({ sort: "newest" }),
+      getApprovedReviews(),
+      getPublicExploreListings(),
+      getPublicServices(),
+      getSearchOptions(),
+      getPublicGuides(),
+      getPublicFaqs(),
+    ]);
 
   // Services first (popular ones leading, then admin order), then partner listings.
   const activities: HomeActivity[] = [
@@ -96,6 +101,8 @@ export default async function HomePage() {
       shopProducts={products.slice(0, 8).map(toHomeProduct)}
       reviews={JSON.parse(JSON.stringify(reviews))}
       searchOptions={searchOptions}
+      guides={guides.slice(0, 8)}
+      faqs={faqs.map((f) => ({ q: f.question, a: f.answer }))}
     />
   );
 }

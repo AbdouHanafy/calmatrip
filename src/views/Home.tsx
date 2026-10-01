@@ -14,6 +14,10 @@ import HomeDestinations from "@/components/home/HomeDestinations";
 import HomeReviews from "@/components/home/HomeReviews";
 import HomePlannerBanner from "@/components/home/HomePlannerBanner";
 import ProductCard from "@/components/home/ProductCard";
+import GuideCard, { type HomeGuide } from "@/components/home/GuideCard";
+import HomeHowItWorks from "@/components/home/HomeHowItWorks";
+import HomeFaq, { type HomeFaqItem } from "@/components/home/HomeFaq";
+import HomePartnerBanner from "@/components/home/HomePartnerBanner";
 import ReviewForm from "@/components/review/ReviewForm";
 
 interface Review {
@@ -31,6 +35,8 @@ interface HomeProps {
   shopProducts: HomeProduct[];
   reviews: Review[];
   searchOptions: SearchOptions;
+  guides: HomeGuide[];
+  faqs: HomeFaqItem[];
 }
 
 // Review form stays on the homepage — it's the only place travellers can leave one.
@@ -49,7 +55,14 @@ function ShareExperienceSection() {
   );
 }
 
-function HomeContent({ activities, shopProducts, reviews, searchOptions }: HomeProps) {
+function HomeContent({
+  activities,
+  shopProducts,
+  reviews,
+  searchOptions,
+  guides,
+  faqs,
+}: HomeProps) {
   const { t } = useCalmaLang();
   const services = activities.filter((a) => a.kind === "service");
   const listings = activities.filter((a) => a.kind === "listing");
@@ -86,8 +99,19 @@ function HomeContent({ activities, shopProducts, reviews, searchOptions }: HomeP
         </HomeCardRow>
       )}
 
+      {guides.length > 0 && (
+        <HomeCardRow title={t.home.guidesHeading} seeAllHref="/guides">
+          {guides.map((g) => (
+            <GuideCard key={g.id} guide={g} />
+          ))}
+        </HomeCardRow>
+      )}
+
+      <HomeHowItWorks />
       <HomeReviews reviews={reviews} />
+      <HomeFaq faqs={faqs} />
       <HomePlannerBanner />
+      <HomePartnerBanner />
       <ShareExperienceSection />
     </main>
   );

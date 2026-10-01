@@ -2,12 +2,19 @@
 
 import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { Star, Send } from "lucide-react";
+import Link from "next/link";
+import { Star, Send, CheckCircle } from "lucide-react";
 
 interface ReviewFormProps {
   onSuccess?: () => void;
 }
 
+const field =
+  "block rounded-xl border border-calma-ink/20 bg-white px-4 py-3 transition-colors focus-within:border-calma-ink";
+const fieldLabel = "mb-1 block text-[12px] font-semibold text-calma-taupe";
+
+// Rendered inside the card of the homepage's "share your experience" block, so it draws
+// no card of its own.
 export default function ReviewForm({ onSuccess }: ReviewFormProps) {
   const { data: session } = useSession();
   const [rating, setRating] = useState(0);
@@ -63,69 +70,64 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
 
   if (submitted) {
     return (
-      <div
-        className="rounded-calma-block border border-calma-olive/10 bg-calma-cream p-10 text-center font-hanken"
-        style={{ boxShadow: "0 22px 50px -22px rgba(21,36,46,.3)" }}
-      >
-        <div className="text-4xl mb-3">🎉</div>
-        <h3 className="font-fraunces text-2xl font-normal text-calma-olive mb-2">
-          Merci pour votre avis !
-        </h3>
-        <p className="text-calma-taupe">Il sera publié après validation par notre équipe.</p>
+      <div className="rounded-xl bg-calma-sand p-8 text-center font-hanken">
+        <CheckCircle size={40} className="mx-auto mb-3 text-calma-success" />
+        <h3 className="m-0 mb-1 text-[18px] font-bold text-calma-ink">Merci pour votre avis !</h3>
+        <p className="m-0 text-[14.5px] text-calma-taupe">
+          Il sera publié après validation par notre équipe.
+        </p>
       </div>
     );
   }
 
   return (
-    <div
-      className="rounded-calma-block border border-calma-olive/10 bg-calma-cream p-8 sm:p-10 font-hanken"
-      style={{ boxShadow: "0 28px 60px -28px rgba(21,36,46,.35)" }}
-    >
+    <div className="font-hanken">
       {!session && (
-        <div className="bg-calma-terracotta/10 border border-calma-terracotta/25 rounded-2xl p-4 mb-6 text-sm text-calma-terracotta">
-          Connectez-vous pour laisser un avis.
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3 rounded-xl bg-calma-sand px-4 py-3 text-[14px] text-calma-ink">
+          <span>Connectez-vous pour laisser un avis.</span>
+          <Link
+            href="/login?callbackUrl=/"
+            className="rounded-full bg-calma-ink px-4 py-1.5 text-[13px] font-semibold text-white no-underline hover:bg-calma-olive"
+          >
+            Connexion
+          </Link>
         </div>
       )}
 
-      <div className="space-y-5">
-        {/* Stars */}
-        <div className="rounded-2xl border border-calma-olive/15 bg-white px-5 py-4 transition-colors focus-within:border-calma-terracotta">
-          <div className="mb-2 text-[11px] font-bold uppercase tracking-[.05em] text-calma-taupe">
-            Note globale
-          </div>
+      <div className="space-y-4">
+        <div className={field}>
+          <span className={fieldLabel}>Note globale</span>
           <div className="flex items-center gap-1">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
                 type="button"
+                aria-label={`${star} / 5`}
                 onClick={() => setRating(star)}
                 onMouseEnter={() => setHovered(star)}
                 onMouseLeave={() => setHovered(0)}
                 className="transition-transform hover:scale-110"
               >
                 <Star
-                  size={28}
+                  size={26}
                   className={
                     star <= (hovered || rating)
                       ? "fill-calma-gold text-calma-gold"
-                      : "text-calma-olive/20"
+                      : "text-calma-ink/20"
                   }
                 />
               </button>
             ))}
             {rating > 0 && (
-              <span className="ml-2 self-center text-sm text-calma-taupe">
+              <span className="ms-2 text-[14px] text-calma-taupe">
                 {["", "Décevant", "Moyen", "Bien", "Très bien", "Excellent"][rating]}
               </span>
             )}
           </div>
         </div>
 
-        {/* Service */}
-        <label className="block rounded-2xl border border-calma-olive/15 bg-white px-5 py-3 transition-colors focus-within:border-calma-terracotta">
-          <span className="mb-1 block text-[11px] font-bold uppercase tracking-[.05em] text-calma-taupe">
-            Service utilisé (optionnel)
-          </span>
+        <label className={field}>
+          <span className={fieldLabel}>Service utilisé (optionnel)</span>
           <select
             value={service}
             onChange={(e) => setService(e.target.value)}
@@ -140,37 +142,37 @@ export default function ReviewForm({ onSuccess }: ReviewFormProps) {
           </select>
         </label>
 
-        {/* Comment */}
-        <label className="block rounded-2xl border border-calma-olive/15 bg-white px-5 py-3 transition-colors focus-within:border-calma-terracotta">
-          <span className="mb-1 block text-[11px] font-bold uppercase tracking-[.05em] text-calma-taupe">
-            Votre commentaire
-          </span>
+        <label className={field}>
+          <span className={fieldLabel}>Votre commentaire</span>
           <textarea
             value={comment}
             onChange={(e) => setComment(e.target.value)}
             rows={4}
+            maxLength={500}
             placeholder="Décrivez votre expérience avec notre service..."
             className="w-full resize-none border-none bg-transparent text-[15px] text-calma-ink outline-none placeholder:text-calma-taupe/60"
           />
         </label>
-        <p className="text-xs text-calma-taupe -mt-3">{comment.length} / 500 caractères</p>
+        <p className="-mt-2 mb-0 text-[12.5px] text-calma-taupe">
+          {comment.length} / 500 caractères
+        </p>
 
-        {error && <p className="text-red-600 text-sm bg-red-50 rounded-2xl px-4 py-3">{error}</p>}
+        {error && (
+          <p className="m-0 rounded-xl bg-red-50 px-4 py-3 text-[14px] text-red-600">{error}</p>
+        )}
 
         <button
+          type="button"
           onClick={handleSubmit}
           disabled={loading || !session}
-          className="group flex w-full items-center justify-center gap-2 rounded-full bg-calma-terracotta px-6 py-4 text-[15px] font-semibold text-calma-ink shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 hover:shadow-[0_18px_34px_-10px_rgba(210,179,139,.75)] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:translate-y-0"
+          className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-calma-ink px-6 py-3.5 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive disabled:cursor-not-allowed disabled:opacity-50"
         >
           {loading ? (
             "Envoi en cours..."
           ) : (
             <>
               Publier mon avis
-              <Send
-                size={16}
-                className="transition-transform duration-300 group-hover:translate-x-1"
-              />
+              <Send size={16} />
             </>
           )}
         </button>

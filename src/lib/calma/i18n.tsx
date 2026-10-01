@@ -555,6 +555,15 @@ export interface CalmaHomeDict {
   plannerHeading: string;
   plannerSub: string;
   plannerContact: string;
+  howHeading: string;
+  howSteps: { title: string; desc: string }[];
+  guidesHeading: string;
+  faqHeading: string;
+  faqSub: string;
+  faqMore: string;
+  partnerHeading: string;
+  partnerSub: string;
+  partnerCta: string;
 }
 
 // Shared header/footer chrome (CalmaHeader, CalmaFooter).
@@ -1513,6 +1522,29 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       plannerSub:
         "Dites-nous ce que vous avez en tête : on prépare le programme, les transferts et les réservations avec vous.",
       plannerContact: "Demander un devis",
+      howHeading: "Comment ça marche",
+      howSteps: [
+        {
+          title: "Choisissez",
+          desc: "Parcourez les excursions, transferts et activités, filtrez par destination, date et nombre de voyageurs.",
+        },
+        {
+          title: "Réservez en direct",
+          desc: "Confirmez en quelques clics, au prix local, sans intermédiaire. Annulation gratuite jusqu'à 24 h avant.",
+        },
+        {
+          title: "Voyagez l'esprit tranquille",
+          desc: "Notre équipe locale vous accompagne avant et pendant le voyage, en français, anglais et arabe.",
+        },
+      ],
+      guidesHeading: "Guides pratiques",
+      faqHeading: "Questions fréquentes",
+      faqSub: "L'essentiel à savoir avant de réserver.",
+      faqMore: "Voir toutes les questions",
+      partnerHeading: "Vous proposez des activités en Tunisie ?",
+      partnerSub:
+        "Artisans, agences, hôtels : rejoignez Calma Trip et présentez vos offres à des voyageurs du monde entier.",
+      partnerCta: "Devenir partenaire",
     },
     layout: {
       login: "Connexion",
@@ -2345,6 +2377,29 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       plannerSub:
         "Tell us what you have in mind — we’ll plan the days, the transfers and the bookings with you.",
       plannerContact: "Request a quote",
+      howHeading: "How it works",
+      howSteps: [
+        {
+          title: "Choose",
+          desc: "Browse excursions, transfers and activities, and filter by destination, date and group size.",
+        },
+        {
+          title: "Book direct",
+          desc: "Confirm in a few clicks at local prices, with no middleman. Free cancellation up to 24 h before.",
+        },
+        {
+          title: "Travel stress-free",
+          desc: "Our local team looks after you before and during your trip, in French, English and Arabic.",
+        },
+      ],
+      guidesHeading: "Practical guides",
+      faqHeading: "Frequently asked questions",
+      faqSub: "The essentials to know before you book.",
+      faqMore: "See all questions",
+      partnerHeading: "Do you offer activities in Tunisia?",
+      partnerSub:
+        "Artisans, agencies, hotels: join Calma Trip and showcase your offers to travellers from around the world.",
+      partnerCta: "Become a partner",
     },
     layout: {
       login: "Log in",
@@ -3148,6 +3203,29 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       plannerHeading: "مجموعة، مناسبة أو رحلة حسب الطلب؟",
       plannerSub: "أخبرنا بما تفكر فيه، وسنخطط معك البرنامج والتنقلات والحجوزات.",
       plannerContact: "اطلب عرض سعر",
+      howHeading: "كيف يعمل الأمر",
+      howSteps: [
+        {
+          title: "اختر",
+          desc: "تصفّح الرحلات والتنقلات والأنشطة، وصفِّ حسب الوجهة والتاريخ وعدد المسافرين.",
+        },
+        {
+          title: "احجز مباشرة",
+          desc: "أكّد بنقرات قليلة وبأسعار محلية دون وسيط. إلغاء مجاني حتى 24 ساعة قبل الموعد.",
+        },
+        {
+          title: "سافر بلا قلق",
+          desc: "يرافقك فريقنا المحلي قبل الرحلة وأثناءها بالفرنسية والإنجليزية والعربية.",
+        },
+      ],
+      guidesHeading: "أدلة عملية",
+      faqHeading: "الأسئلة الشائعة",
+      faqSub: "الأساسيات التي يجب معرفتها قبل الحجز.",
+      faqMore: "عرض كل الأسئلة",
+      partnerHeading: "هل تقدّم أنشطة في تونس؟",
+      partnerSub:
+        "حرفيون ووكالات وفنادق: انضمّوا إلى Calma Trip واعرضوا عروضكم على مسافرين من العالم كله.",
+      partnerCta: "كن شريكًا",
     },
     layout: {
       login: "تسجيل الدخول",

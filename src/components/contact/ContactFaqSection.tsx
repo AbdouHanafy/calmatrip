@@ -14,7 +14,7 @@ export function ContactFaqSection({ faqs }: { faqs: FaqItem[] }) {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
   return (
-    <section className="mx-auto max-w-[1240px] px-4 pt-12 sm:px-6 lg:px-8">
+    <section id="faq" className="mx-auto max-w-[1240px] scroll-mt-24 px-4 pt-12 sm:px-6 lg:px-8">
       <h2 className="m-0 text-[22px] font-bold tracking-[-0.01em] text-calma-ink sm:text-[26px]">
         {t.cnt.faqTitle}
       </h2>
