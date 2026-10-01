@@ -374,6 +374,7 @@ export interface CalmaPartnerOnboardingDict {
   pageSub: string;
   savedIndicator: string;
   savingIndicator: string;
+  googleBtn: string;
 
   stepAccount: string;
   stepPartnerType: string;
@@ -1315,6 +1316,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       pageSub: "Quelques étapes pour rejoindre notre réseau de partenaires.",
       savedIndicator: "Enregistré",
       savingIndicator: "Enregistrement…",
+      googleBtn: "Continuer avec Google",
 
       stepAccount: "Compte",
       stepPartnerType: "Type de partenaire",
@@ -2148,6 +2150,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       pageSub: "A few steps to join our partner network.",
       savedIndicator: "Saved",
       savingIndicator: "Saving…",
+      googleBtn: "Continue with Google",
 
       stepAccount: "Account",
       stepPartnerType: "Partner type",
@@ -2956,6 +2959,7 @@ export const CALMA_DICT: Record<CalmaLang, CalmaDict> = {
       pageSub: "بضع خطوات للانضمام إلى شبكة شركائنا.",
       savedIndicator: "تم الحفظ",
       savingIndicator: "جارٍ الحفظ…",
+      googleBtn: "المتابعة عبر Google",
 
       stepAccount: "الحساب",
       stepPartnerType: "نوع الشريك",

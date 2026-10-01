@@ -14,7 +14,7 @@ type GoogleAuthButtonProps = {
 
 export function GoogleAuthButton({
   callbackUrl = "/dashboard",
-  label = "Continue with Google",
+  label = "Continuer avec Google",
   accountType = "user",
 }: GoogleAuthButtonProps) {
   const [loading, setLoading] = useState(false);

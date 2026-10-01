@@ -90,11 +90,7 @@ export function AccountStep({ t, onCreated }: AccountStepProps) {
       </h2>
       <p className="mb-5 text-[13.5px] text-calma-taupe">{t.accountSub}</p>
 
-      <GoogleAuthButton
-        callbackUrl="/partner/register"
-        label="Continue with Google"
-        accountType="user"
-      />
+      <GoogleAuthButton callbackUrl="/partner/register" label={t.googleBtn} accountType="user" />
 
       <div className="my-4 flex items-center gap-4">
         <div className="h-px flex-1 bg-calma-olive/15" />
