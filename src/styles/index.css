@@ -160,7 +160,9 @@
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
     max-width: 100%;
-    overflow-x: hidden;
+    /* clip, not hidden: hidden on both html and body turns body into a scroll
+       container, which silently breaks every position: sticky (site header). */
+    overflow-x: clip;
   }
 
   ::selection {
