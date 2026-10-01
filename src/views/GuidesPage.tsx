@@ -2,10 +2,11 @@
 import React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BookOpen, ArrowRight } from "lucide-react";
+import { BookOpen } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
+import PageHeader from "@/components/calma/PageHeader";
 
 interface Guide {
   id: number;
@@ -23,80 +24,58 @@ function GuidesPageContent({ guides }: { guides: Guide[] }) {
   return (
     <>
       <CalmaHeader active="blog" />
-      <div className="min-h-screen bg-calma-sand font-hanken">
-        <section className="relative flex min-h-[280px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
-          <Image
-            src="/images/explore/kairouan_mosque.png"
-            alt="Guides pratiques Tunisie"
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background: "rgba(21,36,46,.66)",
-            }}
-          />
-          <div className="relative z-[2] mx-auto max-w-[640px]">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
-              <span className="h-1.5 w-1.5 rounded-full bg-calma-terracotta" />
-              {t.guidesEyebrow}
-            </div>
-            <h1 className="mb-4 text-balance font-fraunces text-[clamp(32px,4.4vw,48px)] font-normal leading-[1.05] tracking-[-0.02em] text-calma-cream">
-              {t.guidesHeroTitle}
-            </h1>
-            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
-              {t.guidesHeroSub}
-            </p>
-          </div>
-        </section>
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title={t.guidesHeroTitle}
+          subtitle={t.guidesHeroSub}
+          image="/images/explore/kairouan_mosque.png"
+          imageAlt="Guides pratiques Tunisie"
+          crumbs={[{ label: t.cnt.breadcrumbHome, href: "/" }, { label: t.guidesEyebrow }]}
+        />
 
-        <section className="mx-auto max-w-7xl px-6 py-16 lg:px-12">
+        <section className="mx-auto max-w-[1240px] px-4 pt-8 sm:px-6 lg:px-8">
           {guides.length === 0 ? (
-            <div className="py-24 text-center">
-              <BookOpen className="mx-auto mb-4 h-12 w-12 text-calma-taupe/30" />
-              <p className="font-medium text-calma-taupe">{t.guidesEmpty}</p>
+            <div className="py-20 text-center">
+              <BookOpen size={40} strokeWidth={1.4} className="mx-auto mb-3 text-calma-ink/30" />
+              <p className="m-0 text-[15px] text-calma-taupe">{t.guidesEmpty}</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
               {guides.map((guide) => (
                 <Link
                   key={guide.id}
                   href={`/guides/${guide.slug}`}
-                  className="group flex flex-col overflow-hidden rounded-3xl border border-calma-olive/[.1] bg-white no-underline shadow-[0_8px_24px_-16px_rgba(21,36,46,.3)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_50px_-24px_rgba(21,36,46,.4)]"
+                  className="group block no-underline"
                 >
-                  {guide.image ? (
-                    <div className="relative h-40 w-full overflow-hidden">
+                  <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-calma-sand">
+                    {guide.image ? (
                       <Image
                         src={guide.image}
                         alt={guide.title}
                         fill
-                        sizes="400px"
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                        sizes="(min-width: 1024px) 290px, (min-width: 640px) 45vw, 90vw"
+                        className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                       />
-                    </div>
-                  ) : (
-                    <div className="flex h-40 w-full items-center justify-center bg-calma-olive/[.06]">
-                      <BookOpen className="h-9 w-9 text-calma-olive/40" />
-                    </div>
-                  )}
-                  <div className="flex flex-1 flex-col p-6">
-                    {guide.category && (
-                      <span className="mb-2 self-start rounded-full bg-calma-terracotta/10 px-2.5 py-1 text-[10.5px] font-bold uppercase tracking-wide text-calma-terracotta">
-                        {guide.category}
-                      </span>
+                    ) : (
+                      <div className="grid h-full place-items-center text-calma-ink/35">
+                        <BookOpen size={40} strokeWidth={1.4} />
+                      </div>
                     )}
-                    <h3 className="mb-2 font-fraunces text-lg font-normal text-calma-ink">
+                  </div>
+                  <div className="pt-3">
+                    {guide.category && (
+                      <div className="mb-1 text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+                        {guide.category}
+                      </div>
+                    )}
+                    <h3 className="m-0 line-clamp-2 text-[16px] font-bold leading-snug text-calma-ink group-hover:underline">
                       {guide.title}
                     </h3>
-                    <p className="mb-4 flex-1 text-sm leading-relaxed text-calma-taupe line-clamp-3">
+                    <p className="mb-0 mt-1.5 line-clamp-3 text-[13.5px] leading-snug text-calma-taupe">
                       {guide.summary}
                     </p>
-                    <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-calma-terracotta">
-                      {t.guidesRead}{" "}
-                      <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                    <span className="mt-2 inline-block text-[14px] font-semibold text-calma-ink underline underline-offset-4">
+                      {t.guidesRead}
                     </span>
                   </div>
                 </Link>
@@ -104,7 +83,7 @@ function GuidesPageContent({ guides }: { guides: Guide[] }) {
             </div>
           )}
         </section>
-      </div>
+      </main>
       <CalmaFooter />
     </>
   );
