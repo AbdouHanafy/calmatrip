@@ -21,17 +21,15 @@ export function PlacesGrid({
 
   if (places.length === 0) {
     return (
-      <div className="py-32 text-center animate-fade-in">
-        <div className="w-24 h-24 bg-calma-cream rounded-full flex items-center justify-center mx-auto mb-8">
-          <Search size={32} className="text-calma-taupe/50" />
-        </div>
-        <h3 className="mb-4 font-fraunces text-3xl font-normal text-calma-ink">
-          {t.exp.emptyTitle}
-        </h3>
-        <p className="text-calma-taupe max-w-md mx-auto mb-10 leading-relaxed">{t.exp.emptySub}</p>
+      <div className="py-20 text-center">
+        <Search size={40} strokeWidth={1.4} className="mx-auto mb-3 text-calma-ink/30" />
+        <h3 className="m-0 text-[20px] font-bold text-calma-ink">{t.exp.emptyTitle}</h3>
+        <p className="mx-auto mb-6 mt-2 max-w-md text-[15px] leading-relaxed text-calma-taupe">
+          {t.exp.emptySub}
+        </p>
         <button
           onClick={onResetFilters}
-          className="px-10 py-4 bg-[#4C7A92] text-white rounded-2xl font-bold hover:bg-[#D2B38B] transition-all shadow-2xl"
+          className="rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive"
         >
           {t.exp.resetFilters}
         </button>
@@ -40,12 +38,11 @@ export function PlacesGrid({
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-      {places.map((place, idx) => (
+    <div className="grid grid-cols-1 gap-x-5 gap-y-8 sm:grid-cols-2 lg:grid-cols-4">
+      {places.map((place) => (
         <PlaceCard
           key={place.id}
           place={place}
-          index={idx}
           isFavorited={isFavorited}
           onToggleFavorite={onToggleFavorite}
         />

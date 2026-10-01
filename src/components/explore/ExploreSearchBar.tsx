@@ -9,17 +9,18 @@ interface ExploreSearchBarProps {
 export function ExploreSearchBar({ value, onChange }: ExploreSearchBarProps) {
   const { t } = useCalmaLang();
   return (
-    <section className="max-w-2xl mx-auto px-6 -mt-16 relative z-20 mb-10">
-      <div className="relative group" style={{ boxShadow: "0 24px 56px -24px rgba(21,36,46,.5)" }}>
-        <Search className="absolute left-6 top-1/2 -translate-y-1/2 w-5 h-5 text-calma-taupe group-focus-within:text-calma-terracotta transition-colors" />
-        <input
-          type="text"
-          placeholder={t.exp.searchPh}
-          className="w-full h-14 rounded-[28px] border border-white/50 bg-white/90 pl-14 pr-6 text-calma-ink outline-none backdrop-blur-xl transition-all placeholder:text-calma-taupe focus:ring-2 focus:ring-calma-terracotta/50"
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-        />
-      </div>
-    </section>
+    <div className="relative mt-5 max-w-[560px]">
+      <Search
+        size={18}
+        className="pointer-events-none absolute start-4 top-1/2 -translate-y-1/2 text-calma-taupe"
+      />
+      <input
+        type="text"
+        placeholder={t.exp.searchPh}
+        className="h-12 w-full rounded-full border border-calma-ink/20 bg-white ps-11 pe-4 text-[15px] text-calma-ink outline-none transition-colors placeholder:text-calma-taupe focus:border-calma-ink"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+      />
+    </div>
   );
 }

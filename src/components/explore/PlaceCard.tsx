@@ -5,33 +5,26 @@ import type { FavoriteType } from "@/hooks/useFavorites";
 
 interface PlaceCardProps {
   place: Place;
-  index: number;
   isFavorited: (type: FavoriteType, id: number) => boolean;
   onToggleFavorite: (type: FavoriteType, id: number) => void;
 }
 
-export function PlaceCard({ place, index, isFavorited, onToggleFavorite }: PlaceCardProps) {
+// Same card language as the homepage's ActivityCard: 4:3 photo, category, title,
+// one meta line. Favourite heart floats on the photo.
+export function PlaceCard({ place, isFavorited, onToggleFavorite }: PlaceCardProps) {
   const fav = getFavoriteKey(place);
   const favorited = isFavorited(fav.type, fav.id);
 
   return (
-    <div
-      className="group bg-white rounded-[2.5rem] overflow-hidden shadow-sm hover:shadow-[0_40px_80px_-30px_rgba(30,58,58,0.15)] transition-all duration-700 border border-transparent hover:border-[#D2B38B]/10 animate-fade-in"
-      style={{ animationDelay: `${index * 50}ms` }}
-    >
-      <div className="relative h-72 overflow-hidden">
+    <article className="group">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-xl bg-calma-sand">
         <Image
           src={place.image}
           alt={place.title}
           fill
-          sizes="(max-width: 767px) 100vw, (max-width: 1023px) 50vw, 33vw"
-          className="object-cover group-hover:scale-110 transition-transform duration-[1.5s] ease-out"
+          sizes="(min-width: 1024px) 290px, (min-width: 640px) 45vw, 90vw"
+          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
         />
-        <div className="absolute top-6 left-6 flex flex-col gap-2">
-          <span className="px-4 py-2 bg-white/95 backdrop-blur-md rounded-xl text-[10px] font-black uppercase tracking-widest text-[#4C7A92] shadow-xl">
-            {place.category}
-          </span>
-        </div>
         <button
           onClick={(e) => {
             e.preventDefault();
@@ -39,77 +32,57 @@ export function PlaceCard({ place, index, isFavorited, onToggleFavorite }: Place
             onToggleFavorite(fav.type, fav.id);
           }}
           aria-label={favorited ? "Retirer des favoris" : "Ajouter aux favoris"}
-          className="absolute top-6 right-6 flex h-10 w-10 items-center justify-center rounded-full bg-white/95 shadow-xl backdrop-blur-md transition-transform hover:scale-110"
+          className="absolute end-2.5 top-2.5 grid h-9 w-9 place-items-center rounded-full bg-white shadow-sm transition-transform hover:scale-105"
         >
           <Heart
-            className={`h-4 w-4 ${favorited ? "fill-[#D2B38B] text-[#D2B38B]" : "text-[#4C7A92]"}`}
+            size={17}
+            className={favorited ? "fill-calma-terracotta text-calma-terracotta" : "text-calma-ink"}
           />
         </button>
-        <div className="absolute bottom-6 left-6 right-6 translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-          <div className="flex gap-2">
-            {place.tags?.slice(0, 2).map((tag) => (
-              <span
-                key={tag}
-                className="px-3 py-1 bg-[#4C7A92]/40 backdrop-blur-md text-white text-[9px] font-bold uppercase tracking-tighter rounded-md border border-white/20"
-              >
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
       </div>
 
-      <div className="p-8">
-        <h3 className="mb-2 font-fraunces text-xl font-semibold leading-tight text-calma-ink">
+      <div className="pt-3">
+        <div className="mb-1 text-[12px] font-semibold uppercase tracking-[.04em] text-calma-taupe">
+          {place.category}
+        </div>
+        <h3 className="m-0 line-clamp-2 text-[16px] font-bold leading-snug text-calma-ink">
           {place.title}
         </h3>
-        <p className="mb-5 line-clamp-2 text-sm leading-relaxed text-calma-taupe">
+        <p className="mb-0 mt-1.5 line-clamp-2 text-[13.5px] leading-snug text-calma-taupe">
           {place.description}
         </p>
-        <div className="flex items-center justify-between mb-5">
-          {place.rating !== undefined ? (
-            <div className="flex items-center gap-1.5 bg-calma-sand px-3 py-1.5 rounded-full">
-              <Star className="w-3.5 h-3.5 fill-[#D2B38B] text-[#D2B38B]" />
-              <span className="text-sm font-black text-calma-ink">{place.rating}</span>
+        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-[13px] text-calma-taupe">
+          {place.rating !== undefined && (
+            <span className="inline-flex items-center gap-1 font-semibold text-calma-ink">
+              <Star size={13} className="fill-calma-gold text-calma-gold" />
+              {place.rating}
               {place.reviews !== undefined && (
-                <span className="text-[10px] text-calma-taupe font-bold uppercase">
-                  ({place.reviews})
-                </span>
+                <span className="font-normal text-calma-taupe">({place.reviews})</span>
               )}
-            </div>
-          ) : (
-            <div className="flex items-center gap-1.5 bg-calma-sand px-3 py-1.5 rounded-full">
-              <MapPin size={14} className="text-[#D2B38B]" />
-              <span className="text-[11px] font-bold uppercase tracking-wide text-calma-ink">
-                {place.city}
-              </span>
-            </div>
+            </span>
           )}
-          <div className="flex items-center gap-1.5 text-calma-taupe text-[11px] font-bold uppercase tracking-wide">
-            {place.startDate ? (
-              <>
-                <CalendarDays size={14} className="text-[#D2B38B]" />{" "}
-                {new Date(place.startDate).toLocaleDateString("fr-FR", {
-                  day: "numeric",
-                  month: "short",
-                })}
-              </>
-            ) : place.openingHours ? (
-              <>
-                <Clock size={14} className="text-[#D2B38B]" /> {place.openingHours}
-              </>
-            ) : place.duration ? (
-              <>
-                <Clock size={14} className="text-[#D2B38B]" /> {place.duration}
-              </>
-            ) : (
-              <>
-                <MapPin size={14} className="text-[#D2B38B]" /> {place.city}
-              </>
-            )}
-          </div>
+          {place.startDate ? (
+            <span className="inline-flex items-center gap-1">
+              <CalendarDays size={13} />
+              {new Date(place.startDate).toLocaleDateString("fr-FR", {
+                day: "numeric",
+                month: "short",
+              })}
+            </span>
+          ) : place.openingHours ? (
+            <span className="inline-flex items-center gap-1">
+              <Clock size={13} /> {place.openingHours}
+            </span>
+          ) : place.duration ? (
+            <span className="inline-flex items-center gap-1">
+              <Clock size={13} /> {place.duration}
+            </span>
+          ) : null}
+          <span className="inline-flex items-center gap-1">
+            <MapPin size={13} /> {place.city}
+          </span>
         </div>
       </div>
-    </div>
+    </article>
   );
 }
