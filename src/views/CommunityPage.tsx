@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSession } from "next-auth/react";
-import { Facebook, Heart, Loader2, Send, Trash2, Users } from "lucide-react";
+import { Facebook, Heart, Loader2, Send, Trash2 } from "lucide-react";
 import { CalmaLangProvider, useCalmaLang } from "@/lib/calma/i18n";
 import CalmaHeader from "@/components/calma/CalmaHeader";
+import PageHeader from "@/components/calma/PageHeader";
 import CalmaFooter from "@/components/calma/CalmaFooter";
 import { SingleImageUpload } from "@/components/admin/SingleImageUpload";
 
@@ -99,67 +100,40 @@ function CommunityPageContent() {
   return (
     <>
       <CalmaHeader active="community" />
-      <main className="min-h-screen bg-calma-cream font-hanken">
-        {/* Hero — photo-backed, matches Services/Explore/Marketplace */}
-        <section className="relative flex min-h-[300px] items-center justify-center overflow-hidden px-6 py-16 text-center sm:px-10">
-          <Image
-            src="/images/hero/sea.png"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-cover"
-          />
-          <div className="absolute inset-0" style={{ background: "rgba(21,36,46,.66)" }} />
-          <div className="relative z-[2] mx-auto max-w-[640px]">
-            <div className="mb-5 inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/[.08] px-4 py-2 text-[11px] font-bold uppercase tracking-[.18em] text-calma-cream backdrop-blur-md">
-              <Users size={13} />
-              {t.community.eyebrow}
-            </div>
-            <h1 className="mb-4 text-balance font-fraunces text-[clamp(30px,4vw,44px)] font-normal leading-[1.1] tracking-[-0.02em] text-calma-cream">
-              {t.community.heroTitle}
-            </h1>
-            <p className="mx-auto max-w-[520px] text-pretty text-[16px] leading-[1.65] text-white/80">
-              {t.community.heroSub}
-            </p>
-          </div>
-        </section>
+      <main className="min-h-screen bg-white pb-12 font-hanken">
+        <PageHeader
+          title={t.community.heroTitle}
+          subtitle={t.community.heroSub}
+          image="/images/hero/sea.png"
+          crumbs={[{ label: t.cnt.breadcrumbHome, href: "/" }, { label: t.community.eyebrow }]}
+        />
 
-        {/* Facebook group CTA */}
-        <section className="mx-auto -mt-8 max-w-[720px] px-6 sm:px-10">
+        <div className="mx-auto max-w-[760px] px-4 sm:px-6">
           <a
             href={FACEBOOK_GROUP_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-4 rounded-calma-block border border-calma-olive/10 bg-white p-5 no-underline shadow-[0_18px_40px_-20px_rgba(21,36,46,.35)] transition-all hover:-translate-y-0.5 hover:shadow-[0_24px_50px_-20px_rgba(21,36,46,.45)] sm:p-6"
+            className="mt-6 flex items-center gap-4 rounded-2xl border border-calma-ink/10 p-5 no-underline transition-colors hover:border-calma-ink/30"
           >
-            <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#1877F2]/10 text-[#1877F2]">
-              <Facebook size={22} />
+            <div className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-[#1877F2]/10 text-[#1877F2]">
+              <Facebook size={20} />
             </div>
             <div className="flex-1">
-              <p className="font-fraunces text-lg font-normal text-calma-ink">
-                {t.community.fbTitle}
-              </p>
-              <p className="text-sm text-calma-taupe">{t.community.fbDesc}</p>
+              <p className="m-0 text-[16px] font-bold text-calma-ink">{t.community.fbTitle}</p>
+              <p className="m-0 text-[14px] text-calma-taupe">{t.community.fbDesc}</p>
             </div>
-            <span className="hidden shrink-0 rounded-full bg-[#1877F2] px-4 py-2 text-sm font-semibold text-white sm:inline-block">
-              {t.community.fbJoin} →
+            <span className="hidden shrink-0 rounded-full bg-calma-ink px-4 py-2 text-[14px] font-semibold text-white sm:inline-block">
+              {t.community.fbJoin}
             </span>
           </a>
-        </section>
 
-        {/* Post form */}
-        <section className="mx-auto max-w-[720px] px-6 pt-10 sm:px-10">
-          <div
-            className="rounded-calma-block border border-calma-olive/10 bg-white p-6 sm:p-8"
-            style={{ boxShadow: "0 22px 50px -22px rgba(21,36,46,.25)" }}
-          >
+          <div className="mt-6 rounded-2xl border border-calma-ink/10 bg-white p-5 sm:p-6">
             {status !== "authenticated" ? (
-              <div className="flex flex-wrap items-center justify-between gap-3 text-sm text-calma-taupe">
+              <div className="flex flex-wrap items-center justify-between gap-3 text-[14.5px] text-calma-taupe">
                 <span>{t.community.loginPrompt}</span>
                 <Link
                   href="/login?callbackUrl=/community"
-                  className="rounded-full bg-calma-terracotta px-5 py-2.5 font-semibold text-calma-ink no-underline"
+                  className="rounded-full bg-calma-ink px-5 py-2.5 text-[14px] font-semibold text-white no-underline transition-colors hover:bg-calma-olive"
                 >
                   {t.community.loginCta}
                 </Link>
@@ -172,9 +146,9 @@ function CommunityPageContent() {
                   rows={4}
                   maxLength={2000}
                   placeholder={t.community.placeholder}
-                  className="w-full resize-none rounded-2xl border border-calma-olive/15 bg-calma-cream px-5 py-4 text-[15px] text-calma-ink outline-none transition-colors focus:border-calma-terracotta"
+                  className="w-full resize-none rounded-xl border border-calma-ink/20 bg-white px-4 py-3 text-[15px] text-calma-ink outline-none transition-colors placeholder:text-calma-taupe/70 focus:border-calma-ink"
                 />
-                <p className="-mt-2 text-xs text-calma-taupe">
+                <p className="-mt-2 mb-0 text-[12.5px] text-calma-taupe">
                   {t.community.charCount.replace("{n}", String(content.length))}
                 </p>
 
@@ -186,10 +160,12 @@ function CommunityPageContent() {
                 />
 
                 {error && (
-                  <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm text-red-600">{error}</p>
+                  <p className="m-0 rounded-xl bg-red-50 px-4 py-3 text-[14px] text-red-600">
+                    {error}
+                  </p>
                 )}
                 {submitted && (
-                  <p className="rounded-2xl bg-calma-success/10 px-4 py-3 text-sm text-calma-success">
+                  <p className="m-0 rounded-xl bg-calma-success/10 px-4 py-3 text-[14px] text-calma-success">
                     {t.community.successMsg}
                   </p>
                 )}
@@ -197,94 +173,90 @@ function CommunityPageContent() {
                 <button
                   onClick={handleSubmit}
                   disabled={submitting}
-                  className="group flex w-full items-center justify-center gap-2 rounded-full px-6 py-3.5 text-[15px] font-semibold text-calma-cream shadow-[0_14px_28px_-10px_rgba(210,179,139,.6)] transition-all duration-300 hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-50 disabled:hover:translate-y-0"
-                  style={{
-                    backgroundColor: "#D2B38B",
-                  }}
+                  className="inline-flex items-center justify-center gap-2 rounded-full bg-calma-ink px-6 py-3 text-[15px] font-semibold text-white transition-colors hover:bg-calma-olive disabled:cursor-not-allowed disabled:opacity-50"
                 >
                   {submitting ? (
                     <Loader2 size={16} className="animate-spin" />
                   ) : (
                     <>
                       {t.community.shareCta}
-                      <Send
-                        size={16}
-                        className="transition-transform duration-300 group-hover:translate-x-1"
-                      />
+                      <Send size={16} className="rtl:-scale-x-100" />
                     </>
                   )}
                 </button>
               </div>
             )}
           </div>
-        </section>
 
-        {/* Feed */}
-        <section className="mx-auto max-w-[720px] px-6 py-16 sm:px-10">
-          {loading ? (
-            <div className="space-y-4">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="h-32 animate-pulse rounded-calma-block bg-calma-sand" />
-              ))}
-            </div>
-          ) : posts.length === 0 ? (
-            <div className="rounded-calma-block border border-dashed border-calma-olive/20 py-16 text-center text-calma-taupe">
-              <Heart className="mx-auto mb-3 h-9 w-9 opacity-30" />
-              <p>{t.community.emptyTitle}</p>
-            </div>
-          ) : (
-            <div className="space-y-5">
-              {posts.map((post) => (
-                <article
-                  key={post.id}
-                  className="rounded-calma-block border border-calma-olive/10 bg-white p-6"
-                  style={{ boxShadow: "0 14px 36px -22px rgba(21,36,46,.3)" }}
-                >
-                  <div className="mb-3 flex items-center justify-between gap-3">
-                    <div className="flex items-center gap-3">
-                      {post.authorAvatar ? (
-                        <Image
-                          src={post.authorAvatar}
-                          alt={post.authorName}
-                          width={40}
-                          height={40}
-                          className="h-10 w-10 rounded-full object-cover"
-                        />
-                      ) : (
-                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-calma-olive text-sm font-bold text-white">
-                          {post.authorName.charAt(0).toUpperCase()}
+          <section className="pt-8">
+            {loading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-32 animate-pulse rounded-2xl bg-calma-sand" />
+                ))}
+              </div>
+            ) : posts.length === 0 ? (
+              <div className="rounded-2xl border border-dashed border-calma-ink/20 py-14 text-center text-calma-taupe">
+                <Heart size={36} strokeWidth={1.4} className="mx-auto mb-3 opacity-40" />
+                <p className="m-0">{t.community.emptyTitle}</p>
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {posts.map((post) => (
+                  <article
+                    key={post.id}
+                    className="rounded-2xl border border-calma-ink/10 bg-white p-5"
+                  >
+                    <div className="mb-3 flex items-center justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        {post.authorAvatar ? (
+                          <Image
+                            src={post.authorAvatar}
+                            alt={post.authorName}
+                            width={40}
+                            height={40}
+                            className="h-10 w-10 rounded-full object-cover"
+                          />
+                        ) : (
+                          <div className="grid h-10 w-10 place-items-center rounded-full bg-calma-ink text-[14px] font-bold text-white">
+                            {post.authorName.charAt(0).toUpperCase()}
+                          </div>
+                        )}
+                        <div>
+                          <p className="m-0 text-[14.5px] font-bold text-calma-ink">
+                            {post.authorName}
+                          </p>
+                          <p className="m-0 text-[12.5px] text-calma-taupe">
+                            {timeAgo(post.createdAt)}
+                          </p>
                         </div>
-                      )}
-                      <div>
-                        <p className="text-sm font-semibold text-calma-ink">{post.authorName}</p>
-                        <p className="text-xs text-calma-taupe">{timeAgo(post.createdAt)}</p>
                       </div>
+                      {session?.user?.id === post.authorId && (
+                        <button
+                          onClick={() => handleDelete(post.id)}
+                          aria-label={t.community.deleteLabel}
+                          className="rounded-lg p-2 text-calma-taupe transition-colors hover:bg-red-50 hover:text-red-500"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
                     </div>
-                    {session?.user?.id === post.authorId && (
-                      <button
-                        onClick={() => handleDelete(post.id)}
-                        aria-label={t.community.deleteLabel}
-                        className="rounded-lg p-2 text-calma-taupe transition-colors hover:bg-red-50 hover:text-red-500"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+
+                    <p className="m-0 whitespace-pre-wrap text-[15px] leading-relaxed text-calma-ink">
+                      {post.content}
+                    </p>
+
+                    {post.image && (
+                      <div className="relative mt-4 aspect-[4/3] w-full overflow-hidden rounded-xl bg-calma-sand">
+                        <Image src={post.image} alt="" fill className="object-cover" />
+                      </div>
                     )}
-                  </div>
-
-                  <p className="whitespace-pre-wrap text-[15px] leading-relaxed text-calma-ink">
-                    {post.content}
-                  </p>
-
-                  {post.image && (
-                    <div className="relative mt-4 h-72 w-full overflow-hidden rounded-2xl bg-calma-sand">
-                      <Image src={post.image} alt="" fill className="object-cover" />
-                    </div>
-                  )}
-                </article>
-              ))}
-            </div>
-          )}
-        </section>
+                  </article>
+                ))}
+              </div>
+            )}
+          </section>
+        </div>
       </main>
       <CalmaFooter />
     </>
